@@ -54,10 +54,13 @@ public class PvMain {
  * It contains toolbar, file tree, image viewer etc.
  */
 public class PvWindow : Window {
+    private Button hide_pane_button;
+    private Image start_here_icon;
+    private Image fullscreen_icon;
+    
     private Button prev_button;
     private Button next_button;
     private Button open_button;
-    private Button toggle_toolbar_button;
     private Button toggle_slide_button;
     
     private Revealer toolbar_revealer;
@@ -70,13 +73,15 @@ public class PvWindow : Window {
     private Button lrotate_button;
     private Button rrotate_button;
 
+    private Paned tree_paned;
     private Revealer tree_revealer;
+    private int tree_save_position;
     
     private Revealer slide_revealer;
     private Button slide_prev_button;
     private PvSlider slider;
     private Button slide_next_button;
-
+    
     private ScrolledWindow image_scroll;
     private PvImage image;
     private PvFileList? file_list = null;
@@ -85,9 +90,24 @@ public class PvWindow : Window {
     public PvWindow() {
         var headerbar = new HeaderBar();
         {
-            toggle_toolbar_button = new Button.from_icon_name("applications-accessories", ICON_SIZE);
-            toggle_toolbar_button.clicked.connect(() => {
-                    toolbar_revealer.reveal_child = !toolbar_revealer.reveal_child;
+            start_here_icon = new Image.from_icon_name("start-here", ICON_SIZE);
+            fullscreen_icon = new Image.from_icon_name("view-fullscreen", ICON_SIZE);
+            
+            hide_pane_button = new Button();
+            hide_pane_button.image = fullscreen_icon;
+            hide_pane_button.clicked.connect(() => {
+                    if (hide_pane_button.image == fullscreen_icon) {
+                        toolbar_revealer.reveal_child = false;
+                        tree_revealer.reveal_child = false;
+                        tree_save_position = tree_paned.position;
+                        tree_paned.position = 0;
+                        hide_pane_button.image = start_here_icon;
+                    } else {
+                        toolbar_revealer.reveal_child = true;
+                        tree_revealer.reveal_child = true;
+                        tree_paned.position = tree_save_position;
+                        hide_pane_button.image = fullscreen_icon;
+                    }
                 });
 
             toggle_slide_button = new Button.from_icon_name("view-more", ICON_SIZE);
@@ -95,35 +115,35 @@ public class PvWindow : Window {
                     slide_revealer.reveal_child = !slide_revealer.reveal_child;
                 });
 
-            headerbar.pack_start(toggle_toolbar_button);
+            headerbar.pack_start(hide_pane_button);
             headerbar.pack_start(toggle_slide_button);
             headerbar.show_close_button = true;
         }
 
         var toolbar_box = new Box(Orientation.VERTICAL, 0);
         {
-            tree_revealer = new Revealer();
+            tree_paned = new Paned(Orientation.HORIZONTAL);
             {
-                var tree_scroll = new ScrolledWindow(null, null);
+                tree_revealer = new Revealer();
                 {
-                    var tree = new PvTreeView();
-                    tree.open_image.connect((file) => {
-                            open_file(file.get_path());
-                            slider.reset(file_list);
-                        });
+                    var tree_scroll = new ScrolledWindow(null, null);
+                    {
+                        var tree = new PvTreeView();
+                        tree.open_image.connect((file) => {
+                                open_file(file.get_path());
+                                slider.reset(file_list);
+                            });
 
-                    tree_scroll.add(tree);
+                        tree_scroll.add(tree);
+                    }
+
+                    tree_revealer.add(tree_scroll);
+                    tree_revealer.reveal_child = true;
+                    tree_revealer.transition_type = RevealerTransitionType.SLIDE_RIGHT;
+                    tree_revealer.hexpand = false;
+                    tree_revealer.vexpand = true;
                 }
 
-                tree_revealer.add(tree_scroll);
-                tree_revealer.reveal_child = true;
-                tree_revealer.transition_type = RevealerTransitionType.SLIDE_RIGHT;
-                tree_revealer.hexpand = false;
-                tree_revealer.vexpand = true;
-            }
-            
-            var tree_paned = new Paned(Orientation.HORIZONTAL);
-            {
                 var main_box = new Box(Orientation.VERTICAL, 2);
                 {
                     toolbar_revealer = new Revealer();
