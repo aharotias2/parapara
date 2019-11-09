@@ -76,6 +76,7 @@ public class PvWindow : Window {
     private Paned tree_paned;
     private Revealer tree_revealer;
     private int tree_save_position;
+    private PvTreeView tree;
     
     private Revealer slide_revealer;
     private Button slide_prev_button;
@@ -128,10 +129,13 @@ public class PvWindow : Window {
                 {
                     var tree_scroll = new ScrolledWindow(null, null);
                     {
-                        var tree = new PvTreeView();
+                        tree = new PvTreeView();
                         tree.open_image.connect((file) => {
+                                bool dir_changed = slider_needs_update(file.get_path());
                                 open_file(file.get_path());
-                                slider.reset(file_list);
+                                if (dir_changed) {
+                                    slider.reset(file_list);
+                                }
                             });
 
                         tree_scroll.add(tree);
@@ -341,12 +345,27 @@ public class PvWindow : Window {
         var res = dialog.run();
         if (res == ResponseType.ACCEPT) {
             string filename = dialog.get_filename();
+            bool dir_changed = slider_needs_update(filename);
+            tree.expand_path(filename);
             open_file(filename);
-            slider.reset(file_list);
+            if (dir_changed) {
+                slider.reset(file_list);
+            }
         }
         dialog.close();
     }
 
+    private bool slider_needs_update(string filename) {
+        if (file_list == null || file_list.size == 0) {
+            debug("slider_needs_update: file_list is null");
+            return true;
+        }
+        string path1 = file_list.get(0).get_parent().get_path();
+        string path2 = File.new_for_path(filename).get_parent().get_path();
+        debug("slider_needs_update (%s %s %s)", path1, path1.collate(path2) != 0 ? "!=" : "==", path2);
+        return path1.collate(path2) != 0;
+    }
+    
     private string make_title_format() {
         string name = image.fileref.get_basename();
         int height = image.original_height;
@@ -366,94 +385,47 @@ public class PvWindow : Window {
 public class PvTreeView : Bin {
     TreeView view;
     TreeStore store;
+    TreeViewColumn file_col;
     
     public signal void open_image(File? file);
     
-    private TreeIter? append_node(File file, TreeIter? parent) throws Error {
-        FileInfo info = file.query_info("standard::*", 0);
-        FileType file_type = info.get_file_type();
-        string mime_type = info.get_content_type();
-        string icon_name;
-
-        if (file_type == FileType.DIRECTORY) {
-            icon_name = "folder";
-        } else if (mime_type.split("/")[0] == "image") {
-            icon_name = "image-x-generic";
-        } else {
-            return null;
-        }
-
-        TreeIter? iter;
-        store.append(out iter, parent);
-        store.set(iter,
-                  0, icon_name,
-                  1, file.get_basename(),
-                  2, file,
-                  3, info
-            );
-        return iter;
+    public PvTreeView() {
+        setup_widgets();
     }
 
-    
-    private void append_children(TreeIter parent) throws Error {
-        FileType file_type = get_file_type(parent);
-        if (file_type == FileType.DIRECTORY) {
-            if (store.iter_has_child(parent)) {
-                remove_children(parent);
-            }
-            
-            string dir_path = get_file_path(parent);
-
-            debug("dir path: %s", dir_path);
-
-            Dir dir = Dir.open(dir_path);
-
-            debug("dir opened");
-            
-            string? name;
-            while ((name = dir.read_name()) != null) {
-                if (name == "." || name == "..") {
-                    continue;
+    public void expand_path(string path) {
+        debug("PvTreeView::expand_path - start");
+        if (Path.is_absolute(path)) {
+            debug("PvTreeView::expand_path - path is absolute");
+            string[] parts = path.substring(1).split("/");
+            string tree_path = "0";
+            TreeIter iter1;
+            TreeIter iter2;
+            store.get_iter_first(out iter1);
+            debug("PvTreeView::expand_path - first child %s", get_basename(iter1));
+            for (int i = 0; i < parts.length; i++) {
+                string part = parts[i];
+                debug("PvTreeView::expand_path - foreach: %s", get_basename(iter1));
+                iter2 = iter1;
+                int index = search_child_name(ref iter2, part);
+                if (iter1 == iter2) {
+                    debug("PvTreeView::expand_path - not found: %s", part);
+                    return;
+                } else {
+                    debug("PvTreeView::expand_path - found: %s", get_basename(iter2));
+                    expand_directory(iter1);
+                    iter1 = iter2;
                 }
-                string child_path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, name);
-                File child = File.new_for_path(child_path);
-                var iter = append_node(child, parent);
-                if (iter != null) {
-                    debug("    append %s", child_path);
-                }
-            } 
-        }
-        debug("all children was appended");
-    }
-
-    private void remove_children(TreeIter parent) {
-        if (store.iter_has_child(parent)) {
-            TreeIter iter;
-            while (store.iter_children(out iter, parent)) {
-                store.remove(ref iter);
+                tree_path += ":" + index.to_string();
             }
+            TreePath tpath = new TreePath.from_string(tree_path);
+            debug("PvTreeView::expand_path - path : %s", tree_path);
+            view.expand_to_path(tpath);
+            view.set_cursor(tpath, file_col, false);
         }
+        debug("PvTreeView::expand_path - end");
     }
     
-    public void expand_directory(TreeIter parent) throws FileError, Error {
-        if (get_file_type(parent) == FileType.DIRECTORY) {
-            if (store.iter_has_child(parent)) {
-                TreeIter child_iter;
-                store.iter_children(out child_iter, parent);
-                do {
-                    FileType type = get_file_type(child_iter);
-                    if (type == FileType.DIRECTORY) {
-                        try {
-                            append_children(child_iter);
-                        } catch (FileError e) {
-                            print("FileError: %s\n", e.message);
-                        }
-                    }
-                } while (store.iter_next(ref child_iter));
-            }
-        }
-    }
-
     public string get_icon_name(TreeIter iter) {
         Value value;
         store.get_value(iter, 0, out value);
@@ -507,7 +479,7 @@ public class PvTreeView : Bin {
         return ((FileInfo) value).get_content_type();
     }
 
-    public PvTreeView() {
+    private void setup_widgets() {
         view = new TreeView();
         {
             store = new TreeStore(4,
@@ -521,7 +493,7 @@ public class PvTreeView : Bin {
                 store.set_sort_func(1, (model, a, b) => get_basename(a).collate(get_basename(b)));
             }
             
-            var file_col = new TreeViewColumn();
+            file_col = new TreeViewColumn();
             {
                 var file_icon_cell = new CellRendererPixbuf();
                 var file_name_cell = new CellRendererText();
@@ -588,6 +560,109 @@ public class PvTreeView : Bin {
             }
         }
         add(view);
+    }
+
+    private void expand_directory(TreeIter parent) throws FileError, Error {
+        if (get_file_type(parent) == FileType.DIRECTORY) {
+            if (store.iter_has_child(parent)) {
+                TreeIter child_iter;
+                store.iter_children(out child_iter, parent);
+                do {
+                    FileType type = get_file_type(child_iter);
+                    if (type == FileType.DIRECTORY) {
+                        try {
+                            append_children(child_iter);
+                        } catch (FileError e) {
+                            print("FileError: %s\n", e.message);
+                        }
+                    }
+                } while (store.iter_next(ref child_iter));
+            }
+        }
+    }
+
+    private TreeIter? append_node(File file, TreeIter? parent) throws Error {
+        FileInfo info = file.query_info("standard::*", 0);
+        FileType file_type = info.get_file_type();
+        string mime_type = info.get_content_type();
+        string icon_name;
+
+        if (file_type == FileType.DIRECTORY) {
+            icon_name = "folder";
+        } else if (mime_type.split("/")[0] == "image") {
+            icon_name = "image-x-generic";
+        } else {
+            return null;
+        }
+
+        TreeIter? iter;
+        store.append(out iter, parent);
+        store.set(iter,
+                  0, icon_name,
+                  1, file.get_basename(),
+                  2, file,
+                  3, info
+            );
+        return iter;
+    }
+
+    
+    private void append_children(TreeIter parent) throws Error {
+        FileType file_type = get_file_type(parent);
+        if (file_type == FileType.DIRECTORY) {
+            if (store.iter_has_child(parent)) {
+                remove_children(parent);
+            }
+            
+            string dir_path = get_file_path(parent);
+
+            debug("dir path: %s", dir_path);
+
+            Dir dir = Dir.open(dir_path);
+
+            debug("dir opened");
+            
+            string? name;
+            while ((name = dir.read_name()) != null) {
+                if (name == "." || name == "..") {
+                    continue;
+                }
+                string child_path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, name);
+                File child = File.new_for_path(child_path);
+                var iter = append_node(child, parent);
+                if (iter != null) {
+                    debug("    append %s", child_path);
+                }
+            } 
+        }
+        debug("all children was appended");
+    }
+
+    private void remove_children(TreeIter parent) {
+        if (store.iter_has_child(parent)) {
+            TreeIter iter;
+            while (store.iter_children(out iter, parent)) {
+                store.remove(ref iter);
+            }
+        }
+    }
+
+    private int search_child_name(ref TreeIter iter, string name) {
+        if (store.iter_has_child(iter)) {
+            TreeIter child;
+            store.iter_children(out child, iter);
+            int i = 0;
+            do {
+                string child_name = get_basename(child);
+                debug("%s %s %s", name, name == child_name ? "==" : "!=", child_name);
+                if (name == child_name) {
+                    iter = child;
+                    return i;
+                }
+                i++;
+            } while (store.iter_next(ref child));
+        }
+        return -1;
     }
 }
 
@@ -795,6 +870,7 @@ public class PvImage : Image {
     
     public void fit_image_to_window() {
         if (original_pixbuf != null) {
+            fit = true;
             debug("PvImage::fit_image_to_window");
             int w0 = parent.get_allocated_width();
             int h0 = parent.get_allocated_height();
@@ -805,7 +881,6 @@ public class PvImage : Image {
             } else if (r0 < r1) {
                 scale_xy(w0, -1);
             }
-            fit = true;
         }
     }
 
