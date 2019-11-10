@@ -35,16 +35,27 @@ extern void get_file_modification_date(string path, string format, char *result)
  * It initializes Gtk, and create a new window to start program.
  */
 public class PvMain {
-    private static PvWindow window;
-    private static void window_setup() {
-        window = new PvWindow();
-    }
-
     public static int main(string[] args) {
         Gtk.init(ref args);
-        window_setup();
+        window_setup(args);
         Gtk.main();
         return 0;
+    }
+
+    private static PvWindow window;
+
+    private static void window_setup(string[] args) {
+        window = new PvWindow(first_file(args));
+    }
+
+    private static string? first_file(string[] args) {
+        for (int i = 1; i < args.length; i++) {
+            if (FileUtils.test(args[i], FileTest.IS_REGULAR)) {
+                debug("Open file: %s", args[i]);
+                return args[i].dup();
+            }
+        }
+        return null;
     }
 }
 
@@ -88,7 +99,7 @@ public class PvWindow : Window {
     private PvFileList? file_list = null;
     private string? title_format;
     
-    public PvWindow() {
+    public PvWindow(string? filepath = null) {
         var headerbar = new HeaderBar();
         {
             start_here_icon = new Image.from_icon_name("start-here", ICON_SIZE);
@@ -319,6 +330,12 @@ public class PvWindow : Window {
             });
         destroy.connect(Gtk.main_quit);
         show_all();
+
+        if (filepath != null) {
+            tree.expand_path(filepath);
+            open_file(filepath);
+            slider.reset(file_list);
+        }
     }
 
     private void open_file(string filename) {
@@ -346,7 +363,13 @@ public class PvWindow : Window {
         if (res == ResponseType.ACCEPT) {
             string filename = dialog.get_filename();
             bool dir_changed = slider_needs_update(filename);
-            tree.expand_path(filename);
+            try {
+                tree.expand_path(filename);
+            } catch (FileError e) {
+                stderr.printf("FileError: %s\n", e.message);
+            } catch (Error e) {
+                stderr.printf("FileError: %s\n", e.message);
+            }
             open_file(filename);
             if (dir_changed) {
                 slider.reset(file_list);
@@ -393,7 +416,7 @@ public class PvTreeView : Bin {
         setup_widgets();
     }
 
-    public void expand_path(string path) {
+    public void expand_path(string path) throws FileError, Error {
         debug("PvTreeView::expand_path - start");
         if (Path.is_absolute(path)) {
             debug("PvTreeView::expand_path - path is absolute");
@@ -831,11 +854,10 @@ public class PvImage : Image {
 
     public File? fileref { get; set; }
     public bool fit { get; set; }
+    public double size_percent { get { return zoom_percent / 10.0; } }
     public int original_height { get { return original_pixbuf.height; } }
     public int original_width { get { return original_pixbuf.width; } }
-    public int height { get { return pixbuf.height; } }
-    public int width { get { return pixbuf.width; } }
-    public double size_percent { get { return zoom_percent / 10.0; } }
+
     private Gdk.Pixbuf? original_pixbuf;
     private int zoom_percent = 1000;
     private int? original_max_size;
