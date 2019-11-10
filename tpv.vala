@@ -20,6 +20,9 @@ using Gtk;
 
 const IconSize ICON_SIZE = IconSize.SMALL_TOOLBAR;
 
+// Environment variables
+bool debugging_on;
+
 /**
  * A C function that calls stat function and put the formatted file modification datetime
  * to char *result.
@@ -37,6 +40,7 @@ extern void get_file_modification_date(string path, string format, char *result)
 public class PvMain {
     public static int main(string[] args) {
         Gtk.init(ref args);
+        env_setup();
         window_setup(args);
         Gtk.main();
         return 0;
@@ -44,6 +48,13 @@ public class PvMain {
 
     private static PvWindow window;
 
+    private static void env_setup() {
+        string g_messages_debug = Environment.get_variable("G_MESSAGES_DEBUG");
+        if (g_messages_debug == "all") {
+            debugging_on = true;
+        }
+    }
+    
     private static void window_setup(string[] args) {
         window = new PvWindow(first_file(args));
     }
@@ -350,7 +361,9 @@ public class PvWindow : Window {
             debug("try to open file %s", filename);
             image.open(filename);
             file_list = new PvFileList(image.fileref.get_parent().get_path());
-            file_list.print_all();
+            if (debugging_on) {
+                file_list.print_all();
+            }
             prev_button.sensitive = !file_list.file_is_first(image.fileref);
             next_button.sensitive = !file_list.file_is_last(image.fileref);
             title_format = make_title_format();
@@ -603,7 +616,10 @@ public class PvTreeView : Bin {
                         try {
                             append_children(child_iter);
                         } catch (FileError e) {
-                            print("FileError: %s\n", e.message);
+                            if (e is FileError.ACCES) {
+                            } else {
+                                print("FileError: %s\n", e.message);
+                            }
                         }
                     }
                 } while (store.iter_next(ref child_iter));
@@ -800,31 +816,27 @@ public class PvSlider : Bin {
                         debug("PvSlider: iter get file %s", file.get_basename());
                         if (file != null) {
                             debug("PvSlider: file is not null");
-                            try {
-                                var item_button = new Button();
+                            var item_button = new Button();
+                            {
+                                var item = new Image();
                                 {
-                                    var item = new Image();
-                                    {
-                                        var pixbuf = get_pixbuf_from_file(file);
-                                        if (pixbuf != null) {
-                                            item.pixbuf = PixbufUtils.scale_limited(pixbuf,
-                                                                                    icon_size);
-                                            item.get_style_context().add_class("flat");
-                                        }
+                                    var pixbuf = get_pixbuf_from_file(file);
+                                    if (pixbuf != null) {
+                                        item.pixbuf = PixbufUtils.scale_limited(pixbuf,
+                                                                                icon_size);
+                                        item.get_style_context().add_class("flat");
                                     }
-
-                                    item_button.image = item;
-                                    item_button.clicked.connect(() => {
-                                            item_clicked(file);
-                                        });
                                 }
 
-                                item_button.show_all();
-                                body.pack_start(item_button, false, false);
-                                debug("PvSlider: %s was added", file.get_basename());
-                            } catch (Error e) {
-                                stderr.printf("Error: %s\n", e.message);
+                                item_button.image = item;
+                                item_button.clicked.connect(() => {
+                                        item_clicked(file);
+                                    });
                             }
+
+                            item_button.show_all();
+                            body.pack_start(item_button, false, false);
+                            debug("PvSlider: %s was added", file.get_basename());
                         }
                         return Source.CONTINUE;
                     } else {
@@ -847,13 +859,18 @@ public class PvSlider : Bin {
         scroll.scroll_child(ScrollType.PAGE_BACKWARD, true);
     }
 
-    private Gdk.Pixbuf get_pixbuf_from_file(File? file) {
-        FileInfo info = file.query_info("standard::*", 0);
-        if (info.get_content_type().split("/")[0] == "image") {
-            return new Gdk.Pixbuf.from_file(file.get_path());
-        } else {
+    private Gdk.Pixbuf? get_pixbuf_from_file(File? file) {
+        try {
+            FileInfo info = file.query_info("standard::*", 0);
+            if (info.get_content_type().split("/")[0] == "image") {
+                return new Gdk.Pixbuf.from_file(file.get_path());
+            } else {
+                return null;
+            }
+        } catch (FileError e) {
+            debug("Error: %s", e.message);
             return null;
-        }
+        }            
     }
 }
 
