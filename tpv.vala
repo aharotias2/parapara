@@ -50,9 +50,10 @@ public class PvMain {
 
     private static string? first_file(string[] args) {
         for (int i = 1; i < args.length; i++) {
-            if (FileUtils.test(args[i], FileTest.IS_REGULAR)) {
-                debug("Open file: %s", args[i]);
-                return args[i].dup();
+            string path = PvFileUtils.get_absolute_path(args[i]);
+            if (FileUtils.test(path, FileTest.IS_REGULAR)) {
+                debug("Open file: %s", path);
+                return path.dup();
             }
         }
         return null;
@@ -332,9 +333,15 @@ public class PvWindow : Window {
         show_all();
 
         if (filepath != null) {
-            tree.expand_path(filepath);
-            open_file(filepath);
-            slider.reset(file_list);
+            try {
+                tree.expand_path(filepath);
+                open_file(filepath);
+                slider.reset(file_list);
+            } catch (FileError e) {
+                stderr.printf("Error: %s\n", e.message);
+            } catch (Error e) {
+                stderr.printf("Error: %s\n", e.message);
+            }                
         }
     }
 
@@ -745,9 +752,9 @@ public class PvFileList : Gee.ArrayList<File> {
     }
     
     public void print_all() {
-        print("PvFileList contains:\n");
+        debug("PvFileList contains:\n");
         for (int i = 0; i < size; i++) {
-            print("    %s\n", get(i).get_basename());
+            debug("    %s", get(i).get_basename());
         }
     }
 }
@@ -798,9 +805,12 @@ public class PvSlider : Bin {
                                 {
                                     var item = new Image();
                                     {
-                                        var pixbuf = new Gdk.Pixbuf.from_file(file.get_path());
-                                        item.pixbuf = PixbufUtils.scale_limited(pixbuf, icon_size);
-                                        item.get_style_context().add_class("flat");
+                                        var pixbuf = get_pixbuf_from_file(file);
+                                        if (pixbuf != null) {
+                                            item.pixbuf = PixbufUtils.scale_limited(pixbuf,
+                                                                                    icon_size);
+                                            item.get_style_context().add_class("flat");
+                                        }
                                     }
 
                                     item_button.image = item;
@@ -835,6 +845,15 @@ public class PvSlider : Bin {
 
     public void step_prev() {
         scroll.scroll_child(ScrollType.PAGE_BACKWARD, true);
+    }
+
+    private Gdk.Pixbuf get_pixbuf_from_file(File? file) {
+        FileInfo info = file.query_info("standard::*", 0);
+        if (info.get_content_type().split("/")[0] == "image") {
+            return new Gdk.Pixbuf.from_file(file.get_path());
+        } else {
+            return null;
+        }
     }
 }
 
@@ -1082,6 +1101,23 @@ public class PvFileUtils {
 
     public static bool file_is_last(File file, List<File> list) {
         return list.nth_data(list.length() - 1).get_path() == file.get_path();
+    }
+
+    public static string get_absolute_path(string path) {
+        if (path[0] == '/') {
+            return path.dup();
+        }
+        if (path.has_prefix("./")) {
+            return Environment.get_current_dir() + path.substring(1);
+        }
+        if (path.has_prefix("~/")) {
+            return Environment.get_home_dir() + path.substring(1);
+        }
+        string username = Environment.get_user_name();
+        if (path.has_prefix(@"~$username/")) {
+            return Environment.get_home_dir() + path.substring(1);
+        }
+        return Environment.get_home_dir() + "/" + path;
     }
 }
 
