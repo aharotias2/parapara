@@ -526,10 +526,10 @@ public class PvTreeView : Bin {
         view = new TreeView();
         {
             store = new TreeStore(4,
-                                      typeof(string), // icon_name
-                                      typeof(string), // file_name
-                                      typeof(File),
-                                      typeof(FileInfo)
+                                  typeof(string), // icon_name
+                                  typeof(string), // file_name
+                                  typeof(File),
+                                  typeof(FileInfo)
                 );
             {
                 store.set_sort_column_id(1, SortType.ASCENDING);
@@ -816,27 +816,27 @@ public class PvSlider : Bin {
                         debug("PvSlider: iter get file %s", file.get_basename());
                         if (file != null) {
                             debug("PvSlider: file is not null");
-                            var item_button = new Button();
-                            {
-                                var item = new Image();
+                            var pixbuf = get_pixbuf_from_file(file);
+                            if (pixbuf != null) {
+                                var item_button = new Button();
                                 {
-                                    var pixbuf = get_pixbuf_from_file(file);
-                                    if (pixbuf != null) {
+                                    var item = new Image();
+                                    {
                                         item.pixbuf = PixbufUtils.scale_limited(pixbuf,
                                                                                 icon_size);
                                         item.get_style_context().add_class("flat");
                                     }
+
+                                    item_button.image = item;
+                                    item_button.clicked.connect(() => {
+                                            item_clicked(file);
+                                        });
                                 }
 
-                                item_button.image = item;
-                                item_button.clicked.connect(() => {
-                                        item_clicked(file);
-                                    });
+                                item_button.show_all();
+                                body.pack_start(item_button, false, false);
+                                debug("PvSlider: %s was added", file.get_basename());
                             }
-
-                            item_button.show_all();
-                            body.pack_start(item_button, false, false);
-                            debug("PvSlider: %s was added", file.get_basename());
                         }
                         return Source.CONTINUE;
                     } else {
