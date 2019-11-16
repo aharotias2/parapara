@@ -297,6 +297,11 @@ public class PvWindow : Window {
                             slider.item_clicked.connect((file) => {
                                     open_file(file.get_path());
                                 });
+                            slider.item_added.connect(() => {
+                                    if (!slide_revealer.child_revealed) {
+                                        slide_revealer.reveal_child = true;
+                                    }
+                                });
                     
                             slide_next_button = new Button.from_icon_name("go-next", IconSize.SMALL_TOOLBAR);
                             slide_next_button.clicked.connect(() => {
@@ -784,6 +789,8 @@ public class PvSlider : Bin {
     private int icon_size = 64;
     Gee.Iterator<File?>? iter;
     public signal void item_clicked(File file);
+    public signal void item_added();
+    public signal void reset_completed();
     
     public PvSlider() {
         scroll = new ScrolledWindow(null, null);
@@ -835,11 +842,13 @@ public class PvSlider : Bin {
 
                                 item_button.show_all();
                                 body.pack_start(item_button, false, false);
+                                item_added();
                                 debug("PvSlider: %s was added", file.get_basename());
                             }
                         }
                         return Source.CONTINUE;
                     } else {
+                        reset_completed();
                         return Source.REMOVE;
                     }
                 }, Priority.DEFAULT);
