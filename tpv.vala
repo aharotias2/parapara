@@ -61,7 +61,7 @@ public class PvMain {
 
     private static string? first_file(string[] args) {
         for (int i = 1; i < args.length; i++) {
-            string path = PvFileUtils.get_absolute_path(args[i]);
+            string path = File.new_for_path(args[i]).get_path();
             if (FileUtils.test(path, FileTest.IS_REGULAR)) {
                 debug("Open file: %s", path);
                 return path.dup();
@@ -864,13 +864,13 @@ public class PvSlider : Bin {
             FileInfo info = file.query_info("standard::*", 0);
             if (info.get_content_type().split("/")[0] == "image") {
                 return new Gdk.Pixbuf.from_file(file.get_path());
-            } else {
-                return null;
             }
         } catch (FileError e) {
+            debug("FileError: %s", e.message);
+        } catch (Error e) {
             debug("Error: %s", e.message);
-            return null;
-        }            
+        }
+        return null;
     }
 }
 
@@ -1118,23 +1118,6 @@ public class PvFileUtils {
 
     public static bool file_is_last(File file, List<File> list) {
         return list.nth_data(list.length() - 1).get_path() == file.get_path();
-    }
-
-    public static string get_absolute_path(string path) {
-        if (path[0] == '/') {
-            return path.dup();
-        }
-        if (path.has_prefix("./")) {
-            return Environment.get_current_dir() + path.substring(1);
-        }
-        if (path.has_prefix("~/")) {
-            return Environment.get_home_dir() + path.substring(1);
-        }
-        string username = Environment.get_user_name();
-        if (path.has_prefix(@"~$username/")) {
-            return Environment.get_home_dir() + path.substring(1);
-        }
-        return Environment.get_home_dir() + "/" + path;
     }
 }
 
