@@ -20,3 +20,5 @@
 all: tpv.vala get_file_modification_time.c 
 	valac -o tpv --pkg=gtk+-3.0 --pkg=gee-0.8 $^
 
+ja: tpv.vala get_file_modification_time.c 
+	valac -o tpv --pkg=gtk+-3.0 --pkg=gee-0.8 -D LANGUAGE_JA $^

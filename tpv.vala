@@ -381,9 +381,9 @@ public class PvWindow : Window {
     }
 
     private void on_open_button_clicked() {
-        var dialog = new FileChooserDialog("ファイルを開く", this, FileChooserAction.OPEN,
-                                               "キャンセル", ResponseType.CANCEL,
-                                               "開く", ResponseType.ACCEPT);
+        var dialog = new FileChooserDialog(Text.FILE_CHOOSER, this, FileChooserAction.OPEN,
+                                           Text.CANCEL, ResponseType.CANCEL,
+                                           Text.OPEN, ResponseType.ACCEPT);
         var res = dialog.run();
         if (res == ResponseType.ACCEPT) {
             string filename = dialog.get_filename();
@@ -1187,3 +1187,14 @@ public class PvStringUtils {
     }
 }
 
+namespace Text {
+#if LANGUAGE_JA
+    const string FILE_CHOOSER = "ファイルを開く";
+    const string CANCEL = "キャンセル";
+    const string OPEN = "開く";
+#else
+    const string FILE_CHOOSER = "File Chooser";
+    const string CANCEL = "Cancel";
+    const string OPEN = "Open";
+#endif    
+}
