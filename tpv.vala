@@ -448,30 +448,42 @@ public class PvTreeView : Bin {
             string[] parts = path.substring(1).split("/");
             string tree_path = "0";
             TreeIter iter1;
-            TreeIter iter2;
             store.get_iter_first(out iter1);
             debug("PvTreeView::expand_path - first child %s", get_basename(iter1));
-            for (int i = 0; i < parts.length; i++) {
-                string part = parts[i];
-                debug("PvTreeView::expand_path - foreach: %s", get_basename(iter1));
-                iter2 = iter1;
-                int index = search_child_name(ref iter2, part);
-                if (iter1 == iter2) {
-                    debug("PvTreeView::expand_path - not found: %s", part);
-                    return;
-                } else {
-                    debug("PvTreeView::expand_path - found: %s", get_basename(iter2));
-                    expand_directory(iter1);
-                    iter1 = iter2;
-                }
-                tree_path += ":" + index.to_string();
-            }
-            TreePath tpath = new TreePath.from_string(tree_path);
-            debug("PvTreeView::expand_path - path : %s", tree_path);
-            view.expand_to_path(tpath);
-            view.set_cursor(tpath, file_col, false);
+            int i = 0;
+            Idle.add(() => {
+                    if (i < parts.length) {
+                        string part = parts[i];
+                        debug("PvTreeView::expand_path - foreach: %s", get_basename(iter1));
+                        TreeIter iter2 = iter1;
+                        int index = search_child_name(ref iter2, part);
+                        if (iter1 == iter2) {
+                            debug("PvTreeView::expand_path - not found: %s", part);
+                            return false;
+                        } else {
+                            debug("PvTreeView::expand_path - found: %s", get_basename(iter2));
+                            try {
+                                expand_directory(iter1);
+                            } catch (Error e) {
+                                debug("Error: %s", e.message);
+                            } catch (FileError e) {
+                                debug("FileError: %s", e.message);
+                            }
+                            iter1 = iter2;
+                        }
+                        tree_path += ":" + index.to_string();
+                        view.expand_to_path(new TreePath.from_string(tree_path));
+                        i++;
+                        return true;
+                    } else {
+                        TreePath tpath = new TreePath.from_string(tree_path);
+                        debug("PvTreeView::expand_path - path : %s", tree_path);
+                        view.set_cursor(tpath, file_col, false);
+                        debug("PvTreeView::expand_path - end");
+                        return false;
+                    }
+                });
         }
-        debug("PvTreeView::expand_path - end");
     }
     
     public string get_icon_name(TreeIter iter) {
