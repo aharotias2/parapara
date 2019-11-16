@@ -34,6 +34,18 @@ bool debugging_on;
 extern void get_file_modification_date(string path, string format, char *result);
 
 /**
+ * a css for internal use
+ */
+const string default_css = """
+.image_overlay_button {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+.image_overlay_button:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+""";
+
+/**
  * The Program Entry Proint.
  * It initializes Gtk, and create a new window to start program.
  */
@@ -42,6 +54,7 @@ public class PvMain {
         Gtk.init(ref args);
         env_setup();
         window_setup(args);
+        css_setup();
         Gtk.main();
         return 0;
     }
@@ -59,6 +72,17 @@ public class PvMain {
         window = new PvWindow(first_file(args));
     }
 
+    private static void css_setup() {
+        Gdk.Screen win_screen = window.get_screen();
+        CssProvider css_provider = new CssProvider();
+        try {
+            css_provider.load_from_data(default_css);
+            Gtk.StyleContext.add_provider_for_screen(win_screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
+        } catch (Error e) {
+            debug("CssProvider loading failed");
+        }
+    }
+    
     private static string? first_file(string[] args) {
         for (int i = 1; i < args.length; i++) {
             string path = File.new_for_path(args[i]).get_path();
@@ -77,14 +101,8 @@ public class PvMain {
  * It contains toolbar, file tree, image viewer etc.
  */
 public class PvWindow : Window {
-    private Button hide_pane_button;
-    private Image start_here_icon;
-    private Image fullscreen_icon;
-    
-    private Button prev_button;
-    private Button next_button;
     private Button open_button;
-    private Button toggle_slide_button;
+    private ToggleButton control_toggle_button;
     
     private Revealer toolbar_revealer;
     private Button zoom_in_button;
@@ -96,9 +114,12 @@ public class PvWindow : Window {
     private Button lrotate_button;
     private Button rrotate_button;
 
+    private Button image_overlay_prev_button;
+    private Button image_overlay_next_button;
+    private Button slide_reveal_button;
+
     private Paned tree_paned;
     private Revealer tree_revealer;
-    private int tree_save_position;
     private PvTreeView tree;
     
     private Revealer slide_revealer;
@@ -106,6 +127,7 @@ public class PvWindow : Window {
     private PvSlider slider;
     private Button slide_next_button;
     
+    private Box image_overlay_vbox;
     private ScrolledWindow image_scroll;
     private PvImage image;
     private PvFileList? file_list = null;
@@ -114,33 +136,39 @@ public class PvWindow : Window {
     public PvWindow(string? filepath = null) {
         var headerbar = new HeaderBar();
         {
-            start_here_icon = new Image.from_icon_name("start-here", ICON_SIZE);
-            fullscreen_icon = new Image.from_icon_name("view-fullscreen", ICON_SIZE);
+            open_button = new Button();
+            {
+                var open_button_box = new Box(Orientation.HORIZONTAL, 2);
+                {
+                    var open_button_icon = new Image.from_icon_name("folder-open", ICON_SIZE);
+                    var open_button_label = new Label(Text.OPEN);
+                    open_button_box.pack_start(open_button_icon, false, false);
+                    open_button_box.pack_start(open_button_label, false, false);
+                }
+
+                open_button.add(open_button_box);
+                open_button.clicked.connect(() => {
+                        on_open_button_clicked();
+                    });
+            }
+
+            control_toggle_button = new ToggleButton();
+            {
+                var control_toggle_button_icon = new Image.from_icon_name("action-unavailable", ICON_SIZE);
+                control_toggle_button.add(control_toggle_button_icon);
+                control_toggle_button.active = true;
+                control_toggle_button.sensitive = false;
+                control_toggle_button.toggled.connect(() => {
+                        if (control_toggle_button.active) {
+                            hide_image_buttons();
+                        } else {
+                            show_image_buttons();
+                        }
+                    });
+            }
             
-            hide_pane_button = new Button();
-            hide_pane_button.image = fullscreen_icon;
-            hide_pane_button.clicked.connect(() => {
-                    if (hide_pane_button.image == fullscreen_icon) {
-                        toolbar_revealer.reveal_child = false;
-                        tree_revealer.reveal_child = false;
-                        tree_save_position = tree_paned.position;
-                        tree_paned.position = 0;
-                        hide_pane_button.image = start_here_icon;
-                    } else {
-                        toolbar_revealer.reveal_child = true;
-                        tree_revealer.reveal_child = true;
-                        tree_paned.position = tree_save_position;
-                        hide_pane_button.image = fullscreen_icon;
-                    }
-                });
-
-            toggle_slide_button = new Button.from_icon_name("view-more", ICON_SIZE);
-            toggle_slide_button.clicked.connect(() => {
-                    slide_revealer.reveal_child = !slide_revealer.reveal_child;
-                });
-
-            headerbar.pack_start(hide_pane_button);
-            headerbar.pack_start(toggle_slide_button);
+            headerbar.pack_start(open_button);
+            headerbar.pack_end(control_toggle_button);
             headerbar.show_close_button = true;
         }
 
@@ -173,117 +201,6 @@ public class PvWindow : Window {
 
                 var main_box = new Box(Orientation.VERTICAL, 2);
                 {
-                    toolbar_revealer = new Revealer();
-                    {
-                        var toolbar = new Box(Orientation.HORIZONTAL, 2);
-                        {
-                            prev_button = new Button.from_icon_name("go-previous", ICON_SIZE);
-                            prev_button.clicked.connect(() => {
-                                    if (file_list != null) {
-                                        File? prev_file = file_list.get_prev_file(image.fileref);
-                                        if (prev_file != null) {
-                                            open_file(prev_file.get_path());
-                                        }
-                                    }
-                                });
-            
-                            next_button = new Button.from_icon_name("go-next", ICON_SIZE);
-                            next_button.clicked.connect(() => {
-                                    if (file_list != null) {
-                                        File? next_file = file_list.get_next_file(image.fileref);
-                                        if (next_file != null) {
-                                            open_file(next_file.get_path());
-                                        }
-                                    }
-                                });
-            
-                            open_button = new Button.from_icon_name("folder-open", ICON_SIZE);
-                            open_button.clicked.connect(() => {
-                                    on_open_button_clicked();
-                                });
-
-                            zoom_in_button = new Button.from_icon_name("zoom-in", ICON_SIZE);
-                            zoom_in_button.clicked.connect(() => {
-                                    image.zoom_in();
-                                    zoom_fit_button.sensitive = true;
-                                    title = title_format.printf(image.size_percent);
-                                });
-            
-                            zoom_out_button = new Button.from_icon_name("zoom-out", ICON_SIZE);
-                            zoom_out_button.clicked.connect(() => {
-                                    image.zoom_out();
-                                    zoom_fit_button.sensitive = true;
-                                    title = title_format.printf(image.size_percent);
-                                });
-            
-                            zoom_fit_button = new Button.from_icon_name("zoom-fit-best", ICON_SIZE);
-                            zoom_fit_button.clicked.connect(() => {
-                                    image.fit_image_to_window();
-                                    zoom_fit_button.sensitive = false;
-                                    title = title_format.printf(image.size_percent);
-                                });
-            
-                            zoom_orig_button = new Button.from_icon_name("zoom-original", ICON_SIZE);
-                            zoom_orig_button.clicked.connect(() => {
-                                    image.zoom_original();
-                                    zoom_fit_button.sensitive = true;
-                                    title = title_format.printf(image.size_percent);
-                                });
-            
-                            hflip_button = new Button.from_icon_name("object-flip-horizontal", ICON_SIZE);
-                            hflip_button.clicked.connect(() => {
-                                    image.hflip();
-                                    title = title_format.printf(image.size_percent);
-                                });
-            
-                            vflip_button = new Button.from_icon_name("object-flip-vertical", ICON_SIZE);
-                            vflip_button.clicked.connect(() => {
-                                    image.vflip();
-                                    title = title_format.printf(image.size_percent);
-                                });
-        
-                            lrotate_button = new Button.from_icon_name("object-rotate-left", ICON_SIZE);
-                            lrotate_button.clicked.connect(() => {
-                                    image.rotate_left();
-                                    title = title_format.printf(image.size_percent);
-                                    zoom_fit_button.sensitive = true;
-                                });
-            
-                            rrotate_button = new Button.from_icon_name("object-rotate-right", ICON_SIZE);
-                            rrotate_button.clicked.connect(() => {
-                                    image.rotate_right();
-                                    title = title_format.printf(image.size_percent);
-                                    zoom_fit_button.sensitive = true;
-                                });
-
-                            toolbar.pack_start(prev_button, false, false);
-                            toolbar.pack_start(next_button, false, false);
-                            toolbar.pack_start(open_button, false, false);
-                            toolbar.pack_start(zoom_in_button, false, false);
-                            toolbar.pack_start(zoom_out_button, false, false);
-                            toolbar.pack_start(zoom_fit_button, false, false);
-                            toolbar.pack_start(zoom_orig_button, false, false);
-                            toolbar.pack_start(hflip_button, false, false);
-                            toolbar.pack_start(vflip_button, false, false);
-                            toolbar.pack_start(lrotate_button, false, false);
-                            toolbar.pack_start(rrotate_button, false, false);
-                        }
-
-                        toolbar_revealer.add(toolbar);
-                        toolbar_revealer.reveal_child = true;
-                        toolbar_revealer.transition_type = RevealerTransitionType.SLIDE_DOWN;
-                        toolbar_revealer.hexpand = true;
-                    }
-
-                    image_scroll = new ScrolledWindow(null, null);
-                    {
-                        image = new PvImage(true);
-                        image_scroll.add(image);
-                        image_scroll.get_style_context().add_class("image");
-                        image_scroll.overlay_scrolling = false;
-                        image_scroll.shadow_type = ShadowType.IN;
-                    }
-
                     slide_revealer = new Revealer();
                     {
                         var slide_box = new Box(Orientation.HORIZONTAL, 2);
@@ -319,9 +236,156 @@ public class PvWindow : Window {
                         slide_revealer.transition_type = RevealerTransitionType.SLIDE_DOWN;
                         slide_revealer.get_style_context().add_class("slide");
                     }
+
+                    var image_overlay = new Overlay();
+                    {
+                        image_overlay_vbox = new Box(Orientation.VERTICAL, 0);
+                        {
+                            slide_reveal_button = new Button.from_icon_name("go-up", ICON_SIZE);
+                            {
+                                slide_reveal_button.halign = Align.CENTER;
+                                slide_reveal_button.get_style_context().add_class("image_overlay_button");
+                                slide_reveal_button.clicked.connect(() => {
+                                        if (slide_revealer.child_revealed) {
+                                            slide_revealer.reveal_child = false;
+                                            (slide_reveal_button.image as Image).icon_name = "go-down";
+                                        } else {
+                                            slide_revealer.reveal_child = true;
+                                            (slide_reveal_button.image as Image).icon_name = "go-up";
+                                        }
+                                    });
+                            }
+
+                            var image_overlay_hbox = new Box(Orientation.HORIZONTAL, 0);
+                            {
+                                image_overlay_prev_button = new Button.from_icon_name("go-previous", ICON_SIZE);
+                                {
+                                    image_overlay_prev_button.valign = Align.CENTER;
+                                    image_overlay_prev_button.get_style_context().add_class("image_overlay_button");
+                                    image_overlay_prev_button.clicked.connect(() => {
+                                            if (file_list != null) {
+                                                File? prev_file = file_list.get_prev_file(image.fileref);
+                                                if (prev_file != null) {
+                                                    open_file(prev_file.get_path());
+                                                }
+                                            }
+                                        });
+                                }
+
+                                image_overlay_next_button = new Button.from_icon_name("go-next", ICON_SIZE);
+                                {
+                                    image_overlay_next_button.valign = Align.CENTER;
+                                    image_overlay_next_button.get_style_context().add_class("image_overlay_button");
+                                    image_overlay_next_button.clicked.connect(() => {
+                                            if (file_list != null) {
+                                                File? next_file = file_list.get_next_file(image.fileref);
+                                                if (next_file != null) {
+                                                    open_file(next_file.get_path());
+                                                }
+                                            }
+                                        });
+                                }
+
+                                image_overlay_hbox.pack_start(image_overlay_prev_button, false, false);
+                                image_overlay_hbox.pack_end(image_overlay_next_button, false, false);
+                            }
+
+                            var toolbar = new Box(Orientation.HORIZONTAL, 2);
+                            {
+                                zoom_in_button = new Button.from_icon_name("zoom-in", ICON_SIZE);
+                                zoom_in_button.get_style_context().add_class("image_overlay_button");
+                                zoom_in_button.clicked.connect(() => {
+                                        image.zoom_in();
+                                        zoom_fit_button.sensitive = true;
+                                        title = title_format.printf(image.size_percent);
+                                    });
             
+                                zoom_out_button = new Button.from_icon_name("zoom-out", ICON_SIZE);
+                                zoom_out_button.get_style_context().add_class("image_overlay_button");
+                                zoom_out_button.clicked.connect(() => {
+                                        image.zoom_out();
+                                        zoom_fit_button.sensitive = true;
+                                        title = title_format.printf(image.size_percent);
+                                    });
+            
+                                zoom_fit_button = new Button.from_icon_name("zoom-fit-best", ICON_SIZE);
+                                zoom_fit_button.get_style_context().add_class("image_overlay_button");
+                                zoom_fit_button.clicked.connect(() => {
+                                        image.fit_image_to_window();
+                                        zoom_fit_button.sensitive = false;
+                                        title = title_format.printf(image.size_percent);
+                                    });
+            
+                                zoom_orig_button = new Button.from_icon_name("zoom-original", ICON_SIZE);
+                                zoom_orig_button.get_style_context().add_class("image_overlay_button");
+                                zoom_orig_button.clicked.connect(() => {
+                                        image.zoom_original();
+                                        zoom_fit_button.sensitive = true;
+                                        title = title_format.printf(image.size_percent);
+                                    });
+            
+                                hflip_button = new Button.from_icon_name("object-flip-horizontal", ICON_SIZE);
+                                hflip_button.get_style_context().add_class("image_overlay_button");
+                                hflip_button.clicked.connect(() => {
+                                        image.hflip();
+                                        title = title_format.printf(image.size_percent);
+                                    });
+            
+                                vflip_button = new Button.from_icon_name("object-flip-vertical", ICON_SIZE);
+                                vflip_button.get_style_context().add_class("image_overlay_button");
+                                vflip_button.clicked.connect(() => {
+                                        image.vflip();
+                                        title = title_format.printf(image.size_percent);
+                                    });
+        
+                                lrotate_button = new Button.from_icon_name("object-rotate-left", ICON_SIZE);
+                                lrotate_button.get_style_context().add_class("image_overlay_button");
+                                lrotate_button.clicked.connect(() => {
+                                        image.rotate_left();
+                                        title = title_format.printf(image.size_percent);
+                                        zoom_fit_button.sensitive = true;
+                                    });
+            
+                                rrotate_button = new Button.from_icon_name("object-rotate-right", ICON_SIZE);
+                                rrotate_button.get_style_context().add_class("image_overlay_button");
+                                rrotate_button.clicked.connect(() => {
+                                        image.rotate_right();
+                                        title = title_format.printf(image.size_percent);
+                                        zoom_fit_button.sensitive = true;
+                                    });
+
+                                toolbar.pack_start(zoom_in_button, false, false);
+                                toolbar.pack_start(zoom_out_button, false, false);
+                                toolbar.pack_start(zoom_fit_button, false, false);
+                                toolbar.pack_start(zoom_orig_button, false, false);
+                                toolbar.pack_start(hflip_button, false, false);
+                                toolbar.pack_start(vflip_button, false, false);
+                                toolbar.pack_start(lrotate_button, false, false);
+                                toolbar.pack_start(rrotate_button, false, false);
+                                toolbar.halign = Align.CENTER;
+                            }
+
+                            image_overlay_vbox.pack_start(slide_reveal_button, false, false);
+                            image_overlay_vbox.pack_start(image_overlay_hbox, true, true);
+                            image_overlay_vbox.pack_start(toolbar, false, false);
+                        }
+                        
+                        image_scroll = new ScrolledWindow(null, null);
+                        {
+                            image = new PvImage(true);
+                            image_scroll.add(image);
+                            image_scroll.get_style_context().add_class("image");
+                            image_scroll.overlay_scrolling = false;
+                            image_scroll.shadow_type = ShadowType.IN;
+                        }
+
+                        image_overlay.add(image_scroll);
+                        image_overlay.add_overlay(image_overlay_vbox);
+                        image_overlay.set_overlay_pass_through(image_overlay_vbox, true);
+                    }
+                    
                     main_box.pack_start(slide_revealer, false, false);
-                    main_box.pack_start(image_scroll, true, true);
+                    main_box.pack_start(image_overlay, true, true);
                 }
 
                 tree_paned.add1(tree_revealer);
@@ -347,6 +411,7 @@ public class PvWindow : Window {
             });
         destroy.connect(Gtk.main_quit);
         show_all();
+        hide_image_buttons();
 
         if (filepath != null) {
             try {
@@ -369,10 +434,13 @@ public class PvWindow : Window {
             if (debugging_on) {
                 file_list.print_all();
             }
-            prev_button.sensitive = !file_list.file_is_first(image.fileref);
-            next_button.sensitive = !file_list.file_is_last(image.fileref);
+            image_overlay_prev_button.sensitive = !file_list.file_is_first(image.fileref);
+            image_overlay_next_button.sensitive = !file_list.file_is_last(image.fileref);
             title_format = make_title_format();
             title = title_format.printf(image.size_percent);
+            show_image_buttons();
+            control_toggle_button.sensitive = true;
+            control_toggle_button.active = false;
         } catch (FileError e) {
             stderr.printf("Error: %s\n", e.message);
         } catch (Error e) {
@@ -403,6 +471,34 @@ public class PvWindow : Window {
         dialog.close();
     }
 
+    private void hide_image_buttons() {
+        slide_reveal_button.visible = false;
+        image_overlay_prev_button.visible = false;
+        image_overlay_next_button.visible = false;
+        zoom_in_button.visible = false;
+        zoom_out_button.visible = false;
+        zoom_fit_button.visible = false;
+        zoom_orig_button.visible = false;
+        hflip_button.visible = false;
+        vflip_button.visible = false;
+        rrotate_button.visible = false;
+        lrotate_button.visible = false;
+    }
+
+    private void show_image_buttons() {
+        slide_reveal_button.visible = true;
+        image_overlay_prev_button.visible = true;
+        image_overlay_next_button.visible = true;
+        zoom_in_button.visible = true;
+        zoom_out_button.visible = true;
+        zoom_fit_button.visible = true;
+        zoom_orig_button.visible = true;
+        hflip_button.visible = true;
+        vflip_button.visible = true;
+        rrotate_button.visible = true;
+        lrotate_button.visible = true;
+    }
+    
     private bool slider_needs_update(string filename) {
         if (file_list == null || file_list.size == 0) {
             debug("slider_needs_update: file_list is null");
@@ -826,6 +922,7 @@ public class PvSlider : Bin {
         body = new Box(Orientation.HORIZONTAL, 4);
         {
             iter = file_list.iterator();
+            bool first_flag = true;
             Timeout.add(100, () => {
                     debug("PvSlider: Timeout start");
                     if (iter.has_next()) {
@@ -854,7 +951,10 @@ public class PvSlider : Bin {
 
                                 item_button.show_all();
                                 body.pack_start(item_button, false, false);
-                                item_added();
+                                if (first_flag) {
+                                    item_added();
+                                    first_flag = false;
+                                }
                                 debug("PvSlider: %s was added", file.get_basename());
                             }
                         }
@@ -907,6 +1007,7 @@ public class PvImage : Image {
 
     public PvImage(bool fit) {
         this.fit = fit;
+        has_image = false;
     }
 
     public File? fileref { get; set; }
@@ -914,6 +1015,7 @@ public class PvImage : Image {
     public double size_percent { get { return zoom_percent / 10.0; } }
     public int original_height { get { return original_pixbuf.height; } }
     public int original_width { get { return original_pixbuf.width; } }
+    public bool has_image { get; set; }
 
     private Gdk.Pixbuf? original_pixbuf;
     private int zoom_percent = 1000;
@@ -934,6 +1036,7 @@ public class PvImage : Image {
             save_width = -1;
             save_height = -1;
             fit_image_to_window();
+            has_image = true;
         } else {
             print("Warning: file type is invalid.\n");
         }
