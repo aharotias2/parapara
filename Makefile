@@ -1,24 +1,24 @@
 # Copyright 2019 Tanaka Takayuki (田中喬之) 
 #
-# This file is part of tpv.
+# This file is part of tatap.
 #
-# tpv is free software: you can redistribute it and/or modify
+# tatap is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# tpv is distributed in the hope that it will be useful,
+# tatap is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with tpv.  If not, see <http://www.gnu.org/licenses/>.
+# along with tatap.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Tanaka Takayuki <msg@gorigorilinux.net>
 
-all: tpv.vala get_file_modification_time.c 
-	valac -o tpv --pkg=gtk+-3.0 --pkg=gee-0.8 $^
+all: tatap.vala get_file_modification_time.c 
+	valac -o tatap --pkg=gtk+-3.0 --pkg=gee-0.8 $^
 
-ja: tpv.vala get_file_modification_time.c 
-	valac -o tpv --pkg=gtk+-3.0 --pkg=gee-0.8 -D LANGUAGE_JA $^
+ja: tatap.vala get_file_modification_time.c 
+	valac -o tatap --pkg=gtk+-3.0 --pkg=gee-0.8 -D LANGUAGE_JA $^

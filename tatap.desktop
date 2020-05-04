@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=tatap
+GenericName=Image Viewer
+MimeType=image/jpeg;image/gif;image/png
+Exec=tatap %F
+Icon=
+Type=Application
+Terminal=false
+Categories=Graphics
+StartupWMClass=Tatap
+Keywords=Picture;Image;Viewer;
