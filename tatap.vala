@@ -18,11 +18,60 @@
 
 using Gtk;
 
+public errordomain TatapError {
+    INVALID_FILE,
+    INVALID_EXTENSION
+}
+
+public enum TatapFileType {
+    JPEG, PNG, BMP, ICO;
+
+    public string? to_string() {
+        switch (this) {
+        case JPEG: return "jpg";
+        case PNG: return "png";
+        case BMP: return "bmp";
+        case ICO: return "ico";
+        default: return null;
+        }
+    }
+
+    public static string? to_pixbuf_type(string extension) {
+        switch (extension) {
+        case "jpeg": case "jpg": case "JPG": case "JPEG":
+        default:
+            return "jpeg";
+        case "png": case "PNG":
+            return "png";
+        case "bmp": case "BMP":
+            return "bmp";
+        case "ico": case "ICO":
+            return "ico";
+        }
+    }
+    
+    public static bool is_valid_extension(string extension) {
+        switch (extension) {
+        case "jpeg": case "jpg": case "JPG": case "JPEG":
+        case "png": case "PNG":
+        case "bmp": case "BMP":
+        case "ico": case "ICO":
+            return true;
+        default:
+            return false;
+        }
+    }
+}
+
 const IconSize ICON_SIZE = IconSize.SMALL_TOOLBAR;
 
 const string stylesheet = """
 .image-view {
     background-color: #24140e;
+}
+
+.toolbar {
+    background-color: @theme_bg_color;
 }
 """;
 
@@ -57,7 +106,9 @@ void main(string[] args) {
  * This is the main window of this program.
  */
 public class TatapWindow : Gtk.Window {
+    private HeaderBar headerbar;
     private Button open_button;
+    private Button save_button;
     
     private Button image_prev_button;
     private Button image_next_button;
@@ -72,28 +123,14 @@ public class TatapWindow : Gtk.Window {
     private Button rrotate_button;
 
     private TatapImage image;
+
+    private Revealer toolbar_revealer;
     
     private TatapFileList? file_list = null;
 
     public TatapWindow() {
-        var headerbar = new HeaderBar();
+        headerbar = new HeaderBar();
         {
-            var button_box1 = new ButtonBox(Orientation.HORIZONTAL);
-            {
-                open_button = new Button();
-                {
-                    var open_button_icon = new Image.from_icon_name("document-open-symbolic", ICON_SIZE);
-
-                    open_button.add(open_button_icon);
-                    open_button.clicked.connect(() => {
-                            on_open_button_clicked();
-                        });
-                }
-
-                button_box1.add(open_button);
-                button_box1.set_layout(ButtonBoxStyle.EXPAND);
-            }
-            
             var button_box2 = new ButtonBox(Orientation.HORIZONTAL);
             {
                 image_prev_button = new Button.from_icon_name("go-previous-symbolic", ICON_SIZE);
@@ -129,107 +166,171 @@ public class TatapWindow : Gtk.Window {
                 button_box2.set_layout(ButtonBoxStyle.EXPAND);
             }
 
-            var button_box3 = new ButtonBox(Orientation.HORIZONTAL);
+            var header_button_box_right = new ButtonBox(Orientation.HORIZONTAL);
             {
-                zoom_in_button = new Button.from_icon_name("zoom-in-symbolic", ICON_SIZE);
+                var toolbar_toggle_button = new ToggleButton();
                 {
-                    zoom_in_button.get_style_context().add_class("image_overlay_button");
-                    zoom_in_button.clicked.connect(() => {
-                            image.zoom_in();
-                            zoom_fit_button.sensitive = true;
-                        });
-                }
-            
-                zoom_out_button = new Button.from_icon_name("zoom-out-symbolic", ICON_SIZE);
-                {
-                    zoom_out_button.get_style_context().add_class("image_overlay_button");
-                    zoom_out_button.clicked.connect(() => {
-                            image.zoom_out();
-                            zoom_fit_button.sensitive = true;
-                        });
-                }
-            
-                zoom_fit_button = new Button.from_icon_name("zoom-fit-best-symbolic", ICON_SIZE);
-                {
-                    zoom_fit_button.get_style_context().add_class("image_overlay_button");
-                    zoom_fit_button.clicked.connect(() => {
-                            image.fit_image_to_window();
-                            zoom_fit_button.sensitive = false;
-                        });
-                }
-            
-                zoom_orig_button = new Button.from_icon_name("zoom-original-symbolic", ICON_SIZE);
-                {
-                    zoom_orig_button.get_style_context().add_class("image_overlay_button");
-                    zoom_orig_button.clicked.connect(() => {
-                            image.zoom_original();
-                            zoom_fit_button.sensitive = true;
-                        });
-                }
-            
-                hflip_button = new Button.from_icon_name("object-flip-horizontal-symbolic", ICON_SIZE);
-                {
-                    hflip_button.get_style_context().add_class("image_overlay_button");
-                    hflip_button.clicked.connect(() => {
-                            image.hflip();
-                        });
-                }
-            
-                vflip_button = new Button.from_icon_name("object-flip-vertical-symbolic", ICON_SIZE);
-                {
-                    vflip_button.get_style_context().add_class("image_overlay_button");
-                    vflip_button.clicked.connect(() => {
-                            image.vflip();
-                        });
-                }
-            
-                lrotate_button = new Button.from_icon_name("object-rotate-left-symbolic", ICON_SIZE);
-                {
-                    lrotate_button.get_style_context().add_class("image_overlay_button");
-                    lrotate_button.clicked.connect(() => {
-                            image.rotate_left();
-                            zoom_fit_button.sensitive = true;
-                        });
-                }
-            
-                rrotate_button = new Button.from_icon_name("object-rotate-right-symbolic", ICON_SIZE);
-                {
-                    rrotate_button.get_style_context().add_class("image_overlay_button");
-                    rrotate_button.clicked.connect(() => {
-                            image.rotate_right();
-                            zoom_fit_button.sensitive = true;
+                    var toggle_toolbar_icon = new Image.from_icon_name("view-more-symbolic", ICON_SIZE);
+
+                    toolbar_toggle_button.add(toggle_toolbar_icon);
+                    toolbar_toggle_button.toggled.connect(() => {
+                            toolbar_revealer.reveal_child = toolbar_toggle_button.active;
                         });
                 }
 
-                button_box3.pack_start(zoom_in_button);
-                button_box3.pack_start(zoom_out_button);
-                button_box3.pack_start(zoom_fit_button);
-                button_box3.pack_start(zoom_orig_button);
-                button_box3.pack_start(hflip_button);
-                button_box3.pack_start(vflip_button);
-                button_box3.pack_start(lrotate_button);
-                button_box3.pack_start(rrotate_button);
-                button_box3.set_layout(ButtonBoxStyle.EXPAND);
+                header_button_box_right.add(toolbar_toggle_button);
+                header_button_box_right.set_layout(ButtonBoxStyle.EXPAND);
             }
             
-            headerbar.pack_start(button_box1);
             headerbar.pack_start(button_box2);
-            headerbar.pack_start(button_box3);
+            headerbar.pack_end(header_button_box_right);
             headerbar.show_close_button = true;
         }
 
-        var image_container = new ScrolledWindow(null, null);
+        var window_overlay = new Overlay();
         {
-            image = new TatapImage(true);
+            toolbar_revealer = new Revealer();
             {
-                image.get_style_context().add_class("image-view");
+                var toolbar_hbox = new Box(Orientation.HORIZONTAL, 0);
+                {
+                    var button_box1 = new ButtonBox(Orientation.HORIZONTAL);
+                    {
+                        open_button = new Button();
+                        {
+                            var open_button_icon = new Image.from_icon_name("document-open-symbolic",
+                                                                            ICON_SIZE);
+
+                            open_button.add(open_button_icon);
+                            open_button.clicked.connect(() => {
+                                    on_open_button_clicked();
+                                });
+                        }
+
+                        save_button = new Button.from_icon_name("document-save-symbolic", ICON_SIZE);
+                        {
+                            save_button.clicked.connect(() => {
+                                    on_save_button_clicked();
+                                });
+                        }
+                        
+                        button_box1.add(open_button);
+                        button_box1.add(save_button);
+                        button_box1.set_layout(ButtonBoxStyle.EXPAND);
+                        button_box1.margin = 5;
+                    }
+            
+                    var button_box3 = new ButtonBox(Orientation.HORIZONTAL);
+                    {
+                        zoom_in_button = new Button.from_icon_name("zoom-in-symbolic", ICON_SIZE);
+                        {
+                            zoom_in_button.get_style_context().add_class("image_overlay_button");
+                            zoom_in_button.clicked.connect(() => {
+                                    image.zoom_in();
+                                    zoom_fit_button.sensitive = true;
+                                });
+                        }
+            
+                        zoom_out_button = new Button.from_icon_name("zoom-out-symbolic", ICON_SIZE);
+                        {
+                            zoom_out_button.get_style_context().add_class("image_overlay_button");
+                            zoom_out_button.clicked.connect(() => {
+                                    image.zoom_out();
+                                    zoom_fit_button.sensitive = true;
+                                });
+                        }
+            
+                        zoom_fit_button = new Button.from_icon_name("zoom-fit-best-symbolic", ICON_SIZE);
+                        {
+                            zoom_fit_button.get_style_context().add_class("image_overlay_button");
+                            zoom_fit_button.clicked.connect(() => {
+                                    image.fit_image_to_window();
+                                    zoom_fit_button.sensitive = false;
+                                });
+                        }
+            
+                        zoom_orig_button = new Button.from_icon_name("zoom-original-symbolic", ICON_SIZE);
+                        {
+                            zoom_orig_button.get_style_context().add_class("image_overlay_button");
+                            zoom_orig_button.clicked.connect(() => {
+                                    image.zoom_original();
+                                    zoom_fit_button.sensitive = true;
+                                });
+                        }
+            
+                        hflip_button = new Button.from_icon_name("object-flip-horizontal-symbolic", ICON_SIZE);
+                        {
+                            hflip_button.get_style_context().add_class("image_overlay_button");
+                            hflip_button.clicked.connect(() => {
+                                    image.hflip();
+                                });
+                        }
+            
+                        vflip_button = new Button.from_icon_name("object-flip-vertical-symbolic", ICON_SIZE);
+                        {
+                            vflip_button.get_style_context().add_class("image_overlay_button");
+                            vflip_button.clicked.connect(() => {
+                                    image.vflip();
+                                });
+                        }
+            
+                        lrotate_button = new Button.from_icon_name("object-rotate-left-symbolic", ICON_SIZE);
+                        {
+                            lrotate_button.get_style_context().add_class("image_overlay_button");
+                            lrotate_button.clicked.connect(() => {
+                                    image.rotate_left();
+                                    zoom_fit_button.sensitive = true;
+                                });
+                        }
+            
+                        rrotate_button = new Button.from_icon_name("object-rotate-right-symbolic", ICON_SIZE);
+                        {
+                            rrotate_button.get_style_context().add_class("image_overlay_button");
+                            rrotate_button.clicked.connect(() => {
+                                    image.rotate_right();
+                                    zoom_fit_button.sensitive = true;
+                                });
+                        }
+
+                        button_box3.pack_start(zoom_in_button);
+                        button_box3.pack_start(zoom_out_button);
+                        button_box3.pack_start(zoom_fit_button);
+                        button_box3.pack_start(zoom_orig_button);
+                        button_box3.pack_start(hflip_button);
+                        button_box3.pack_start(vflip_button);
+                        button_box3.pack_start(lrotate_button);
+                        button_box3.pack_start(rrotate_button);
+                        button_box3.set_layout(ButtonBoxStyle.EXPAND);
+                        button_box3.margin = 5;
+                    }
+                    
+                    toolbar_hbox.pack_start(button_box1, false, false);
+                    toolbar_hbox.pack_start(button_box3, false, false);
+                    toolbar_hbox.vexpand = false;
+                    toolbar_hbox.valign = Align.START;
+                    toolbar_hbox.get_style_context().add_class("toolbar");
+                }
+                
+                toolbar_revealer.add(toolbar_hbox);
+                toolbar_revealer.transition_type = RevealerTransitionType.SLIDE_DOWN;
             }
             
-            image_container.add(image);
+            var image_container = new ScrolledWindow(null, null);
+            {
+                image = new TatapImage(true);
+                {
+                    image.get_style_context().add_class("image-view");
+                }
+            
+                image_container.add(image);
+            }
+
+            window_overlay.add(image_container);
+            window_overlay.add_overlay(toolbar_revealer);
+            window_overlay.set_overlay_pass_through(toolbar_revealer, true);
         }
         
         set_titlebar(headerbar);
-        add(image_container);
+        add(window_overlay);
         set_default_size(800, 600);
         configure_event.connect((cr) => {
                 if (image.fit) {
@@ -270,6 +371,7 @@ public class TatapWindow : Gtk.Window {
             file_list.set_current(image.fileref);
             image_prev_button.sensitive = !file_list.file_is_first();
             image_next_button.sensitive = !file_list.file_is_last();
+            headerbar.title = image.fileref.get_basename();
         } catch (FileError e) {
             stderr.printf("Error: %s\n", e.message);
         } catch (Error e) {
@@ -277,6 +379,41 @@ public class TatapWindow : Gtk.Window {
         }
     }
 
+    private void save_file(string filename) {
+        debug("The file name for save: %s", filename);
+        File file = File.new_for_path(filename);
+        if (FileUtils.test(filename, FileTest.EXISTS)) {
+            DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
+            var alert = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL, Text.FILE_EXISTS);
+            var res = alert.run();
+            alert.close();
+
+            if (res != ResponseType.OK) {
+                return;
+            }
+        }
+        
+        Gdk.Pixbuf pixbuf = image.pixbuf;
+        string[] tmp = filename.split(".");
+        try {
+            string extension = tmp[tmp.length - 1];
+            if (TatapFileType.is_valid_extension(extension)) {
+                pixbuf.save(filename, TatapFileType.to_pixbuf_type(extension)); // TODO other parameters will be required.
+            } else {
+                throw new TatapError.INVALID_EXTENSION(extension);
+            }
+        } catch (TatapError e) {
+            if (e is TatapError.INVALID_EXTENSION) {
+                DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
+                var alert = new MessageDialog(this, flags, MessageType.WARNING, ButtonsType.OK, Text.INVALID_EXTENSION);
+                alert.run();
+                alert.close();
+            }
+        } catch (Error e) {
+            stderr.printf("Error: %s\n", e.message);
+        }
+    }
+    
     private void on_open_button_clicked() {
         var dialog = new FileChooserDialog(Text.FILE_CHOOSER, this, FileChooserAction.OPEN,
                                            Text.CANCEL, ResponseType.CANCEL,
@@ -285,6 +422,18 @@ public class TatapWindow : Gtk.Window {
         if (res == ResponseType.ACCEPT) {
             string filename = dialog.get_filename();
             open_file(filename);
+        }
+        dialog.close();
+    }
+
+    private void on_save_button_clicked() {
+        var dialog = new FileChooserDialog(Text.FILE_CHOOSER, this, FileChooserAction.SAVE,
+                                           Text.CANCEL, ResponseType.CANCEL,
+                                           Text.OPEN, ResponseType.ACCEPT);
+        var res = dialog.run();
+        if (res == ResponseType.ACCEPT) {
+            string filename = dialog.get_filename();
+            save_file(filename);
         }
         dialog.close();
     }
@@ -297,45 +446,57 @@ public class TatapFileList : Gee.LinkedList<File> {
     private int current_index;
     
     public TatapFileList(string dir_path) throws FileError {
+        if (dir_path == null) {
+            return;
+        }
+        
         Dir dir = Dir.open(dir_path);
-        string? name = null;
         current_index = 0;
 
-        while ((name = dir.read_name()) != null) {
-            if (name != "." && name != "..") {
-                continue;
-            }
-
-            string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, name);
-
-            if (!FileUtils.test(path, FileTest.IS_REGULAR)) {
-                continue;
-            }
-            
-            File file = File.new_for_path(path);
-            string mimetype = TatapFileUtils.get_mime_type_from_file(file);
-
-            if (mimetype == null || mimetype.split("/")[0] != "image") {
-                continue;
-            }
-            
-            bool inserted = false;
-
-            for (int i = 0; i < size; i++) {
-                if (file.get_basename().collate(get(i).get_basename()) < 0) {
-                    debug("[%d] name: %s", i, name);
-                    insert(i, file);
-                    inserted = true;
-                    break;
-                }
-            }
-
-            if (!inserted) {
-                add(file);
-            }
-        }
+        string? result = null;
+        do {
+            result = add_file_from_dir(dir, dir_path);
+        } while (result != null);
     }
 
+    public string? add_file_from_dir(Dir? dir, string dir_path) {
+        string? name = dir.read_name();
+        if (name == null) {
+            return null;
+        }
+        
+        string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, name);
+
+        if (name == "." || name == ".." || !FileUtils.test(path, FileTest.IS_REGULAR)) {
+            return "";
+        }
+            
+        File file = File.new_for_path(path);
+        add_file(file);
+        return name;
+    }
+
+    public void add_file(File file) {
+        string mimetype = TatapFileUtils.get_mime_type_from_file(file);
+
+        if (mimetype == null || mimetype.split("/")[0] != "image") {
+            return;
+        }
+            
+        bool inserted = false;
+
+        for (int i = 0; i < size; i++) {
+            if (file.get_basename().collate(get(i).get_basename()) < 0) {
+                debug("[%d] name: %s", i, file.get_basename());
+                insert(i, file);
+                inserted = true;
+                return;
+            }
+        }
+
+        add(file);
+    }
+    
     public void set_current(File file) {
         for (int i = 1; i < size; i++) {
             if (get(i).get_path() == file.get_path()) {
@@ -370,13 +531,6 @@ public class TatapFileList : Gee.LinkedList<File> {
             return null;
         }
     }
-    
-    public void print_all() {
-        debug("TatapFileList contains:\n");
-        for (int i = 0; i < size; i++) {
-            debug("    %s", get(i).get_basename());
-        }
-    }
 }
 
 /**
@@ -386,46 +540,59 @@ public class TatapFileList : Gee.LinkedList<File> {
  */
 public class TatapImage : Image {
     public static int[] zoom_level = {
-        16, 32, 64, 125, 250, 500, 750, 800, 900, 1000, 1250, 1500, 1750, 1800, 1900, 2000, 2500, 3000
+        16, 24, 32, 48, 52, 64, 72, 82, 96, 100, 120, 140, 160, 180, 200,
+        220, 240, 260, 280, 300, 320, 340, 360, 380, 400, 440, 480, 520,
+        560, 600, 640, 680, 720, 760, 800, 880, 960, 1040, 1120, 1200, 1280,
+        1360, 1440, 1520, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300,
+        2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400,
+        3500, 3600, 3700, 3800, 3900, 4000, 4100, 4200, 4300, 4400, 4500,
+        4600, 4700, 4800, 4900, 5000, 5100, 5200, 5300, 5400, 5500, 5600,
+        5700, 5800, 5900, 6000
     };
-
     public File? fileref { get; set; }
     public bool fit { get; set; }
     public double size_percent { get { return zoom_percent / 10.0; } }
     public int original_height { get { return original_pixbuf.height; } }
     public int original_width { get { return original_pixbuf.width; } }
     public bool has_image { get; set; }
-
     private Gdk.Pixbuf? original_pixbuf;
     private int zoom_percent = 1000;
     private int? original_max_size;
     private double? original_rate_x;
     private int save_width;
     private int save_height;
-    
+
     public TatapImage(bool fit) {
         this.fit = fit;
         has_image = false;
     }
 
     public void open(string filename) throws FileError, Error {
-        File file = File.new_for_path(filename);
-        FileInfo info = TatapFileUtils.get_file_info_from_file(file);
-        if (info != null && info.get_file_type() == FileType.REGULAR) {
-            string mime_type = info.get_content_type();
-            if (mime_type.split("/")[0] == "image") {
-                fileref = file;
-                original_pixbuf = new Gdk.Pixbuf.from_file(filename);
-                original_max_size = int.max(original_pixbuf.width, original_pixbuf.height);
-                original_rate_x = (double) original_pixbuf.width / (double) original_pixbuf.height;
-                save_width = -1;
-                save_height = -1;
-                fit_image_to_window();
-                has_image = true;
-                return;
+        try {
+            File file = File.new_for_path(filename);
+            FileInfo info = TatapFileUtils.get_file_info_from_file(file);
+            if (info == null || info.get_file_type() != FileType.REGULAR) {
+                throw new TatapError.INVALID_FILE(null);
             }
+                
+            string mime_type = info.get_content_type();
+
+            if (mime_type.split("/")[0] != "image") {
+                throw new TatapError.INVALID_FILE(null);
+            }
+
+            fileref = file;
+            var pixbuf = new Gdk.Pixbuf.from_file(filename);
+            original_pixbuf = pixbuf;
+            original_max_size = int.max(original_pixbuf.width, original_pixbuf.height);
+            original_rate_x = (double) original_pixbuf.width / (double) original_pixbuf.height;
+            save_width = -1;
+            save_height = -1;
+            fit_image_to_window();
+            has_image = true;
+        } catch (TatapError e) {
+            print("Warning: file type is invalid.\n");
         }
-        print("Warning: file type is invalid.\n");
     }
 
     public void zoom_original() {
@@ -658,9 +825,13 @@ namespace Text {
     const string FILE_CHOOSER = "ファイルを開く";
     const string CANCEL = "キャンセル";
     const string OPEN = "開く";
+    const string INVALID_EXTENSION = "拡張子の種類が不正です。(jpg, png, bmp, icoから選択して下さい)";
+    const  string FILE_EXISTS = "ファイルは既に存在します。上書きしてよろしいですか？";
 #else
     const string FILE_CHOOSER = "File Chooser";
     const string CANCEL = "Cancel";
     const string OPEN = "Open";
+    const string INVALID_EXTENSION = "This has invalid extension (choose from jpg, png, bmp, or ico)";
+    const string FILE_EXISTS = "File is already exists. Do you want to overwrite it?";
 #endif    
 }
