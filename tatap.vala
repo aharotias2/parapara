@@ -315,11 +315,7 @@ public class TatapFileList : Gee.LinkedList<File> {
             File file = File.new_for_path(path);
             string mimetype = TatapFileUtils.get_mime_type_from_file(file);
 
-            if (mimetype == null) {
-                continue;
-            }
-
-            if (mimetype.split("/")[0] != "image") {
+            if (mimetype == null || mimetype.split("/")[0] != "image") {
                 continue;
             }
             
@@ -333,6 +329,7 @@ public class TatapFileList : Gee.LinkedList<File> {
                     break;
                 }
             }
+
             if (!inserted) {
                 add(file);
             }
