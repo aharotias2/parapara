@@ -30,26 +30,26 @@ const string stylesheet = """
  * The Program Entry Proint.
  * It initializes Gtk, and create a new window to start program.
  */
-public class TatapMain {
-    public static void main(string[] args) {
-        Gtk.init(ref args);
-        var window = new TatapWindow();
+void main(string[] args) {
+    Gtk.init(ref args);
+    var window = new TatapWindow();
 
-        if (args.length > 1) {
-            File file = File.new_for_path(args[1]);
-            string? filepath = file.get_path();
-            string mimetype = TatapFileUtils.get_mime_type_from_file(file);
-            stdout.printf("The first argument is a file path: %s (%s)\n", filepath,
-                          mimetype != null ? "unknown type" : "");
-            if (mimetype != null && mimetype.split("/")[0] == "image") {
-                window.open_file(filepath);
-            } else {
-                stderr.printf("The argument is not a image file!\n");
-            }
+    if (args.length > 1) {
+        File file = File.new_for_path(args[1]);
+        string? filepath = file.get_path();
+        string mimetype = TatapFileUtils.get_mime_type_from_file(file);
+
+        stdout.printf("The first argument is a file path: %s (%s)\n", filepath,
+                      mimetype != null ? "unknown type" : "");
+
+        if (mimetype != null && mimetype.split("/")[0] == "image") {
+            window.open_file(filepath);
+        } else {
+            stderr.printf("The argument is not a image file!\n");
         }
-        
-        Gtk.main();
     }
+        
+    Gtk.main();
 }
 
 /**

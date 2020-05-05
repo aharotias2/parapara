@@ -17,8 +17,8 @@
 #
 # Tanaka Takayuki <msg@gorigorilinux.net>
 
-all: tatap.vala get_file_modification_time.c 
+all: tatap.vala
 	valac -o tatap --pkg=gtk+-3.0 --pkg=gee-0.8 $^
 
-ja: tatap.vala get_file_modification_time.c 
+ja: tatap.vala
 	valac -o tatap --pkg=gtk+-3.0 --pkg=gee-0.8 -D LANGUAGE_JA $^
