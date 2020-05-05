@@ -303,25 +303,38 @@ public class TatapFileList : Gee.LinkedList<File> {
 
         while ((name = dir.read_name()) != null) {
             if (name != "." && name != "..") {
-                string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, name);
-                if (FileUtils.test(path, FileTest.IS_REGULAR)) {
-                    File file = File.new_for_path(path);
-                    string mimetype = TatapFileUtils.get_mime_type_from_file(file);
-                    if (mimetype != null && mimetype.split("/")[0] == "image") {
-                        bool inserted = false;
-                        for (int i = 0; i < size; i++) {
-                            if (file.get_basename().collate(get(i).get_basename()) < 0) {
-                                debug("[%d] name: %s", i, name);
-                                insert(i, file);
-                                inserted = true;
-                                break;
-                            }
-                        }
-                        if (!inserted) {
-                            add(file);
-                        }
-                    }
+                continue;
+            }
+
+            string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, name);
+
+            if (!FileUtils.test(path, FileTest.IS_REGULAR)) {
+                continue;
+            }
+            
+            File file = File.new_for_path(path);
+            string mimetype = TatapFileUtils.get_mime_type_from_file(file);
+
+            if (mimetype == null) {
+                continue;
+            }
+
+            if (mimetype.split("/")[0] != "image") {
+                continue;
+            }
+            
+            bool inserted = false;
+
+            for (int i = 0; i < size; i++) {
+                if (file.get_basename().collate(get(i).get_basename()) < 0) {
+                    debug("[%d] name: %s", i, name);
+                    insert(i, file);
+                    inserted = true;
+                    break;
                 }
+            }
+            if (!inserted) {
+                add(file);
             }
         }
     }
