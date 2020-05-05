@@ -72,7 +72,6 @@ public class TatapWindow : Gtk.Window {
     private Button rrotate_button;
 
     private TatapImage image;
-    private Revealer image_revealer;
     
     private TatapFileList? file_list = null;
 
@@ -241,7 +240,6 @@ public class TatapWindow : Gtk.Window {
             });
         destroy.connect(Gtk.main_quit);
         show_all();
-        image_revealer.visible = false;
 
         setup_css();
     }
@@ -272,11 +270,6 @@ public class TatapWindow : Gtk.Window {
             file_list.set_current(image.fileref);
             image_prev_button.sensitive = !file_list.file_is_first();
             image_next_button.sensitive = !file_list.file_is_last();
-            image_revealer.visible = true;
-            Idle.add(() => {
-                    image_revealer.reveal_child = true;
-                    return Source.REMOVE;
-                });
         } catch (FileError e) {
             stderr.printf("Error: %s\n", e.message);
         } catch (Error e) {
