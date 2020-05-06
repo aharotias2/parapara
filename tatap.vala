@@ -73,6 +73,14 @@ const string stylesheet = """
 .toolbar {
     background-color: @theme_bg_color;
 }
+
+.message_bar {
+    background-color: @theme_bg_color;
+}
+
+.message_bar_label {
+    color: @theme_fg_color;
+}
 """;
 
 /**
@@ -106,6 +114,8 @@ void main(string[] args) {
  * This is the main window of this program.
  */
 public class TatapWindow : Gtk.Window {
+    private const string title_format = "%s (%dx%d : %.2f%%)";
+    
     private HeaderBar headerbar;
     private Button open_button;
     private Button save_button;
@@ -123,7 +133,9 @@ public class TatapWindow : Gtk.Window {
     private Button rrotate_button;
 
     private TatapImage image;
-
+    private Revealer message_revealer;
+    private Label message_label;
+    
     private Revealer toolbar_revealer;
     
     private TatapFileList? file_list = null;
@@ -226,6 +238,7 @@ public class TatapWindow : Gtk.Window {
                             zoom_in_button.get_style_context().add_class("image_overlay_button");
                             zoom_in_button.clicked.connect(() => {
                                     image.zoom_in();
+                                    set_title();
                                     zoom_fit_button.sensitive = true;
                                 });
                         }
@@ -235,6 +248,7 @@ public class TatapWindow : Gtk.Window {
                             zoom_out_button.get_style_context().add_class("image_overlay_button");
                             zoom_out_button.clicked.connect(() => {
                                     image.zoom_out();
+                                    set_title();
                                     zoom_fit_button.sensitive = true;
                                 });
                         }
@@ -244,6 +258,7 @@ public class TatapWindow : Gtk.Window {
                             zoom_fit_button.get_style_context().add_class("image_overlay_button");
                             zoom_fit_button.clicked.connect(() => {
                                     image.fit_image_to_window();
+                                    set_title();
                                     zoom_fit_button.sensitive = false;
                                 });
                         }
@@ -253,6 +268,7 @@ public class TatapWindow : Gtk.Window {
                             zoom_orig_button.get_style_context().add_class("image_overlay_button");
                             zoom_orig_button.clicked.connect(() => {
                                     image.zoom_original();
+                                    set_title();
                                     zoom_fit_button.sensitive = true;
                                 });
                         }
@@ -278,6 +294,7 @@ public class TatapWindow : Gtk.Window {
                             lrotate_button.get_style_context().add_class("image_overlay_button");
                             lrotate_button.clicked.connect(() => {
                                     image.rotate_left();
+                                    set_title();
                                     zoom_fit_button.sensitive = true;
                                 });
                         }
@@ -287,6 +304,7 @@ public class TatapWindow : Gtk.Window {
                             rrotate_button.get_style_context().add_class("image_overlay_button");
                             rrotate_button.clicked.connect(() => {
                                     image.rotate_right();
+                                    set_title();
                                     zoom_fit_button.sensitive = true;
                                 });
                         }
@@ -324,7 +342,32 @@ public class TatapWindow : Gtk.Window {
                 image_container.add(image);
             }
 
+            message_revealer = new Revealer();
+            {
+                var message_bar = new Box(Orientation.HORIZONTAL, 0);
+                {
+                    message_label = new Label("");
+                    {
+                        message_label.get_style_context().add_class("message_label");
+                        message_label.margin = 10;
+                    }
+
+                    message_bar.pack_start(message_label);
+                    message_bar.valign = Align.END;
+                    message_bar.hexpand = true;
+                    message_bar.vexpand = false;
+                    message_bar.get_style_context().add_class("message_bar");
+                }
+                    
+                message_revealer.add(message_bar);
+                message_revealer.transition_type = RevealerTransitionType.SLIDE_UP;
+                message_revealer.transition_duration = 100;
+                message_revealer.reveal_child = false;
+            }
+
             window_overlay.add(image_container);
+            window_overlay.add_overlay(message_revealer);
+            window_overlay.set_overlay_pass_through(message_revealer, true);
             window_overlay.add_overlay(toolbar_revealer);
             window_overlay.set_overlay_pass_through(toolbar_revealer, true);
         }
@@ -336,6 +379,7 @@ public class TatapWindow : Gtk.Window {
                 if (image.fit) {
                     debug("window::configure_event -> image.fit_image_to_window");
                     image.fit_image_to_window();
+                    set_title();
                 }
                 return false;
             });
@@ -345,6 +389,16 @@ public class TatapWindow : Gtk.Window {
         setup_css();
     }
 
+    private new void set_title() {
+        if (image.has_image) {
+            string title = title_format.printf(image.fileref.get_basename(),
+                                               image.original_width,
+                                               image.original_height,
+                                               image.size_percent);
+            headerbar.title = title;
+        }
+    }
+    
     private void setup_css() {
         Gdk.Screen win_screen = get_screen();
         CssProvider css_provider = new CssProvider();
@@ -371,7 +425,7 @@ public class TatapWindow : Gtk.Window {
             file_list.set_current(image.fileref);
             image_prev_button.sensitive = !file_list.file_is_first();
             image_next_button.sensitive = !file_list.file_is_last();
-            headerbar.title = image.fileref.get_basename();
+            set_title();
         } catch (FileError e) {
             stderr.printf("Error: %s\n", e.message);
         } catch (Error e) {
@@ -382,7 +436,8 @@ public class TatapWindow : Gtk.Window {
     private void save_file(string filename) {
         debug("The file name for save: %s", filename);
         File file = File.new_for_path(filename);
-        if (FileUtils.test(filename, FileTest.EXISTS)) {
+        string full_path = file.get_path();
+        if (FileUtils.test(full_path, FileTest.EXISTS)) {
             DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
             var alert = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL, Text.FILE_EXISTS);
             var res = alert.run();
@@ -394,11 +449,20 @@ public class TatapWindow : Gtk.Window {
         }
         
         Gdk.Pixbuf pixbuf = image.pixbuf;
-        string[] tmp = filename.split(".");
+        string[] tmp = full_path.split(".");
         try {
             string extension = tmp[tmp.length - 1];
             if (TatapFileType.is_valid_extension(extension)) {
-                pixbuf.save(filename, TatapFileType.to_pixbuf_type(extension)); // TODO other parameters will be required.
+                pixbuf.save(full_path, TatapFileType.to_pixbuf_type(extension)); // TODO other parameters will be required.
+                Idle.add(() => {
+                        message_label.label = Text.SAVE_MESSAGE;
+                        message_revealer.reveal_child = true;
+                        Timeout.add(2000, () => {
+                                message_revealer.reveal_child = false;
+                                return Source.REMOVE;
+                            });
+                        return Source.REMOVE;
+                    });
             } else {
                 throw new TatapError.INVALID_EXTENSION(extension);
             }
@@ -429,7 +493,7 @@ public class TatapWindow : Gtk.Window {
     private void on_save_button_clicked() {
         var dialog = new FileChooserDialog(Text.FILE_CHOOSER, this, FileChooserAction.SAVE,
                                            Text.CANCEL, ResponseType.CANCEL,
-                                           Text.OPEN, ResponseType.ACCEPT);
+                                           Text.SAVE, ResponseType.ACCEPT);
         var res = dialog.run();
         if (res == ResponseType.ACCEPT) {
             string filename = dialog.get_filename();
@@ -825,13 +889,17 @@ namespace Text {
     const string FILE_CHOOSER = "ファイルを開く";
     const string CANCEL = "キャンセル";
     const string OPEN = "開く";
+    const string SAVE = "保存";
     const string INVALID_EXTENSION = "拡張子の種類が不正です。(jpg, png, bmp, icoから選択して下さい)";
-    const  string FILE_EXISTS = "ファイルは既に存在します。上書きしてよろしいですか？";
+    const string FILE_EXISTS = "ファイルは既に存在します。上書きしてよろしいですか？";
+    const string SAVE_MESSAGE = "画像を保存しました。";
 #else
     const string FILE_CHOOSER = "File Chooser";
     const string CANCEL = "Cancel";
     const string OPEN = "Open";
+    const string SAVE = "Save";
     const string INVALID_EXTENSION = "This has invalid extension (choose from jpg, png, bmp, or ico)";
     const string FILE_EXISTS = "File is already exists. Do you want to overwrite it?";
+    const string SAVE_MESSAGE = "The file is saved.";
 #endif    
 }
