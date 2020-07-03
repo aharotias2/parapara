@@ -83,13 +83,20 @@ const string stylesheet = """
 }
 """;
 
+TatapWindow window;
+
 /**
  * The Program Entry Proint.
  * It initializes Gtk, and create a new window to start program.
  */
 void main(string[] args) {
+#if DEBUG
+    string home_dir = Environment.get_home_dir();
+    stdout = FileStream.open(home_dir + "/tatap-out.txt", "w+");
+    stderr = FileStream.open(home_dir + "/tatap-out.txt", "w+");
+#endif
     Gtk.init(ref args);
-    var window = new TatapWindow();
+    window = new TatapWindow();
 
     if (args.length > 1) {
         File file = File.new_for_path(args[1]);
@@ -105,7 +112,8 @@ void main(string[] args) {
             stderr.printf("The argument is not a image file!\n");
         }
     }
-        
+
+    window.show_all();
     Gtk.main();
 }
 
@@ -166,6 +174,7 @@ public class TatapWindow : Gtk.Window {
                     image_next_button.clicked.connect(() => {
                             if (file_list != null) {
                                 File? next_file = file_list.get_next_file(image.fileref);
+                                debug("next file: %s", next_file.get_basename());
                                 if (next_file != null) {
                                     open_file(next_file.get_path());
                                 }
@@ -371,6 +380,19 @@ public class TatapWindow : Gtk.Window {
             window_overlay.add_overlay(toolbar_revealer);
             window_overlay.set_overlay_pass_through(toolbar_revealer, true);
         }
+
+        Timeout.add(100, () => {
+                if (file_list != null) {
+                    if (file_list.size == 0) {
+                        image_prev_button.sensitive = false;
+                        image_next_button.sensitive = false;
+                    } else {
+                        image_prev_button.sensitive = !file_list.file_is_first();
+                        image_next_button.sensitive = !file_list.file_is_last();
+                    }
+                }
+                return Source.CONTINUE;
+            });
         
         set_titlebar(headerbar);
         add(window_overlay);
@@ -384,7 +406,6 @@ public class TatapWindow : Gtk.Window {
                 return false;
             });
         destroy.connect(Gtk.main_quit);
-        show_all();
 
         setup_css();
     }
@@ -399,7 +420,7 @@ public class TatapWindow : Gtk.Window {
         }
     }
     
-    private void setup_css() {
+        private void setup_css() {
         Gdk.Screen win_screen = get_screen();
         CssProvider css_provider = new CssProvider();
         try {
@@ -420,7 +441,23 @@ public class TatapWindow : Gtk.Window {
             image.open(filename);
             string new_file_dir = image.fileref.get_parent().get_path();
             if (old_file_dir == null || old_file_dir != new_file_dir) {
-                file_list = new TatapFileList(image.fileref.get_parent().get_path());
+                file_list = new TatapFileList();
+                file_list.directory_not_found.connect(() => {
+                        DialogFlags flags = DialogFlags.MODAL;
+                        var alert = new MessageDialog(this, flags, MessageType.ERROR,
+                                                      ButtonsType.OK, Text.DIR_NOT_FOUND);
+                        alert.run();
+                        alert.close();
+                        Gtk.main_quit();
+                    });
+                file_list.file_not_found.connect(() => {
+                        DialogFlags flags = DialogFlags.MODAL;
+                        var alert = new MessageDialog(this, flags, MessageType.ERROR,
+                                                      ButtonsType.OK, Text.FILE_NOT_FOUND);
+                        alert.run();
+                        alert.close();
+                    });
+                file_list.make_list(image.fileref.get_parent().get_path());
             }
             file_list.set_current(image.fileref);
             image_prev_button.sensitive = !file_list.file_is_first();
@@ -506,94 +543,192 @@ public class TatapWindow : Gtk.Window {
 /**
  * TatapFileList is a custome Gee.LinkedList<File>.
  */
-public class TatapFileList : Gee.LinkedList<File> {
-    private int current_index;
-    
-    public TatapFileList(string dir_path) throws FileError {
-        if (dir_path == null) {
-            return;
+public class TatapFileList {
+    private string dir_path = "";
+    private Gee.List<string> file_list = new Gee.LinkedList<string>();
+    private int current_index = -1;
+    private string current_name = "";
+    private bool inner_running = false;
+
+    public int size {
+        get {
+            return file_list.size;
         }
-        
+    }
+
+    public signal void directory_not_found();
+    public signal void file_not_found();
+
+    public void make_list(string dir_path) throws FileError {
+        this.dir_path = dir_path;
         Dir dir = Dir.open(dir_path);
-        current_index = 0;
-
-        string? result = null;
-        do {
-            result = add_file_from_dir(dir, dir_path);
-        } while (result != null);
-    }
-
-    public string? add_file_from_dir(Dir? dir, string dir_path) {
-        string? name = dir.read_name();
-        if (name == null) {
-            return null;
-        }
-        
-        string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, name);
-
-        if (name == "." || name == ".." || !FileUtils.test(path, FileTest.IS_REGULAR)) {
-            return "";
-        }
-            
-        File file = File.new_for_path(path);
-        add_file(file);
-        return name;
-    }
-
-    public void add_file(File file) {
-        string mimetype = TatapFileUtils.get_mime_type_from_file(file);
-
-        if (mimetype == null || mimetype.split("/")[0] != "image") {
-            return;
-        }
-            
-        bool inserted = false;
-
-        for (int i = 0; i < size; i++) {
-            if (file.get_basename().collate(get(i).get_basename()) < 0) {
-                debug("[%d] name: %s", i, file.get_basename());
-                insert(i, file);
-                inserted = true;
-                return;
+        string? name;
+        while ((name = dir.read_name()) != null) {
+            if (name != "." && name != "..") {
+                string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, name);
+                if (TatapFileUtils.check_file_is_image(path)) {
+                    file_list.add(name);
+                }
             }
         }
-
-        add(file);
+        file_list.sort((a, b) => a.collate(b));
+        Timeout.add(1000, () => {
+                make_list_async();
+                return Source.REMOVE;
+            });
     }
     
     public void set_current(File file) {
-        for (int i = 1; i < size; i++) {
-            if (get(i).get_path() == file.get_path()) {
-                current_index = i;
-                return;
-            }
+        string name = file.get_basename();
+        int new_index = file_list.index_of(name);
+        if (new_index >= 0) {
+            current_index = new_index;
+            current_name = name;
+        } else {
+            file_not_found();
         }
     }
 
     public bool file_is_first() {
-        return current_index == 0;
+        if (file_list.size == 0) {
+            return true;
+        } else {
+            return current_index == 0;
+        }
     }
 
     public bool file_is_last() {
-        return current_index == size - 1;
+        if (file_list.size == 0) {
+            return true;
+        } else {
+            return current_index == file_list.size - 1;
+        }
     }
 
     public File? get_prev_file(File file) {
-        if (current_index > 0) {
-            current_index--;
-            return get(current_index);
-        } else {
+        if (file_list.size == 0) {
             return null;
         }
+        int new_index;
+        if (current_index > 0) {
+            const int try_count = 3;
+            for (int i = 0; i < try_count; i++) {
+                if (file_list.size == 0) {
+                    return null;
+                }
+                if (current_index < file_list.size) {
+                    new_index = current_index - 1;
+                } else {
+                    new_index = file_list.size - 1;
+                }
+                string new_name = file_list.get(new_index);
+                string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, new_name);
+                if (FileUtils.test(path, FileTest.EXISTS)) {
+                    File prev_file = File.new_for_path(path);
+                    current_index = new_index;
+                    current_name = new_name;
+                    return prev_file;
+                }
+                Thread.usleep(100);
+            }
+        }
+        file_not_found();
+        return null;
     }
 
     public File? get_next_file(File file) {
-        if (current_index < size - 1) {
-            current_index++;
-            return get(current_index);
-        } else {
+        if (file_list.size == 0) {
             return null;
         }
+        int new_index;
+        const int try_count = 3;
+        for (int i = 0; i < try_count; i++) {
+            if (file_list.size == 0) {
+                return null;
+            }
+            if (current_index < file_list.size - 1) {
+                new_index = current_index + 1;
+            } else {
+                new_index = file_list.size - 1;
+            }
+            string new_name = file_list.get(new_index);
+            string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, new_name);
+            if (FileUtils.test(path, FileTest.EXISTS)) {
+                current_index = new_index;
+                current_name = new_name;
+                File? next_file = File.new_for_path(path);
+                return next_file;
+            }
+            Thread.usleep(100);
+        }
+        file_not_found();
+        return null;
+    }
+
+    private void make_list_async() {
+        try {
+            run_async_loop();
+        } catch (FileError e) {
+            directory_not_found();
+        }
+    }
+
+    private void run_async_loop() throws FileError {
+        debug("Start running async loop");
+        make_list_async_part();
+        Idle.add(() => {
+                if (inner_running) {
+                    return Source.CONTINUE;
+                } else {
+                    debug("End running async loop");
+                    Timeout.add(1000, () => {
+                            try {
+                                run_async_loop();
+                            } catch (FileError e) {
+                                directory_not_found();
+                            }
+                            return Source.REMOVE;
+                        });
+                    return Source.REMOVE;
+                }
+            });
+    }
+
+    private void make_list_async_part() throws FileError {
+        Gee.List<string> list = new Gee.LinkedList<string>();
+        Dir dir = Dir.open(dir_path);
+        string? name = null;
+        inner_running = true;
+        Idle.add(() => {
+                name = dir.read_name();
+                if (name != null) {
+                    if (name != "." && name != "..") {
+                        string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, name);
+                        if (TatapFileUtils.check_file_is_image(path)) {
+                            list.add(name);
+                        }
+                    }
+                    return Source.CONTINUE;
+                } else {
+                    int len = list.size;
+                    if (len > 0) {
+                        list.sort((a, b) => a.collate(b));
+                        int new_index = list.index_of(current_name);
+                        if (new_index >= 0) {
+                            current_index = new_index;
+                        } else if (current_index < list.size) {
+                            current_name = list.get(current_index);
+                        } else {
+                            current_index = list.size - 1;
+                            current_name = list.get(current_index);
+                        }
+                    }
+                    file_list = list;
+                    inner_running = false;
+                    debug("File list is updated");
+                    return Source.REMOVE;
+                }
+            }, 0);
     }
 }
 
@@ -869,6 +1004,16 @@ public class TatapFileUtils {
         }
         return null;
     }
+
+    public static bool check_file_is_image(string? path) {
+        File f = File.new_for_path(path);
+        string? mime_type = get_mime_type_from_file(f);
+        if (mime_type.split("/")[0] == "image") {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
 /**
@@ -893,6 +1038,8 @@ namespace Text {
     const string INVALID_EXTENSION = "拡張子の種類が不正です。(jpg, png, bmp, icoから選択して下さい)";
     const string FILE_EXISTS = "ファイルは既に存在します。上書きしてよろしいですか？";
     const string SAVE_MESSAGE = "画像を保存しました。";
+    const string DIR_NOT_FOUND = "ディレクトリが存在しません。終了します。";
+    const string FILE_NOT_FOUND = "ファイルが見つかりません。";
 #else
     const string FILE_CHOOSER = "File Chooser";
     const string CANCEL = "Cancel";
@@ -901,5 +1048,7 @@ namespace Text {
     const string INVALID_EXTENSION = "This has invalid extension (choose from jpg, png, bmp, or ico)";
     const string FILE_EXISTS = "File is already exists. Do you want to overwrite it?";
     const string SAVE_MESSAGE = "The file is saved.";
-#endif    
+    const string DIR_NOT_FOUND = "The directory is not found. Exit.";
+    const string FILE_NOT_FOUND = "The file is not found.";
+#endif
 }

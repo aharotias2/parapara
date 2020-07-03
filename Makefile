@@ -22,3 +22,6 @@ all: tatap.vala
 
 ja: tatap.vala
 	valac -o tatap --pkg=gtk+-3.0 --pkg=gee-0.8 -D LANGUAGE_JA $^
+
+debug: tatap.vala
+	valac -o tatap --pkg=gtk+-3.0 --pkg=gee-0.8 -D DEBUG $^
