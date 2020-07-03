@@ -810,7 +810,7 @@ public class TatapImage : Image {
             int h0 = parent.get_allocated_height();
             double r0 = (double) w0 / (double) h0;
             double r1 = original_rate_x;
-            if (r0 > r1) {
+            if (r0 >= r1) {
                 scale_xy(-1, h0);
             } else if (r0 < r1) {
                 scale_xy(w0, -1);
