@@ -694,6 +694,7 @@ public class TatapFileList {
                         yield;
                     }
                 } catch (FileError e) {
+                    // if file is not exist
                     file_not_found();
                     continue;
                 }
@@ -727,10 +728,12 @@ public class TatapFileList {
                     Timeout.add(1000, make_list_async.callback);
                     yield;
                 } catch (TatapError e) {
+                    // file existing check error after list made up.
                     file_not_found();
                 }
             }
         } catch (FileError e) {
+            // dir.open method failed.
             directory_not_found();
         }
     }
@@ -1009,12 +1012,24 @@ public class TatapFileUtils {
         return null;
     }
 
+    /**
+     * This function checks an argument as a file path pointing to an image file or not.
+     *
+     * when path does not exist        => throw Error
+     * when path is not a regular file => return false
+     * when path is not a image file   => return false
+     * when path is a image file       => return true
+     */
     public static bool check_file_is_image(string? path) throws FileError {
-        if (FileUtils.test(path, FileTest.EXISTS) && FileUtils.test(path, FileTest.IS_REGULAR)) {
-            File f = File.new_for_path(path);
-            string? mime_type = get_mime_type_from_file(f);
-            if (mime_type.split("/")[0] == "image") {
-                return true;
+        if (FileUtils.test(path, FileTest.EXISTS)) {
+            if (FileUtils.test(path, FileTest.IS_REGULAR)) {
+                File f = File.new_for_path(path);
+                string? mime_type = get_mime_type_from_file(f);
+                if (mime_type.split("/")[0] == "image") {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
