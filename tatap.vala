@@ -16,7 +16,7 @@
  *  Tanaka Takayuki <msg@gorigorilinux.net>
  */
 
-using Gtk;
+using Gtk, Gdk;
 
 public errordomain TatapError {
     INVALID_FILE,
@@ -141,6 +141,7 @@ public class TatapWindow : Gtk.Window {
     private Button lrotate_button;
     private Button rrotate_button;
 
+    private ScrolledWindow image_container;
     private TatapImage image;
     private Revealer message_revealer;
     private Label message_label;
@@ -148,6 +149,10 @@ public class TatapWindow : Gtk.Window {
     private Revealer toolbar_revealer;
     
     private TatapFileList? file_list = null;
+
+    private bool button_pressed = false;
+    private double x;
+    private double y;
 
     public TatapWindow() {
         headerbar = new HeaderBar();
@@ -211,175 +216,179 @@ public class TatapWindow : Gtk.Window {
 
         var window_overlay = new Overlay();
         {
-            toolbar_revealer = new Revealer();
-            {
-                var toolbar_hbox = new Box(Orientation.HORIZONTAL, 0);
-                {
-                    var button_box1 = new ButtonBox(Orientation.HORIZONTAL);
-                    {
-                        open_button = new Button();
-                        {
-                            var open_button_icon = new Image.from_icon_name("document-open-symbolic",
-                                                                            ICON_SIZE);
-
-                            open_button.add(open_button_icon);
-                            open_button.clicked.connect(() => {
-                                    on_open_button_clicked();
-                                });
-                        }
-
-                        save_button = new Button.from_icon_name("document-save-symbolic", ICON_SIZE);
-                        {
-                            save_button.clicked.connect(() => {
-                                    on_save_button_clicked();
-                                });
-                        }
-                        
-                        button_box1.add(open_button);
-                        button_box1.add(save_button);
-                        button_box1.set_layout(ButtonBoxStyle.EXPAND);
-                        button_box1.margin = 5;
-                    }
-            
-                    var button_box3 = new ButtonBox(Orientation.HORIZONTAL);
-                    {
-                        zoom_in_button = new Button.from_icon_name("zoom-in-symbolic", ICON_SIZE);
-                        {
-                            zoom_in_button.get_style_context().add_class("image_overlay_button");
-                            zoom_in_button.clicked.connect(() => {
-                                    image.zoom_in();
-                                    set_title();
-                                    zoom_fit_button.sensitive = true;
-                                });
-                        }
-            
-                        zoom_out_button = new Button.from_icon_name("zoom-out-symbolic", ICON_SIZE);
-                        {
-                            zoom_out_button.get_style_context().add_class("image_overlay_button");
-                            zoom_out_button.clicked.connect(() => {
-                                    image.zoom_out();
-                                    set_title();
-                                    zoom_fit_button.sensitive = true;
-                                });
-                        }
-            
-                        zoom_fit_button = new Button.from_icon_name("zoom-fit-best-symbolic", ICON_SIZE);
-                        {
-                            zoom_fit_button.get_style_context().add_class("image_overlay_button");
-                            zoom_fit_button.clicked.connect(() => {
-                                    image.fit_image_to_window();
-                                    set_title();
-                                    zoom_fit_button.sensitive = false;
-                                });
-                        }
-            
-                        zoom_orig_button = new Button.from_icon_name("zoom-original-symbolic", ICON_SIZE);
-                        {
-                            zoom_orig_button.get_style_context().add_class("image_overlay_button");
-                            zoom_orig_button.clicked.connect(() => {
-                                    image.zoom_original();
-                                    set_title();
-                                    zoom_fit_button.sensitive = true;
-                                });
-                        }
-            
-                        hflip_button = new Button.from_icon_name("object-flip-horizontal-symbolic", ICON_SIZE);
-                        {
-                            hflip_button.get_style_context().add_class("image_overlay_button");
-                            hflip_button.clicked.connect(() => {
-                                    image.hflip();
-                                });
-                        }
-            
-                        vflip_button = new Button.from_icon_name("object-flip-vertical-symbolic", ICON_SIZE);
-                        {
-                            vflip_button.get_style_context().add_class("image_overlay_button");
-                            vflip_button.clicked.connect(() => {
-                                    image.vflip();
-                                });
-                        }
-            
-                        lrotate_button = new Button.from_icon_name("object-rotate-left-symbolic", ICON_SIZE);
-                        {
-                            lrotate_button.get_style_context().add_class("image_overlay_button");
-                            lrotate_button.clicked.connect(() => {
-                                    image.rotate_left();
-                                    set_title();
-                                    zoom_fit_button.sensitive = true;
-                                });
-                        }
-            
-                        rrotate_button = new Button.from_icon_name("object-rotate-right-symbolic", ICON_SIZE);
-                        {
-                            rrotate_button.get_style_context().add_class("image_overlay_button");
-                            rrotate_button.clicked.connect(() => {
-                                    image.rotate_right();
-                                    set_title();
-                                    zoom_fit_button.sensitive = true;
-                                });
-                        }
-
-                        button_box3.pack_start(zoom_in_button);
-                        button_box3.pack_start(zoom_out_button);
-                        button_box3.pack_start(zoom_fit_button);
-                        button_box3.pack_start(zoom_orig_button);
-                        button_box3.pack_start(hflip_button);
-                        button_box3.pack_start(vflip_button);
-                        button_box3.pack_start(lrotate_button);
-                        button_box3.pack_start(rrotate_button);
-                        button_box3.set_layout(ButtonBoxStyle.EXPAND);
-                        button_box3.margin = 5;
-                    }
-                    
-                    toolbar_hbox.pack_start(button_box1, false, false);
-                    toolbar_hbox.pack_start(button_box3, false, false);
-                    toolbar_hbox.vexpand = false;
-                    toolbar_hbox.valign = Align.START;
-                    toolbar_hbox.get_style_context().add_class("toolbar");
-                }
-                
-                toolbar_revealer.add(toolbar_hbox);
-                toolbar_revealer.transition_type = RevealerTransitionType.SLIDE_DOWN;
-            }
-            
-            var image_container = new ScrolledWindow(null, null);
+            image_container = new ScrolledWindow(null, null);
             {
                 image = new TatapImage(true);
                 {
                     image.get_style_context().add_class("image-view");
                 }
-            
+
                 image_container.add(image);
             }
 
-            message_revealer = new Revealer();
+            var revealer_box = new Box(Orientation.VERTICAL, 0);
             {
-                var message_bar = new Box(Orientation.HORIZONTAL, 0);
+                toolbar_revealer = new Revealer();
                 {
-                    message_label = new Label("");
+                    var toolbar_hbox = new Box(Orientation.HORIZONTAL, 0);
                     {
-                        message_label.get_style_context().add_class("message_label");
-                        message_label.margin = 10;
-                    }
+                        var button_box1 = new ButtonBox(Orientation.HORIZONTAL);
+                        {
+                            open_button = new Button();
+                            {
+                                var open_button_icon = new Image.from_icon_name("document-open-symbolic",
+                                                                                ICON_SIZE);
 
-                    message_bar.pack_start(message_label);
-                    message_bar.valign = Align.END;
-                    message_bar.hexpand = true;
-                    message_bar.vexpand = false;
-                    message_bar.get_style_context().add_class("message_bar");
-                }
+                                open_button.add(open_button_icon);
+                                open_button.clicked.connect(() => {
+                                        on_open_button_clicked();
+                                    });
+                            }
+
+                            save_button = new Button.from_icon_name("document-save-symbolic", ICON_SIZE);
+                            {
+                                save_button.clicked.connect(() => {
+                                        on_save_button_clicked();
+                                    });
+                            }
+
+                            button_box1.add(open_button);
+                            button_box1.add(save_button);
+                            button_box1.set_layout(ButtonBoxStyle.EXPAND);
+                            button_box1.margin = 5;
+                        }
+            
+                        var button_box3 = new ButtonBox(Orientation.HORIZONTAL);
+                        {
+                            zoom_in_button = new Button.from_icon_name("zoom-in-symbolic", ICON_SIZE);
+                            {
+                                zoom_in_button.get_style_context().add_class("image_overlay_button");
+                                zoom_in_button.clicked.connect(() => {
+                                        image.zoom_in();
+                                        set_title_label();
+                                        zoom_fit_button.sensitive = true;
+                                    });
+                            }
+            
+                            zoom_out_button = new Button.from_icon_name("zoom-out-symbolic", ICON_SIZE);
+                            {
+                                zoom_out_button.get_style_context().add_class("image_overlay_button");
+                                zoom_out_button.clicked.connect(() => {
+                                        image.zoom_out();
+                                        set_title_label();
+                                        zoom_fit_button.sensitive = true;
+                                    });
+                            }
+            
+                            zoom_fit_button = new Button.from_icon_name("zoom-fit-best-symbolic", ICON_SIZE);
+                            {
+                                zoom_fit_button.get_style_context().add_class("image_overlay_button");
+                                zoom_fit_button.clicked.connect(() => {
+                                        image.fit_image_to_window();
+                                        set_title_label();
+                                        zoom_fit_button.sensitive = false;
+                                    });
+                            }
+            
+                            zoom_orig_button = new Button.from_icon_name("zoom-original-symbolic", ICON_SIZE);
+                            {
+                                zoom_orig_button.get_style_context().add_class("image_overlay_button");
+                                zoom_orig_button.clicked.connect(() => {
+                                        image.zoom_original();
+                                        set_title_label();
+                                        zoom_fit_button.sensitive = true;
+                                    });
+                            }
+            
+                            hflip_button = new Button.from_icon_name("object-flip-horizontal-symbolic", ICON_SIZE);
+                            {
+                                hflip_button.get_style_context().add_class("image_overlay_button");
+                                hflip_button.clicked.connect(() => {
+                                        image.hflip();
+                                    });
+                            }
+            
+                            vflip_button = new Button.from_icon_name("object-flip-vertical-symbolic", ICON_SIZE);
+                            {
+                                vflip_button.get_style_context().add_class("image_overlay_button");
+                                vflip_button.clicked.connect(() => {
+                                        image.vflip();
+                                    });
+                            }
+            
+                            lrotate_button = new Button.from_icon_name("object-rotate-left-symbolic", ICON_SIZE);
+                            {
+                                lrotate_button.get_style_context().add_class("image_overlay_button");
+                                lrotate_button.clicked.connect(() => {
+                                        image.rotate_left();
+                                        set_title_label();
+                                        zoom_fit_button.sensitive = true;
+                                    });
+                            }
+
+                            rrotate_button = new Button.from_icon_name("object-rotate-right-symbolic", ICON_SIZE);
+                            {
+                                rrotate_button.get_style_context().add_class("image_overlay_button");
+                                rrotate_button.clicked.connect(() => {
+                                        image.rotate_right();
+                                        set_title_label();
+                                        zoom_fit_button.sensitive = true;
+                                    });
+                            }
+
+                            button_box3.pack_start(zoom_in_button);
+                            button_box3.pack_start(zoom_out_button);
+                            button_box3.pack_start(zoom_fit_button);
+                            button_box3.pack_start(zoom_orig_button);
+                            button_box3.pack_start(hflip_button);
+                            button_box3.pack_start(vflip_button);
+                            button_box3.pack_start(lrotate_button);
+                            button_box3.pack_start(rrotate_button);
+                            button_box3.set_layout(ButtonBoxStyle.EXPAND);
+                            button_box3.margin = 5;
+                        }
                     
-                message_revealer.add(message_bar);
-                message_revealer.transition_type = RevealerTransitionType.SLIDE_UP;
-                message_revealer.transition_duration = 100;
-                message_revealer.reveal_child = false;
+                        toolbar_hbox.pack_start(button_box1, false, false);
+                        toolbar_hbox.pack_start(button_box3, false, false);
+                        toolbar_hbox.vexpand = false;
+                        toolbar_hbox.valign = Align.START;
+                        toolbar_hbox.get_style_context().add_class("toolbar");
+                    }
+                
+                    toolbar_revealer.add(toolbar_hbox);
+                    toolbar_revealer.transition_type = RevealerTransitionType.SLIDE_DOWN;
+                }
+
+                message_revealer = new Revealer();
+                {
+                    var message_bar = new Box(Orientation.HORIZONTAL, 0);
+                    {
+                        message_label = new Label("");
+                        {
+                            message_label.get_style_context().add_class("message_label");
+                            message_label.margin = 10;
+                        }
+
+                        message_bar.pack_start(message_label);
+                        message_bar.valign = Align.END;
+                        message_bar.hexpand = true;
+                        message_bar.vexpand = false;
+                        message_bar.get_style_context().add_class("message_bar");
+                    }
+                    
+                    message_revealer.add(message_bar);
+                    message_revealer.transition_type = RevealerTransitionType.SLIDE_UP;
+                    message_revealer.transition_duration = 100;
+                    message_revealer.reveal_child = false;
+                }
+
+                revealer_box.pack_start(toolbar_revealer, false, false);
+                revealer_box.pack_end(message_revealer, false, false);
             }
 
             window_overlay.add(image_container);
-            window_overlay.add_overlay(message_revealer);
-            window_overlay.set_overlay_pass_through(message_revealer, true);
-            window_overlay.add_overlay(toolbar_revealer);
-            window_overlay.set_overlay_pass_through(toolbar_revealer, true);
+            window_overlay.add_overlay(revealer_box);
+            window_overlay.set_overlay_pass_through(revealer_box, true);
         }
 
         Idle.add(() => {
@@ -398,11 +407,15 @@ public class TatapWindow : Gtk.Window {
         set_titlebar(headerbar);
         add(window_overlay);
         set_default_size(800, 600);
+        event.connect((ev) => {
+                handle_events(ev);
+                return false;
+            });
         configure_event.connect((cr) => {
                 if (image.fit) {
                     debug("window::configure_event -> image.fit_image_to_window");
                     image.fit_image_to_window();
-                    set_title();
+                    set_title_label();
                 }
                 return false;
             });
@@ -411,7 +424,32 @@ public class TatapWindow : Gtk.Window {
         setup_css();
     }
 
-    private new void set_title() {
+    private void handle_events(Event ev) {
+        switch (ev.type) {
+        case EventType.BUTTON_PRESS:
+            button_pressed = true;
+            x = ev.motion.x_root;
+            y = ev.motion.y_root;
+            break;
+        case EventType.BUTTON_RELEASE:
+            button_pressed = false;
+            break;
+        case EventType.MOTION_NOTIFY:
+            if (button_pressed) {
+                double new_x = ev.motion.x_root;
+                double new_y = ev.motion.y_root;
+                int x_move = (int) (new_x - x);
+                int y_move = (int) (new_y - y);
+                image_container.hadjustment.value = image_container.hadjustment.value - x_move;
+                image_container.vadjustment.value = image_container.vadjustment.value - y_move;
+                x = new_x;
+                y = new_y;
+            }
+            break;
+        }
+    }
+
+    private void set_title_label() {
         if (image.has_image) {
             string title = title_format.printf(image.fileref.get_basename(),
                                                image.original_width,
@@ -420,8 +458,8 @@ public class TatapWindow : Gtk.Window {
             headerbar.title = title;
         }
     }
-    
-        private void setup_css() {
+
+    private void setup_css() {
         Gdk.Screen win_screen = get_screen();
         CssProvider css_provider = new CssProvider();
         try {
@@ -463,7 +501,7 @@ public class TatapWindow : Gtk.Window {
             file_list.set_current(image.fileref);
             image_prev_button.sensitive = !file_list.file_is_first(true);
             image_next_button.sensitive = !file_list.file_is_last(true);
-            set_title();
+            set_title_label();
         } catch (FileError e) {
             stderr.printf("Error: %s\n", e.message);
         } catch (Error e) {
