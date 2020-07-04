@@ -20,7 +20,8 @@ using Gtk;
 
 public errordomain TatapError {
     INVALID_FILE,
-    INVALID_EXTENSION
+    INVALID_EXTENSION,
+    FILE_NOT_EXISTS
 }
 
 public enum TatapFileType {
@@ -563,12 +564,19 @@ public class TatapFileList {
         this.dir_path = dir_path;
         Dir dir = Dir.open(dir_path);
         string? name;
-        while ((name = dir.read_name()) != null) {
-            if (name != "." && name != "..") {
-                string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, name);
-                if (TatapFileUtils.check_file_is_image(path)) {
-                    file_list.add(name);
+        while (true) {
+            try {
+                while ((name = dir.read_name()) != null) {
+                    if (name != "." && name != "..") {
+                        string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, name);
+                        if (TatapFileUtils.check_file_is_image(path)) {
+                            file_list.add(name);
+                        }
+                    }
                 }
+                break;
+            } catch (FileError e) {
+                stderr.printf("FileError: %s\n", e.message);
             }
         }
         file_list.sort((a, b) => a.collate(b));
@@ -673,37 +681,54 @@ public class TatapFileList {
                 Dir dir = Dir.open(dir_path);
                 string? name = null;
                 inner_running = true;
-                while ((name = dir.read_name()) != null) {
-                    if (name != "." && name != "..") {
-                        string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, name);
-                        if (TatapFileUtils.check_file_is_image(path)) {
-                            list.add(name);
+
+                try {
+                    while ((name = dir.read_name()) != null) {
+                        if (name != "." && name != "..") {
+                            string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, name);
+                            if (TatapFileUtils.check_file_is_image(path)) {
+                                list.add(name);
+                            }
+                        }
+                        Idle.add(make_list_async.callback);
+                        yield;
+                    }
+                } catch (FileError e) {
+                    file_not_found();
+                    continue;
+                }
+
+                try {
+                    int len = list.size;
+                    if (len > 0) {
+                        for (int i = 0; i < list.size; i++) {
+                            string p = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, list.get(i));
+                            if (!FileUtils.test(p, FileTest.EXISTS)) {
+                                throw new TatapError.FILE_NOT_EXISTS("file is not found");
+                            }
+                        }
+
+                        list.sort((a, b) => a.collate(b));
+                        int new_index = list.index_of(current_name);
+                        if (new_index >= 0) {
+                            current_index = new_index;
+                        } else if (current_index < list.size) {
+                            current_name = list.get(current_index);
+                        } else {
+                            current_index = list.size - 1;
+                            current_name = list.get(current_index);
                         }
                     }
-                    Idle.add(make_list_async.callback);
+
+                    file_list = list;
+                    inner_running = false;
+                    debug("File list is updated");
+                    debug("End running async loop");
+                    Timeout.add(1000, make_list_async.callback);
                     yield;
+                } catch (TatapError e) {
+                    file_not_found();
                 }
-
-                int len = list.size;
-                if (len > 0) {
-                    list.sort((a, b) => a.collate(b));
-                    int new_index = list.index_of(current_name);
-                    if (new_index >= 0) {
-                        current_index = new_index;
-                    } else if (current_index < list.size) {
-                        current_name = list.get(current_index);
-                    } else {
-                        current_index = list.size - 1;
-                        current_name = list.get(current_index);
-                    }
-                }
-
-                file_list = list;
-                inner_running = false;
-                debug("File list is updated");
-                debug("End running async loop");
-                Timeout.add(1000, make_list_async.callback);
-                yield;
             }
         } catch (FileError e) {
             directory_not_found();
@@ -984,13 +1009,17 @@ public class TatapFileUtils {
         return null;
     }
 
-    public static bool check_file_is_image(string? path) {
-        File f = File.new_for_path(path);
-        string? mime_type = get_mime_type_from_file(f);
-        if (mime_type.split("/")[0] == "image") {
-            return true;
+    public static bool check_file_is_image(string? path) throws FileError {
+        if (FileUtils.test(path, FileTest.EXISTS) && FileUtils.test(path, FileTest.IS_REGULAR)) {
+            File f = File.new_for_path(path);
+            string? mime_type = get_mime_type_from_file(f);
+            if (mime_type.split("/")[0] == "image") {
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            return false;
+            throw new FileError.EXIST("The file path is invalid. it does not exist or is not a regular file.");
         }
     }
 }
