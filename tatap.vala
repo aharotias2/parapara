@@ -381,14 +381,14 @@ public class TatapWindow : Gtk.Window {
             window_overlay.set_overlay_pass_through(toolbar_revealer, true);
         }
 
-        Timeout.add(100, () => {
+        Idle.add(() => {
                 if (file_list != null) {
                     if (file_list.size == 0) {
                         image_prev_button.sensitive = false;
                         image_next_button.sensitive = false;
                     } else {
-                        image_prev_button.sensitive = !file_list.file_is_first();
-                        image_next_button.sensitive = !file_list.file_is_last();
+                        image_prev_button.sensitive = !file_list.file_is_first(true);
+                        image_next_button.sensitive = !file_list.file_is_last(true);
                     }
                 }
                 return Source.CONTINUE;
@@ -460,8 +460,8 @@ public class TatapWindow : Gtk.Window {
                 file_list.make_list(image.fileref.get_parent().get_path());
             }
             file_list.set_current(image.fileref);
-            image_prev_button.sensitive = !file_list.file_is_first();
-            image_next_button.sensitive = !file_list.file_is_last();
+            image_prev_button.sensitive = !file_list.file_is_first(true);
+            image_next_button.sensitive = !file_list.file_is_last(true);
             set_title();
         } catch (FileError e) {
             stderr.printf("Error: %s\n", e.message);
@@ -573,7 +573,7 @@ public class TatapFileList {
         }
         file_list.sort((a, b) => a.collate(b));
         Timeout.add(1000, () => {
-                make_list_async();
+                make_list_async.begin();
                 return Source.REMOVE;
             });
     }
@@ -589,17 +589,17 @@ public class TatapFileList {
         }
     }
 
-    public bool file_is_first() {
+    public bool file_is_first(bool default_value) {
         if (file_list.size == 0) {
-            return true;
+            return default_value;
         } else {
             return current_index == 0;
         }
     }
 
-    public bool file_is_last() {
+    public bool file_is_last(bool default_value) {
         if (file_list.size == 0) {
-            return true;
+            return default_value;
         } else {
             return current_index == file_list.size - 1;
         }
@@ -665,70 +665,49 @@ public class TatapFileList {
         return null;
     }
 
-    private void make_list_async() {
+    private async void make_list_async() {
         try {
-            run_async_loop();
-        } catch (FileError e) {
-            directory_not_found();
-        }
-    }
-
-    private void run_async_loop() throws FileError {
-        debug("Start running async loop");
-        make_list_async_part();
-        Idle.add(() => {
-                if (inner_running) {
-                    return Source.CONTINUE;
-                } else {
-                    debug("End running async loop");
-                    Timeout.add(1000, () => {
-                            try {
-                                run_async_loop();
-                            } catch (FileError e) {
-                                directory_not_found();
-                            }
-                            return Source.REMOVE;
-                        });
-                    return Source.REMOVE;
-                }
-            });
-    }
-
-    private void make_list_async_part() throws FileError {
-        Gee.List<string> list = new Gee.LinkedList<string>();
-        Dir dir = Dir.open(dir_path);
-        string? name = null;
-        inner_running = true;
-        Idle.add(() => {
-                name = dir.read_name();
-                if (name != null) {
+            while (true) {
+                debug("Start running async loop");
+                Gee.List<string> list = new Gee.LinkedList<string>();
+                Dir dir = Dir.open(dir_path);
+                string? name = null;
+                inner_running = true;
+                while ((name = dir.read_name()) != null) {
                     if (name != "." && name != "..") {
                         string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, name);
                         if (TatapFileUtils.check_file_is_image(path)) {
                             list.add(name);
                         }
                     }
-                    return Source.CONTINUE;
-                } else {
-                    int len = list.size;
-                    if (len > 0) {
-                        list.sort((a, b) => a.collate(b));
-                        int new_index = list.index_of(current_name);
-                        if (new_index >= 0) {
-                            current_index = new_index;
-                        } else if (current_index < list.size) {
-                            current_name = list.get(current_index);
-                        } else {
-                            current_index = list.size - 1;
-                            current_name = list.get(current_index);
-                        }
-                    }
-                    file_list = list;
-                    inner_running = false;
-                    debug("File list is updated");
-                    return Source.REMOVE;
+                    Idle.add(make_list_async.callback);
+                    yield;
                 }
-            }, 0);
+
+                int len = list.size;
+                if (len > 0) {
+                    list.sort((a, b) => a.collate(b));
+                    int new_index = list.index_of(current_name);
+                    if (new_index >= 0) {
+                        current_index = new_index;
+                    } else if (current_index < list.size) {
+                        current_name = list.get(current_index);
+                    } else {
+                        current_index = list.size - 1;
+                        current_name = list.get(current_index);
+                    }
+                }
+
+                file_list = list;
+                inner_running = false;
+                debug("File list is updated");
+                debug("End running async loop");
+                Timeout.add(1000, make_list_async.callback);
+                yield;
+            }
+        } catch (FileError e) {
+            directory_not_found();
+        }
     }
 }
 
