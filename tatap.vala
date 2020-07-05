@@ -157,7 +157,7 @@ public class TatapWindow : Gtk.Window {
     public TatapWindow() {
         headerbar = new HeaderBar();
         {
-            var button_box2 = new ButtonBox(Orientation.HORIZONTAL);
+            ButtonBox button_box2 = new ButtonBox(Orientation.HORIZONTAL);
             {
                 image_prev_button = new Button.from_icon_name("go-previous-symbolic", ICON_SIZE);
                 {
@@ -193,11 +193,11 @@ public class TatapWindow : Gtk.Window {
                 button_box2.set_layout(ButtonBoxStyle.EXPAND);
             }
 
-            var header_button_box_right = new ButtonBox(Orientation.HORIZONTAL);
+            ButtonBox header_button_box_right = new ButtonBox(Orientation.HORIZONTAL);
             {
-                var toolbar_toggle_button = new ToggleButton();
+                ToggleButton toolbar_toggle_button = new ToggleButton();
                 {
-                    var toggle_toolbar_icon = new Image.from_icon_name("view-more-symbolic", ICON_SIZE);
+                    Image toggle_toolbar_icon = new Image.from_icon_name("view-more-symbolic", ICON_SIZE);
 
                     toolbar_toggle_button.add(toggle_toolbar_icon);
                     toolbar_toggle_button.toggled.connect(() => {
@@ -214,7 +214,7 @@ public class TatapWindow : Gtk.Window {
             headerbar.show_close_button = true;
         }
 
-        var window_overlay = new Overlay();
+        Overlay window_overlay = new Overlay();
         {
             image_container = new ScrolledWindow(null, null);
             {
@@ -224,19 +224,23 @@ public class TatapWindow : Gtk.Window {
                 }
 
                 image_container.add(image);
+                image_container.scroll_child.connect((a, b) => {
+                        print("Scroll Event\n");
+                        return false;
+                    });
             }
 
-            var revealer_box = new Box(Orientation.VERTICAL, 0);
+            Box revealer_box = new Box(Orientation.VERTICAL, 0);
             {
                 toolbar_revealer = new Revealer();
                 {
-                    var toolbar_hbox = new Box(Orientation.HORIZONTAL, 0);
+                    Box toolbar_hbox = new Box(Orientation.HORIZONTAL, 0);
                     {
-                        var button_box1 = new ButtonBox(Orientation.HORIZONTAL);
+                        ButtonBox button_box1 = new ButtonBox(Orientation.HORIZONTAL);
                         {
                             open_button = new Button();
                             {
-                                var open_button_icon = new Image.from_icon_name("document-open-symbolic",
+                                Image open_button_icon = new Image.from_icon_name("document-open-symbolic",
                                                                                 ICON_SIZE);
 
                                 open_button.add(open_button_icon);
@@ -258,7 +262,7 @@ public class TatapWindow : Gtk.Window {
                             button_box1.margin = 5;
                         }
             
-                        var button_box3 = new ButtonBox(Orientation.HORIZONTAL);
+                        ButtonBox button_box3 = new ButtonBox(Orientation.HORIZONTAL);
                         {
                             zoom_in_button = new Button.from_icon_name("zoom-in-symbolic", ICON_SIZE);
                             {
@@ -361,7 +365,7 @@ public class TatapWindow : Gtk.Window {
 
                 message_revealer = new Revealer();
                 {
-                    var message_bar = new Box(Orientation.HORIZONTAL, 0);
+                    Box message_bar = new Box(Orientation.HORIZONTAL, 0);
                     {
                         message_label = new Label("");
                         {
@@ -408,8 +412,7 @@ public class TatapWindow : Gtk.Window {
         add(window_overlay);
         set_default_size(800, 600);
         event.connect((ev) => {
-                handle_events(ev);
-                return false;
+                return handle_events(ev);
             });
         configure_event.connect((cr) => {
                 if (image.fit) {
@@ -424,7 +427,7 @@ public class TatapWindow : Gtk.Window {
         setup_css();
     }
 
-    private void handle_events(Event ev) {
+    private bool handle_events(Event ev) {
         switch (ev.type) {
         case EventType.BUTTON_PRESS:
             button_pressed = true;
@@ -440,13 +443,24 @@ public class TatapWindow : Gtk.Window {
                 double new_y = ev.motion.y_root;
                 int x_move = (int) (new_x - x);
                 int y_move = (int) (new_y - y);
-                image_container.hadjustment.value = image_container.hadjustment.value - x_move;
-                image_container.vadjustment.value = image_container.vadjustment.value - y_move;
+                image_container.hadjustment.value -= x_move;
+                image_container.vadjustment.value -= y_move;
                 x = new_x;
                 y = new_y;
             }
             break;
+        case EventType.SCROLL:
+            if (ev.scroll.state == ModifierType.CONTROL_MASK) {
+                if (ev.scroll.direction == ScrollDirection.UP) {
+                    image.zoom_out();
+                } else if (ev.scroll.direction == ScrollDirection.DOWN) {
+                    image.zoom_in();
+                }
+                return true;
+            }
+            break;
         }
+        return false;
     }
 
     private void set_title_label() {
@@ -460,7 +474,7 @@ public class TatapWindow : Gtk.Window {
     }
 
     private void setup_css() {
-        Gdk.Screen win_screen = get_screen();
+        Screen win_screen = get_screen();
         CssProvider css_provider = new CssProvider();
         try {
             css_provider.load_from_data(stylesheet);
@@ -483,7 +497,7 @@ public class TatapWindow : Gtk.Window {
                 file_list = new TatapFileList();
                 file_list.directory_not_found.connect(() => {
                         DialogFlags flags = DialogFlags.MODAL;
-                        var alert = new MessageDialog(this, flags, MessageType.ERROR,
+                        MessageDialog alert = new MessageDialog(this, flags, MessageType.ERROR,
                                                       ButtonsType.OK, Text.DIR_NOT_FOUND);
                         alert.run();
                         alert.close();
@@ -491,7 +505,7 @@ public class TatapWindow : Gtk.Window {
                     });
                 file_list.file_not_found.connect(() => {
                         DialogFlags flags = DialogFlags.MODAL;
-                        var alert = new MessageDialog(this, flags, MessageType.ERROR,
+                        MessageDialog alert = new MessageDialog(this, flags, MessageType.ERROR,
                                                       ButtonsType.OK, Text.FILE_NOT_FOUND);
                         alert.run();
                         alert.close();
@@ -515,8 +529,8 @@ public class TatapWindow : Gtk.Window {
         string full_path = file.get_path();
         if (FileUtils.test(full_path, FileTest.EXISTS)) {
             DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
-            var alert = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL, Text.FILE_EXISTS);
-            var res = alert.run();
+            MessageDialog alert = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL, Text.FILE_EXISTS);
+            int res = alert.run();
             alert.close();
 
             if (res != ResponseType.OK) {
@@ -524,7 +538,7 @@ public class TatapWindow : Gtk.Window {
             }
         }
         
-        Gdk.Pixbuf pixbuf = image.pixbuf;
+        Pixbuf pixbuf = image.pixbuf;
         string[] tmp = full_path.split(".");
         try {
             string extension = tmp[tmp.length - 1];
@@ -545,7 +559,7 @@ public class TatapWindow : Gtk.Window {
         } catch (TatapError e) {
             if (e is TatapError.INVALID_EXTENSION) {
                 DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
-                var alert = new MessageDialog(this, flags, MessageType.WARNING, ButtonsType.OK, Text.INVALID_EXTENSION);
+                MessageDialog alert = new MessageDialog(this, flags, MessageType.WARNING, ButtonsType.OK, Text.INVALID_EXTENSION);
                 alert.run();
                 alert.close();
             }
@@ -555,10 +569,10 @@ public class TatapWindow : Gtk.Window {
     }
     
     private void on_open_button_clicked() {
-        var dialog = new FileChooserDialog(Text.FILE_CHOOSER, this, FileChooserAction.OPEN,
+        FileChooserDialog dialog = new FileChooserDialog(Text.FILE_CHOOSER, this, FileChooserAction.OPEN,
                                            Text.CANCEL, ResponseType.CANCEL,
                                            Text.OPEN, ResponseType.ACCEPT);
-        var res = dialog.run();
+        int res = dialog.run();
         if (res == ResponseType.ACCEPT) {
             string filename = dialog.get_filename();
             open_file(filename);
@@ -567,10 +581,10 @@ public class TatapWindow : Gtk.Window {
     }
 
     private void on_save_button_clicked() {
-        var dialog = new FileChooserDialog(Text.FILE_CHOOSER, this, FileChooserAction.SAVE,
+        FileChooserDialog dialog = new FileChooserDialog(Text.FILE_CHOOSER, this, FileChooserAction.SAVE,
                                            Text.CANCEL, ResponseType.CANCEL,
                                            Text.SAVE, ResponseType.ACCEPT);
-        var res = dialog.run();
+        int res = dialog.run();
         if (res == ResponseType.ACCEPT) {
             string filename = dialog.get_filename();
             save_file(filename);
@@ -635,7 +649,7 @@ public class TatapFileList {
         }
     }
 
-    public bool file_is_first(bool default_value) {
+    public bool file_is_first(bool default_value = true) {
         if (file_list.size == 0) {
             return default_value;
         } else {
@@ -643,7 +657,7 @@ public class TatapFileList {
         }
     }
 
-    public bool file_is_last(bool default_value) {
+    public bool file_is_last(bool default_value = true) {
         if (file_list.size == 0) {
             return default_value;
         } else {
@@ -675,7 +689,7 @@ public class TatapFileList {
                     current_name = new_name;
                     return prev_file;
                 }
-                Thread.usleep(100);
+                Thread.usleep(500);
             }
         }
         file_not_found();
@@ -705,7 +719,7 @@ public class TatapFileList {
                 File? next_file = File.new_for_path(path);
                 return next_file;
             }
-            Thread.usleep(100);
+            Thread.usleep(500);
         }
         file_not_found();
         return null;
@@ -799,7 +813,7 @@ public class TatapImage : Image {
     public int original_height { get { return original_pixbuf.height; } }
     public int original_width { get { return original_pixbuf.width; } }
     public bool has_image { get; set; }
-    private Gdk.Pixbuf? original_pixbuf;
+    private Pixbuf? original_pixbuf;
     private int zoom_percent = 1000;
     private int? original_max_size;
     private double? original_rate_x;
@@ -826,7 +840,7 @@ public class TatapImage : Image {
             }
 
             fileref = file;
-            var pixbuf = new Gdk.Pixbuf.from_file(filename);
+            Pixbuf pixbuf = new Pixbuf.from_file(filename);
             original_pixbuf = pixbuf;
             original_max_size = int.max(original_pixbuf.width, original_pixbuf.height);
             original_rate_x = (double) original_pixbuf.width / (double) original_pixbuf.height;
@@ -881,7 +895,7 @@ public class TatapImage : Image {
     
     public void rotate_right() {
         if (original_pixbuf != null) {
-            original_pixbuf = original_pixbuf.rotate_simple(Gdk.PixbufRotation.CLOCKWISE);
+            original_pixbuf = original_pixbuf.rotate_simple(PixbufRotation.CLOCKWISE);
             original_rate_x = (double) original_pixbuf.width / (double) original_pixbuf.height;
             if (fit) {
                 fit_image_to_window();
@@ -894,7 +908,7 @@ public class TatapImage : Image {
 
     public void rotate_left() {
         if (original_pixbuf != null) {
-            original_pixbuf = original_pixbuf.rotate_simple(Gdk.PixbufRotation.COUNTERCLOCKWISE);
+            original_pixbuf = original_pixbuf.rotate_simple(PixbufRotation.COUNTERCLOCKWISE);
             original_rate_x = (double) original_pixbuf.width / (double) original_pixbuf.height;
             if (fit) {
                 fit_image_to_window();
@@ -980,7 +994,7 @@ public class TatapImage : Image {
  * This contains image scale function.
  */
 public class PixbufUtils {
-    public static Gdk.Pixbuf scale_limited(Gdk.Pixbuf pixbuf, int size) {
+    public static Pixbuf scale_limited(Pixbuf pixbuf, int size) {
         size = int.max(10, size);
         if (pixbuf.width > pixbuf.height) {
             return scale_xy(pixbuf, size, (int) (size * ((double) pixbuf.height / pixbuf.width)));
@@ -991,9 +1005,9 @@ public class PixbufUtils {
         }            
     }
 
-    public static Gdk.Pixbuf scale_xy(Gdk.Pixbuf pixbuf, int width, int height) {
+    public static Pixbuf scale_xy(Pixbuf pixbuf, int width, int height) {
         debug("PixbufUtils.scale_xy(%d, %d -> %d, %d)", pixbuf.width, pixbuf.height, width, height);
-        return pixbuf.scale_simple(width, height, Gdk.InterpType.BILINEAR);
+        return pixbuf.scale_simple(width, height, InterpType.BILINEAR);
     }
 }
 
