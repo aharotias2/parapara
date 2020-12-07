@@ -162,6 +162,7 @@ public class TatapWindow : Gtk.Window {
                 image_prev_button = new Button.from_icon_name("go-previous-symbolic", ICON_SIZE);
                 {
                     image_prev_button.valign = Align.CENTER;
+                    image_prev_button.tooltip_text = Text.GO_PREVIOUS;
                     image_prev_button.get_style_context().add_class("image_button");
                     image_prev_button.clicked.connect(() => {
                             if (file_list != null) {
@@ -176,6 +177,7 @@ public class TatapWindow : Gtk.Window {
                 image_next_button = new Button.from_icon_name("go-next-symbolic", ICON_SIZE);
                 {
                     image_next_button.valign = Align.CENTER;
+                    image_next_button.tooltip_text = Text.GO_NEXT;
                     image_next_button.get_style_context().add_class("image_button");
                     image_next_button.clicked.connect(() => {
                             if (file_list != null) {
@@ -199,6 +201,7 @@ public class TatapWindow : Gtk.Window {
                 {
                     Image toggle_toolbar_icon = new Image.from_icon_name("view-more-symbolic", ICON_SIZE);
 
+                    toolbar_toggle_button.tooltip_text = Text.MENU;
                     toolbar_toggle_button.add(toggle_toolbar_icon);
                     toolbar_toggle_button.toggled.connect(() => {
                             toolbar_revealer.reveal_child = toolbar_toggle_button.active;
@@ -243,6 +246,7 @@ public class TatapWindow : Gtk.Window {
                                 Image open_button_icon = new Image.from_icon_name("document-open-symbolic",
                                                                                 ICON_SIZE);
 
+                                open_button.tooltip_text = Text.TOOLBAR_OPEN;
                                 open_button.add(open_button_icon);
                                 open_button.clicked.connect(() => {
                                         on_open_button_clicked();
@@ -251,6 +255,7 @@ public class TatapWindow : Gtk.Window {
 
                             save_button = new Button.from_icon_name("document-save-symbolic", ICON_SIZE);
                             {
+                                save_button.tooltip_text = Text.TOOLBAR_SAVE;
                                 save_button.clicked.connect(() => {
                                         on_save_button_clicked();
                                     });
@@ -266,6 +271,7 @@ public class TatapWindow : Gtk.Window {
                         {
                             zoom_in_button = new Button.from_icon_name("zoom-in-symbolic", ICON_SIZE);
                             {
+                                zoom_in_button.tooltip_text = Text.TOOLBAR_ZOOM_IN;
                                 zoom_in_button.get_style_context().add_class("image_overlay_button");
                                 zoom_in_button.clicked.connect(() => {
                                         image.zoom_in();
@@ -276,6 +282,7 @@ public class TatapWindow : Gtk.Window {
             
                             zoom_out_button = new Button.from_icon_name("zoom-out-symbolic", ICON_SIZE);
                             {
+                                zoom_out_button.tooltip_text = Text.TOOLBAR_ZOOM_OUT;
                                 zoom_out_button.get_style_context().add_class("image_overlay_button");
                                 zoom_out_button.clicked.connect(() => {
                                         image.zoom_out();
@@ -286,6 +293,7 @@ public class TatapWindow : Gtk.Window {
             
                             zoom_fit_button = new Button.from_icon_name("zoom-fit-best-symbolic", ICON_SIZE);
                             {
+                                zoom_fit_button.tooltip_text = Text.TOOLBAR_ZOOM_FIT;
                                 zoom_fit_button.get_style_context().add_class("image_overlay_button");
                                 zoom_fit_button.clicked.connect(() => {
                                         image.fit_image_to_window();
@@ -296,6 +304,7 @@ public class TatapWindow : Gtk.Window {
             
                             zoom_orig_button = new Button.from_icon_name("zoom-original-symbolic", ICON_SIZE);
                             {
+                                zoom_orig_button.tooltip_text = Text.TOOLBAR_ZOOM_ORIGINAL;
                                 zoom_orig_button.get_style_context().add_class("image_overlay_button");
                                 zoom_orig_button.clicked.connect(() => {
                                         image.zoom_original();
@@ -306,6 +315,7 @@ public class TatapWindow : Gtk.Window {
             
                             hflip_button = new Button.from_icon_name("object-flip-horizontal-symbolic", ICON_SIZE);
                             {
+                                hflip_button.tooltip_text = Text.TOOLBAR_HFLIP;
                                 hflip_button.get_style_context().add_class("image_overlay_button");
                                 hflip_button.clicked.connect(() => {
                                         image.hflip();
@@ -314,6 +324,7 @@ public class TatapWindow : Gtk.Window {
             
                             vflip_button = new Button.from_icon_name("object-flip-vertical-symbolic", ICON_SIZE);
                             {
+                                vflip_button.tooltip_text = Text.TOOLBAR_VFLIP;
                                 vflip_button.get_style_context().add_class("image_overlay_button");
                                 vflip_button.clicked.connect(() => {
                                         image.vflip();
@@ -322,6 +333,7 @@ public class TatapWindow : Gtk.Window {
             
                             lrotate_button = new Button.from_icon_name("object-rotate-left-symbolic", ICON_SIZE);
                             {
+                                lrotate_button.tooltip_text = Text.TOOLBAR_LROTATE;
                                 lrotate_button.get_style_context().add_class("image_overlay_button");
                                 lrotate_button.clicked.connect(() => {
                                         image.rotate_left();
@@ -332,6 +344,7 @@ public class TatapWindow : Gtk.Window {
 
                             rrotate_button = new Button.from_icon_name("object-rotate-right-symbolic", ICON_SIZE);
                             {
+                                rrotate_button.tooltip_text = Text.TOOLBAR_RROTATE;
                                 rrotate_button.get_style_context().add_class("image_overlay_button");
                                 rrotate_button.clicked.connect(() => {
                                         image.rotate_right();
@@ -1115,6 +1128,19 @@ namespace Text {
     const string SAVE_MESSAGE = "画像を保存しました。";
     const string DIR_NOT_FOUND = "ディレクトリが存在しません。終了します。";
     const string FILE_NOT_FOUND = "ファイルが見つかりません。";
+    const string GO_PREVIOUS = "前の画像";
+    const string GO_NEXT = "次の画像";
+    const string MENU = "メニュー";
+    const string TOOLBAR_OPEN = "開く";
+    const string TOOLBAR_SAVE = "保存";
+    const string TOOLBAR_ZOOM_IN = "拡大";
+    const string TOOLBAR_ZOOM_OUT = "縮小";
+    const string TOOLBAR_ZOOM_FIT = "ページに合わせる";
+    const string TOOLBAR_ZOOM_ORIGINAL = "100%";
+    const string TOOLBAR_HFLIP = "上下反転";
+    const string TOOLBAR_VFLIP = "左右反転";
+    const string TOOLBAR_LROTATE = "右回転";
+    const string TOOLBAR_RROTATE = "左回転";
 #else
     const string FILE_CHOOSER = "File Chooser";
     const string CANCEL = "Cancel";
@@ -1125,5 +1151,18 @@ namespace Text {
     const string SAVE_MESSAGE = "The file is saved.";
     const string DIR_NOT_FOUND = "The directory is not found. Exit.";
     const string FILE_NOT_FOUND = "The file is not found.";
+    const string GO_PREVIOUS = "Previous";
+    const string GO_NEXT = "Next";
+    const string MENU = "Menu";
+    const string TOOLBAR_OPEN = "Open";
+    const string TOOLBAR_SAVE = "Save";
+    const string TOOLBAR_ZOOM_IN = "Zoom in";
+    const string TOOLBAR_ZOOM_OUT = "Zoom out";
+    const string TOOLBAR_ZOOM_FIT = "Fit to the page";
+    const string TOOLBAR_ZOOM_ORIGINAL = "100%";
+    const string TOOLBAR_HFLIP = "Flip horizontally";
+    const string TOOLBAR_VFLIP = "Flip vertically";
+    const string TOOLBAR_LROTATE = "Rotate to the left";
+    const string TOOLBAR_RROTATE = "Rotate to the right";
 #endif
 }
