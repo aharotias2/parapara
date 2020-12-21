@@ -17,11 +17,11 @@
 #
 # Tanaka Takayuki <msg@gorigorilinux.net>
 
-all: tatap.vala
+all: src/*.vala src/Utils/*.vala
 	valac -o tatap --pkg=gtk+-3.0 --pkg=gee-0.8 $^
 
-ja: tatap.vala
+ja: src/*.vala src/Utils/*.vala
 	valac -o tatap --pkg=gtk+-3.0 --pkg=gee-0.8 -D LANGUAGE_JA $^
 
-debug: tatap.vala
+debug: src/*.vala src/Utils/*.vala
 	valac -o tatap --pkg=gtk+-3.0 --pkg=gee-0.8 -D DEBUG $^
