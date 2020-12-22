@@ -1,0 +1,99 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the com.github.aharotias2.tatap package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: com.github.aharotias2.tatap\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-12-22 22:34+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/TatapWindow.vala:85
+msgid "Previous"
+msgstr ""
+
+#: src/TatapWindow.vala:100
+msgid "Next"
+msgstr ""
+
+#: src/TatapWindow.vala:124
+msgid "Menu"
+msgstr ""
+
+#: src/TatapWindow.vala:169 src/TatapWindow.vala:507 src/TatapWindow.vala:519
+msgid "Open"
+msgstr ""
+
+#: src/TatapWindow.vala:178 src/TatapWindow.vala:517
+msgid "Save as…"
+msgstr ""
+
+#: src/TatapWindow.vala:194
+msgid "Zoom in"
+msgstr ""
+
+#: src/TatapWindow.vala:205
+msgid "Zoom out"
+msgstr ""
+
+#: src/TatapWindow.vala:216
+msgid "Fit to the page"
+msgstr ""
+
+#: src/TatapWindow.vala:227
+msgid "100%"
+msgstr ""
+
+#: src/TatapWindow.vala:238
+msgid "Flip horizontally"
+msgstr ""
+
+#: src/TatapWindow.vala:247
+msgid "Flip vertically"
+msgstr ""
+
+#: src/TatapWindow.vala:256
+msgid "Rotate to the left"
+msgstr ""
+
+#: src/TatapWindow.vala:267
+msgid "Rotate to the right"
+msgstr ""
+
+#: src/TatapWindow.vala:434
+msgid "The directory does not found. Exiting."
+msgstr ""
+
+#: src/TatapWindow.vala:442
+msgid "The file does not found."
+msgstr ""
+
+#: src/TatapWindow.vala:465
+msgid "File already exists. Do you want to overwrite it?"
+msgstr ""
+
+#. TODO other parameters will be required.
+#: src/TatapWindow.vala:481
+msgid "The file is saved."
+msgstr ""
+
+#: src/TatapWindow.vala:495
+msgid "This has invalid extension (choose from jpg, png, bmp, or ico)"
+msgstr ""
+
+#: src/TatapWindow.vala:505
+msgid "Choose file to open"
+msgstr ""
+
+#: src/TatapWindow.vala:506 src/TatapWindow.vala:518
+msgid "Cancel"
+msgstr ""

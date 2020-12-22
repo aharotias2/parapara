@@ -82,7 +82,7 @@ public class TatapWindow : Gtk.Window {
                 image_prev_button = new Button.from_icon_name("go-previous-symbolic", ICON_SIZE);
                 {
                     image_prev_button.valign = Align.CENTER;
-                    image_prev_button.tooltip_text = Text.GO_PREVIOUS;
+                    image_prev_button.tooltip_text = _("Previous");
                     image_prev_button.get_style_context().add_class("image_button");
                     image_prev_button.clicked.connect(() => {
                             if (file_list != null) {
@@ -97,7 +97,7 @@ public class TatapWindow : Gtk.Window {
                 image_next_button = new Button.from_icon_name("go-next-symbolic", ICON_SIZE);
                 {
                     image_next_button.valign = Align.CENTER;
-                    image_next_button.tooltip_text = Text.GO_NEXT;
+                    image_next_button.tooltip_text = _("Next");
                     image_next_button.get_style_context().add_class("image_button");
                     image_next_button.clicked.connect(() => {
                             if (file_list != null) {
@@ -121,7 +121,7 @@ public class TatapWindow : Gtk.Window {
                 {
                     Image toggle_toolbar_icon = new Image.from_icon_name("view-more-symbolic", ICON_SIZE);
 
-                    toolbar_toggle_button.tooltip_text = Text.MENU;
+                    toolbar_toggle_button.tooltip_text = _("Menu");
                     toolbar_toggle_button.add(toggle_toolbar_icon);
                     toolbar_toggle_button.toggled.connect(() => {
                             toolbar_revealer.reveal_child = toolbar_toggle_button.active;
@@ -166,7 +166,7 @@ public class TatapWindow : Gtk.Window {
                                 Image open_button_icon = new Image.from_icon_name("document-open-symbolic",
                                                                                 ICON_SIZE);
 
-                                open_button.tooltip_text = Text.TOOLBAR_OPEN;
+                                open_button.tooltip_text = _("Open");
                                 open_button.add(open_button_icon);
                                 open_button.clicked.connect(() => {
                                         on_open_button_clicked();
@@ -175,7 +175,7 @@ public class TatapWindow : Gtk.Window {
 
                             save_button = new Button.from_icon_name("document-save-symbolic", ICON_SIZE);
                             {
-                                save_button.tooltip_text = Text.TOOLBAR_SAVE;
+                                save_button.tooltip_text = _("Save as…");
                                 save_button.clicked.connect(() => {
                                         on_save_button_clicked();
                                     });
@@ -191,7 +191,7 @@ public class TatapWindow : Gtk.Window {
                         {
                             zoom_in_button = new Button.from_icon_name("zoom-in-symbolic", ICON_SIZE);
                             {
-                                zoom_in_button.tooltip_text = Text.TOOLBAR_ZOOM_IN;
+                                zoom_in_button.tooltip_text = _("Zoom in");
                                 zoom_in_button.get_style_context().add_class("image_overlay_button");
                                 zoom_in_button.clicked.connect(() => {
                                         image.zoom_in();
@@ -202,7 +202,7 @@ public class TatapWindow : Gtk.Window {
             
                             zoom_out_button = new Button.from_icon_name("zoom-out-symbolic", ICON_SIZE);
                             {
-                                zoom_out_button.tooltip_text = Text.TOOLBAR_ZOOM_OUT;
+                                zoom_out_button.tooltip_text = _("Zoom out");
                                 zoom_out_button.get_style_context().add_class("image_overlay_button");
                                 zoom_out_button.clicked.connect(() => {
                                         image.zoom_out();
@@ -213,7 +213,7 @@ public class TatapWindow : Gtk.Window {
             
                             zoom_fit_button = new Button.from_icon_name("zoom-fit-best-symbolic", ICON_SIZE);
                             {
-                                zoom_fit_button.tooltip_text = Text.TOOLBAR_ZOOM_FIT;
+                                zoom_fit_button.tooltip_text = _("Fit to the page");
                                 zoom_fit_button.get_style_context().add_class("image_overlay_button");
                                 zoom_fit_button.clicked.connect(() => {
                                         image.fit_image_to_window();
@@ -224,7 +224,7 @@ public class TatapWindow : Gtk.Window {
             
                             zoom_orig_button = new Button.from_icon_name("zoom-original-symbolic", ICON_SIZE);
                             {
-                                zoom_orig_button.tooltip_text = Text.TOOLBAR_ZOOM_ORIGINAL;
+                                zoom_orig_button.tooltip_text = _("100%");
                                 zoom_orig_button.get_style_context().add_class("image_overlay_button");
                                 zoom_orig_button.clicked.connect(() => {
                                         image.zoom_original();
@@ -235,7 +235,7 @@ public class TatapWindow : Gtk.Window {
             
                             hflip_button = new Button.from_icon_name("object-flip-horizontal-symbolic", ICON_SIZE);
                             {
-                                hflip_button.tooltip_text = Text.TOOLBAR_HFLIP;
+                                hflip_button.tooltip_text = _("Flip horizontally");
                                 hflip_button.get_style_context().add_class("image_overlay_button");
                                 hflip_button.clicked.connect(() => {
                                         image.hflip();
@@ -244,7 +244,7 @@ public class TatapWindow : Gtk.Window {
             
                             vflip_button = new Button.from_icon_name("object-flip-vertical-symbolic", ICON_SIZE);
                             {
-                                vflip_button.tooltip_text = Text.TOOLBAR_VFLIP;
+                                vflip_button.tooltip_text = _("Flip vertically");
                                 vflip_button.get_style_context().add_class("image_overlay_button");
                                 vflip_button.clicked.connect(() => {
                                         image.vflip();
@@ -253,7 +253,7 @@ public class TatapWindow : Gtk.Window {
             
                             lrotate_button = new Button.from_icon_name("object-rotate-left-symbolic", ICON_SIZE);
                             {
-                                lrotate_button.tooltip_text = Text.TOOLBAR_LROTATE;
+                                lrotate_button.tooltip_text = _("Rotate to the left");
                                 lrotate_button.get_style_context().add_class("image_overlay_button");
                                 lrotate_button.clicked.connect(() => {
                                         image.rotate_left();
@@ -264,7 +264,7 @@ public class TatapWindow : Gtk.Window {
 
                             rrotate_button = new Button.from_icon_name("object-rotate-right-symbolic", ICON_SIZE);
                             {
-                                rrotate_button.tooltip_text = Text.TOOLBAR_RROTATE;
+                                rrotate_button.tooltip_text = _("Rotate to the right");
                                 rrotate_button.get_style_context().add_class("image_overlay_button");
                                 rrotate_button.clicked.connect(() => {
                                         image.rotate_right();
@@ -431,7 +431,7 @@ public class TatapWindow : Gtk.Window {
                 file_list.directory_not_found.connect(() => {
                         DialogFlags flags = DialogFlags.MODAL;
                         MessageDialog alert = new MessageDialog(this, flags, MessageType.ERROR,
-                                                      ButtonsType.OK, Text.DIR_NOT_FOUND);
+                                                      ButtonsType.OK, _("The directory does not found. Exiting."));
                         alert.run();
                         alert.close();
                         Gtk.main_quit();
@@ -439,7 +439,7 @@ public class TatapWindow : Gtk.Window {
                 file_list.file_not_found.connect(() => {
                         DialogFlags flags = DialogFlags.MODAL;
                         MessageDialog alert = new MessageDialog(this, flags, MessageType.ERROR,
-                                                      ButtonsType.OK, Text.FILE_NOT_FOUND);
+                                                      ButtonsType.OK, _("The file does not found."));
                         alert.run();
                         alert.close();
                     });
@@ -462,7 +462,7 @@ public class TatapWindow : Gtk.Window {
         string full_path = file.get_path();
         if (FileUtils.test(full_path, FileTest.EXISTS)) {
             DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
-            MessageDialog alert = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL, Text.FILE_EXISTS);
+            MessageDialog alert = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL, _("File already exists. Do you want to overwrite it?"));
             int res = alert.run();
             alert.close();
 
@@ -478,7 +478,7 @@ public class TatapWindow : Gtk.Window {
             if (TatapFileType.is_valid_extension(extension)) {
                 pixbuf.save(full_path, TatapFileType.to_pixbuf_type(extension)); // TODO other parameters will be required.
                 Idle.add(() => {
-                        message_label.label = Text.SAVE_MESSAGE;
+                        message_label.label = _("The file is saved.");
                         message_revealer.reveal_child = true;
                         Timeout.add(2000, () => {
                                 message_revealer.reveal_child = false;
@@ -492,7 +492,7 @@ public class TatapWindow : Gtk.Window {
         } catch (TatapError e) {
             if (e is TatapError.INVALID_EXTENSION) {
                 DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
-                MessageDialog alert = new MessageDialog(this, flags, MessageType.WARNING, ButtonsType.OK, Text.INVALID_EXTENSION);
+                MessageDialog alert = new MessageDialog(this, flags, MessageType.WARNING, ButtonsType.OK, _("This has invalid extension (choose from jpg, png, bmp, or ico)"));
                 alert.run();
                 alert.close();
             }
@@ -502,9 +502,9 @@ public class TatapWindow : Gtk.Window {
     }
     
     private void on_open_button_clicked() {
-        FileChooserDialog dialog = new FileChooserDialog(Text.FILE_CHOOSER, this, FileChooserAction.OPEN,
-                                           Text.CANCEL, ResponseType.CANCEL,
-                                           Text.OPEN, ResponseType.ACCEPT);
+        FileChooserDialog dialog = new FileChooserDialog(_("Choose file to open"), this, FileChooserAction.OPEN,
+                                           _("Cancel"), ResponseType.CANCEL,
+                                           _("Open"), ResponseType.ACCEPT);
         int res = dialog.run();
         if (res == ResponseType.ACCEPT) {
             string filename = dialog.get_filename();
@@ -514,9 +514,9 @@ public class TatapWindow : Gtk.Window {
     }
 
     private void on_save_button_clicked() {
-        FileChooserDialog dialog = new FileChooserDialog(Text.FILE_CHOOSER, this, FileChooserAction.SAVE,
-                                           Text.CANCEL, ResponseType.CANCEL,
-                                           Text.SAVE, ResponseType.ACCEPT);
+        FileChooserDialog dialog = new FileChooserDialog(_("Save as…"), this, FileChooserAction.SAVE,
+                                           _("Cancel"), ResponseType.CANCEL,
+                                           _("Open"), ResponseType.ACCEPT);
         int res = dialog.run();
         if (res == ResponseType.ACCEPT) {
             string filename = dialog.get_filename();
