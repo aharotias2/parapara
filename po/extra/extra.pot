@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-22 22:48+0900\n"
+"POT-Creation-Date: 2020-12-23 21:29+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,8 +17,20 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/tatap.desktop.in:3
-msgid "tatap"
+#: data/tatap.appdata.xml.in:7 data/tatap.desktop.in:3
+msgid "Tatap"
+msgstr ""
+
+#: data/tatap.appdata.xml.in:8
+msgid "An image viewer without library"
+msgstr ""
+
+#: data/tatap.appdata.xml.in:10
+msgid "An image viewer that supports jpg, png, bmp, and ico files."
+msgstr ""
+
+#: data/tatap.appdata.xml.in:53
+msgid "Tanaka Takayuki"
 msgstr ""
 
 #: data/tatap.desktop.in:4
