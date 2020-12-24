@@ -1,0 +1,51 @@
+# Japanese translations for extra package.
+# Copyright (C) 2020 THE extra'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the extra package.
+# Automatically generated, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: extra\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-12-23 21:29+0900\n"
+"PO-Revision-Date: 2020-12-23 21:31+0900\n"
+"Last-Translator: Ryo Nakano <ryonakaknock3@gmail.com>\n"
+"Language-Team: none\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 2.3\n"
+
+#: data/tatap.appdata.xml.in:7 data/tatap.desktop.in:3
+msgid "Tatap"
+msgstr "Tatap"
+
+#: data/tatap.appdata.xml.in:8
+msgid "An image viewer without library"
+msgstr "ライブラリー機能のない画像ビューアー"
+
+#: data/tatap.appdata.xml.in:10
+msgid "An image viewer that supports jpg, png, bmp, and ico files."
+msgstr "jpg、png、bmp、、ico ファイルに対応する画像ビューアーです。"
+
+#: data/tatap.appdata.xml.in:53
+msgid "Tanaka Takayuki"
+msgstr "Tanaka Takayuki"
+
+#: data/tatap.desktop.in:4
+msgid "Image Viewer"
+msgstr "画像ビューアー"
+
+#: data/tatap.desktop.in:5
+msgid "View image files"
+msgstr "画像ファイルを表示します"
+
+#: data/tatap.desktop.in:8
+msgid "com.github.aharotias2.tatap"
+msgstr "com.github.aharotias2.tatap"
+
+#: data/tatap.desktop.in:13
+msgid "Picture;Image;Viewer;"
+msgstr "Picture;Image;Viewer;ピクチャー;画像;イメージ;ビューアー;ビューワー;"
