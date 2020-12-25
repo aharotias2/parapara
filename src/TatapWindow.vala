@@ -168,36 +168,36 @@ public class TatapWindow : Gtk.Window {
 
     private bool handle_events(Event ev) {
         switch (ev.type) {
-        case EventType.BUTTON_PRESS:
-            button_pressed = true;
-            x = ev.motion.x_root;
-            y = ev.motion.y_root;
-            break;
-        case EventType.BUTTON_RELEASE:
-            button_pressed = false;
-            break;
-        case EventType.MOTION_NOTIFY:
-            if (button_pressed) {
-                double new_x = ev.motion.x_root;
-                double new_y = ev.motion.y_root;
-                int x_move = (int) (new_x - x);
-                int y_move = (int) (new_y - y);
-                image_container.hadjustment.value -= x_move;
-                image_container.vadjustment.value -= y_move;
-                x = new_x;
-                y = new_y;
-            }
-            break;
-        case EventType.SCROLL:
-            if (ev.scroll.state == ModifierType.CONTROL_MASK) {
-                if (ev.scroll.direction == ScrollDirection.UP) {
-                    image.zoom_out();
-                } else if (ev.scroll.direction == ScrollDirection.DOWN) {
-                    image.zoom_in();
+            case EventType.BUTTON_PRESS:
+                button_pressed = true;
+                x = ev.motion.x_root;
+                y = ev.motion.y_root;
+                break;
+            case EventType.BUTTON_RELEASE:
+                button_pressed = false;
+                break;
+            case EventType.MOTION_NOTIFY:
+                if (button_pressed) {
+                    double new_x = ev.motion.x_root;
+                    double new_y = ev.motion.y_root;
+                    int x_move = (int) (new_x - x);
+                    int y_move = (int) (new_y - y);
+                    image_container.hadjustment.value -= x_move;
+                    image_container.vadjustment.value -= y_move;
+                    x = new_x;
+                    y = new_y;
                 }
-                return true;
-            }
-            break;
+                break;
+            case EventType.SCROLL:
+                if (ev.scroll.state == ModifierType.CONTROL_MASK) {
+                    if (ev.scroll.direction == ScrollDirection.UP) {
+                        image.zoom_out();
+                    } else if (ev.scroll.direction == ScrollDirection.DOWN) {
+                        image.zoom_in();
+                    }
+                    return true;
+                }
+                break;
         }
         return false;
     }
@@ -235,20 +235,20 @@ public class TatapWindow : Gtk.Window {
             if (old_file_dir == null || old_file_dir != new_file_dir) {
                 file_list = new TatapFileList();
                 file_list.directory_not_found.connect(() => {
-                        DialogFlags flags = DialogFlags.MODAL;
-                        MessageDialog alert = new MessageDialog(this, flags, MessageType.ERROR,
-                                                      ButtonsType.OK, _("The directory does not found. Exiting."));
-                        alert.run();
-                        alert.close();
-                        Gtk.main_quit();
-                    });
+                    DialogFlags flags = DialogFlags.MODAL;
+                    MessageDialog alert = new MessageDialog(this, flags, MessageType.ERROR,
+                                                    ButtonsType.OK, _("The directory does not found. Exiting."));
+                    alert.run();
+                    alert.close();
+                    Gtk.main_quit();
+                });
                 file_list.file_not_found.connect(() => {
-                        DialogFlags flags = DialogFlags.MODAL;
-                        MessageDialog alert = new MessageDialog(this, flags, MessageType.ERROR,
-                                                      ButtonsType.OK, _("The file does not found."));
-                        alert.run();
-                        alert.close();
-                    });
+                    DialogFlags flags = DialogFlags.MODAL;
+                    MessageDialog alert = new MessageDialog(this, flags, MessageType.ERROR,
+                                                    ButtonsType.OK, _("The file does not found."));
+                    alert.run();
+                    alert.close();
+                });
                 file_list.make_list(image.fileref.get_parent().get_path());
             }
             file_list.set_current(image.fileref);
@@ -284,14 +284,14 @@ public class TatapWindow : Gtk.Window {
             if (TatapFileType.is_valid_extension(extension)) {
                 pixbuf.save(full_path, TatapFileType.to_pixbuf_type(extension)); // TODO other parameters will be required.
                 Idle.add(() => {
-                        message_label.label = _("The file is saved.");
-                        message_revealer.reveal_child = true;
-                        Timeout.add(2000, () => {
-                                message_revealer.reveal_child = false;
-                                return Source.REMOVE;
-                            });
+                    message_label.label = _("The file is saved.");
+                    message_revealer.reveal_child = true;
+                    Timeout.add(2000, () => {
+                        message_revealer.reveal_child = false;
                         return Source.REMOVE;
                     });
+                    return Source.REMOVE;
+                });
             } else {
                 throw new TatapError.INVALID_EXTENSION(extension);
             }
