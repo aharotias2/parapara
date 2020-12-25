@@ -46,27 +46,16 @@ public class TatapWindow : Gtk.Window {
     private const string title_format = "%s (%dx%d : %.2f%%)";
     
     private HeaderBar headerbar;
-    private Button open_button;
-    private Button save_button;
 
     private NavigationBox navigation_box;
     
-    private Button zoom_in_button;
-    private Button zoom_out_button;
-    private Button zoom_fit_button;
-    private Button zoom_orig_button;
-    private Button hflip_button;
-    private Button vflip_button;
-    private Button lrotate_button;
-    private Button rrotate_button;
-
     private ScrolledWindow image_container;
     public TatapImage image { get; private set; }
     private Revealer message_revealer;
     private Label message_label;
     
     private Revealer toolbar_revealer;
-    
+
     public TatapFileList? file_list { get; private set; default = null; }
 
     private bool button_pressed = false;
@@ -74,8 +63,10 @@ public class TatapWindow : Gtk.Window {
     private double y;
 
     public TatapWindow() {
-        navigation_box = new NavigationBox (this);
+        /* previous/next buttons at the left of the headerbar */
+        navigation_box = new NavigationBox(this);
 
+        /* menu button at the right of the headerbar */
         var toggle_toolbar_icon = new Image.from_icon_name("view-more-symbolic", ICON_SIZE);
         var toolbar_toggle_button = new ToggleButton() {
             tooltip_text = _("Menu")
@@ -89,12 +80,14 @@ public class TatapWindow : Gtk.Window {
         header_button_box_right.add(toolbar_toggle_button);
         header_button_box_right.set_layout(ButtonBoxStyle.EXPAND);
 
+        /* the headerbar itself */
         headerbar = new HeaderBar() {
             show_close_button = true
         };
         headerbar.pack_start(navigation_box);
         headerbar.pack_end(header_button_box_right);
 
+        /* image area in the center of the window */
         image = new TatapImage(true);
         image.get_style_context().add_class("image-view");
 
@@ -105,133 +98,10 @@ public class TatapWindow : Gtk.Window {
             return false;
         });
 
-        var open_button_icon = new Image.from_icon_name("document-open-symbolic",
-        ICON_SIZE);
+        /* contain buttons that can be opened from the menu */
+        toolbar_revealer = new ToolBarRevealer(this);
 
-        open_button = new Button() {
-            tooltip_text = _("Open")
-        };
-        open_button.add(open_button_icon);
-        open_button.clicked.connect(() => {
-            on_open_button_clicked();
-        });
-
-        save_button = new Button.from_icon_name("document-save-symbolic", ICON_SIZE) {
-            tooltip_text = _("Save as…")
-        };
-        save_button.clicked.connect(() => {
-            on_save_button_clicked();
-        });
-
-        var button_box1 = new ButtonBox(Orientation.HORIZONTAL) {
-            margin = 5
-        };
-        button_box1.add(open_button);
-        button_box1.add(save_button);
-        button_box1.set_layout(ButtonBoxStyle.EXPAND);
-
-        zoom_in_button = new Button.from_icon_name("zoom-in-symbolic", ICON_SIZE) {
-            tooltip_text = _("Zoom in")
-        };
-        zoom_in_button.get_style_context().add_class("image_overlay_button");
-        zoom_in_button.clicked.connect(() => {
-            image.zoom_in();
-            set_title_label();
-            zoom_fit_button.sensitive = true;
-        });
-
-        zoom_out_button = new Button.from_icon_name("zoom-out-symbolic", ICON_SIZE) {
-            tooltip_text = _("Zoom out")
-        };
-        zoom_out_button.get_style_context().add_class("image_overlay_button");
-        zoom_out_button.clicked.connect(() => {
-            image.zoom_out();
-            set_title_label();
-            zoom_fit_button.sensitive = true;
-        });
-
-        zoom_fit_button = new Button.from_icon_name("zoom-fit-best-symbolic", ICON_SIZE) {
-            tooltip_text = _("Fit to the page")
-        };
-        zoom_fit_button.get_style_context().add_class("image_overlay_button");
-        zoom_fit_button.clicked.connect(() => {
-            image.fit_image_to_window();
-            set_title_label();
-            zoom_fit_button.sensitive = false;
-        });
-
-        zoom_orig_button = new Button.from_icon_name("zoom-original-symbolic", ICON_SIZE) {
-            tooltip_text = _("100%")
-        };
-        zoom_orig_button.get_style_context().add_class("image_overlay_button");
-        zoom_orig_button.clicked.connect(() => {
-            image.zoom_original();
-            set_title_label();
-            zoom_fit_button.sensitive = true;
-        });
-
-        hflip_button = new Button.from_icon_name("object-flip-horizontal-symbolic", ICON_SIZE) {
-            tooltip_text = _("Flip horizontally")
-        };
-        hflip_button.get_style_context().add_class("image_overlay_button");
-        hflip_button.clicked.connect(() => {
-            image.hflip();
-        });
-
-        vflip_button = new Button.from_icon_name("object-flip-vertical-symbolic", ICON_SIZE) {
-            tooltip_text = _("Flip vertically")
-        };
-        vflip_button.get_style_context().add_class("image_overlay_button");
-        vflip_button.clicked.connect(() => {
-            image.vflip();
-        });
-
-        lrotate_button = new Button.from_icon_name("object-rotate-left-symbolic", ICON_SIZE) {
-            tooltip_text = _("Rotate to the left")
-        };
-        lrotate_button.get_style_context().add_class("image_overlay_button");
-        lrotate_button.clicked.connect(() => {
-            image.rotate_left();
-            set_title_label();
-            zoom_fit_button.sensitive = true;
-        });
-
-        rrotate_button = new Button.from_icon_name("object-rotate-right-symbolic", ICON_SIZE) {
-            tooltip_text = _("Rotate to the right")
-        };
-        rrotate_button.get_style_context().add_class("image_overlay_button");
-        rrotate_button.clicked.connect(() => {
-            image.rotate_right();
-            set_title_label();
-            zoom_fit_button.sensitive = true;
-        });
-
-        var button_box3 = new ButtonBox(Orientation.HORIZONTAL) {
-            margin = 5
-        };
-        button_box3.pack_start(zoom_in_button);
-        button_box3.pack_start(zoom_out_button);
-        button_box3.pack_start(zoom_fit_button);
-        button_box3.pack_start(zoom_orig_button);
-        button_box3.pack_start(hflip_button);
-        button_box3.pack_start(vflip_button);
-        button_box3.pack_start(lrotate_button);
-        button_box3.pack_start(rrotate_button);
-        button_box3.set_layout(ButtonBoxStyle.EXPAND);
-
-        var toolbar_hbox = new Box(Orientation.HORIZONTAL, 0) {
-            vexpand = false,
-            valign = Align.START
-        };
-        toolbar_hbox.pack_start(button_box1, false, false);
-        toolbar_hbox.pack_start(button_box3, false, false);
-        toolbar_hbox.get_style_context().add_class("toolbar");
-
-        toolbar_revealer = new Revealer() {
-            transition_type = RevealerTransitionType.SLIDE_DOWN
-        };
-        toolbar_revealer.add(toolbar_hbox);
-
+        /* revealer showing error messages */
         message_label = new Label("") {
             margin = 10
         };
@@ -256,10 +126,13 @@ public class TatapWindow : Gtk.Window {
         revealer_box.pack_start(toolbar_revealer, false, false);
         revealer_box.pack_end(message_revealer, false, false);
 
+        /* Add images and revealer into overlay */
         var window_overlay = new Overlay();
         window_overlay.add(image_container);
         window_overlay.add_overlay(revealer_box);
         window_overlay.set_overlay_pass_through(revealer_box, true);
+
+        add(window_overlay);
 
         Idle.add(() => {
             if (file_list != null) {
@@ -276,7 +149,6 @@ public class TatapWindow : Gtk.Window {
         });
         
         set_titlebar(headerbar);
-        add(window_overlay);
         set_default_size(800, 600);
         event.connect((ev) => {
             return handle_events(ev);
@@ -330,7 +202,7 @@ public class TatapWindow : Gtk.Window {
         return false;
     }
 
-    private void set_title_label() {
+    public void set_title_label() {
         if (image.has_image) {
             string title = title_format.printf(image.fileref.get_basename(),
                                                image.original_width,
@@ -390,7 +262,7 @@ public class TatapWindow : Gtk.Window {
         }
     }
 
-    private void save_file(string filename) {
+    public void save_file(string filename) {
         debug("The file name for save: %s", filename);
         File file = File.new_for_path(filename);
         string full_path = file.get_path();
@@ -433,29 +305,5 @@ public class TatapWindow : Gtk.Window {
         } catch (Error e) {
             stderr.printf("Error: %s\n", e.message);
         }
-    }
-    
-    private void on_open_button_clicked() {
-        FileChooserDialog dialog = new FileChooserDialog(_("Choose file to open"), this, FileChooserAction.OPEN,
-                                           _("Cancel"), ResponseType.CANCEL,
-                                           _("Open"), ResponseType.ACCEPT);
-        int res = dialog.run();
-        if (res == ResponseType.ACCEPT) {
-            string filename = dialog.get_filename();
-            open_file(filename);
-        }
-        dialog.close();
-    }
-
-    private void on_save_button_clicked() {
-        FileChooserDialog dialog = new FileChooserDialog(_("Save as…"), this, FileChooserAction.SAVE,
-                                           _("Cancel"), ResponseType.CANCEL,
-                                           _("Open"), ResponseType.ACCEPT);
-        int res = dialog.run();
-        if (res == ResponseType.ACCEPT) {
-            string filename = dialog.get_filename();
-            save_file(filename);
-        }
-        dialog.close();
     }
 }
