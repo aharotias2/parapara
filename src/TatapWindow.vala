@@ -75,286 +75,255 @@ public class TatapWindow : Gtk.Window {
     private double y;
 
     public TatapWindow() {
-        headerbar = new HeaderBar();
-        {
-            ButtonBox button_box2 = new ButtonBox(Orientation.HORIZONTAL);
-            {
-                image_prev_button = new Button.from_icon_name("go-previous-symbolic", ICON_SIZE);
-                {
-                    image_prev_button.valign = Align.CENTER;
-                    image_prev_button.tooltip_text = _("Previous");
-                    image_prev_button.get_style_context().add_class("image_button");
-                    image_prev_button.clicked.connect(() => {
-                            if (file_list != null) {
-                                File? prev_file = file_list.get_prev_file(image.fileref);
-                                if (prev_file != null) {
-                                    open_file(prev_file.get_path());
-                                }
-                            }
-                        });
-                }
+        image_prev_button = new Button.from_icon_name("go-previous-symbolic", ICON_SIZE) {
+            valign = Align.CENTER,
+            tooltip_text = _("Previous")
+        };
+        image_prev_button.get_style_context().add_class("image_button");
+        image_prev_button.clicked.connect(() => {
+            if (file_list != null) {
+                File? prev_file = file_list.get_prev_file(image.fileref);
 
-                image_next_button = new Button.from_icon_name("go-next-symbolic", ICON_SIZE);
-                {
-                    image_next_button.valign = Align.CENTER;
-                    image_next_button.tooltip_text = _("Next");
-                    image_next_button.get_style_context().add_class("image_button");
-                    image_next_button.clicked.connect(() => {
-                            if (file_list != null) {
-                                File? next_file = file_list.get_next_file(image.fileref);
-                                debug("next file: %s", next_file.get_basename());
-                                if (next_file != null) {
-                                    open_file(next_file.get_path());
-                                }
-                            }
-                        });
+                if (prev_file != null) {
+                    open_file(prev_file.get_path());
                 }
-
-                button_box2.add(image_prev_button);
-                button_box2.add(image_next_button);
-                button_box2.set_layout(ButtonBoxStyle.EXPAND);
             }
+        });
 
-            ButtonBox header_button_box_right = new ButtonBox(Orientation.HORIZONTAL);
-            {
-                ToggleButton toolbar_toggle_button = new ToggleButton();
-                {
-                    Image toggle_toolbar_icon = new Image.from_icon_name("view-more-symbolic", ICON_SIZE);
+        image_next_button = new Button.from_icon_name("go-next-symbolic", ICON_SIZE) {
+            valign = Align.CENTER,
+            tooltip_text = _("Next")
+        };
+        image_next_button.get_style_context().add_class("image_button");
+        image_next_button.clicked.connect(() => {
+            if (file_list != null) {
+                File? next_file = file_list.get_next_file(image.fileref);
+                debug("next file: %s", next_file.get_basename());
 
-                    toolbar_toggle_button.tooltip_text = _("Menu");
-                    toolbar_toggle_button.add(toggle_toolbar_icon);
-                    toolbar_toggle_button.toggled.connect(() => {
-                            toolbar_revealer.reveal_child = toolbar_toggle_button.active;
-                        });
+                if (next_file != null) {
+                    open_file(next_file.get_path());
                 }
-
-                header_button_box_right.add(toolbar_toggle_button);
-                header_button_box_right.set_layout(ButtonBoxStyle.EXPAND);
             }
-            
-            headerbar.pack_start(button_box2);
-            headerbar.pack_end(header_button_box_right);
-            headerbar.show_close_button = true;
-        }
+        });
 
-        Overlay window_overlay = new Overlay();
-        {
-            image_container = new ScrolledWindow(null, null);
-            {
-                image = new TatapImage(true);
-                {
-                    image.get_style_context().add_class("image-view");
-                }
+        var button_box2 = new ButtonBox(Orientation.HORIZONTAL);
+        button_box2.add(image_prev_button);
+        button_box2.add(image_next_button);
+        button_box2.set_layout(ButtonBoxStyle.EXPAND);
 
-                image_container.add(image);
-                image_container.scroll_child.connect((a, b) => {
-                        print("Scroll Event\n");
-                        return false;
-                    });
-            }
+        var toggle_toolbar_icon = new Image.from_icon_name("view-more-symbolic", ICON_SIZE);
+        var toolbar_toggle_button = new ToggleButton() {
+            tooltip_text = _("Menu")
+        };
+        toolbar_toggle_button.add(toggle_toolbar_icon);
+        toolbar_toggle_button.toggled.connect(() => {
+            toolbar_revealer.reveal_child = toolbar_toggle_button.active;
+        });
 
-            Box revealer_box = new Box(Orientation.VERTICAL, 0);
-            {
-                toolbar_revealer = new Revealer();
-                {
-                    Box toolbar_hbox = new Box(Orientation.HORIZONTAL, 0);
-                    {
-                        ButtonBox button_box1 = new ButtonBox(Orientation.HORIZONTAL);
-                        {
-                            open_button = new Button();
-                            {
-                                Image open_button_icon = new Image.from_icon_name("document-open-symbolic",
-                                                                                ICON_SIZE);
+        var header_button_box_right = new ButtonBox(Orientation.HORIZONTAL);
+        header_button_box_right.add(toolbar_toggle_button);
+        header_button_box_right.set_layout(ButtonBoxStyle.EXPAND);
 
-                                open_button.tooltip_text = _("Open");
-                                open_button.add(open_button_icon);
-                                open_button.clicked.connect(() => {
-                                        on_open_button_clicked();
-                                    });
-                            }
+        headerbar = new HeaderBar() {
+            show_close_button = true
+        };
+        headerbar.pack_start(button_box2);
+        headerbar.pack_end(header_button_box_right);
 
-                            save_button = new Button.from_icon_name("document-save-symbolic", ICON_SIZE);
-                            {
-                                save_button.tooltip_text = _("Save as…");
-                                save_button.clicked.connect(() => {
-                                        on_save_button_clicked();
-                                    });
-                            }
+        image = new TatapImage(true);
+        image.get_style_context().add_class("image-view");
 
-                            button_box1.add(open_button);
-                            button_box1.add(save_button);
-                            button_box1.set_layout(ButtonBoxStyle.EXPAND);
-                            button_box1.margin = 5;
-                        }
-            
-                        ButtonBox button_box3 = new ButtonBox(Orientation.HORIZONTAL);
-                        {
-                            zoom_in_button = new Button.from_icon_name("zoom-in-symbolic", ICON_SIZE);
-                            {
-                                zoom_in_button.tooltip_text = _("Zoom in");
-                                zoom_in_button.get_style_context().add_class("image_overlay_button");
-                                zoom_in_button.clicked.connect(() => {
-                                        image.zoom_in();
-                                        set_title_label();
-                                        zoom_fit_button.sensitive = true;
-                                    });
-                            }
-            
-                            zoom_out_button = new Button.from_icon_name("zoom-out-symbolic", ICON_SIZE);
-                            {
-                                zoom_out_button.tooltip_text = _("Zoom out");
-                                zoom_out_button.get_style_context().add_class("image_overlay_button");
-                                zoom_out_button.clicked.connect(() => {
-                                        image.zoom_out();
-                                        set_title_label();
-                                        zoom_fit_button.sensitive = true;
-                                    });
-                            }
-            
-                            zoom_fit_button = new Button.from_icon_name("zoom-fit-best-symbolic", ICON_SIZE);
-                            {
-                                zoom_fit_button.tooltip_text = _("Fit to the page");
-                                zoom_fit_button.get_style_context().add_class("image_overlay_button");
-                                zoom_fit_button.clicked.connect(() => {
-                                        image.fit_image_to_window();
-                                        set_title_label();
-                                        zoom_fit_button.sensitive = false;
-                                    });
-                            }
-            
-                            zoom_orig_button = new Button.from_icon_name("zoom-original-symbolic", ICON_SIZE);
-                            {
-                                zoom_orig_button.tooltip_text = _("100%");
-                                zoom_orig_button.get_style_context().add_class("image_overlay_button");
-                                zoom_orig_button.clicked.connect(() => {
-                                        image.zoom_original();
-                                        set_title_label();
-                                        zoom_fit_button.sensitive = true;
-                                    });
-                            }
-            
-                            hflip_button = new Button.from_icon_name("object-flip-horizontal-symbolic", ICON_SIZE);
-                            {
-                                hflip_button.tooltip_text = _("Flip horizontally");
-                                hflip_button.get_style_context().add_class("image_overlay_button");
-                                hflip_button.clicked.connect(() => {
-                                        image.hflip();
-                                    });
-                            }
-            
-                            vflip_button = new Button.from_icon_name("object-flip-vertical-symbolic", ICON_SIZE);
-                            {
-                                vflip_button.tooltip_text = _("Flip vertically");
-                                vflip_button.get_style_context().add_class("image_overlay_button");
-                                vflip_button.clicked.connect(() => {
-                                        image.vflip();
-                                    });
-                            }
-            
-                            lrotate_button = new Button.from_icon_name("object-rotate-left-symbolic", ICON_SIZE);
-                            {
-                                lrotate_button.tooltip_text = _("Rotate to the left");
-                                lrotate_button.get_style_context().add_class("image_overlay_button");
-                                lrotate_button.clicked.connect(() => {
-                                        image.rotate_left();
-                                        set_title_label();
-                                        zoom_fit_button.sensitive = true;
-                                    });
-                            }
+        image_container = new ScrolledWindow(null, null);
+        image_container.add(image);
+        image_container.scroll_child.connect((a, b) => {
+            print("Scroll Event\n");
+            return false;
+        });
 
-                            rrotate_button = new Button.from_icon_name("object-rotate-right-symbolic", ICON_SIZE);
-                            {
-                                rrotate_button.tooltip_text = _("Rotate to the right");
-                                rrotate_button.get_style_context().add_class("image_overlay_button");
-                                rrotate_button.clicked.connect(() => {
-                                        image.rotate_right();
-                                        set_title_label();
-                                        zoom_fit_button.sensitive = true;
-                                    });
-                            }
+        var open_button_icon = new Image.from_icon_name("document-open-symbolic",
+        ICON_SIZE);
 
-                            button_box3.pack_start(zoom_in_button);
-                            button_box3.pack_start(zoom_out_button);
-                            button_box3.pack_start(zoom_fit_button);
-                            button_box3.pack_start(zoom_orig_button);
-                            button_box3.pack_start(hflip_button);
-                            button_box3.pack_start(vflip_button);
-                            button_box3.pack_start(lrotate_button);
-                            button_box3.pack_start(rrotate_button);
-                            button_box3.set_layout(ButtonBoxStyle.EXPAND);
-                            button_box3.margin = 5;
-                        }
-                    
-                        toolbar_hbox.pack_start(button_box1, false, false);
-                        toolbar_hbox.pack_start(button_box3, false, false);
-                        toolbar_hbox.vexpand = false;
-                        toolbar_hbox.valign = Align.START;
-                        toolbar_hbox.get_style_context().add_class("toolbar");
-                    }
-                
-                    toolbar_revealer.add(toolbar_hbox);
-                    toolbar_revealer.transition_type = RevealerTransitionType.SLIDE_DOWN;
-                }
+        open_button = new Button() {
+            tooltip_text = _("Open")
+        };
+        open_button.add(open_button_icon);
+        open_button.clicked.connect(() => {
+            on_open_button_clicked();
+        });
 
-                message_revealer = new Revealer();
-                {
-                    Box message_bar = new Box(Orientation.HORIZONTAL, 0);
-                    {
-                        message_label = new Label("");
-                        {
-                            message_label.get_style_context().add_class("message_label");
-                            message_label.margin = 10;
-                        }
+        save_button = new Button.from_icon_name("document-save-symbolic", ICON_SIZE) {
+            tooltip_text = _("Save as…")
+        };
+        save_button.clicked.connect(() => {
+            on_save_button_clicked();
+        });
 
-                        message_bar.pack_start(message_label);
-                        message_bar.valign = Align.END;
-                        message_bar.hexpand = true;
-                        message_bar.vexpand = false;
-                        message_bar.get_style_context().add_class("message_bar");
-                    }
-                    
-                    message_revealer.add(message_bar);
-                    message_revealer.transition_type = RevealerTransitionType.SLIDE_UP;
-                    message_revealer.transition_duration = 100;
-                    message_revealer.reveal_child = false;
-                }
+        var button_box1 = new ButtonBox(Orientation.HORIZONTAL) {
+            margin = 5
+        };
+        button_box1.add(open_button);
+        button_box1.add(save_button);
+        button_box1.set_layout(ButtonBoxStyle.EXPAND);
 
-                revealer_box.pack_start(toolbar_revealer, false, false);
-                revealer_box.pack_end(message_revealer, false, false);
-            }
+        zoom_in_button = new Button.from_icon_name("zoom-in-symbolic", ICON_SIZE) {
+            tooltip_text = _("Zoom in")
+        };
+        zoom_in_button.get_style_context().add_class("image_overlay_button");
+        zoom_in_button.clicked.connect(() => {
+            image.zoom_in();
+            set_title_label();
+            zoom_fit_button.sensitive = true;
+        });
 
-            window_overlay.add(image_container);
-            window_overlay.add_overlay(revealer_box);
-            window_overlay.set_overlay_pass_through(revealer_box, true);
-        }
+        zoom_out_button = new Button.from_icon_name("zoom-out-symbolic", ICON_SIZE) {
+            tooltip_text = _("Zoom out")
+        };
+        zoom_out_button.get_style_context().add_class("image_overlay_button");
+        zoom_out_button.clicked.connect(() => {
+            image.zoom_out();
+            set_title_label();
+            zoom_fit_button.sensitive = true;
+        });
+
+        zoom_fit_button = new Button.from_icon_name("zoom-fit-best-symbolic", ICON_SIZE) {
+            tooltip_text = _("Fit to the page")
+        };
+        zoom_fit_button.get_style_context().add_class("image_overlay_button");
+        zoom_fit_button.clicked.connect(() => {
+            image.fit_image_to_window();
+            set_title_label();
+            zoom_fit_button.sensitive = false;
+        });
+
+        zoom_orig_button = new Button.from_icon_name("zoom-original-symbolic", ICON_SIZE) {
+            tooltip_text = _("100%")
+        };
+        zoom_orig_button.get_style_context().add_class("image_overlay_button");
+        zoom_orig_button.clicked.connect(() => {
+            image.zoom_original();
+            set_title_label();
+            zoom_fit_button.sensitive = true;
+        });
+
+        hflip_button = new Button.from_icon_name("object-flip-horizontal-symbolic", ICON_SIZE) {
+            tooltip_text = _("Flip horizontally")
+        };
+        hflip_button.get_style_context().add_class("image_overlay_button");
+        hflip_button.clicked.connect(() => {
+            image.hflip();
+        });
+
+        vflip_button = new Button.from_icon_name("object-flip-vertical-symbolic", ICON_SIZE) {
+            tooltip_text = _("Flip vertically")
+        };
+        vflip_button.get_style_context().add_class("image_overlay_button");
+        vflip_button.clicked.connect(() => {
+            image.vflip();
+        });
+
+        lrotate_button = new Button.from_icon_name("object-rotate-left-symbolic", ICON_SIZE) {
+            tooltip_text = _("Rotate to the left")
+        };
+        lrotate_button.get_style_context().add_class("image_overlay_button");
+        lrotate_button.clicked.connect(() => {
+            image.rotate_left();
+            set_title_label();
+            zoom_fit_button.sensitive = true;
+        });
+
+        rrotate_button = new Button.from_icon_name("object-rotate-right-symbolic", ICON_SIZE) {
+            tooltip_text = _("Rotate to the right")
+        };
+        rrotate_button.get_style_context().add_class("image_overlay_button");
+        rrotate_button.clicked.connect(() => {
+            image.rotate_right();
+            set_title_label();
+            zoom_fit_button.sensitive = true;
+        });
+
+        var button_box3 = new ButtonBox(Orientation.HORIZONTAL) {
+            margin = 5
+        };
+        button_box3.pack_start(zoom_in_button);
+        button_box3.pack_start(zoom_out_button);
+        button_box3.pack_start(zoom_fit_button);
+        button_box3.pack_start(zoom_orig_button);
+        button_box3.pack_start(hflip_button);
+        button_box3.pack_start(vflip_button);
+        button_box3.pack_start(lrotate_button);
+        button_box3.pack_start(rrotate_button);
+        button_box3.set_layout(ButtonBoxStyle.EXPAND);
+
+        var toolbar_hbox = new Box(Orientation.HORIZONTAL, 0) {
+            vexpand = false,
+            valign = Align.START
+        };
+        toolbar_hbox.pack_start(button_box1, false, false);
+        toolbar_hbox.pack_start(button_box3, false, false);
+        toolbar_hbox.get_style_context().add_class("toolbar");
+
+        toolbar_revealer = new Revealer() {
+            transition_type = RevealerTransitionType.SLIDE_DOWN
+        };
+        toolbar_revealer.add(toolbar_hbox);
+
+        message_label = new Label("") {
+            margin = 10
+        };
+        message_label.get_style_context().add_class("message_label");
+
+        var message_bar = new Box(Orientation.HORIZONTAL, 0) {
+            valign = Align.END,
+            hexpand = true,
+            vexpand = false
+        };
+        message_bar.pack_start(message_label);
+        message_bar.get_style_context().add_class("message_bar");
+
+        message_revealer = new Revealer() {
+            transition_type = RevealerTransitionType.SLIDE_UP,
+            transition_duration = 100,
+            reveal_child = false
+        };
+        message_revealer.add(message_bar);
+
+        var revealer_box = new Box(Orientation.VERTICAL, 0);
+        revealer_box.pack_start(toolbar_revealer, false, false);
+        revealer_box.pack_end(message_revealer, false, false);
+
+        var window_overlay = new Overlay();
+        window_overlay.add(image_container);
+        window_overlay.add_overlay(revealer_box);
+        window_overlay.set_overlay_pass_through(revealer_box, true);
 
         Idle.add(() => {
-                if (file_list != null) {
-                    if (file_list.size == 0) {
-                        image_prev_button.sensitive = false;
-                        image_next_button.sensitive = false;
-                    } else {
-                        image_prev_button.sensitive = !file_list.file_is_first(true);
-                        image_next_button.sensitive = !file_list.file_is_last(true);
-                    }
+            if (file_list != null) {
+                if (file_list.size == 0) {
+                    image_prev_button.sensitive = false;
+                    image_next_button.sensitive = false;
+                } else {
+                    image_prev_button.sensitive = !file_list.file_is_first(true);
+                    image_next_button.sensitive = !file_list.file_is_last(true);
                 }
-                return Source.CONTINUE;
-            });
+            }
+
+            return Source.CONTINUE;
+        });
         
         set_titlebar(headerbar);
         add(window_overlay);
         set_default_size(800, 600);
         event.connect((ev) => {
-                return handle_events(ev);
-            });
+            return handle_events(ev);
+        });
         configure_event.connect((cr) => {
-                if (image.fit) {
-                    debug("window::configure_event -> image.fit_image_to_window");
-                    image.fit_image_to_window();
-                    set_title_label();
-                }
-                return false;
-            });
+            if (image.fit) {
+                debug("window::configure_event -> image.fit_image_to_window");
+                image.fit_image_to_window();
+                set_title_label();
+            }
+            return false;
+        });
         destroy.connect(Gtk.main_quit);
 
         setup_css();
