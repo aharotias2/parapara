@@ -48,10 +48,9 @@ public class TatapWindow : Gtk.Window {
     private HeaderBar headerbar;
     private Button open_button;
     private Button save_button;
-    
-    private Button image_prev_button;
-    private Button image_next_button;
 
+    private NavigationBox navigation_box;
+    
     private Button zoom_in_button;
     private Button zoom_out_button;
     private Button zoom_fit_button;
@@ -62,54 +61,20 @@ public class TatapWindow : Gtk.Window {
     private Button rrotate_button;
 
     private ScrolledWindow image_container;
-    private TatapImage image;
+    public TatapImage image { get; private set; }
     private Revealer message_revealer;
     private Label message_label;
     
     private Revealer toolbar_revealer;
     
-    private TatapFileList? file_list = null;
+    public TatapFileList? file_list { get; private set; default = null; }
 
     private bool button_pressed = false;
     private double x;
     private double y;
 
     public TatapWindow() {
-        image_prev_button = new Button.from_icon_name("go-previous-symbolic", ICON_SIZE) {
-            valign = Align.CENTER,
-            tooltip_text = _("Previous")
-        };
-        image_prev_button.get_style_context().add_class("image_button");
-        image_prev_button.clicked.connect(() => {
-            if (file_list != null) {
-                File? prev_file = file_list.get_prev_file(image.fileref);
-
-                if (prev_file != null) {
-                    open_file(prev_file.get_path());
-                }
-            }
-        });
-
-        image_next_button = new Button.from_icon_name("go-next-symbolic", ICON_SIZE) {
-            valign = Align.CENTER,
-            tooltip_text = _("Next")
-        };
-        image_next_button.get_style_context().add_class("image_button");
-        image_next_button.clicked.connect(() => {
-            if (file_list != null) {
-                File? next_file = file_list.get_next_file(image.fileref);
-                debug("next file: %s", next_file.get_basename());
-
-                if (next_file != null) {
-                    open_file(next_file.get_path());
-                }
-            }
-        });
-
-        var button_box2 = new ButtonBox(Orientation.HORIZONTAL);
-        button_box2.add(image_prev_button);
-        button_box2.add(image_next_button);
-        button_box2.set_layout(ButtonBoxStyle.EXPAND);
+        navigation_box = new NavigationBox (this);
 
         var toggle_toolbar_icon = new Image.from_icon_name("view-more-symbolic", ICON_SIZE);
         var toolbar_toggle_button = new ToggleButton() {
@@ -127,7 +92,7 @@ public class TatapWindow : Gtk.Window {
         headerbar = new HeaderBar() {
             show_close_button = true
         };
-        headerbar.pack_start(button_box2);
+        headerbar.pack_start(navigation_box);
         headerbar.pack_end(header_button_box_right);
 
         image = new TatapImage(true);
@@ -299,11 +264,11 @@ public class TatapWindow : Gtk.Window {
         Idle.add(() => {
             if (file_list != null) {
                 if (file_list.size == 0) {
-                    image_prev_button.sensitive = false;
-                    image_next_button.sensitive = false;
+                    navigation_box.set_image_prev_button_sensitivity(false);
+                    navigation_box.set_image_next_button_sensitivity(false);
                 } else {
-                    image_prev_button.sensitive = !file_list.file_is_first(true);
-                    image_next_button.sensitive = !file_list.file_is_last(true);
+                    navigation_box.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
+                    navigation_box.set_image_next_button_sensitivity(!file_list.file_is_last(true));
                 }
             }
 
@@ -415,8 +380,8 @@ public class TatapWindow : Gtk.Window {
                 file_list.make_list(image.fileref.get_parent().get_path());
             }
             file_list.set_current(image.fileref);
-            image_prev_button.sensitive = !file_list.file_is_first(true);
-            image_next_button.sensitive = !file_list.file_is_last(true);
+            navigation_box.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
+            navigation_box.set_image_next_button_sensitivity(!file_list.file_is_last(true));
             set_title_label();
         } catch (FileError e) {
             stderr.printf("Error: %s\n", e.message);
