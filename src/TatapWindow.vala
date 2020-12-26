@@ -44,16 +44,16 @@ public class TatapWindow : Gtk.Window {
     """;
 
     private const string title_format = "%s (%dx%d : %.2f%%)";
-    
+
     private HeaderBar headerbar;
 
     private NavigationBox navigation_box;
-    
+
     private ScrolledWindow image_container;
     public TatapImage image { get; private set; }
     private Revealer message_revealer;
     private Label message_label;
-    
+
     private Revealer toolbar_revealer;
 
     public TatapFileList? file_list { get; private set; default = null; }
@@ -148,7 +148,7 @@ public class TatapWindow : Gtk.Window {
 
             return Source.CONTINUE;
         });
-        
+
         set_titlebar(headerbar);
         set_default_size(800, 600);
         event.connect((ev) => {
@@ -223,13 +223,13 @@ public class TatapWindow : Gtk.Window {
             stderr.printf("CssProvider loading failed!\n");
         }
     }
-    
+
     public void open_file(string filename) {
         string? old_file_dir = null;
         if (image.fileref != null) {
             old_file_dir = image.fileref.get_parent().get_path();
         }
-        
+
         try {
             image.open(filename);
             string new_file_dir = image.fileref.get_parent().get_path();
@@ -277,7 +277,7 @@ public class TatapWindow : Gtk.Window {
                 return;
             }
         }
-        
+
         Pixbuf pixbuf = image.pixbuf;
         string[] tmp = full_path.split(".");
         try {
