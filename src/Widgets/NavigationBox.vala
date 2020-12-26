@@ -25,7 +25,8 @@ public class NavigationBox : Gtk.ButtonBox {
     public NavigationBox (TatapWindow window) {
         Object (
             window: window,
-            orientation: Gtk.Orientation.HORIZONTAL
+            orientation: Gtk.Orientation.HORIZONTAL,
+            layout_style: Gtk.ButtonBoxStyle.EXPAND
         );
     }
 
@@ -63,7 +64,6 @@ public class NavigationBox : Gtk.ButtonBox {
 
         add(image_prev_button);
         add(image_next_button);
-        set_layout(Gtk.ButtonBoxStyle.EXPAND);
     }
 
     public void set_image_prev_button_sensitivity(bool is_sensitive) {

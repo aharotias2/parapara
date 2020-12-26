@@ -76,9 +76,10 @@ public class TatapWindow : Gtk.Window {
             toolbar_revealer.reveal_child = toolbar_toggle_button.active;
         });
 
-        var header_button_box_right = new ButtonBox(Orientation.HORIZONTAL);
+        var header_button_box_right = new ButtonBox(Orientation.HORIZONTAL) {
+            layout_style = ButtonBoxStyle.EXPAND
+        };
         header_button_box_right.add(toolbar_toggle_button);
-        header_button_box_right.set_layout(ButtonBoxStyle.EXPAND);
 
         /* the headerbar itself */
         headerbar = new HeaderBar() {

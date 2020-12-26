@@ -45,11 +45,11 @@ public class ToolBarRevealer : Gtk.Revealer {
         });
 
         var file_action_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
-            margin = 5
+            margin = 5,
+            layout_style = Gtk.ButtonBoxStyle.EXPAND
         };
         file_action_button_box.add(open_button);
         file_action_button_box.add(save_button);
-        file_action_button_box.set_layout(Gtk.ButtonBoxStyle.EXPAND);
 
         /* action buttons for the image */
         var zoom_in_button = new Gtk.Button.from_icon_name("zoom-in-symbolic", Gtk.IconSize.SMALL_TOOLBAR) {
@@ -129,7 +129,8 @@ public class ToolBarRevealer : Gtk.Revealer {
         });
 
         var image_actions_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
-            margin = 5
+            margin = 5,
+            layout_style = Gtk.ButtonBoxStyle.EXPAND
         };
         image_actions_button_box.pack_start(zoom_in_button);
         image_actions_button_box.pack_start(zoom_out_button);
@@ -139,7 +140,6 @@ public class ToolBarRevealer : Gtk.Revealer {
         image_actions_button_box.pack_start(vflip_button);
         image_actions_button_box.pack_start(lrotate_button);
         image_actions_button_box.pack_start(rrotate_button);
-        image_actions_button_box.set_layout(Gtk.ButtonBoxStyle.EXPAND);
 
         var toolbar_hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0) {
             vexpand = false,
