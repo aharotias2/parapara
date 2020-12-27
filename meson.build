@@ -25,6 +25,7 @@ executable(
     'src/Utils/TatapStringUtils.vala',
     'src/Widgets/NavigationBox.vala',
     'src/Widgets/ToolBarRevealer.vala',
+    'src/Widgets/ToolButton.vala',
     'src/Application.vala',
     'src/TatapFileList.vala',
     'src/TatapImage.vala',

@@ -26,15 +26,13 @@ public class NavigationBox : Gtk.ButtonBox {
         Object (
             window: window,
             orientation: Gtk.Orientation.HORIZONTAL,
-            layout_style: Gtk.ButtonBoxStyle.EXPAND
+            layout_style: Gtk.ButtonBoxStyle.EXPAND,
+            valign: Gtk.Align.CENTER
         );
     }
 
     construct {
-        image_prev_button = new Gtk.Button.from_icon_name("go-previous-symbolic", Gtk.IconSize.SMALL_TOOLBAR) {
-            valign = Gtk.Align.CENTER,
-            tooltip_text = _("Previous")
-        };
+        image_prev_button = new ToolButton("go-previous-symbolic", _("Previous"));
         image_prev_button.get_style_context().add_class("image_button");
         image_prev_button.clicked.connect(() => {
             if (window.file_list != null) {
@@ -46,10 +44,7 @@ public class NavigationBox : Gtk.ButtonBox {
             }
         });
 
-        image_next_button = new Gtk.Button.from_icon_name("go-next-symbolic", Gtk.IconSize.SMALL_TOOLBAR) {
-            valign = Gtk.Align.CENTER,
-            tooltip_text = _("Next")
-        };
+        image_next_button = new ToolButton("go-next-symbolic", _("Next"));
         image_next_button.get_style_context().add_class("image_button");
         image_next_button.clicked.connect(() => {
             if (window.file_list != null) {
