@@ -29,7 +29,7 @@ public class TatapWindow : Gtk.Window {
 
     private HeaderBar headerbar;
 
-    private NavigationBox navigation_box;
+    private HeaderButtons header_buttons;
 
     private ScrolledWindow image_container;
     public TatapImage image { get; private set; }
@@ -46,7 +46,7 @@ public class TatapWindow : Gtk.Window {
 
     public TatapWindow() {
         /* previous, next, open, and save buttons at the left of the headerbar */
-        navigation_box = new NavigationBox(this);
+        header_buttons = new HeaderButtons(this);
 
         /* menu button at the right of the headerbar */
         var toggle_toolbar_icon = new Image.from_icon_name("view-more-symbolic", ICON_SIZE);
@@ -59,8 +59,7 @@ public class TatapWindow : Gtk.Window {
         });
 
         var header_button_box_right = new ButtonBox(Orientation.HORIZONTAL) {
-            layout_style = ButtonBoxStyle.EXPAND,
-            valign = Gtk.Align.CENTER
+            layout_style = ButtonBoxStyle.EXPAND
         };
         header_button_box_right.add(toolbar_toggle_button);
 
@@ -68,7 +67,7 @@ public class TatapWindow : Gtk.Window {
         headerbar = new HeaderBar() {
             show_close_button = true
         };
-        headerbar.pack_start(navigation_box);
+        headerbar.pack_start(header_buttons);
         headerbar.pack_end(header_button_box_right);
 
         /* image area in the center of the window */
@@ -121,11 +120,11 @@ public class TatapWindow : Gtk.Window {
         Idle.add(() => {
             if (file_list != null) {
                 if (file_list.size == 0) {
-                    navigation_box.set_image_prev_button_sensitivity(false);
-                    navigation_box.set_image_next_button_sensitivity(false);
+                    header_buttons.set_image_prev_button_sensitivity(false);
+                    header_buttons.set_image_next_button_sensitivity(false);
                 } else {
-                    navigation_box.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
-                    navigation_box.set_image_next_button_sensitivity(!file_list.file_is_last(true));
+                    header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
+                    header_buttons.set_image_next_button_sensitivity(!file_list.file_is_last(true));
                 }
             }
 
@@ -233,8 +232,8 @@ public class TatapWindow : Gtk.Window {
                 file_list.make_list(image.fileref.get_parent().get_path());
             }
             file_list.set_current(image.fileref);
-            navigation_box.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
-            navigation_box.set_image_next_button_sensitivity(!file_list.file_is_last(true));
+            header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
+            header_buttons.set_image_next_button_sensitivity(!file_list.file_is_last(true));
             set_title_label();
         } catch (FileError e) {
             stderr.printf("Error: %s\n", e.message);

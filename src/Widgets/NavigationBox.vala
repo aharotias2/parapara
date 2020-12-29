@@ -16,24 +16,26 @@
  *  Tanaka Takayuki <msg@gorigorilinux.net>
  */
 
-public class NavigationBox : Gtk.Box {
+public class HeaderButtons : Gtk.Box {
     public TatapWindow window { get; construct; }
 
-    private Gtk.Button image_prev_button;
-    private Gtk.Button image_next_button;
+    private Gtk.ToolButton image_prev_button;
+    private Gtk.ToolButton image_next_button;
 
-    public NavigationBox (TatapWindow window) {
+    public HeaderButtons (TatapWindow window) {
         Object (
             window: window,
             orientation: Gtk.Orientation.HORIZONTAL,
-            valign: Gtk.Align.CENTER
+            spacing: 12
         );
     }
 
     construct {
         /* navigation buttons */
-        image_prev_button = new ToolButton("go-previous-symbolic", _("Previous"));
-        image_prev_button.get_style_context().add_class("image_button");
+        var image_prev_icon = new Gtk.Image.from_icon_name("go-previous", Gtk.IconSize.SMALL_TOOLBAR);
+        image_prev_button = new Gtk.ToolButton(image_prev_icon, null) {
+            tooltip_text = _("Previous")
+        };
         image_prev_button.clicked.connect(() => {
             if (window.file_list != null) {
                 File? prev_file = window.file_list.get_prev_file(window.image.fileref);
@@ -44,8 +46,10 @@ public class NavigationBox : Gtk.Box {
             }
         });
 
-        image_next_button = new ToolButton("go-next-symbolic", _("Next"));
-        image_next_button.get_style_context().add_class("image_button");
+        var image_next_icon = new Gtk.Image.from_icon_name("go-next", Gtk.IconSize.SMALL_TOOLBAR);
+        image_next_button = new Gtk.ToolButton(image_next_icon, null) {
+            tooltip_text = _("Next")
+        };
         image_next_button.clicked.connect(() => {
             if (window.file_list != null) {
                 File? next_file = window.file_list.get_next_file(window.image.fileref);
@@ -57,33 +61,33 @@ public class NavigationBox : Gtk.Box {
             }
         });
 
-        var file_navigation_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
-            margin = 5,
-            layout_style = Gtk.ButtonBoxStyle.EXPAND
-        };
-        file_navigation_button_box.add(image_prev_button);
-        file_navigation_button_box.add(image_next_button);
+        var navigation_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
+        navigation_box.pack_start(image_prev_button);
+        navigation_box.pack_start(image_next_button);
 
         /* action buttons */
-        var open_button = new ToolButton("document-open-symbolic", _("Open"));
+        var open_button_icon = new Gtk.Image.from_icon_name("document-open", Gtk.IconSize.SMALL_TOOLBAR);
+        var open_button = new Gtk.ToolButton(open_button_icon, null) {
+            tooltip_text = _("Open")
+        };
         open_button.clicked.connect(() => {
             on_open_button_clicked();
         });
 
-        var save_button = new ToolButton("document-save-symbolic", _("Save as…"));
+        var save_button_icon = new Gtk.Image.from_icon_name("document-save-as", Gtk.IconSize.SMALL_TOOLBAR);
+        var save_button = new Gtk.ToolButton(save_button_icon, null) {
+            tooltip_text = _("Save as…")
+        };
         save_button.clicked.connect(() => {
             on_save_button_clicked();
         });
 
-        var file_action_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
-            margin = 5,
-            layout_style = Gtk.ButtonBoxStyle.EXPAND
-        };
-        file_action_button_box.add(open_button);
-        file_action_button_box.add(save_button);
+        var actions_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
+        actions_box.pack_start(open_button);
+        actions_box.pack_start(save_button);
 
-        add(file_navigation_button_box);
-        add(file_action_button_box);
+        add(navigation_box);
+        add(actions_box);
     }
 
     private void on_open_button_clicked() {
