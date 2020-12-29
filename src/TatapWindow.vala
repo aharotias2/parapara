@@ -45,7 +45,7 @@ public class TatapWindow : Gtk.Window {
     private double y;
 
     public TatapWindow() {
-        /* previous/next buttons at the left of the headerbar */
+        /* previous, next, open, and save buttons at the left of the headerbar */
         navigation_box = new NavigationBox(this);
 
         /* menu button at the right of the headerbar */
@@ -59,7 +59,8 @@ public class TatapWindow : Gtk.Window {
         });
 
         var header_button_box_right = new ButtonBox(Orientation.HORIZONTAL) {
-            layout_style = ButtonBoxStyle.EXPAND
+            layout_style = ButtonBoxStyle.EXPAND,
+            valign = Gtk.Align.CENTER
         };
         header_button_box_right.add(toolbar_toggle_button);
 

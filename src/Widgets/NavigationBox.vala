@@ -16,7 +16,7 @@
  *  Tanaka Takayuki <msg@gorigorilinux.net>
  */
 
-public class NavigationBox : Gtk.ButtonBox {
+public class NavigationBox : Gtk.Box {
     public TatapWindow window { get; construct; }
 
     private Gtk.Button image_prev_button;
@@ -26,12 +26,12 @@ public class NavigationBox : Gtk.ButtonBox {
         Object (
             window: window,
             orientation: Gtk.Orientation.HORIZONTAL,
-            layout_style: Gtk.ButtonBoxStyle.EXPAND,
             valign: Gtk.Align.CENTER
         );
     }
 
     construct {
+        /* navigation buttons */
         image_prev_button = new ToolButton("go-previous-symbolic", _("Previous"));
         image_prev_button.get_style_context().add_class("image_button");
         image_prev_button.clicked.connect(() => {
@@ -57,8 +57,57 @@ public class NavigationBox : Gtk.ButtonBox {
             }
         });
 
-        add(image_prev_button);
-        add(image_next_button);
+        var file_navigation_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+            margin = 5,
+            layout_style = Gtk.ButtonBoxStyle.EXPAND
+        };
+        file_navigation_button_box.add(image_prev_button);
+        file_navigation_button_box.add(image_next_button);
+
+        /* action buttons */
+        var open_button = new ToolButton("document-open-symbolic", _("Open"));
+        open_button.clicked.connect(() => {
+            on_open_button_clicked();
+        });
+
+        var save_button = new ToolButton("document-save-symbolic", _("Save as…"));
+        save_button.clicked.connect(() => {
+            on_save_button_clicked();
+        });
+
+        var file_action_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+            margin = 5,
+            layout_style = Gtk.ButtonBoxStyle.EXPAND
+        };
+        file_action_button_box.add(open_button);
+        file_action_button_box.add(save_button);
+
+        add(file_navigation_button_box);
+        add(file_action_button_box);
+    }
+
+    private void on_open_button_clicked() {
+        var dialog = new Gtk.FileChooserDialog(_("Choose file to open"), window, Gtk.FileChooserAction.OPEN,
+                                           _("Cancel"), Gtk.ResponseType.CANCEL,
+                                           _("Open"), Gtk.ResponseType.ACCEPT);
+        int res = dialog.run();
+        if (res == Gtk.ResponseType.ACCEPT) {
+            string filename = dialog.get_filename();
+            window.open_file(filename);
+        }
+        dialog.close();
+    }
+
+    private void on_save_button_clicked() {
+        var dialog = new Gtk.FileChooserDialog(_("Save as…"), window, Gtk.FileChooserAction.SAVE,
+                                           _("Cancel"), Gtk.ResponseType.CANCEL,
+                                           _("Open"), Gtk.ResponseType.ACCEPT);
+        int res = dialog.run();
+        if (res == Gtk.ResponseType.ACCEPT) {
+            string filename = dialog.get_filename();
+            window.save_file(filename);
+        }
+        dialog.close();
     }
 
     public void set_image_prev_button_sensitivity(bool is_sensitive) {
