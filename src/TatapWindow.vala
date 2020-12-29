@@ -136,6 +136,7 @@ public class TatapWindow : Gtk.Window {
         event.connect((ev) => {
             return handle_events(ev);
         });
+        add_events (Gdk.EventMask.SCROLL_MASK);
         configure_event.connect((cr) => {
             if (image.fit) {
                 debug("window::configure_event -> image.fit_image_to_window");
@@ -172,11 +173,11 @@ public class TatapWindow : Gtk.Window {
                 }
                 break;
             case EventType.SCROLL:
-                if (ev.scroll.state == ModifierType.CONTROL_MASK) {
+                if (ModifierType.CONTROL_MASK in ev.scroll.state) {
                     if (ev.scroll.direction == ScrollDirection.UP) {
-                        image.zoom_out();
-                    } else if (ev.scroll.direction == ScrollDirection.DOWN) {
                         image.zoom_in();
+                    } else if (ev.scroll.direction == ScrollDirection.DOWN) {
+                        image.zoom_out();
                     }
                     return true;
                 }
