@@ -182,6 +182,16 @@ public class TatapWindow : Gtk.Window {
                     return true;
                 }
                 break;
+            case EventType.KEY_PRESS:
+                switch (ev.key.keyval) {
+                    case Gdk.Key.Left:
+                        go_prev();
+                        return true;
+                    case Gdk.Key.Right:
+                        go_next();
+                        return true;
+                }
+                break;
         }
         return false;
     }
@@ -285,6 +295,27 @@ public class TatapWindow : Gtk.Window {
             }
         } catch (Error e) {
             stderr.printf("Error: %s\n", e.message);
+        }
+    }
+
+    public void go_prev() {
+        if (file_list != null) {
+            File? prev_file = file_list.get_prev_file(image.fileref);
+
+            if (prev_file != null) {
+                open_file(prev_file.get_path());
+            }
+        }
+    }
+
+    public void go_next() {
+        if (file_list != null) {
+            File? next_file = file_list.get_next_file(image.fileref);
+            debug("next file: %s", next_file.get_basename());
+
+            if (next_file != null) {
+                open_file(next_file.get_path());
+            }
         }
     }
 }

@@ -34,28 +34,11 @@ public class NavigationBox : Gtk.ButtonBox {
     construct {
         image_prev_button = new ToolButton("go-previous-symbolic", _("Previous"));
         image_prev_button.get_style_context().add_class("image_button");
-        image_prev_button.clicked.connect(() => {
-            if (window.file_list != null) {
-                File? prev_file = window.file_list.get_prev_file(window.image.fileref);
-
-                if (prev_file != null) {
-                    window.open_file(prev_file.get_path());
-                }
-            }
-        });
+        image_prev_button.clicked.connect(window.go_prev);
 
         image_next_button = new ToolButton("go-next-symbolic", _("Next"));
         image_next_button.get_style_context().add_class("image_button");
-        image_next_button.clicked.connect(() => {
-            if (window.file_list != null) {
-                File? next_file = window.file_list.get_next_file(window.image.fileref);
-                debug("next file: %s", next_file.get_basename());
-
-                if (next_file != null) {
-                    window.open_file(next_file.get_path());
-                }
-            }
-        });
+        image_next_button.clicked.connect(window.go_next);
 
         add(image_prev_button);
         add(image_next_button);
