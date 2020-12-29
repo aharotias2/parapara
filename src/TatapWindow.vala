@@ -25,24 +25,6 @@ using Gtk, Gdk;
 public class TatapWindow : Gtk.Window {
     const IconSize ICON_SIZE = IconSize.SMALL_TOOLBAR;
 
-    const string stylesheet = """
-    .image-view {
-        background-color: #24140e;
-    }
-
-    .toolbar {
-        background-color: @theme_bg_color;
-    }
-
-    .message_bar {
-        background-color: @theme_bg_color;
-    }
-
-    .message_bar_label {
-        color: @theme_fg_color;
-    }
-    """;
-
     private const string title_format = "%s (%dx%d : %.2f%%)";
 
     private HeaderBar headerbar;
@@ -214,14 +196,11 @@ public class TatapWindow : Gtk.Window {
     }
 
     private void setup_css() {
-        Screen win_screen = get_screen();
-        CssProvider css_provider = new CssProvider();
-        try {
-            css_provider.load_from_data(stylesheet);
-            Gtk.StyleContext.add_provider_for_screen(win_screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
-        } catch (Error e) {
-            stderr.printf("CssProvider loading failed!\n");
-        }
+        var css_provider = new CssProvider();
+        css_provider.load_from_resource ("/com/github/aharotias2/tatap/Application.css");
+        Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (),
+                                                    css_provider,
+                                                    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
 
     public void open_file(string filename) {

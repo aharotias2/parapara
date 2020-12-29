@@ -9,6 +9,7 @@ if is_debug
     add_project_arguments(['--define', 'DEBUG'], language: 'vala')
 endif
 
+gnome = import('gnome')
 i18n = import('i18n')
 
 add_project_arguments(
@@ -16,8 +17,16 @@ add_project_arguments(
     language: 'c'
 )
 
+asresources = gnome.compile_resources(
+    'as-resources',
+    join_paths('data', 'tatap.gresource.xml'),
+    source_dir: 'data',
+    c_name: 'as'
+)
+
 executable(
     meson.project_name(),
+    asresources,
     'src/Utils/PixbufUtils.vala',
     'src/Utils/TatapFileType.vala',
     'src/Utils/TatapFileUtils.vala',
@@ -48,3 +57,5 @@ i18n.merge_file(
 )
 
 subdir('po')
+
+meson.add_install_script('meson/post_install.py')
