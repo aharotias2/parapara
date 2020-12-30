@@ -19,8 +19,8 @@
 public class HeaderButtons : Gtk.Box {
     public TatapWindow window { get; construct; }
 
-    private Gtk.ToolButton image_prev_button;
-    private Gtk.ToolButton image_next_button;
+    private ToolButton image_prev_button;
+    private ToolButton image_next_button;
 
     public HeaderButtons (TatapWindow window) {
         Object (
@@ -31,35 +31,13 @@ public class HeaderButtons : Gtk.Box {
     }
 
     construct {
-        /* navigation buttons */
-        var image_prev_icon = new Gtk.Image.from_icon_name("go-previous", Gtk.IconSize.SMALL_TOOLBAR);
-        image_prev_button = new Gtk.ToolButton(image_prev_icon, null) {
-            tooltip_text = _("Previous")
-        };
-        image_prev_button.clicked.connect(() => {
-            if (window.file_list != null) {
-                File? prev_file = window.file_list.get_prev_file(window.image.fileref);
+        image_prev_button = new ToolButton("go-previous-symbolic", _("Previous"));
+        image_prev_button.get_style_context().add_class("image_button");
+        image_prev_button.clicked.connect(window.go_prev);
 
-                if (prev_file != null) {
-                    window.open_file(prev_file.get_path());
-                }
-            }
-        });
-
-        var image_next_icon = new Gtk.Image.from_icon_name("go-next", Gtk.IconSize.SMALL_TOOLBAR);
-        image_next_button = new Gtk.ToolButton(image_next_icon, null) {
-            tooltip_text = _("Next")
-        };
-        image_next_button.clicked.connect(() => {
-            if (window.file_list != null) {
-                File? next_file = window.file_list.get_next_file(window.image.fileref);
-                debug("next file: %s", next_file.get_basename());
-
-                if (next_file != null) {
-                    window.open_file(next_file.get_path());
-                }
-            }
-        });
+        image_next_button = new ToolButton("go-next-symbolic", _("Next"));
+        image_next_button.get_style_context().add_class("image_button");
+        image_next_button.clicked.connect(window.go_next);
 
         var navigation_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
         navigation_box.pack_start(image_prev_button);
