@@ -136,6 +136,7 @@ public class TatapWindow : Gtk.Window {
         event.connect((ev) => {
             return handle_events(ev);
         });
+        add_events (Gdk.EventMask.SCROLL_MASK);
         configure_event.connect((cr) => {
             if (image.fit) {
                 debug("window::configure_event -> image.fit_image_to_window");
@@ -172,13 +173,23 @@ public class TatapWindow : Gtk.Window {
                 }
                 break;
             case EventType.SCROLL:
-                if (ev.scroll.state == ModifierType.CONTROL_MASK) {
+                if (ModifierType.CONTROL_MASK in ev.scroll.state) {
                     if (ev.scroll.direction == ScrollDirection.UP) {
-                        image.zoom_out();
-                    } else if (ev.scroll.direction == ScrollDirection.DOWN) {
                         image.zoom_in();
+                    } else if (ev.scroll.direction == ScrollDirection.DOWN) {
+                        image.zoom_out();
                     }
                     return true;
+                }
+                break;
+            case EventType.KEY_PRESS:
+                switch (ev.key.keyval) {
+                    case Gdk.Key.Left:
+                        go_prev();
+                        return true;
+                    case Gdk.Key.Right:
+                        go_next();
+                        return true;
                 }
                 break;
             default:
@@ -304,6 +315,27 @@ public class TatapWindow : Gtk.Window {
             }
         } catch (Error e) {
             stderr.printf("Error: %s\n", e.message);
+        }
+    }
+
+    public void go_prev() {
+        if (file_list != null) {
+            File? prev_file = file_list.get_prev_file(image.fileref);
+
+            if (prev_file != null) {
+                open_file(prev_file.get_path());
+            }
+        }
+    }
+
+    public void go_next() {
+        if (file_list != null) {
+            File? next_file = file_list.get_next_file(image.fileref);
+            debug("next file: %s", next_file.get_basename());
+
+            if (next_file != null) {
+                open_file(next_file.get_path());
+            }
         }
     }
 }
