@@ -31,24 +31,6 @@ public class ToolBarRevealer : Gtk.Revealer {
     }
 
     construct {
-        /* action buttons for file */
-        var open_button = new ToolButton("document-open-symbolic", _("Open"));
-        open_button.clicked.connect(() => {
-            on_open_button_clicked();
-        });
-
-        var save_button = new ToolButton("document-save-symbolic", _("Save as…"));
-        save_button.clicked.connect(() => {
-            on_save_button_clicked();
-        });
-
-        var file_action_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
-            margin = 5,
-            layout_style = Gtk.ButtonBoxStyle.EXPAND
-        };
-        file_action_button_box.add(open_button);
-        file_action_button_box.add(save_button);
-
         /* action buttons for the image */
         var zoom_in_button = new ToolButton("zoom-in-symbolic", _("Zoom in"));
         zoom_in_button.get_style_context().add_class("image_overlay_button");
@@ -158,42 +140,10 @@ public class ToolBarRevealer : Gtk.Revealer {
             vexpand = false,
             valign = Gtk.Align.START
         };
-        toolbar_hbox.pack_start(file_action_button_box, false, false);
         toolbar_hbox.pack_start(image_actions_button_box, false, false);
         toolbar_hbox.pack_end(animation_actions_button_box, false, false);
         toolbar_hbox.get_style_context().add_class("toolbar");
 
         add(toolbar_hbox);
-    }
-
-    private void on_open_button_clicked() {
-        var dialog = new Gtk.FileChooserDialog(_("Choose file to open"), window, Gtk.FileChooserAction.OPEN,
-                                           _("Cancel"), Gtk.ResponseType.CANCEL,
-                                           _("Open"), Gtk.ResponseType.ACCEPT);
-        int res = dialog.run();
-        if (res == Gtk.ResponseType.ACCEPT) {
-            string filename = dialog.get_filename();
-            window.open_file(filename);
-        }
-        dialog.close();
-    }
-
-    private void on_save_button_clicked() {
-        if (window.image.is_animation) {
-            Gtk.DialogFlags flags = Gtk.DialogFlags.MODAL;
-            Gtk.MessageDialog alert = new Gtk.MessageDialog(window, flags, Gtk.MessageType.ERROR,
-                    Gtk.ButtonsType.OK, _("Sorry, saving animations is not supported yet."));
-            alert.run();
-            alert.close();
-        } else {
-            var dialog = new Gtk.FileChooserDialog(_("Save as…"), window, Gtk.FileChooserAction.SAVE,
-                    _("Cancel"), Gtk.ResponseType.CANCEL, _("Open"), Gtk.ResponseType.ACCEPT);
-            int res = dialog.run();
-            if (res == Gtk.ResponseType.ACCEPT) {
-                string filename = dialog.get_filename();
-                window.save_file(filename);
-            }
-            dialog.close();
-        }
     }
 }
