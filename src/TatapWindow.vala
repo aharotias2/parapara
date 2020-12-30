@@ -245,9 +245,17 @@ public class TatapWindow : Gtk.Window {
             }
             set_title_label();
         } catch (FileError e) {
-            stderr.printf("Error: %s\n", e.message);
+            DialogFlags flags = DialogFlags.MODAL;
+            MessageDialog alert = new MessageDialog(this, flags, MessageType.ERROR, ButtonsType.OK,
+                    _("The file could not be opend (cause: %s)").printf(e.message));
+            alert.run();
+            alert.close();
         } catch (Error e) {
-            stderr.printf("Error: %s\n", e.message);
+            DialogFlags flags = DialogFlags.MODAL;
+            MessageDialog alert = new MessageDialog(this, flags, MessageType.ERROR, ButtonsType.OK,
+                    _("The file could not be opend (cause: %s)").printf(e.message));
+            alert.run();
+            alert.close();
         }
     }
 
