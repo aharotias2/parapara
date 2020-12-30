@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Tanaka Takayuki (田中喬之) 
+ *  Copyright 2019-2020 Tanaka Takayuki (田中喬之)
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -60,7 +60,7 @@ public class TatapFileList {
             return Source.REMOVE;
         });
     }
-    
+
     public void set_current(File file) {
         string name = file.get_basename();
         int new_index = file_list.index_of(name);

@@ -148,7 +148,7 @@ public class TatapWindow : Gtk.Window {
 
         setup_css();
     }
-    
+
     private bool handle_events(Event ev) {
         switch (ev.type) {
             case EventType.BUTTON_PRESS:

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Tanaka Takayuki (田中喬之) 
+ *  Copyright 2019-2020 Tanaka Takayuki (田中喬之)
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -22,7 +22,7 @@ public class ToolBarRevealer : Gtk.Revealer {
     private Gtk.Button zoom_fit_button;
     public ToolButton animation_forward_button { get; private set; }
     public ToolButton animation_play_pause_button { get; private set; }
-    
+
     public ToolBarRevealer (TatapWindow window) {
         Object (
             window: window,
@@ -122,7 +122,7 @@ public class ToolBarRevealer : Gtk.Revealer {
         image_actions_button_box.pack_start(vflip_button);
         image_actions_button_box.pack_start(lrotate_button);
         image_actions_button_box.pack_start(rrotate_button);
-        
+
         animation_forward_button = new ToolButton("media-skip-forward-symbolic", _("Skip forward"));
         animation_forward_button.sensitive = false;
         animation_forward_button.get_style_context().add_class("image_overlay_button");

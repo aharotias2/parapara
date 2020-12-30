@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Tanaka Takayuki (田中喬之) 
+ *  Copyright 2019-2020 Tanaka Takayuki (田中喬之)
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -34,7 +34,7 @@ public class TatapImage : Image {
         4600, 4700, 4800, 4900, 5000, 5100, 5200, 5300, 5400, 5500, 5600,
         5700, 5800, 5900, 6000
     };
-    
+
     public File? fileref { get; set; }
     public bool fit { get; set; }
     public bool is_animation { get; private set; }
@@ -67,7 +67,7 @@ public class TatapImage : Image {
     private bool playing;
     private bool step_once;
     private TimeVal? tval;
-    
+
     public TatapImage(bool fit) {
         this.fit = fit;
         has_image = false;
@@ -153,15 +153,15 @@ public class TatapImage : Image {
     public void animate_step_once() {
         step_once = true;
     }
-    
+
     public void pause() {
         paused_value = true;
     }
-    
+
     public void unpause() {
         paused_value = false;
     }
-    
+
     public void zoom_original() {
         if (original_pixbuf != null) {
             pixbuf = original_pixbuf;
@@ -169,7 +169,7 @@ public class TatapImage : Image {
             fit = false;
         }
     }
-    
+
     public void fit_image_to_window() {
         if (original_pixbuf != null) {
             fit = true;
@@ -201,7 +201,7 @@ public class TatapImage : Image {
             fit = false;
         }
     }
-    
+
     public void rotate_right() {
         if (original_pixbuf != null) {
             original_pixbuf = original_pixbuf.rotate_simple(PixbufRotation.CLOCKWISE);
@@ -245,7 +245,7 @@ public class TatapImage : Image {
             vflipped = !vflipped;
         }
     }
-    
+
     private void scale(int max_size) {
         if (original_pixbuf != null) {
             debug("TatapImage::scale(%d)", max_size);
@@ -255,7 +255,7 @@ public class TatapImage : Image {
                     adjust_zoom_percent();
                 }
             }
-        }            
+        }
     }
 
     private void scale_xy(int width, int height) {
@@ -272,7 +272,7 @@ public class TatapImage : Image {
             }
         }
     }
-    
+
     private void adjust_zoom_percent() {
         int original_size = int.max(original_pixbuf.height, original_pixbuf.width);
         int size = int.max(pixbuf.height, pixbuf.width);

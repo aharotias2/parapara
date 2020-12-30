@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Tanaka Takayuki (田中喬之) 
+ *  Copyright 2019-2020 Tanaka Takayuki (田中喬之)
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -18,7 +18,7 @@
 
 public class ToolButton : Gtk.Button {
     public string icon_name { get; construct; }
-    
+
     public ToolButton (string icon_name, string tooltip_text) {
         Object (
             icon_name: icon_name,
@@ -30,7 +30,7 @@ public class ToolButton : Gtk.Button {
         var icon = new Gtk.Image.from_icon_name(icon_name, Gtk.IconSize.SMALL_TOOLBAR);
         add(icon);
     }
-    
+
     public void replace_icon_name(string new_icon_name) {
         image = new Gtk.Image.from_icon_name(new_icon_name, Gtk.IconSize.SMALL_TOOLBAR);
     }

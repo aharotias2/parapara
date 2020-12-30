@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Tanaka Takayuki (田中喬之) 
+ *  Copyright 2019-2020 Tanaka Takayuki (田中喬之)
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -31,7 +31,7 @@ public class PixbufUtils {
             return scale_xy(pixbuf, (int) (size * ((double) pixbuf.width / pixbuf.height)), size);
         } else {
             return scale_xy(pixbuf, size, size);
-        }            
+        }
     }
 
     public static Pixbuf scale_xy(Pixbuf pixbuf, int width, int height) {
