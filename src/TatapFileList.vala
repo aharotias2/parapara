@@ -56,9 +56,9 @@ public class TatapFileList {
         }
         file_list.sort((a, b) => a.collate(b));
         Timeout.add(1000, () => {
-                make_list_async.begin();
-                return Source.REMOVE;
-            });
+            make_list_async.begin();
+            return Source.REMOVE;
+        });
     }
     
     public void set_current(File file) {

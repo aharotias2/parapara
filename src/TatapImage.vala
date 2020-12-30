@@ -34,52 +34,134 @@ public class TatapImage : Image {
         4600, 4700, 4800, 4900, 5000, 5100, 5200, 5300, 5400, 5500, 5600,
         5700, 5800, 5900, 6000
     };
+    
     public File? fileref { get; set; }
     public bool fit { get; set; }
+    public bool is_animation { get; private set; }
+    public bool paused {
+        get {
+            return paused_value;
+        }
+        set {
+            if (is_animation) {
+                paused_value = value;
+            }
+        }
+    }
     public double size_percent { get { return zoom_percent / 10.0; } }
     public int original_height { get { return original_pixbuf.height; } }
     public int original_width { get { return original_pixbuf.width; } }
     public bool has_image { get; set; }
+    private PixbufAnimation? animation;
+    private PixbufAnimationIter? animation_iter;
     private Pixbuf? original_pixbuf;
     private int zoom_percent = 1000;
     private int? original_max_size;
     private double? original_rate_x;
     private int save_width;
     private int save_height;
-
+    private bool hflipped;
+    private bool vflipped;
+    private int degree;
+    private bool paused_value;
+    private bool playing;
+    private bool step_once;
+    private TimeVal? tval;
+    
     public TatapImage(bool fit) {
         this.fit = fit;
         has_image = false;
+        paused_value = true;
+        playing = false;
     }
 
     public void open(string filename) throws FileError, Error {
         try {
             File file = File.new_for_path(filename);
-            FileInfo info = TatapFileUtils.get_file_info_from_file(file);
-            if (info == null || info.get_file_type() != FileType.REGULAR) {
-                throw new TatapError.INVALID_FILE(null);
-            }
-                
-            string mime_type = info.get_content_type();
-
-            if (mime_type.split("/")[0] != "image") {
+            string? mime_type = TatapFileUtils.get_mime_type_from_file(file);
+            if (mime_type == null) {
                 throw new TatapError.INVALID_FILE(null);
             }
 
             fileref = file;
-            Pixbuf pixbuf = new Pixbuf.from_file(filename);
-            original_pixbuf = pixbuf;
+            animation = new PixbufAnimation.from_file(filename);
+            tval = TimeVal();
+            animation_iter = animation.get_iter(tval);
+            original_pixbuf = animation_iter.get_pixbuf();
             original_max_size = int.max(original_pixbuf.width, original_pixbuf.height);
             original_rate_x = (double) original_pixbuf.width / (double) original_pixbuf.height;
             save_width = -1;
             save_height = -1;
-            fit_image_to_window();
+            hflipped = false;
+            vflipped = false;
+            degree = 0;
             has_image = true;
+            if (!animation.is_static_image()) {
+                paused_value = false;
+                playing = true;
+                is_animation = true;
+            } else {
+                playing = false;
+                paused = true;
+                animation_iter = null;
+                is_animation = false;
+            }
+            Idle.add(() => {
+                fit_image_to_window();
+                if (is_animation) {
+                    animate.begin();
+                }
+                return false;
+            });
         } catch (TatapError e) {
             print("Warning: file type is invalid.\n");
         }
     }
 
+    public async void animate() {
+        string filepath_save = fileref.get_path();
+        while (filepath_save == fileref.get_path()) {
+            if (!paused_value || step_once) {
+                tval.add(animation_iter.get_delay_time() * 1000);
+                animation_iter.advance(tval);
+                original_pixbuf = animation_iter.get_pixbuf();
+                if (original_pixbuf == null) {
+                    return;
+                }
+                if (hflipped) {
+                    original_pixbuf = original_pixbuf.flip(true);
+                }
+                if (vflipped) {
+                    original_pixbuf = original_pixbuf.flip(false);
+                }
+                if (degree != 0) {
+                    for (int i_degree = 0; i_degree < degree; i_degree += 90) {
+                        original_pixbuf = original_pixbuf.rotate_simple(PixbufRotation.COUNTERCLOCKWISE);
+                    }
+                }
+                scale_xy(pixbuf.width, pixbuf.height);
+                step_once = false;
+                int delay_time = animation_iter.get_delay_time();
+                Timeout.add(delay_time, animate.callback);
+            } else {
+                Idle.add(animate.callback);
+            }
+            yield;
+        }
+    }
+
+    public void animate_step_once() {
+        step_once = true;
+    }
+    
+    public void pause() {
+        paused_value = true;
+    }
+    
+    public void unpause() {
+        paused_value = false;
+    }
+    
     public void zoom_original() {
         if (original_pixbuf != null) {
             pixbuf = original_pixbuf;
@@ -123,6 +205,7 @@ public class TatapImage : Image {
     public void rotate_right() {
         if (original_pixbuf != null) {
             original_pixbuf = original_pixbuf.rotate_simple(PixbufRotation.CLOCKWISE);
+            degree = degree == 0 ? 270 : degree - 90;
             original_rate_x = (double) original_pixbuf.width / (double) original_pixbuf.height;
             if (fit) {
                 fit_image_to_window();
@@ -136,6 +219,7 @@ public class TatapImage : Image {
     public void rotate_left() {
         if (original_pixbuf != null) {
             original_pixbuf = original_pixbuf.rotate_simple(PixbufRotation.COUNTERCLOCKWISE);
+            degree = degree == 270 ? 0 : degree + 90;
             original_rate_x = (double) original_pixbuf.width / (double) original_pixbuf.height;
             if (fit) {
                 fit_image_to_window();
@@ -150,6 +234,7 @@ public class TatapImage : Image {
         if (original_pixbuf != null) {
             original_pixbuf = original_pixbuf.flip(true);
             scale(int.max(pixbuf.width, pixbuf.height));
+            hflipped = !hflipped;
         }
     }
 
@@ -157,6 +242,7 @@ public class TatapImage : Image {
         if (original_pixbuf != null) {
             original_pixbuf = original_pixbuf.flip(false);
             scale(int.max(pixbuf.width, pixbuf.height));
+            vflipped = !vflipped;
         }
     }
     

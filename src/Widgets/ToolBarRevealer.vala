@@ -20,7 +20,9 @@ public class ToolBarRevealer : Gtk.Revealer {
     public TatapWindow window { get; construct; }
 
     private Gtk.Button zoom_fit_button;
-
+    public ToolButton animation_forward_button { get; private set; }
+    public ToolButton animation_play_pause_button { get; private set; }
+    
     public ToolBarRevealer (TatapWindow window) {
         Object (
             window: window,
@@ -120,6 +122,37 @@ public class ToolBarRevealer : Gtk.Revealer {
         image_actions_button_box.pack_start(vflip_button);
         image_actions_button_box.pack_start(lrotate_button);
         image_actions_button_box.pack_start(rrotate_button);
+        
+        animation_forward_button = new ToolButton("media-skip-forward-symbolic", _("Skip forward"));
+        animation_forward_button.sensitive = false;
+        animation_forward_button.get_style_context().add_class("image_overlay_button");
+        animation_forward_button.clicked.connect(() => {
+            if (window.image.paused) {
+                window.image.animate_step_once();
+            }
+        });
+
+        animation_play_pause_button = new ToolButton("media-playback-start-symbolic", _("Play animation"));
+        animation_play_pause_button.sensitive = false;
+        animation_play_pause_button.get_style_context().add_class("image_overlay_button");
+        animation_play_pause_button.clicked.connect(() => {
+            if (!window.image.paused) {
+                window.image.pause();
+                animation_play_pause_button.replace_icon_name("media-playback-pause-symbolic");
+                animation_forward_button.sensitive = true;
+            } else {
+                window.image.unpause();
+                animation_play_pause_button.replace_icon_name("media-playback-start-symbolic");
+                animation_forward_button.sensitive = false;
+            }
+        });
+
+        var animation_actions_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+            margin = 5,
+            layout_style = Gtk.ButtonBoxStyle.EXPAND
+        };
+        animation_actions_button_box.pack_start(animation_play_pause_button);
+        animation_actions_button_box.pack_start(animation_forward_button);
 
         var toolbar_hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0) {
             vexpand = false,
@@ -127,6 +160,7 @@ public class ToolBarRevealer : Gtk.Revealer {
         };
         toolbar_hbox.pack_start(file_action_button_box, false, false);
         toolbar_hbox.pack_start(image_actions_button_box, false, false);
+        toolbar_hbox.pack_end(animation_actions_button_box, false, false);
         toolbar_hbox.get_style_context().add_class("toolbar");
 
         add(toolbar_hbox);
@@ -145,14 +179,21 @@ public class ToolBarRevealer : Gtk.Revealer {
     }
 
     private void on_save_button_clicked() {
-        var dialog = new Gtk.FileChooserDialog(_("Save as…"), window, Gtk.FileChooserAction.SAVE,
-                                           _("Cancel"), Gtk.ResponseType.CANCEL,
-                                           _("Open"), Gtk.ResponseType.ACCEPT);
-        int res = dialog.run();
-        if (res == Gtk.ResponseType.ACCEPT) {
-            string filename = dialog.get_filename();
-            window.save_file(filename);
+        if (window.image.is_animation) {
+            Gtk.DialogFlags flags = Gtk.DialogFlags.MODAL;
+            Gtk.MessageDialog alert = new Gtk.MessageDialog(window, flags, Gtk.MessageType.ERROR,
+                    Gtk.ButtonsType.OK, _("Sorry, saving animations is not supported yet."));
+            alert.run();
+            alert.close();
+        } else {
+            var dialog = new Gtk.FileChooserDialog(_("Save as…"), window, Gtk.FileChooserAction.SAVE,
+                    _("Cancel"), Gtk.ResponseType.CANCEL, _("Open"), Gtk.ResponseType.ACCEPT);
+            int res = dialog.run();
+            if (res == Gtk.ResponseType.ACCEPT) {
+                string filename = dialog.get_filename();
+                window.save_file(filename);
+            }
+            dialog.close();
         }
-        dialog.close();
     }
 }

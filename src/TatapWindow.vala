@@ -36,7 +36,7 @@ public class TatapWindow : Gtk.Window {
     private Revealer message_revealer;
     private Label message_label;
 
-    private Revealer toolbar_revealer;
+    private ToolBarRevealer toolbar_revealer;
 
     public TatapFileList? file_list { get; private set; default = null; }
 
@@ -148,7 +148,7 @@ public class TatapWindow : Gtk.Window {
 
         setup_css();
     }
-
+    
     private bool handle_events(Event ev) {
         switch (ev.type) {
             case EventType.BUTTON_PRESS:
@@ -180,6 +180,8 @@ public class TatapWindow : Gtk.Window {
                     }
                     return true;
                 }
+                break;
+            default:
                 break;
         }
         return false;
@@ -234,6 +236,13 @@ public class TatapWindow : Gtk.Window {
             file_list.set_current(image.fileref);
             navigation_box.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
             navigation_box.set_image_next_button_sensitivity(!file_list.file_is_last(true));
+            if (image.is_animation) {
+                toolbar_revealer.animation_play_pause_button.replace_icon_name("media-playback-pause-symbolic");
+                toolbar_revealer.animation_play_pause_button.sensitive = true;
+            } else {
+                toolbar_revealer.animation_play_pause_button.sensitive = false;
+                toolbar_revealer.animation_forward_button.sensitive = false;
+            }
             set_title_label();
         } catch (FileError e) {
             stderr.printf("Error: %s\n", e.message);
@@ -248,7 +257,8 @@ public class TatapWindow : Gtk.Window {
         string full_path = file.get_path();
         if (FileUtils.test(full_path, FileTest.EXISTS)) {
             DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
-            MessageDialog alert = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL, _("File already exists. Do you want to overwrite it?"));
+            MessageDialog alert = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL,
+                    _("File already exists. Do you want to overwrite it?"));
             int res = alert.run();
             alert.close();
 
@@ -262,7 +272,8 @@ public class TatapWindow : Gtk.Window {
         try {
             string extension = tmp[tmp.length - 1];
             if (TatapFileType.is_valid_extension(extension)) {
-                pixbuf.save(full_path, TatapFileType.to_pixbuf_type(extension)); // TODO other parameters will be required.
+                // TODO other parameters will be required.
+                pixbuf.save(full_path, TatapFileType.to_pixbuf_type(extension));
                 Idle.add(() => {
                     message_label.label = _("The file is saved.");
                     message_revealer.reveal_child = true;
@@ -278,7 +289,8 @@ public class TatapWindow : Gtk.Window {
         } catch (TatapError e) {
             if (e is TatapError.INVALID_EXTENSION) {
                 DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
-                MessageDialog alert = new MessageDialog(this, flags, MessageType.WARNING, ButtonsType.OK, _("This has invalid extension (choose from jpg, png, bmp, or ico)"));
+                MessageDialog alert = new MessageDialog(this, flags, MessageType.WARNING, ButtonsType.OK,
+                        _("This has invalid extension (choose from jpg, png, bmp, or ico)"));
                 alert.run();
                 alert.close();
             }
