@@ -32,7 +32,7 @@ executable(
     'src/Utils/TatapFileUtils.vala',
     'src/Utils/TatapMathUtils.vala',
     'src/Utils/TatapStringUtils.vala',
-    'src/Widgets/NavigationBox.vala',
+    'src/Widgets/HeaderButtons.vala',
     'src/Widgets/ToolBarRevealer.vala',
     'src/Widgets/ToolButton.vala',
     'src/Application.vala',
