@@ -21,6 +21,7 @@ public class HeaderButtons : Gtk.Box {
 
     private ToolButton image_prev_button;
     private ToolButton image_next_button;
+    private Gtk.ToolButton save_button;
 
     public HeaderButtons (TatapWindow window) {
         Object (
@@ -53,7 +54,7 @@ public class HeaderButtons : Gtk.Box {
         });
 
         var save_button_icon = new Gtk.Image.from_icon_name("document-save-as", Gtk.IconSize.SMALL_TOOLBAR);
-        var save_button = new Gtk.ToolButton(save_button_icon, null) {
+        save_button = new Gtk.ToolButton(save_button_icon, null) {
             tooltip_text = _("Save as…")
         };
         save_button.clicked.connect(() => {
@@ -105,5 +106,9 @@ public class HeaderButtons : Gtk.Box {
 
     public void set_image_next_button_sensitivity(bool is_sensitive) {
         image_next_button.sensitive = is_sensitive;
+    }
+
+    public void set_save_button_sensitivity(bool is_sensitive) {
+        save_button.sensitive = is_sensitive;
     }
 }
