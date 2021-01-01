@@ -50,7 +50,7 @@ public class HeaderButtons : Gtk.Box {
             tooltip_text = _("Open")
         };
         open_button.clicked.connect(() => {
-            on_open_button_clicked();
+            window.on_open_button_clicked();
         });
 
         var save_button_icon = new Gtk.Image.from_icon_name("document-save-as", Gtk.IconSize.SMALL_TOOLBAR);
@@ -67,18 +67,6 @@ public class HeaderButtons : Gtk.Box {
 
         add(navigation_box);
         add(actions_box);
-    }
-
-    private void on_open_button_clicked() {
-        var dialog = new Gtk.FileChooserDialog(_("Choose file to open"), window, Gtk.FileChooserAction.OPEN,
-                                           _("Cancel"), Gtk.ResponseType.CANCEL,
-                                           _("Open"), Gtk.ResponseType.ACCEPT);
-        int res = dialog.run();
-        if (res == Gtk.ResponseType.ACCEPT) {
-            string filename = dialog.get_filename();
-            window.open_file(filename);
-        }
-        dialog.close();
     }
 
     private void on_save_button_clicked() {

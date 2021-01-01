@@ -70,6 +70,18 @@ public class TatapWindow : Gtk.Window {
         headerbar.pack_start(header_buttons);
         headerbar.pack_end(header_button_box_right);
 
+        /* welcome screen */
+        var welcome = new Granite.Widgets.Welcome(
+            _("No Images Open"),
+            _("Click 'Open Image' to get started.")
+        );
+        welcome.append("document-open", _("Open Image"), _("Show and edit your image."));
+        welcome.activated.connect((i) => {
+            if (i == 0) {
+                on_open_button_clicked();
+            }
+        });
+
         /* image area in the center of the window */
         image = new TatapImage(true);
         image.get_style_context().add_class("image-view");
@@ -80,6 +92,12 @@ public class TatapWindow : Gtk.Window {
             print("Scroll Event\n");
             return false;
         });
+
+        /* switch welcome screen and image view */
+        var stack = new Stack();
+        stack.transition_type = StackTransitionType.SLIDE_LEFT_RIGHT;
+        stack.add(welcome);
+        stack.add(image_container);
 
         /* contain buttons that can be opened from the menu */
         toolbar_revealer = new ToolBarRevealer(this);
@@ -111,32 +129,26 @@ public class TatapWindow : Gtk.Window {
 
         /* Add images and revealer into overlay */
         var window_overlay = new Overlay();
-        window_overlay.add(image_container);
+        window_overlay.add(stack);
         window_overlay.add_overlay(revealer_box);
         window_overlay.set_overlay_pass_through(revealer_box, true);
 
         add(window_overlay);
 
         Idle.add(() => {
-            if (file_list != null) {
-                if (file_list.size == 0) {
-                    header_buttons.set_image_prev_button_sensitivity(false);
-                    header_buttons.set_image_next_button_sensitivity(false);
-                    header_buttons.set_save_button_sensitivity(false);
-                    toolbar_toggle_button.sensitive = false;
-                } else {
-                    header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
-                    header_buttons.set_image_next_button_sensitivity(!file_list.file_is_last(true));
-                    header_buttons.set_save_button_sensitivity(true);
-                    toolbar_toggle_button.sensitive = true;
-                }
-            } else {
+            if (file_list == null || file_list.size == 0) {
+                stack.visible_child = welcome;
                 header_buttons.set_image_prev_button_sensitivity(false);
                 header_buttons.set_image_next_button_sensitivity(false);
                 header_buttons.set_save_button_sensitivity(false);
                 toolbar_toggle_button.sensitive = false;
+            } else {
+                stack.visible_child = image_container;
+                header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
+                header_buttons.set_image_next_button_sensitivity(!file_list.file_is_last(true));
+                header_buttons.set_save_button_sensitivity(true);
+                toolbar_toggle_button.sensitive = true;
             }
-
             return Source.CONTINUE;
         });
 
@@ -223,6 +235,18 @@ public class TatapWindow : Gtk.Window {
         Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (),
                                                     css_provider,
                                                     Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+    }
+
+    public void on_open_button_clicked() {
+        var dialog = new Gtk.FileChooserDialog(_("Choose file to open"), this, Gtk.FileChooserAction.OPEN,
+                                           _("Cancel"), Gtk.ResponseType.CANCEL,
+                                           _("Open"), Gtk.ResponseType.ACCEPT);
+        int res = dialog.run();
+        if (res == Gtk.ResponseType.ACCEPT) {
+            string filename = dialog.get_filename();
+            open_file(filename);
+        }
+        dialog.close();
     }
 
     public void open_file(string filename) {
