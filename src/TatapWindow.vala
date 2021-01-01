@@ -122,10 +122,19 @@ public class TatapWindow : Gtk.Window {
                 if (file_list.size == 0) {
                     header_buttons.set_image_prev_button_sensitivity(false);
                     header_buttons.set_image_next_button_sensitivity(false);
+                    header_buttons.set_save_button_sensitivity(false);
+                    toolbar_toggle_button.sensitive = false;
                 } else {
                     header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
                     header_buttons.set_image_next_button_sensitivity(!file_list.file_is_last(true));
+                    header_buttons.set_save_button_sensitivity(true);
+                    toolbar_toggle_button.sensitive = true;
                 }
+            } else {
+                header_buttons.set_image_prev_button_sensitivity(false);
+                header_buttons.set_image_next_button_sensitivity(false);
+                header_buttons.set_save_button_sensitivity(false);
+                toolbar_toggle_button.sensitive = false;
             }
 
             return Source.CONTINUE;
