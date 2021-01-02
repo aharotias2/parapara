@@ -146,4 +146,8 @@ public class ToolBarRevealer : Gtk.Revealer {
 
         add(toolbar_hbox);
     }
+
+    public void set_zoom_fit_button_sensitivity(bool is_sensitive) {
+        zoom_fit_button.sensitive = is_sensitive;
+    }
 }
