@@ -35,7 +35,7 @@ public class TatapWindow : Gtk.Window {
     public TatapImage image { get; private set; }
     private Revealer message_revealer;
     private Label message_label;
-
+    private Stack stack;
     private ToolBarRevealer toolbar_revealer;
 
     public TatapFileList? file_list { get; private set; default = null; }
@@ -94,10 +94,12 @@ public class TatapWindow : Gtk.Window {
         });
 
         /* switch welcome screen and image view */
-        var stack = new Stack();
+        stack = new Stack();
         stack.transition_type = StackTransitionType.SLIDE_LEFT_RIGHT;
         stack.add(welcome);
         stack.add(image_container);
+
+        image.container = stack;
 
         /* contain buttons that can be opened from the menu */
         toolbar_revealer = new ToolBarRevealer(this);
