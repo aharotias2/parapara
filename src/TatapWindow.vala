@@ -94,8 +94,9 @@ public class TatapWindow : Gtk.Window {
         });
 
         /* switch welcome screen and image view */
-        var stack = new Stack();
-        stack.transition_type = StackTransitionType.SLIDE_LEFT_RIGHT;
+        var stack = new Stack() {
+            transition_type = StackTransitionType.SLIDE_LEFT_RIGHT
+        };
         stack.add(welcome);
         stack.add(image_container);
 
