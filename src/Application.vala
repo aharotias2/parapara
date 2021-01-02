@@ -27,23 +27,54 @@ public class Application : Gtk.Application {
     * The Program Entry Proint.
     * It initializes Gtk, and create a new window to start program.
     */
-    public static int main(string[] args) {
-        Gtk.init(ref args);
-        var window = new TatapWindow();
+    public Application () {
+        Object (
+            application_id: "com.github.aharotias2.tatap",
+            flags: ApplicationFlags.HANDLES_OPEN
+        );
+    }
 
-        if (args.length > 1) {
-            File file = File.new_for_path(args[1]);
+    protected override void activate() {
+        create_new_window();
+    }
+
+    protected override void open(File[] files, string hint) {
+        if (files.length == 0) {
+            return;
+        }
+
+        foreach (var file in files) {
             string? filepath = file.get_path();
             string mimetype = TatapFileUtils.get_mime_type_from_file(file);
             if (mimetype != null && mimetype.split("/")[0] == "image") {
+                TatapWindow window = create_new_window();
                 window.open_file(filepath);
             } else {
                 stderr.printf("The argument is not a image file!\n");
             }
         }
+    }
 
+    private TatapWindow create_new_window() {
+        var window = new TatapWindow();
+        window.set_application(this);
         window.show_all();
-        Gtk.main();
-        return 0;
+        return window;
+    }
+
+    public static int main(string[] args) {
+        var app = new Application();
+
+        if (args.length > 1) {
+            File[]? files = null;
+
+            for (int i = 0; i < args.length; i++) {
+                files += File.new_for_path(args[i]);
+            }
+
+            app.open(files, "Open specified files");
+        }
+
+        return app.run(args);
     }
 }

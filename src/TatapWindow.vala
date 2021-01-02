@@ -43,6 +43,7 @@ public class TatapWindow : Gtk.Window {
     private bool button_pressed = false;
     private double x;
     private double y;
+    private uint? update_view;
 
     public TatapWindow() {
         /* previous, next, open, and save buttons at the left of the headerbar */
@@ -138,7 +139,7 @@ public class TatapWindow : Gtk.Window {
 
         add(window_overlay);
 
-        Idle.add(() => {
+        update_view = Idle.add(() => {
             if (file_list == null || file_list.size == 0) {
                 stack.visible_child = welcome;
                 header_buttons.set_image_prev_button_sensitivity(false);
@@ -169,7 +170,9 @@ public class TatapWindow : Gtk.Window {
             }
             return false;
         });
-        destroy.connect(Gtk.main_quit);
+        destroy.connect(() => {
+            Source.remove(update_view);
+        });
 
         setup_css();
     }
