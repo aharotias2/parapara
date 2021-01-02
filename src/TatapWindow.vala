@@ -141,13 +141,21 @@ public class TatapWindow : Gtk.Window {
                     stack.visible_child = welcome;
                     header_buttons.set_image_prev_button_sensitivity(false);
                     header_buttons.set_image_next_button_sensitivity(false);
+                    header_buttons.set_save_button_sensitivity(false);
+                    toolbar_toggle_button.sensitive = false;
                 } else {
                     stack.visible_child = image_container;
                     header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
                     header_buttons.set_image_next_button_sensitivity(!file_list.file_is_last(true));
+                    header_buttons.set_save_button_sensitivity(true);
+                    toolbar_toggle_button.sensitive = true;
                 }
             } else {
                 stack.visible_child = welcome;
+                header_buttons.set_image_prev_button_sensitivity(false);
+                header_buttons.set_image_next_button_sensitivity(false);
+                header_buttons.set_save_button_sensitivity(false);
+                toolbar_toggle_button.sensitive = false;
             }
 
             return Source.CONTINUE;

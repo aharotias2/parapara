@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-22 22:34+0900\n"
+"POT-Creation-Date: 2021-01-01 22:19+0900\n"
 "PO-Revision-Date: 2020-12-22 22:33+0900\n"
 "Last-Translator: Ryo Nakano <ryonakaknock3@gmail.com>\n"
 "Language-Team: none\n"
@@ -18,83 +18,100 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/TatapWindow.vala:85
+#: src/Widgets/NavigationBox.vala:34
 msgid "Previous"
 msgstr "前の画像"
 
-#: src/TatapWindow.vala:100
+#: src/Widgets/NavigationBox.vala:38
 msgid "Next"
 msgstr "次の画像"
 
-#: src/TatapWindow.vala:124
-msgid "Menu"
-msgstr "メニュー"
-
-#: src/TatapWindow.vala:169 src/TatapWindow.vala:507 src/TatapWindow.vala:519
+#: src/Widgets/NavigationBox.vala:49 src/Widgets/NavigationBox.vala:74
+#: src/Widgets/NavigationBox.vala:92
 msgid "Open"
 msgstr "開く"
 
-#: src/TatapWindow.vala:178 src/TatapWindow.vala:517
+#: src/Widgets/NavigationBox.vala:57 src/Widgets/NavigationBox.vala:91
 msgid "Save as…"
 msgstr "名前を付けて保存…"
 
-#: src/TatapWindow.vala:194
-msgid "Zoom in"
-msgstr "拡大"
-
-#: src/TatapWindow.vala:205
-msgid "Zoom out"
-msgstr "縮小"
-
-#: src/TatapWindow.vala:216
-msgid "Fit to the page"
-msgstr "ページに合わせる"
-
-#: src/TatapWindow.vala:227
-msgid "100%"
-msgstr "100%"
-
-#: src/TatapWindow.vala:238
-msgid "Flip horizontally"
-msgstr "上下反転"
-
-#: src/TatapWindow.vala:247
-msgid "Flip vertically"
-msgstr "左右反転"
-
-#: src/TatapWindow.vala:256
-msgid "Rotate to the left"
-msgstr "右回転"
-
-#: src/TatapWindow.vala:267
-msgid "Rotate to the right"
-msgstr "左回転"
-
-#: src/TatapWindow.vala:434
-msgid "The directory does not found. Exiting."
-msgstr "ディレクトリが存在しません。終了します。"
-
-#: src/TatapWindow.vala:442
-msgid "The file does not found."
-msgstr "ファイルが見つかりません。"
-
-#: src/TatapWindow.vala:465
-msgid "File already exists. Do you want to overwrite it?"
-msgstr "ファイルはすでに存在します。上書きしてもよろしいですか？"
-
-#. TODO other parameters will be required.
-#: src/TatapWindow.vala:481
-msgid "The file is saved."
-msgstr "画像を保存しました。"
-
-#: src/TatapWindow.vala:495
-msgid "This has invalid extension (choose from jpg, png, bmp, or ico)"
-msgstr "拡張子の種類が不正です (jpg、png、bmp、ico から選択してください)"
-
-#: src/TatapWindow.vala:505
+#: src/Widgets/NavigationBox.vala:72
 msgid "Choose file to open"
 msgstr "開くファイルを選択"
 
-#: src/TatapWindow.vala:506 src/TatapWindow.vala:518
+#: src/Widgets/NavigationBox.vala:73 src/Widgets/NavigationBox.vala:92
 msgid "Cancel"
 msgstr "キャンセル"
+
+#: src/Widgets/NavigationBox.vala:87
+msgid "Sorry, saving animations is not supported yet."
+msgstr "残念、アニメーションの保存はできません"
+
+#: src/Widgets/ToolBarRevealer.vala:35
+msgid "Zoom in"
+msgstr "拡大"
+
+#: src/Widgets/ToolBarRevealer.vala:43
+msgid "Zoom out"
+msgstr "縮小"
+
+#: src/Widgets/ToolBarRevealer.vala:51
+msgid "Fit to the page"
+msgstr "ページに合わせる"
+
+#: src/Widgets/ToolBarRevealer.vala:59
+msgid "100%"
+msgstr "100%"
+
+#: src/Widgets/ToolBarRevealer.vala:67
+msgid "Flip horizontally"
+msgstr "上下反転"
+
+#: src/Widgets/ToolBarRevealer.vala:73
+msgid "Flip vertically"
+msgstr "左右反転"
+
+#: src/Widgets/ToolBarRevealer.vala:79
+msgid "Rotate to the left"
+msgstr "右回転"
+
+#: src/Widgets/ToolBarRevealer.vala:87
+msgid "Rotate to the right"
+msgstr "左回転"
+
+#: src/Widgets/ToolBarRevealer.vala:108
+msgid "Skip forward"
+msgstr "進む"
+
+#: src/Widgets/ToolBarRevealer.vala:117
+msgid "Play animation"
+msgstr "アニメーションを再生する"
+
+#: src/TatapWindow.vala:54
+msgid "Menu"
+msgstr "メニュー"
+
+#: src/TatapWindow.vala:233
+msgid "The directory does not found. Exiting."
+msgstr "ディレクトリが存在しません。終了します。"
+
+#: src/TatapWindow.vala:241
+msgid "The file does not found."
+msgstr "ファイルが見つかりません。"
+
+#: src/TatapWindow.vala:261 src/TatapWindow.vala:267
+#, c-format
+msgid "The file could not be opend (cause: %s)"
+msgstr "ファイルを開けません (理由: %s)"
+
+#: src/TatapWindow.vala:280
+msgid "File already exists. Do you want to overwrite it?"
+msgstr "ファイルはすでに存在します。上書きしてもよろしいですか？"
+
+#: src/TatapWindow.vala:297
+msgid "The file is saved."
+msgstr "画像を保存しました。"
+
+#: src/TatapWindow.vala:312
+msgid "This has invalid extension (choose from jpg, png, bmp, or ico)"
+msgstr "拡張子の種類が不正です (jpg、png、bmp、ico から選択してください)"
