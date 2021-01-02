@@ -200,8 +200,12 @@ public class TatapWindow : Gtk.Window {
                 if (ModifierType.CONTROL_MASK in ev.scroll.state) {
                     if (ev.scroll.direction == ScrollDirection.UP) {
                         image.zoom_in();
+                        set_title_label();
+                        toolbar_revealer.set_zoom_fit_button_sensitivity(true);
                     } else if (ev.scroll.direction == ScrollDirection.DOWN) {
                         image.zoom_out();
+                        set_title_label();
+                        toolbar_revealer.set_zoom_fit_button_sensitivity(true);
                     }
                     return true;
                 }
