@@ -94,8 +94,9 @@ public class TatapWindow : Gtk.Window {
         });
 
         /* switch welcome screen and image view */
-        stack = new Stack();
-        stack.transition_type = StackTransitionType.SLIDE_LEFT_RIGHT;
+        var stack = new Stack() {
+            transition_type = StackTransitionType.SLIDE_LEFT_RIGHT
+        };
         stack.add(welcome);
         stack.add(image_container);
 
@@ -151,7 +152,6 @@ public class TatapWindow : Gtk.Window {
                 header_buttons.set_save_button_sensitivity(true);
                 toolbar_toggle_button.sensitive = true;
             }
-            return Source.CONTINUE;
         });
 
         set_titlebar(headerbar);
