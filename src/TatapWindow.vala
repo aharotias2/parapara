@@ -214,6 +214,19 @@ public class TatapWindow : Gtk.Window {
                     case Gdk.Key.Right:
                         go_next();
                         return true;
+                    case Gdk.Key.space:
+                        if (image.is_animation) {
+                            if (!image.paused) {
+                                image.pause();
+                                toolbar_revealer.animation_play_pause_button.replace_icon_name("media-playback-pause-symbolic");
+                                toolbar_revealer.animation_forward_button.sensitive = true;
+                            } else {
+                                image.unpause();
+                                toolbar_revealer.animation_play_pause_button.replace_icon_name("media-playback-start-symbolic");
+                                toolbar_revealer.animation_forward_button.sensitive = false;
+                            }
+                        }
+                        break;
                 }
                 break;
             default:
