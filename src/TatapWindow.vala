@@ -330,29 +330,16 @@ public class TatapWindow : Gtk.Window {
         string[] tmp = full_path.split(".");
         try {
             string extension = tmp[tmp.length - 1];
-            if (TatapFileType.is_valid_extension(extension)) {
-                // TODO other parameters will be required.
-                pixbuf.save(full_path, TatapFileType.to_pixbuf_type(extension));
-                Idle.add(() => {
-                    message_label.label = _("The file is saved.");
-                    message_revealer.reveal_child = true;
-                    Timeout.add(2000, () => {
-                        message_revealer.reveal_child = false;
-                        return Source.REMOVE;
-                    });
+            pixbuf.save(full_path, TatapFileType.to_pixbuf_type(extension));
+            Idle.add(() => {
+                message_label.label = _("The file is saved.");
+                message_revealer.reveal_child = true;
+                Timeout.add(2000, () => {
+                    message_revealer.reveal_child = false;
                     return Source.REMOVE;
                 });
-            } else {
-                throw new TatapError.INVALID_EXTENSION(extension);
-            }
-        } catch (TatapError e) {
-            if (e is TatapError.INVALID_EXTENSION) {
-                DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
-                MessageDialog alert = new MessageDialog(this, flags, MessageType.WARNING, ButtonsType.OK,
-                        _("This has invalid extension (choose from jpg, png, bmp, or ico)"));
-                alert.run();
-                alert.close();
-            }
+                return Source.REMOVE;
+            });
         } catch (Error e) {
             stderr.printf("Error: %s\n", e.message);
         }
