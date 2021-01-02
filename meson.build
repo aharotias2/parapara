@@ -41,6 +41,7 @@ executable(
     'src/TatapWindow.vala',
     dependencies: [
         dependency('gee-0.8'),
+        dependency('granite'),
         dependency('gtk+-3.0'),
         dependency('gdk-3.0')
     ],

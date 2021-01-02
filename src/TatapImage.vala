@@ -35,6 +35,7 @@ public class TatapImage : Image {
         5700, 5800, 5900, 6000
     };
 
+    public Container container { get; set; }
     public File? fileref { get; set; }
     public bool fit { get; set; }
     public bool is_animation { get; private set; }
@@ -73,6 +74,7 @@ public class TatapImage : Image {
         has_image = false;
         paused_value = true;
         playing = false;
+        container = parent;
     }
 
     public void open(string filename) throws FileError, Error {
@@ -174,8 +176,8 @@ public class TatapImage : Image {
         if (original_pixbuf != null) {
             fit = true;
             debug("TatapImage::fit_image_to_window");
-            int w0 = parent.get_allocated_width();
-            int h0 = parent.get_allocated_height();
+            int w0 = container.get_allocated_width();
+            int h0 = container.get_allocated_height();
             double r0 = (double) w0 / (double) h0;
             double r1 = original_rate_x;
             if (r0 >= r1) {
