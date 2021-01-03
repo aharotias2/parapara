@@ -225,11 +225,11 @@ public class TatapWindow : Gtk.Window {
                         if (image.is_animation) {
                             if (!image.paused) {
                                 image.pause();
-                                toolbar_revealer.animation_play_pause_button.replace_icon_name("media-playback-pause-symbolic");
+                                toolbar_revealer.animation_play_pause_button.icon_name = "media-playback-pause-symbolic";
                                 toolbar_revealer.animation_forward_button.sensitive = true;
                             } else {
                                 image.unpause();
-                                toolbar_revealer.animation_play_pause_button.replace_icon_name("media-playback-start-symbolic");
+                                toolbar_revealer.animation_play_pause_button.icon_name = "media-playback-start-symbolic";
                                 toolbar_revealer.animation_forward_button.sensitive = false;
                             }
                         }
@@ -304,9 +304,10 @@ public class TatapWindow : Gtk.Window {
             header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
             header_buttons.set_image_next_button_sensitivity(!file_list.file_is_last(true));
             if (image.is_animation) {
-                toolbar_revealer.animation_play_pause_button.replace_icon_name("media-playback-pause-symbolic");
+                toolbar_revealer.animation_play_pause_button.icon_name = "media-playback-start-symbolic";
                 toolbar_revealer.animation_play_pause_button.sensitive = true;
             } else {
+                toolbar_revealer.animation_play_pause_button.icon_name = "media-playback-start-symbolic";
                 toolbar_revealer.animation_play_pause_button.sensitive = false;
                 toolbar_revealer.animation_forward_button.sensitive = false;
             }

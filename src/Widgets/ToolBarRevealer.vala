@@ -120,12 +120,30 @@ public class ToolBarRevealer : Gtk.Revealer {
         animation_play_pause_button.clicked.connect(() => {
             if (!window.image.paused) {
                 window.image.pause();
-                animation_play_pause_button.replace_icon_name("media-playback-pause-symbolic");
+                animation_play_pause_button.icon_name = "media-playback-pause-symbolic";
                 animation_forward_button.sensitive = true;
             } else {
                 window.image.unpause();
-                animation_play_pause_button.replace_icon_name("media-playback-start-symbolic");
+                animation_play_pause_button.icon_name = "media-playback-start-symbolic";
                 animation_forward_button.sensitive = false;
+            }
+        });
+        animation_play_pause_button.enter_notify_event.connect((ex) => {
+            if (window.image.is_animation) {
+                if (window.image.paused) {
+                    animation_play_pause_button.icon_name = "media-playback-start-symbolic";
+                } else {
+                    animation_play_pause_button.icon_name = "media-playback-pause-symbolic";
+                }
+            }
+        });
+        animation_play_pause_button.leave_notify_event.connect((ex) => {
+            if (window.image.is_animation) {
+                if (window.image.paused) {
+                    animation_play_pause_button.icon_name = "media-playback-pause-symbolic";
+                } else {
+                    animation_play_pause_button.icon_name = "media-playback-start-symbolic";
+                }
             }
         });
 

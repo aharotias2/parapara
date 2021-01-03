@@ -17,7 +17,16 @@
  */
 
 public class ToolButton : Gtk.Button {
-    public string icon_name { get; construct; }
+    private string icon_name_value;
+    
+    public string icon_name {
+        get {
+            return icon_name_value;
+        }
+        set {
+            replace_icon_name(value);
+        }
+    }
 
     public ToolButton (string icon_name, string tooltip_text) {
         Object (
@@ -26,12 +35,8 @@ public class ToolButton : Gtk.Button {
         );
     }
 
-    construct {
-        var icon = new Gtk.Image.from_icon_name(icon_name, Gtk.IconSize.SMALL_TOOLBAR);
-        add(icon);
-    }
-
     public void replace_icon_name(string new_icon_name) {
+        icon_name_value = new_icon_name;
         image = new Gtk.Image.from_icon_name(new_icon_name, Gtk.IconSize.SMALL_TOOLBAR);
     }
 }
