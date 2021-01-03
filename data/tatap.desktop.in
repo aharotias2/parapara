@@ -2,7 +2,7 @@
 Name=Tatap
 GenericName=Image Viewer
 Comment=View image files
-MimeType=image/jpeg;image/gif;image/png
+MimeType=image/jpeg;image/gif;image/png;image/bmp;image/vnd.microsoft.icon;
 Exec=com.github.aharotias2.tatap %F
 Icon=com.github.aharotias2.tatap
 Type=Application
