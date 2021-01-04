@@ -20,8 +20,8 @@ public class ToolBarRevealer : Gtk.Revealer {
     public TatapWindow window { get; construct; }
 
     private Gtk.Button zoom_fit_button;
-    public ToolButton animation_forward_button { get; private set; }
-    public ToolButton animation_play_pause_button { get; private set; }
+    public ActionButton animation_forward_button { get; private set; }
+    public ActionButton animation_play_pause_button { get; private set; }
 
     public ToolBarRevealer (TatapWindow window) {
         Object (
@@ -32,7 +32,7 @@ public class ToolBarRevealer : Gtk.Revealer {
 
     construct {
         /* action buttons for the image */
-        var zoom_in_button = new ToolButton("zoom-in-symbolic", _("Zoom in"));
+        var zoom_in_button = new ActionButton("zoom-in-symbolic", _("Zoom in"));
         zoom_in_button.get_style_context().add_class("image_overlay_button");
         zoom_in_button.clicked.connect(() => {
             window.image.zoom_in();
@@ -40,7 +40,7 @@ public class ToolBarRevealer : Gtk.Revealer {
             zoom_fit_button.sensitive = true;
         });
 
-        var zoom_out_button = new ToolButton("zoom-out-symbolic", _("Zoom out"));
+        var zoom_out_button = new ActionButton("zoom-out-symbolic", _("Zoom out"));
         zoom_out_button.get_style_context().add_class("image_overlay_button");
         zoom_out_button.clicked.connect(() => {
             window.image.zoom_out();
@@ -48,7 +48,7 @@ public class ToolBarRevealer : Gtk.Revealer {
             zoom_fit_button.sensitive = true;
         });
 
-        zoom_fit_button = new ToolButton("zoom-fit-best-symbolic", _("Fit to the page"));
+        zoom_fit_button = new ActionButton("zoom-fit-best-symbolic", _("Fit to the page"));
         zoom_fit_button.get_style_context().add_class("image_overlay_button");
         zoom_fit_button.clicked.connect(() => {
             window.image.fit_image_to_window();
@@ -56,7 +56,7 @@ public class ToolBarRevealer : Gtk.Revealer {
             zoom_fit_button.sensitive = false;
         });
 
-        var zoom_orig_button = new ToolButton("zoom-original-symbolic", _("100%"));
+        var zoom_orig_button = new ActionButton("zoom-original-symbolic", _("100%"));
         zoom_orig_button.get_style_context().add_class("image_overlay_button");
         zoom_orig_button.clicked.connect(() => {
             window.image.zoom_original();
@@ -64,19 +64,19 @@ public class ToolBarRevealer : Gtk.Revealer {
             zoom_fit_button.sensitive = true;
         });
 
-        var hflip_button = new ToolButton("object-flip-horizontal-symbolic", _("Flip horizontally"));
+        var hflip_button = new ActionButton("object-flip-horizontal-symbolic", _("Flip horizontally"));
         hflip_button.get_style_context().add_class("image_overlay_button");
         hflip_button.clicked.connect(() => {
             window.image.hflip();
         });
 
-        var vflip_button = new ToolButton("object-flip-vertical-symbolic", _("Flip vertically"));
+        var vflip_button = new ActionButton("object-flip-vertical-symbolic", _("Flip vertically"));
         vflip_button.get_style_context().add_class("image_overlay_button");
         vflip_button.clicked.connect(() => {
             window.image.vflip();
         });
 
-        var lrotate_button = new ToolButton("object-rotate-left-symbolic", _("Rotate to the left"));
+        var lrotate_button = new ActionButton("object-rotate-left-symbolic", _("Rotate to the left"));
         lrotate_button.get_style_context().add_class("image_overlay_button");
         lrotate_button.clicked.connect(() => {
             window.image.rotate_left();
@@ -84,7 +84,7 @@ public class ToolBarRevealer : Gtk.Revealer {
             zoom_fit_button.sensitive = true;
         });
 
-        var rrotate_button = new ToolButton("object-rotate-right-symbolic", _("Rotate to the right"));
+        var rrotate_button = new ActionButton("object-rotate-right-symbolic", _("Rotate to the right"));
         rrotate_button.get_style_context().add_class("image_overlay_button");
         rrotate_button.clicked.connect(() => {
             window.image.rotate_right();
@@ -105,7 +105,7 @@ public class ToolBarRevealer : Gtk.Revealer {
         image_actions_button_box.pack_start(lrotate_button);
         image_actions_button_box.pack_start(rrotate_button);
 
-        animation_forward_button = new ToolButton("media-skip-forward-symbolic", _("Skip forward"));
+        animation_forward_button = new ActionButton("media-skip-forward-symbolic", _("Skip forward"));
         animation_forward_button.sensitive = false;
         animation_forward_button.get_style_context().add_class("image_overlay_button");
         animation_forward_button.clicked.connect(() => {
@@ -114,7 +114,7 @@ public class ToolBarRevealer : Gtk.Revealer {
             }
         });
 
-        animation_play_pause_button = new ToolButton("media-playback-start-symbolic", _("Play animation"));
+        animation_play_pause_button = new ActionButton("media-playback-start-symbolic", _("Play animation"));
         animation_play_pause_button.sensitive = false;
         animation_play_pause_button.get_style_context().add_class("image_overlay_button");
         animation_play_pause_button.clicked.connect(() => {
