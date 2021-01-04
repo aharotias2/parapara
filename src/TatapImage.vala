@@ -68,6 +68,7 @@ public class TatapImage : Image {
     private bool playing;
     private bool step_once;
     private TimeVal? tval;
+    private uint file_counter;
 
     public TatapImage(bool fit) {
         this.fit = fit;
@@ -75,6 +76,7 @@ public class TatapImage : Image {
         paused_value = true;
         playing = false;
         container = parent;
+        file_counter = 0;
     }
 
     public void open(string filename) throws FileError, Error {
@@ -86,6 +88,7 @@ public class TatapImage : Image {
             }
 
             fileref = file;
+            file_counter++;
             animation = new PixbufAnimation.from_file(filename);
             tval = TimeVal();
             animation_iter = animation.get_iter(tval);
@@ -121,8 +124,8 @@ public class TatapImage : Image {
     }
 
     public async void animate() {
-        string filepath_save = fileref.get_path();
-        while (filepath_save == fileref.get_path()) {
+        uint count_holder = file_counter;
+        while (count_holder == file_counter) {
             if (!paused_value || step_once) {
                 tval.add(animation_iter.get_delay_time() * 1000);
                 animation_iter.advance(tval);
@@ -150,6 +153,10 @@ public class TatapImage : Image {
             }
             yield;
         }
+    }
+
+    public void quit_animation() {
+        file_counter = 0;
     }
 
     public void animate_step_once() {

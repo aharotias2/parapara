@@ -172,6 +172,9 @@ public class TatapWindow : Gtk.Window {
         });
         destroy.connect(() => {
             Source.remove(update_view);
+            if (image.is_animation) {
+                image.quit_animation();
+            }
         });
 
         setup_css();
