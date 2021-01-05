@@ -16,27 +16,22 @@
  *  Tanaka Takayuki <aharotias2@gmail.com>
  */
 
-public class ToolButton : Gtk.Button {
-    private string icon_name_value;
-    
+public class ActionButton : Gtk.Button {
+    private string _icon_name;
     public string icon_name {
         get {
-            return icon_name_value;
+            return _icon_name;
         }
         set {
-            replace_icon_name(value);
+            _icon_name = value;
+            image = new Gtk.Image.from_icon_name(_icon_name, Gtk.IconSize.SMALL_TOOLBAR);
         }
     }
 
-    public ToolButton (string icon_name, string tooltip_text) {
+    public ActionButton (string icon_name, string tooltip_text) {
         Object (
             icon_name: icon_name,
             tooltip_text: tooltip_text
         );
-    }
-
-    public void replace_icon_name(string new_icon_name) {
-        icon_name_value = new_icon_name;
-        image = new Gtk.Image.from_icon_name(new_icon_name, Gtk.IconSize.SMALL_TOOLBAR);
     }
 }

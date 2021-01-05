@@ -19,8 +19,8 @@
 public class HeaderButtons : Gtk.Box {
     public TatapWindow window { get; construct; }
 
-    private ToolButton image_prev_button;
-    private ToolButton image_next_button;
+    private ActionButton image_prev_button;
+    private ActionButton image_next_button;
     private Gtk.ToolButton save_button;
 
     public HeaderButtons (TatapWindow window) {
@@ -32,11 +32,11 @@ public class HeaderButtons : Gtk.Box {
     }
 
     construct {
-        image_prev_button = new ToolButton("go-previous-symbolic", _("Previous"));
+        image_prev_button = new ActionButton("go-previous-symbolic", _("Previous"));
         image_prev_button.get_style_context().add_class("image_button");
         image_prev_button.clicked.connect(window.go_prev);
 
-        image_next_button = new ToolButton("go-next-symbolic", _("Next"));
+        image_next_button = new ActionButton("go-next-symbolic", _("Next"));
         image_next_button.get_style_context().add_class("image_button");
         image_next_button.clicked.connect(window.go_next);
 
@@ -44,7 +44,7 @@ public class HeaderButtons : Gtk.Box {
         navigation_box.pack_start(image_prev_button);
         navigation_box.pack_start(image_next_button);
 
-        /* action buttons */
+        /* file buttons */
         var open_button_icon = new Gtk.Image.from_icon_name("document-open", Gtk.IconSize.SMALL_TOOLBAR);
         var open_button = new Gtk.ToolButton(open_button_icon, null) {
             tooltip_text = _("Open")
@@ -61,12 +61,12 @@ public class HeaderButtons : Gtk.Box {
             on_save_button_clicked();
         });
 
-        var actions_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
-        actions_box.pack_start(open_button);
-        actions_box.pack_start(save_button);
+        var file_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
+        file_box.pack_start(open_button);
+        file_box.pack_start(save_button);
 
         add(navigation_box);
-        add(actions_box);
+        add(file_box);
     }
 
     private void on_save_button_clicked() {
