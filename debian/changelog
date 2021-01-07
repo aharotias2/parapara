@@ -1,3 +1,5 @@
-com.github.yourusername.yourrepositoryname (0.1) UNRELEASED; urgency=low
+com.github.aharotias2.tatap (3.0.0) bionic; urgency=medium
 
-  * Initial Release.
+  * Initial release to AppCenter
+
+ -- Takayuki Tanaka <aharotias2@gmail.com>  Thu, 07 Jan 2021 15:02:58 +0900
