@@ -114,8 +114,8 @@ public class TatapFileList {
                 }
                 Thread.usleep(500);
             }
+            file_not_found();
         }
-        file_not_found();
         return null;
     }
 
