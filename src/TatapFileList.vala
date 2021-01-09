@@ -131,6 +131,8 @@ public class TatapFileList {
             }
             if (current_index < file_list.size - 1) {
                 new_index = current_index + 1;
+            } else if (current_index == file_list.size - 1) {
+                continue;
             } else {
                 new_index = file_list.size - 1;
             }
@@ -144,7 +146,9 @@ public class TatapFileList {
             }
             Thread.usleep(500);
         }
-        file_not_found();
+        if (current_index < file_list.size - 1) {
+            file_not_found();
+        }
         return null;
     }
 
