@@ -4,12 +4,11 @@ Priority: optional
 Maintainer: Takayuki Tanaka <aharotias2@gmail.com>
 Build-Depends: debhelper (>= 10.5.1),
                gettext,
-               libgee-0.8-dev
+               libgee-0.8-dev,
                libgranite-dev,
-               libgtk3-dev,
-               ninja (>= 1.0),
+               libgtk-3-dev,
                meson (>= 0.5),
-               valac (>= 0.40.0),
+               valac (>= 0.40.0)
 Standards-Version: 4.1.1
 
 Package: com.github.aharotias2.tatap
