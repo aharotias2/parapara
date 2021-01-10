@@ -54,7 +54,6 @@ public class TatapImage : Image {
     public int original_width { get { return original_pixbuf.width; } }
     public bool has_image { get; set; }
     private PixbufAnimation? animation;
-    private PixbufAnimationIter? animation_iter;
     private Pixbuf? original_pixbuf;
     private int zoom_percent = 1000;
     private int? original_max_size;
@@ -91,7 +90,7 @@ public class TatapImage : Image {
             file_counter++;
             animation = new PixbufAnimation.from_file(filename);
             tval = TimeVal();
-            animation_iter = animation.get_iter(tval);
+            var animation_iter = animation.get_iter(tval);
             original_pixbuf = animation_iter.get_pixbuf();
             original_max_size = int.max(original_pixbuf.width, original_pixbuf.height);
             original_rate_x = (double) original_pixbuf.width / (double) original_pixbuf.height;
@@ -114,7 +113,7 @@ public class TatapImage : Image {
             Idle.add(() => {
                 fit_image_to_window();
                 if (is_animation) {
-                    animate.begin();
+                    animate.begin(animation_iter);
                 }
                 return false;
             });
@@ -123,11 +122,12 @@ public class TatapImage : Image {
         }
     }
 
-    public async void animate() {
+    public async void animate(Gdk.PixbufAnimationIter animation_iter) {
         uint count_holder = file_counter;
         Thread<int>? inner_thread = null;
         bool run_thread = false;
         Gdk.Pixbuf? prepared_pixbuf = null;
+        Gdk.Pixbuf? prepared_pixbuf_resized = null;
         int next_zoom_percent = 100;
         while (count_holder == file_counter) {
             if (!paused_value || step_once) {
@@ -138,24 +138,24 @@ public class TatapImage : Image {
                     inner_thread = new Thread<int>(null, () => {
                         while (count_holder == file_counter) {
                             if (run_thread) {
-                                original_pixbuf = animation_iter.get_pixbuf();
-                                if (original_pixbuf == null) {
+                                prepared_pixbuf = animation_iter.get_pixbuf();
+                                if (prepared_pixbuf == null) {
                                     Idle.add(animate.callback);
                                     return -1;
                                 }
                                 if (hflipped) {
-                                    original_pixbuf = original_pixbuf.flip(true);
+                                    prepared_pixbuf = prepared_pixbuf.flip(true);
                                 }
                                 if (vflipped) {
-                                    original_pixbuf = original_pixbuf.flip(false);
+                                    prepared_pixbuf = prepared_pixbuf.flip(false);
                                 }
                                 if (degree != 0) {
                                     for (int i_degree = 0; i_degree < degree; i_degree += 90) {
-                                        original_pixbuf = original_pixbuf.rotate_simple(PixbufRotation.COUNTERCLOCKWISE);
+                                        prepared_pixbuf = prepared_pixbuf.rotate_simple(PixbufRotation.COUNTERCLOCKWISE);
                                     }
                                 }
-                                prepared_pixbuf = return_scale_xy(pixbuf.width, pixbuf.height);
-                                next_zoom_percent = calc_zoom_percent(prepared_pixbuf.height, original_pixbuf.height);
+                                prepared_pixbuf_resized = return_scale_xy(prepared_pixbuf, pixbuf.width, pixbuf.height);
+                                next_zoom_percent = calc_zoom_percent(prepared_pixbuf_resized.height, prepared_pixbuf.height);
                                 run_thread = false;
                                 Idle.add(animate.callback);
                             } else {
@@ -166,14 +166,14 @@ public class TatapImage : Image {
                     });
                 }
                 yield;
-                if (original_pixbuf == null) {
-                    break;
+                if (count_holder == file_counter) {
+                    original_pixbuf = prepared_pixbuf;
+                    pixbuf = prepared_pixbuf_resized;
+                    zoom_percent = next_zoom_percent;
+                    step_once = false;
+                    run_thread = false;
+                    Timeout.add(animation_iter.get_delay_time(), animate.callback);
                 }
-                pixbuf = prepared_pixbuf;
-                zoom_percent = next_zoom_percent;
-                step_once = false;
-                run_thread = false;
-                Timeout.add(animation_iter.get_delay_time(), animate.callback);
             } else {
                 run_thread = false;
                 Idle.add(animate.callback);
@@ -299,7 +299,7 @@ public class TatapImage : Image {
     private void scale_xy(int width, int height) {
         if (original_pixbuf != null) {
             debug("TatapImage::scale_xy(%d, %d)", width, height);
-            pixbuf = return_scale_xy(width, height);
+            pixbuf = return_scale_xy(original_pixbuf, width, height);
             if (fit) {
                 adjust_zoom_percent();
             }
@@ -336,12 +336,12 @@ public class TatapImage : Image {
         return resized * 1000 / original;
     }
 
-    private Gdk.Pixbuf? return_scale_xy(int width, int height) {
+    private Gdk.Pixbuf? return_scale_xy(Gdk.Pixbuf? src_pixbuf, int width, int height) {
         if (width >= 0 && height < 0) {
-            height = (int) (original_pixbuf.height * ((double) width / (double) original_pixbuf.width));
+            height = (int) (src_pixbuf.height * ((double) width / (double) src_pixbuf.width));
         } else if (width < 0 && height >= 0) {
-            width = (int) (original_pixbuf.width * ((double) height / (double) original_pixbuf.height));
+            width = (int) (src_pixbuf.width * ((double) height / (double) src_pixbuf.height));
         }
-        return PixbufUtils.scale_xy(original_pixbuf, width, height);
+        return PixbufUtils.scale_xy(src_pixbuf, width, height);
     }
 }
