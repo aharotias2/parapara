@@ -378,7 +378,6 @@ public class TatapWindow : Gtk.Window {
     public void go_next() {
         if (file_list != null) {
             File? next_file = file_list.get_next_file(image.fileref);
-            debug("next file: %s", next_file.get_basename());
 
             if (next_file != null) {
                 open_file(next_file.get_path());
