@@ -2,14 +2,14 @@
 # Copyright (C) 2020 THE com.github.aharotias2.tatap'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.aharotias2.tatap package.
 # Tanaka Takayuki <aharotias2@gmail.com>, 2019-2020.
-# Ryo Nakano <ryonakaknock3@gmail.com>, 2020.
+# Ryo Nakano <ryonakaknock3@gmail.com>, 2020-2021.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-12 14:11+0000\n"
-"PO-Revision-Date: 2020-12-22 22:33+0900\n"
+"PO-Revision-Date: 2021-01-14 11:54+0900\n"
 "Last-Translator: Ryo Nakano <ryonakaknock3@gmail.com>\n"
 "Language-Team: none\n"
 "Language: ja\n"
@@ -37,7 +37,7 @@ msgstr "名前を付けて保存…"
 
 #: src/Widgets/HeaderButtons.vala:76
 msgid "Sorry, saving animations is not supported yet."
-msgstr "残念、アニメーションの保存はできません"
+msgstr "申し訳ありませんが、アニメーションの保存には未対応です。"
 
 #: src/Widgets/HeaderButtons.vala:81 src/TatapWindow.vala:268
 msgid "Cancel"
@@ -81,7 +81,7 @@ msgstr "進む"
 
 #: src/Widgets/ToolBarRevealer.vala:117
 msgid "Play animation"
-msgstr "アニメーションを再生する"
+msgstr "アニメーションを再生"
 
 #: src/TatapWindow.vala:55
 msgid "Menu"
@@ -89,11 +89,11 @@ msgstr "メニュー"
 
 #: src/TatapWindow.vala:76
 msgid "No Images Open"
-msgstr "画像が開いていません。"
+msgstr "画像が開いていません"
 
 #: src/TatapWindow.vala:77
 msgid "Click 'Open Image' to get started."
-msgstr "「画像を開く」をクリックして開始しましょう"
+msgstr "「画像を開く」をクリックして開始しましょう。"
 
 #: src/TatapWindow.vala:79
 msgid "Open Image"
@@ -126,4 +126,4 @@ msgstr "ファイルはすでに存在します。上書きしてもよろしい
 
 #: src/TatapWindow.vala:355
 msgid "The file is saved."
-msgstr "画像を保存しました。"
+msgstr "ファイルを保存しました。"
