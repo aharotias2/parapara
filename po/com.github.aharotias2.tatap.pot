@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-14 14:27+0000\n"
+"POT-Creation-Date: 2021-01-14 15:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,32 +17,31 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Widgets/HeaderButtons.vala:35
+#: src/Widgets/HeaderButtons.vala:36
 msgid "Previous"
 msgstr ""
 
-#: src/Widgets/HeaderButtons.vala:39
+#: src/Widgets/HeaderButtons.vala:41
 msgid "Next"
 msgstr ""
 
-#: src/Widgets/HeaderButtons.vala:50 src/Widgets/HeaderButtons.vala:81
+#: src/Widgets/HeaderButtons.vala:53 src/Widgets/HeaderButtons.vala:84
 #: src/TatapWindow.vala:269
 msgid "Open"
 msgstr ""
 
-#: src/Widgets/HeaderButtons.vala:58 src/Widgets/HeaderButtons.vala:80
+#: src/Widgets/HeaderButtons.vala:59 src/Widgets/HeaderButtons.vala:83
 msgid "Save as…"
 msgstr ""
 
-#: src/Widgets/HeaderButtons.vala:76
+#: src/Widgets/HeaderButtons.vala:79
 msgid "Sorry, saving animations is not supported yet."
 msgstr ""
 
-#: src/Widgets/HeaderButtons.vala:81 src/TatapWindow.vala:268
+#: src/Widgets/HeaderButtons.vala:84 src/TatapWindow.vala:268
 msgid "Cancel"
 msgstr ""
 
-#. action buttons for the image
 #: src/Widgets/ToolBarRevealer.vala:35
 msgid "Zoom in"
 msgstr ""
