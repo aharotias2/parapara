@@ -2,14 +2,14 @@
 # Copyright (C) 2020 THE com.github.aharotias2.tatap'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.aharotias2.tatap package.
 # Tanaka Takayuki <aharotias2@gmail.com>, 2019-2020.
-# Ryo Nakano <ryonakaknock3@gmail.com>, 2020.
+# Ryo Nakano <ryonakaknock3@gmail.com>, 2020-2021.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-03 00:31+0900\n"
-"PO-Revision-Date: 2020-12-22 22:33+0900\n"
+"POT-Creation-Date: 2021-01-12 14:11+0000\n"
+"PO-Revision-Date: 2021-01-14 11:54+0900\n"
 "Last-Translator: Ryo Nakano <ryonakaknock3@gmail.com>\n"
 "Language-Team: none\n"
 "Language: ja\n"
@@ -27,7 +27,7 @@ msgid "Next"
 msgstr "次の画像"
 
 #: src/Widgets/HeaderButtons.vala:50 src/Widgets/HeaderButtons.vala:81
-#: src/TatapWindow.vala:246 src/TatapWindow.vala:250
+#: src/TatapWindow.vala:269
 msgid "Open"
 msgstr "開く"
 
@@ -37,10 +37,9 @@ msgstr "名前を付けて保存…"
 
 #: src/Widgets/HeaderButtons.vala:76
 msgid "Sorry, saving animations is not supported yet."
-msgstr "残念、アニメーションの保存はできません"
+msgstr "申し訳ありませんが、アニメーションの保存には未対応です。"
 
-#: src/Widgets/HeaderButtons.vala:81 src/TatapWindow.vala:246
-#: src/TatapWindow.vala:249
+#: src/Widgets/HeaderButtons.vala:81 src/TatapWindow.vala:268
 msgid "Cancel"
 msgstr "キャンセル"
 
@@ -82,50 +81,49 @@ msgstr "進む"
 
 #: src/Widgets/ToolBarRevealer.vala:117
 msgid "Play animation"
-msgstr "アニメーションを再生する"
+msgstr "アニメーションを再生"
 
-#: src/TatapWindow.vala:54
+#: src/TatapWindow.vala:55
 msgid "Menu"
 msgstr "メニュー"
 
-#: src/TatapWindow.vala:75
-msgid "No Images Open"
-msgstr "画像が開いていません。"
-
 #: src/TatapWindow.vala:76
-msgid "Click 'Open Image' to get started."
-msgstr "「画像を開く」をクリックして開始しましょう"
+msgid "No Images Open"
+msgstr "画像が開いていません"
 
-#: src/TatapWindow.vala:78
+#: src/TatapWindow.vala:77
+msgid "Click 'Open Image' to get started."
+msgstr "「画像を開く」をクリックして開始しましょう。"
+
+#: src/TatapWindow.vala:79
 msgid "Open Image"
 msgstr "画像を開く"
 
-#: src/TatapWindow.vala:78
+#: src/TatapWindow.vala:79
 msgid "Show and edit your image."
 msgstr "画像を閲覧/編集できます"
 
-#: src/TatapWindow.vala:245 src/TatapWindow.vala:248
+#: src/TatapWindow.vala:267
 msgid "Choose file to open"
 msgstr "開くファイルを選択"
 
-#: src/TatapWindow.vala:269 src/TatapWindow.vala:273
+#: src/TatapWindow.vala:292
 msgid "The directory does not found. Exiting."
 msgstr "ディレクトリが存在しません。終了します。"
 
-#: src/TatapWindow.vala:277 src/TatapWindow.vala:281
+#: src/TatapWindow.vala:300
 msgid "The file does not found."
 msgstr "ファイルが見つかりません。"
 
-#: src/TatapWindow.vala:297 src/TatapWindow.vala:303 src/TatapWindow.vala:301
-#: src/TatapWindow.vala:307
+#: src/TatapWindow.vala:321 src/TatapWindow.vala:327
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr "ファイルを開けません (理由: %s)"
 
-#: src/TatapWindow.vala:316 src/TatapWindow.vala:320
+#: src/TatapWindow.vala:340
 msgid "File already exists. Do you want to overwrite it?"
 msgstr "ファイルはすでに存在します。上書きしてもよろしいですか？"
 
-#: src/TatapWindow.vala:330 src/TatapWindow.vala:335
+#: src/TatapWindow.vala:355
 msgid "The file is saved."
-msgstr "画像を保存しました。"
+msgstr "ファイルを保存しました。"
