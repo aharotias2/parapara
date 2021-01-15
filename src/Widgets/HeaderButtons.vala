@@ -21,7 +21,8 @@ public class HeaderButtons : Gtk.Box {
 
     private ActionButton image_prev_button;
     private ActionButton image_next_button;
-    private Gtk.ToolButton save_button;
+    private ActionButton save_button;
+    private ActionButton open_button;
 
     public HeaderButtons (TatapWindow window) {
         Object (
@@ -34,34 +35,36 @@ public class HeaderButtons : Gtk.Box {
     construct {
         image_prev_button = new ActionButton("go-previous-symbolic", _("Previous"));
         image_prev_button.get_style_context().add_class("image_button");
+        image_prev_button.get_style_context().add_class("linked");
         image_prev_button.clicked.connect(window.go_prev);
 
         image_next_button = new ActionButton("go-next-symbolic", _("Next"));
         image_next_button.get_style_context().add_class("image_button");
+        image_next_button.get_style_context().add_class("linked");
         image_next_button.clicked.connect(window.go_next);
 
-        var navigation_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
+        var navigation_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+            layout_style = Gtk.ButtonBoxStyle.EXPAND
+        };
         navigation_box.pack_start(image_prev_button);
         navigation_box.pack_start(image_next_button);
 
         /* file buttons */
-        var open_button_icon = new Gtk.Image.from_icon_name("document-open", Gtk.IconSize.SMALL_TOOLBAR);
-        var open_button = new Gtk.ToolButton(open_button_icon, null) {
-            tooltip_text = _("Open")
-        };
+        open_button = new ActionButton("document-open", _("Open"));
+        open_button.get_style_context().add_class("linked");
         open_button.clicked.connect(() => {
             window.on_open_button_clicked();
         });
 
-        var save_button_icon = new Gtk.Image.from_icon_name("document-save-as", Gtk.IconSize.SMALL_TOOLBAR);
-        save_button = new Gtk.ToolButton(save_button_icon, null) {
-            tooltip_text = _("Save as…")
-        };
+        save_button = new ActionButton("document-save-as-symbolic", _("Save as…"));
+        save_button.get_style_context().add_class("linked");
         save_button.clicked.connect(() => {
             on_save_button_clicked();
         });
 
-        var file_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
+        var file_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+            layout_style = Gtk.ButtonBoxStyle.EXPAND
+        };
         file_box.pack_start(open_button);
         file_box.pack_start(save_button);
 
