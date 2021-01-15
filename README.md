@@ -7,6 +7,7 @@ A simple picture viewer written in Vala
 You'll need the following dependencies:
 
 * libgee-0.8-dev
+* granite
 * libgtk-3.0-dev
 * meson
 * valac
