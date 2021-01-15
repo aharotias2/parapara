@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-14 15:54+0000\n"
+"POT-Creation-Date: 2021-01-15 15:22+0000\n"
 "PO-Revision-Date: 2021-01-14 11:54+0900\n"
 "Last-Translator: Ryo Nakano <ryonakaknock3@gmail.com>\n"
 "Language-Team: none\n"
@@ -22,27 +22,29 @@ msgstr ""
 msgid "Previous"
 msgstr "前の画像"
 
-#: src/Widgets/HeaderButtons.vala:41
+#: src/Widgets/HeaderButtons.vala:40
 msgid "Next"
 msgstr "次の画像"
 
-#: src/Widgets/HeaderButtons.vala:53 src/Widgets/HeaderButtons.vala:84
+#. file buttons
+#: src/Widgets/HeaderButtons.vala:51 src/Widgets/HeaderButtons.vala:80
 #: src/TatapWindow.vala:269
 msgid "Open"
 msgstr "開く"
 
-#: src/Widgets/HeaderButtons.vala:59 src/Widgets/HeaderButtons.vala:83
+#: src/Widgets/HeaderButtons.vala:56 src/Widgets/HeaderButtons.vala:79
 msgid "Save as…"
 msgstr "名前を付けて保存…"
 
-#: src/Widgets/HeaderButtons.vala:79
+#: src/Widgets/HeaderButtons.vala:75
 msgid "Sorry, saving animations is not supported yet."
 msgstr "申し訳ありませんが、アニメーションの保存には未対応です。"
 
-#: src/Widgets/HeaderButtons.vala:84 src/TatapWindow.vala:268
+#: src/Widgets/HeaderButtons.vala:80 src/TatapWindow.vala:268
 msgid "Cancel"
 msgstr "キャンセル"
 
+#. action buttons for the image
 #: src/Widgets/ToolBarRevealer.vala:35
 msgid "Zoom in"
 msgstr "拡大"
