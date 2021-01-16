@@ -154,7 +154,7 @@ public class TatapImage : Image {
                                         prepared_pixbuf = prepared_pixbuf.rotate_simple(PixbufRotation.COUNTERCLOCKWISE);
                                     }
                                 }
-                                prepared_pixbuf_resized = return_scale_xy(prepared_pixbuf, pixbuf.width, pixbuf.height);
+                                prepared_pixbuf_resized = prepared_pixbuf.scale_simple(pixbuf.width, pixbuf.height, Gdk.InterpType.BILINEAR);
                                 next_zoom_percent = calc_zoom_percent(prepared_pixbuf_resized.height, prepared_pixbuf.height);
                                 run_thread = false;
                                 Idle.add(animate.callback);
@@ -217,9 +217,12 @@ public class TatapImage : Image {
             double r0 = (double) w0 / (double) h0;
             double r1 = original_rate_x;
             if (r0 >= r1) {
-                scale_xy(-1, h0);
+                pixbuf = PixbufUtils.scale_by_max_height(original_pixbuf, h0);
             } else if (r0 < r1) {
-                scale_xy(w0, -1);
+                pixbuf = PixbufUtils.scale_by_max_width(original_pixbuf, w0);
+            }
+            if (fit) {
+                adjust_zoom_percent();
             }
         }
     }
@@ -296,16 +299,6 @@ public class TatapImage : Image {
         }
     }
 
-    private void scale_xy(int width, int height) {
-        if (original_pixbuf != null) {
-            debug("TatapImage::scale_xy(%d, %d)", width, height);
-            pixbuf = return_scale_xy(original_pixbuf, width, height);
-            if (fit) {
-                adjust_zoom_percent();
-            }
-        }
-    }
-
     private void adjust_zoom_percent() {
         zoom_percent = calc_zoom_percent(pixbuf.height, original_pixbuf.height);
         debug("zoom: %.1f%%", (double) zoom_percent / 10.0);
@@ -334,14 +327,5 @@ public class TatapImage : Image {
 
     private int calc_zoom_percent(int resized, int original) {
         return resized * 1000 / original;
-    }
-
-    private Gdk.Pixbuf? return_scale_xy(Gdk.Pixbuf? src_pixbuf, int width, int height) {
-        if (width >= 0 && height < 0) {
-            height = (int) (src_pixbuf.height * ((double) width / (double) src_pixbuf.width));
-        } else if (width < 0 && height >= 0) {
-            width = (int) (src_pixbuf.width * ((double) height / (double) src_pixbuf.height));
-        }
-        return PixbufUtils.scale_xy(src_pixbuf, width, height);
     }
 }

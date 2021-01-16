@@ -23,19 +23,33 @@ using Gdk;
  * This contains image scale function.
  */
 public class PixbufUtils {
+    /**
+     * Scales the image to fit in a square of the specified size.
+     */
     public static Pixbuf scale_limited(Pixbuf pixbuf, int size) {
         size = int.max(10, size);
         if (pixbuf.width > pixbuf.height) {
-            return scale_xy(pixbuf, size, (int) (size * ((double) pixbuf.height / pixbuf.width)));
+            return pixbuf.scale_simple(size, (int) (size * ((double) pixbuf.height / pixbuf.width)), InterpType.BILINEAR);
         } else if (pixbuf.width < pixbuf.height) {
-            return scale_xy(pixbuf, (int) (size * ((double) pixbuf.width / pixbuf.height)), size);
+            return pixbuf.scale_simple((int) (size * ((double) pixbuf.width / pixbuf.height)), size, InterpType.BILINEAR);
         } else {
-            return scale_xy(pixbuf, size, size);
+            return pixbuf.scale_simple(size, size, InterpType.BILINEAR);
         }
     }
 
-    public static Pixbuf scale_xy(Pixbuf pixbuf, int width, int height) {
-        debug("PixbufUtils.scale_xy(%d, %d -> %d, %d)", pixbuf.width, pixbuf.height, width, height);
-        return pixbuf.scale_simple(width, height, InterpType.BILINEAR);
+    /**    
+     * Specify the maximum width to maintain the aspect ratio and zoom in/out
+     */
+    public static Pixbuf scale_by_max_width(Pixbuf src_pixbuf, int max_width) {
+        int height = (int) (src_pixbuf.height * ((double) max_width / (double) src_pixbuf.width));
+        return src_pixbuf.scale_simple(max_width, height, InterpType.BILINEAR);
+    }
+
+    /**
+     * Specify the maximum height to maintain the aspect ratio and zoom in/out
+     */
+    public static Pixbuf scale_by_max_height(Pixbuf src_pixbuf, int max_height) {
+        int width = (int) (src_pixbuf.width * ((double) max_height / (double) src_pixbuf.height));
+        return src_pixbuf.scale_simple(width, max_height, InterpType.BILINEAR);
     }
 }

@@ -35,12 +35,10 @@ public class HeaderButtons : Gtk.Box {
     construct {
         image_prev_button = new ActionButton("go-previous-symbolic", _("Previous"));
         image_prev_button.get_style_context().add_class("image_button");
-        image_prev_button.get_style_context().add_class("linked");
         image_prev_button.clicked.connect(window.go_prev);
 
         image_next_button = new ActionButton("go-next-symbolic", _("Next"));
         image_next_button.get_style_context().add_class("image_button");
-        image_next_button.get_style_context().add_class("linked");
         image_next_button.clicked.connect(window.go_next);
 
         var navigation_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
@@ -51,13 +49,11 @@ public class HeaderButtons : Gtk.Box {
 
         /* file buttons */
         open_button = new ActionButton("document-open", _("Open"));
-        open_button.get_style_context().add_class("linked");
         open_button.clicked.connect(() => {
             window.on_open_button_clicked();
         });
 
         save_button = new ActionButton("document-save-as-symbolic", _("Save as…"));
-        save_button.get_style_context().add_class("linked");
         save_button.clicked.connect(() => {
             on_save_button_clicked();
         });
