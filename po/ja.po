@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-15 15:22+0000\n"
+"POT-Creation-Date: 2021-01-16 16:05+0000\n"
 "PO-Revision-Date: 2021-01-14 11:54+0900\n"
 "Last-Translator: Ryo Nakano <ryonakaknock3@gmail.com>\n"
 "Language-Team: none\n"
@@ -26,9 +26,8 @@ msgstr "前の画像"
 msgid "Next"
 msgstr "次の画像"
 
-#. file buttons
 #: src/Widgets/HeaderButtons.vala:51 src/Widgets/HeaderButtons.vala:80
-#: src/TatapWindow.vala:269
+#: src/TatapWindow.vala:282
 msgid "Open"
 msgstr "開く"
 
@@ -40,11 +39,10 @@ msgstr "名前を付けて保存…"
 msgid "Sorry, saving animations is not supported yet."
 msgstr "申し訳ありませんが、アニメーションの保存には未対応です。"
 
-#: src/Widgets/HeaderButtons.vala:80 src/TatapWindow.vala:268
+#: src/Widgets/HeaderButtons.vala:80 src/TatapWindow.vala:281
 msgid "Cancel"
 msgstr "キャンセル"
 
-#. action buttons for the image
 #: src/Widgets/ToolBarRevealer.vala:35
 msgid "Zoom in"
 msgstr "拡大"
@@ -105,27 +103,27 @@ msgstr "画像を開く"
 msgid "Show and edit your image."
 msgstr "画像を閲覧/編集できます"
 
-#: src/TatapWindow.vala:267
+#: src/TatapWindow.vala:280
 msgid "Choose file to open"
 msgstr "開くファイルを選択"
 
-#: src/TatapWindow.vala:292
+#: src/TatapWindow.vala:305
 msgid "The directory does not found. Exiting."
 msgstr "ディレクトリが存在しません。終了します。"
 
-#: src/TatapWindow.vala:300
+#: src/TatapWindow.vala:313
 msgid "The file does not found."
 msgstr "ファイルが見つかりません。"
 
-#: src/TatapWindow.vala:321 src/TatapWindow.vala:327
+#: src/TatapWindow.vala:334 src/TatapWindow.vala:340
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr "ファイルを開けません (理由: %s)"
 
-#: src/TatapWindow.vala:340
+#: src/TatapWindow.vala:353
 msgid "File already exists. Do you want to overwrite it?"
 msgstr "ファイルはすでに存在します。上書きしてもよろしいですか？"
 
-#: src/TatapWindow.vala:355
+#: src/TatapWindow.vala:368
 msgid "The file is saved."
 msgstr "ファイルを保存しました。"
