@@ -214,6 +214,12 @@ public class TatapWindow : Gtk.Window {
                         toolbar_revealer.set_zoom_fit_button_sensitivity(true);
                     }
                     return true;
+                } else {
+                    if (ev.scroll.direction == ScrollDirection.UP) {
+                        go_prev();
+                    } else if (ev.scroll.direction == ScrollDirection.DOWN) {
+                        go_next();
+                    }
                 }
                 break;
             case EventType.KEY_PRESS:
@@ -236,6 +242,13 @@ public class TatapWindow : Gtk.Window {
                                 toolbar_revealer.animation_forward_button.sensitive = false;
                             }
                         }
+                        break;
+                    case Gdk.Key.O: case Gdk.Key.o:
+                        on_open_button_clicked();
+                        break;
+                    case Gdk.Key.Q: case Gdk.Key.q:
+                    case Gdk.Key.W: case Gdk.Key.w:
+                        close();
                         break;
                 }
                 break;
