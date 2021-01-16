@@ -48,7 +48,7 @@ public class HeaderButtons : Gtk.Box {
         navigation_box.pack_start(image_next_button);
 
         /* file buttons */
-        open_button = new ActionButton("document-open", _("Open"));
+        open_button = new ActionButton("document-open-symbolic", _("Open"));
         open_button.clicked.connect(() => {
             window.on_open_button_clicked();
         });
