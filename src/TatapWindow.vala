@@ -223,6 +223,18 @@ public class TatapWindow : Gtk.Window {
                 }
                 break;
             case EventType.KEY_PRESS:
+                if (Gdk.ModifierType.CONTROL_MASK in ev.key.state) {
+                    switch (ev.key.keyval) {
+                        case Gdk.Key.o:
+                            on_open_button_clicked();
+                            return true;
+                        case Gdk.Key.q:
+                        case Gdk.Key.w:
+                            close();
+                            return true;
+                    }
+                }
+
                 switch (ev.key.keyval) {
                     case Gdk.Key.Left:
                         go_prev();
@@ -242,13 +254,6 @@ public class TatapWindow : Gtk.Window {
                                 toolbar_revealer.animation_forward_button.sensitive = false;
                             }
                         }
-                        break;
-                    case Gdk.Key.O: case Gdk.Key.o:
-                        on_open_button_clicked();
-                        break;
-                    case Gdk.Key.Q: case Gdk.Key.q:
-                    case Gdk.Key.W: case Gdk.Key.w:
-                        close();
                         break;
                 }
                 break;
