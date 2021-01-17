@@ -28,10 +28,10 @@ public class ActionButton : Gtk.Button {
         }
     }
 
-    public ActionButton (string icon_name, string tooltip_text) {
+    public ActionButton (string icon_name, string tooltip_text, string[]? accels = null) {
         Object (
             icon_name: icon_name,
-            tooltip_text: tooltip_text
+            tooltip_markup: accels != null ? Granite.markup_accel_tooltip(accels, tooltip_text) : tooltip_text
         );
     }
 }
