@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-16 16:05+0000\n"
+"POT-Creation-Date: 2021-01-17 16:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,21 +25,12 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: src/Widgets/HeaderButtons.vala:51 src/Widgets/HeaderButtons.vala:80
-#: src/TatapWindow.vala:282
+#: src/Widgets/HeaderButtons.vala:51 src/TatapWindow.vala:293
 msgid "Open"
 msgstr ""
 
-#: src/Widgets/HeaderButtons.vala:56 src/Widgets/HeaderButtons.vala:79
+#: src/Widgets/HeaderButtons.vala:56 src/TatapWindow.vala:372
 msgid "Save as…"
-msgstr ""
-
-#: src/Widgets/HeaderButtons.vala:75
-msgid "Sorry, saving animations is not supported yet."
-msgstr ""
-
-#: src/Widgets/HeaderButtons.vala:80 src/TatapWindow.vala:281
-msgid "Cancel"
 msgstr ""
 
 #: src/Widgets/ToolBarRevealer.vala:35
@@ -102,27 +93,51 @@ msgstr ""
 msgid "Show and edit your image."
 msgstr ""
 
-#: src/TatapWindow.vala:280
+#: src/TatapWindow.vala:291
 msgid "Choose file to open"
 msgstr ""
 
-#: src/TatapWindow.vala:305
+#: src/TatapWindow.vala:292 src/TatapWindow.vala:373
+msgid "Cancel"
+msgstr ""
+
+#: src/TatapWindow.vala:316
 msgid "The directory does not found. Exiting."
 msgstr ""
 
-#: src/TatapWindow.vala:313
+#: src/TatapWindow.vala:324
 msgid "The file does not found."
 msgstr ""
 
-#: src/TatapWindow.vala:334 src/TatapWindow.vala:340
+#: src/TatapWindow.vala:345 src/TatapWindow.vala:351
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr ""
 
-#: src/TatapWindow.vala:353
+#: src/TatapWindow.vala:361
+msgid "Sorry, saving animations is not supported yet."
+msgstr ""
+
+#: src/TatapWindow.vala:365
+msgid "The size of the saved image: "
+msgstr ""
+
+#: src/TatapWindow.vala:366
+msgid "Currently displayed size"
+msgstr ""
+
+#: src/TatapWindow.vala:367
+msgid "Original size"
+msgstr ""
+
+#: src/TatapWindow.vala:373
+msgid "Save"
+msgstr ""
+
+#: src/TatapWindow.vala:392
 msgid "File already exists. Do you want to overwrite it?"
 msgstr ""
 
-#: src/TatapWindow.vala:368
+#: src/TatapWindow.vala:407
 msgid "The file is saved."
 msgstr ""
