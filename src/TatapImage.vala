@@ -53,8 +53,8 @@ public class TatapImage : Image {
     public int original_height { get { return original_pixbuf.height; } }
     public int original_width { get { return original_pixbuf.width; } }
     public bool has_image { get; set; }
+    public Pixbuf? original_pixbuf { get; private set; }
     private PixbufAnimation? animation;
-    private Pixbuf? original_pixbuf;
     private int zoom_percent = 1000;
     private int? original_max_size;
     private double? original_rate_x;
