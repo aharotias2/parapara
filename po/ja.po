@@ -121,19 +121,19 @@ msgstr "申し訳ありませんが、アニメーションの保存には未対
 
 #: src/TatapWindow.vala:365
 msgid "The size of the saved image: "
-msgstr ""
+msgstr "保存する画像のサイズを選択: "
 
 #: src/TatapWindow.vala:366
 msgid "Currently displayed size"
-msgstr ""
+msgstr "現在表示中のサイズ"
 
 #: src/TatapWindow.vala:367
 msgid "Original size"
-msgstr ""
+msgstr "オリジナルのサイズ"
 
 #: src/TatapWindow.vala:373
 msgid "Save"
-msgstr ""
+msgstr "保存する"
 
 #: src/TatapWindow.vala:392
 msgid "File already exists. Do you want to overwrite it?"
