@@ -215,10 +215,13 @@ public class TatapWindow : Gtk.Window {
                     }
                     return true;
                 } else {
-                    if (ev.scroll.direction == ScrollDirection.UP) {
-                        go_prev();
-                    } else if (ev.scroll.direction == ScrollDirection.DOWN) {
-                        go_next();
+                    if (image_container.get_allocated_height() >= image_container.get_vadjustment().upper
+                            && image_container.get_allocated_width() >= image_container.get_hadjustment().upper) {
+                        if (ev.scroll.direction == ScrollDirection.UP) {
+                            go_prev();
+                        } else if (ev.scroll.direction == ScrollDirection.DOWN) {
+                            go_next();
+                        }
                     }
                 }
                 break;
