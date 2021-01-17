@@ -33,11 +33,11 @@ public class HeaderButtons : Gtk.Box {
     }
 
     construct {
-        image_prev_button = new ActionButton("go-previous-symbolic", _("Previous"));
+        image_prev_button = new ActionButton("go-previous-symbolic", _("Previous"), {"Left"});
         image_prev_button.get_style_context().add_class("image_button");
         image_prev_button.clicked.connect(window.go_prev);
 
-        image_next_button = new ActionButton("go-next-symbolic", _("Next"));
+        image_next_button = new ActionButton("go-next-symbolic", _("Next"), {"Right"});
         image_next_button.get_style_context().add_class("image_button");
         image_next_button.clicked.connect(window.go_next);
 
@@ -48,14 +48,14 @@ public class HeaderButtons : Gtk.Box {
         navigation_box.pack_start(image_next_button);
 
         /* file buttons */
-        open_button = new ActionButton("document-open-symbolic", _("Open"));
+        open_button = new ActionButton("document-open-symbolic", _("Open"), {"<Control>o"});
         open_button.clicked.connect(() => {
             window.on_open_button_clicked();
         });
 
-        save_button = new ActionButton("document-save-as-symbolic", _("Save as…"));
+        save_button = new ActionButton("document-save-as-symbolic", _("Save as…"), {"<Control>s"});
         save_button.clicked.connect(() => {
-            on_save_button_clicked();
+            window.on_save_button_clicked();
         });
 
         var file_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
@@ -66,25 +66,6 @@ public class HeaderButtons : Gtk.Box {
 
         add(navigation_box);
         add(file_box);
-    }
-
-    private void on_save_button_clicked() {
-        if (window.image.is_animation) {
-            Gtk.DialogFlags flags = Gtk.DialogFlags.MODAL;
-            Gtk.MessageDialog alert = new Gtk.MessageDialog(window, flags, Gtk.MessageType.ERROR,
-                    Gtk.ButtonsType.OK, _("Sorry, saving animations is not supported yet."));
-            alert.run();
-            alert.close();
-        } else {
-            var dialog = new Gtk.FileChooserDialog(_("Save as…"), window, Gtk.FileChooserAction.SAVE,
-                    _("Cancel"), Gtk.ResponseType.CANCEL, _("Open"), Gtk.ResponseType.ACCEPT);
-            int res = dialog.run();
-            if (res == Gtk.ResponseType.ACCEPT) {
-                string filename = dialog.get_filename();
-                window.save_file(filename);
-            }
-            dialog.close();
-        }
     }
 
     public void set_image_prev_button_sensitivity(bool is_sensitive) {

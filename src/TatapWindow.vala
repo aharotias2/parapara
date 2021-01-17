@@ -226,6 +226,21 @@ public class TatapWindow : Gtk.Window {
                 }
                 break;
             case EventType.KEY_PRESS:
+                if (Gdk.ModifierType.CONTROL_MASK in ev.key.state) {
+                    switch (ev.key.keyval) {
+                        case Gdk.Key.o:
+                            on_open_button_clicked();
+                            return true;
+                        case Gdk.Key.s:
+                            on_save_button_clicked();
+                            return true;
+                        case Gdk.Key.q:
+                        case Gdk.Key.w:
+                            close();
+                            return true;
+                    }
+                }
+
                 switch (ev.key.keyval) {
                     case Gdk.Key.Left:
                         go_prev();
@@ -245,13 +260,6 @@ public class TatapWindow : Gtk.Window {
                                 toolbar_revealer.animation_forward_button.sensitive = false;
                             }
                         }
-                        break;
-                    case Gdk.Key.O: case Gdk.Key.o:
-                        on_open_button_clicked();
-                        break;
-                    case Gdk.Key.Q: case Gdk.Key.q:
-                    case Gdk.Key.W: case Gdk.Key.w:
-                        close();
                         break;
                 }
                 break;
@@ -343,6 +351,25 @@ public class TatapWindow : Gtk.Window {
                     _("The file could not be opend (cause: %s)").printf(e.message));
             alert.run();
             alert.close();
+        }
+    }
+
+    public void on_save_button_clicked() {
+        if (image.is_animation) {
+            Gtk.DialogFlags flags = Gtk.DialogFlags.MODAL;
+            Gtk.MessageDialog alert = new Gtk.MessageDialog(this, flags, Gtk.MessageType.ERROR,
+                    Gtk.ButtonsType.OK, _("Sorry, saving animations is not supported yet."));
+            alert.run();
+            alert.close();
+        } else {
+            var dialog = new Gtk.FileChooserDialog(_("Save as…"), this, Gtk.FileChooserAction.SAVE,
+                    _("Cancel"), Gtk.ResponseType.CANCEL, _("Open"), Gtk.ResponseType.ACCEPT);
+            int res = dialog.run();
+            if (res == Gtk.ResponseType.ACCEPT) {
+                string filename = dialog.get_filename();
+                save_file(filename);
+            }
+            dialog.close();
         }
     }
 
