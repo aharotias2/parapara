@@ -135,7 +135,7 @@ msgstr "オリジナルのサイズ"
 
 #: src/TatapWindow.vala:373
 msgid "Save"
-msgstr "保存する"
+msgstr "保存"
 
 #: src/TatapWindow.vala:392
 msgid "File already exists. Do you want to overwrite it?"
