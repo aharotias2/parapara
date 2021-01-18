@@ -23,23 +23,21 @@ using Gtk, Gdk;
  * This is the main window of this program.
  */
 public class TatapWindow : Gtk.Window {
-    const IconSize ICON_SIZE = IconSize.SMALL_TOOLBAR;
-
+    private const IconSize ICON_SIZE = IconSize.SMALL_TOOLBAR;
     private const string title_format = "%s (%dx%d : %.2f%%)";
 
+    public signal void require_new_window();
+    public signal void require_quit();
+
     private HeaderBar headerbar;
-
     private HeaderButtons header_buttons;
-
     private ScrolledWindow image_container;
     public TatapImage image { get; private set; }
     private Revealer message_revealer;
     private Label message_label;
     private Stack stack;
     private ToolBarRevealer toolbar_revealer;
-
     public TatapFileList? file_list { get; private set; default = null; }
-
     private bool button_pressed = false;
     private double x;
     private double y;
@@ -228,15 +226,22 @@ public class TatapWindow : Gtk.Window {
             case EventType.KEY_PRESS:
                 if (Gdk.ModifierType.CONTROL_MASK in ev.key.state) {
                     switch (ev.key.keyval) {
+                        case Gdk.Key.n:
+                            require_new_window();
+                            return true;
                         case Gdk.Key.o:
                             on_open_button_clicked();
                             return true;
                         case Gdk.Key.s:
-                            on_save_button_clicked();
+                            if (image.has_image) {
+                                on_save_button_clicked();
+                            }
                             return true;
-                        case Gdk.Key.q:
                         case Gdk.Key.w:
                             close();
+                            return true;
+                        case Gdk.Key.q:
+                            require_quit();
                             return true;
                     }
                 }
@@ -260,7 +265,7 @@ public class TatapWindow : Gtk.Window {
                                 toolbar_revealer.animation_forward_button.sensitive = false;
                             }
                         }
-                        break;
+                        return true;
                 }
                 break;
             default:
@@ -291,6 +296,9 @@ public class TatapWindow : Gtk.Window {
         var dialog = new Gtk.FileChooserDialog(_("Choose file to open"), this, Gtk.FileChooserAction.OPEN,
                                            _("Cancel"), Gtk.ResponseType.CANCEL,
                                            _("Open"), Gtk.ResponseType.ACCEPT);
+        if (image.fileref != null) {
+            dialog.set_current_folder(image.fileref.get_parent().get_path());
+        }
         int res = dialog.run();
         if (res == Gtk.ResponseType.ACCEPT) {
             string filename = dialog.get_filename();

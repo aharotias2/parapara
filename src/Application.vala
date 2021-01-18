@@ -58,6 +58,8 @@ public class Application : Gtk.Application {
     private TatapWindow create_new_window() {
         var window = new TatapWindow();
         window.set_application(this);
+        window.require_new_window.connect(() => create_new_window());
+        window.require_quit.connect(() => quit());
         window.show_all();
         return window;
     }
