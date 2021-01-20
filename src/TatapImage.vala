@@ -24,17 +24,6 @@ using Gtk, Gdk;
  * like zoom in/out, fit it to a parent widget, rotate, and flip.
  */
 public class TatapImage : Image {
-    public static int[] zoom_level = {
-        16, 24, 32, 48, 52, 64, 72, 82, 96, 100, 120, 140, 160, 180, 200,
-        220, 240, 260, 280, 300, 320, 340, 360, 380, 400, 440, 480, 520,
-        560, 600, 640, 680, 720, 760, 800, 880, 960, 1040, 1120, 1200, 1280,
-        1360, 1440, 1520, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300,
-        2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400,
-        3500, 3600, 3700, 3800, 3900, 4000, 4100, 4200, 4300, 4400, 4500,
-        4600, 4700, 4800, 4900, 5000, 5100, 5200, 5300, 5400, 5500, 5600,
-        5700, 5800, 5900, 6000
-    };
-
     public Container container { get; set; }
     public File? fileref { get; set; }
     public bool fit { get; set; }
@@ -55,7 +44,7 @@ public class TatapImage : Image {
     public bool has_image { get; set; }
     public Pixbuf? original_pixbuf { get; private set; }
     private PixbufAnimation? animation;
-    private int zoom_percent = 1000;
+    private uint zoom_percent = 1000;
     private int? original_max_size;
     private double? original_rate_x;
     private int save_width;
@@ -128,7 +117,7 @@ public class TatapImage : Image {
         bool run_thread = false;
         Gdk.Pixbuf? prepared_pixbuf = null;
         Gdk.Pixbuf? prepared_pixbuf_resized = null;
-        int next_zoom_percent = 100;
+        uint next_zoom_percent = 100;
         while (count_holder == file_counter) {
             if (!paused_value || step_once) {
                 tval.add(animation_iter.get_delay_time() * 1000);
@@ -212,14 +201,14 @@ public class TatapImage : Image {
         if (original_pixbuf != null) {
             fit = true;
             debug("TatapImage::fit_image_to_window");
-            int w0 = container.get_allocated_width();
-            int h0 = container.get_allocated_height();
-            double r0 = (double) w0 / (double) h0;
+            int max_width = container.get_allocated_width();
+            int max_height = container.get_allocated_height();
+            double r0 = (double) max_width / (double) max_height;
             double r1 = original_rate_x;
             if (r0 >= r1) {
-                pixbuf = PixbufUtils.scale_by_max_height(original_pixbuf, h0);
+                pixbuf = PixbufUtils.scale_by_max_height(original_pixbuf, max_height);
             } else if (r0 < r1) {
-                pixbuf = PixbufUtils.scale_by_max_width(original_pixbuf, w0);
+                pixbuf = PixbufUtils.scale_by_max_width(original_pixbuf, max_width);
             }
             if (fit) {
                 adjust_zoom_percent();
@@ -227,18 +216,24 @@ public class TatapImage : Image {
         }
     }
 
-    public void zoom_in() {
+    public void set_scale_percent(uint percentage) {
         if (original_pixbuf != null) {
-            up_percent();
-            scale((int) (original_max_size * zoom_percent / 1000));
+            scale(percentage);
+        }
+    }
+
+    public void zoom_in(uint plus_percent = 1) {
+        if (original_pixbuf != null) {
+            zoom_percent += plus_percent;
+            scale((uint) (original_max_size * zoom_percent / 1000));
             fit = false;
         }
     }
 
-    public void zoom_out() {
+    public void zoom_out(uint minus_percent = 1) {
         if (original_pixbuf != null) {
-            down_percent();
-            scale((int) (original_max_size * zoom_percent / 1000));
+            zoom_percent -= minus_percent;
+            scale((uint) (original_max_size * zoom_percent / 1000));
             fit = false;
         }
     }
@@ -252,7 +247,7 @@ public class TatapImage : Image {
                 fit_image_to_window();
                 adjust_zoom_percent();
             } else {
-                scale(int.max(pixbuf.width, pixbuf.height));
+                scale(uint.max((uint) pixbuf.width, (uint) pixbuf.height));
             }
         }
     }
@@ -266,7 +261,7 @@ public class TatapImage : Image {
                 fit_image_to_window();
                 adjust_zoom_percent();
             } else {
-                scale(int.max(pixbuf.width, pixbuf.height));
+                scale(uint.max((uint) pixbuf.width, (uint)pixbuf.height));
             }
         }
     }
@@ -274,7 +269,7 @@ public class TatapImage : Image {
     public void hflip() {
         if (original_pixbuf != null) {
             original_pixbuf = original_pixbuf.flip(true);
-            scale(int.max(pixbuf.width, pixbuf.height));
+            scale(uint.max((uint) pixbuf.width, (uint) pixbuf.height));
             hflipped = !hflipped;
         }
     }
@@ -282,16 +277,16 @@ public class TatapImage : Image {
     public void vflip() {
         if (original_pixbuf != null) {
             original_pixbuf = original_pixbuf.flip(false);
-            scale(int.max(pixbuf.width, pixbuf.height));
+            scale(uint.max((uint) pixbuf.width, (uint) pixbuf.height));
             vflipped = !vflipped;
         }
     }
 
-    private void scale(int max_size) {
+    private void scale(uint max_size) {
         if (original_pixbuf != null) {
-            debug("TatapImage::scale(%d)", max_size);
-            if (max_size != int.max(save_width, save_height)) {
-                pixbuf = PixbufUtils.scale_limited(original_pixbuf, max_size);
+            debug("TatapImage::scale(%u)", max_size);
+            if (max_size != uint.max(save_width, save_height)) {
+                pixbuf = PixbufUtils.scale_limited(original_pixbuf, (int) max_size);
                 if (fit) {
                     adjust_zoom_percent();
                 }
@@ -302,27 +297,6 @@ public class TatapImage : Image {
     private void adjust_zoom_percent() {
         zoom_percent = calc_zoom_percent(pixbuf.height, original_pixbuf.height);
         debug("zoom: %.1f%%", (double) zoom_percent / 10.0);
-    }
-
-    private void up_percent() {
-        for (int i = 0; i < zoom_level.length; i++) {
-            if (zoom_percent < zoom_level[i]) {
-                zoom_percent = zoom_level[i];
-                debug("zoom: %.1f%%", ((double) zoom_percent) / 10.0);
-                return;
-            }
-        }
-    }
-
-    private void down_percent() {
-        int i = 0;
-        int temp = zoom_percent;
-        while (zoom_level[i] < zoom_percent && i < zoom_level.length) {
-            temp = zoom_level[i];
-            i++;
-        }
-        zoom_percent = temp;
-        debug("zoom: %.1f%%", ((double) zoom_percent) / 10.0);
     }
 
     private int calc_zoom_percent(int resized, int original) {

@@ -37,7 +37,7 @@ public class PixbufUtils {
         }
     }
 
-    /**    
+    /**
      * Specify the maximum width to maintain the aspect ratio and zoom in/out
      */
     public static Pixbuf scale_by_max_width(Pixbuf src_pixbuf, int max_width) {

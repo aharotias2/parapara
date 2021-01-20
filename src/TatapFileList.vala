@@ -20,11 +20,13 @@
  * TatapFileList is a custome Gee.LinkedList<File>.
  */
 public class TatapFileList {
+    public signal void updated();
+    
     private string dir_path = "";
     private Gee.List<string> file_list = new Gee.LinkedList<string>();
     private int current_index = -1;
     private string current_name = "";
-    private bool inner_running = false;
+    private bool closed;
 
     public int size {
         get {
@@ -32,33 +34,19 @@ public class TatapFileList {
         }
     }
 
+    public TatapFileList() {
+        closed = false;
+    }
+
+    public void close() {
+        closed = true;
+    }
+
     public signal void directory_not_found();
     public signal void file_not_found();
 
     public void make_list(string dir_path) throws FileError {
-        this.dir_path = dir_path;
-        Dir dir = Dir.open(dir_path);
-        string? name;
-        while (true) {
-            try {
-                while ((name = dir.read_name()) != null) {
-                    if (name != "." && name != "..") {
-                        string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, name);
-                        if (TatapFileUtils.check_file_is_image(path)) {
-                            file_list.add(name);
-                        }
-                    }
-                }
-                break;
-            } catch (FileError e) {
-                stderr.printf("FileError: %s\n", e.message);
-            }
-        }
-        file_list.sort((a, b) => a.collate(b));
-        Timeout.add(1000, () => {
-            make_list_async.begin();
-            return Source.REMOVE;
-        });
+        make_list_async.begin(dir_path);
     }
 
     public void set_current(File file) {
@@ -67,7 +55,11 @@ public class TatapFileList {
         if (new_index >= 0) {
             current_index = new_index;
             current_name = name;
+        } else if (current_index < file_list.size) {
+            current_name = file_list.get(current_index);
         } else {
+            current_index = file_list.size - 1;
+            current_name = file_list.get(current_index);
             file_not_found();
         }
     }
@@ -152,68 +144,93 @@ public class TatapFileList {
         return null;
     }
 
-    private async void make_list_async() {
-        try {
-            while (true) {
-                debug("Start running async loop");
-                Gee.List<string> list = new Gee.LinkedList<string>();
-                Dir dir = Dir.open(dir_path);
-                string? name = null;
-                inner_running = true;
-
-                try {
-                    while ((name = dir.read_name()) != null) {
-                        if (name != "." && name != "..") {
-                            string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, name);
-                            if (TatapFileUtils.check_file_is_image(path)) {
-                                list.add(name);
-                            }
-                        }
-                        Idle.add(make_list_async.callback);
-                        yield;
-                    }
-                } catch (FileError e) {
-                    // if file is not exist
-                    file_not_found();
-                    continue;
-                }
-
-                try {
-                    int len = list.size;
-                    if (len > 0) {
-                        for (int i = 0; i < list.size; i++) {
-                            string p = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, list.get(i));
-                            if (!FileUtils.test(p, FileTest.EXISTS)) {
-                                throw new TatapError.FILE_NOT_EXISTS("file is not found");
-                            }
-                        }
-
-                        list.sort((a, b) => a.collate(b));
-                        int new_index = list.index_of(current_name);
-                        if (new_index >= 0) {
-                            current_index = new_index;
-                        } else if (current_index < list.size) {
-                            current_name = list.get(current_index);
-                        } else {
-                            current_index = list.size - 1;
-                            current_name = list.get(current_index);
-                        }
-                    }
-
-                    file_list = list;
-                    inner_running = false;
-                    debug("File list is updated");
-                    debug("End running async loop");
-                    Timeout.add(1000, make_list_async.callback);
-                    yield;
-                } catch (TatapError e) {
-                    // file existing check error after list made up.
-                    file_not_found();
-                }
+    public async void make_list_async(string dir_path) {
+        this.dir_path = dir_path;
+        string save_dir_path = dir_path;
+        Gee.List<string>? inner_file_list = null;
+        TatapFileListThreadData thread_data = new TatapFileListThreadData(dir_path);
+        thread_data.file_found.connect((file_name) => {
+            string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, file_name);
+            try {
+                return TatapFileUtils.check_file_is_image(path);
+            } catch (FileError e) {
+                thread_data.canceled = true;
+                file_not_found();
+                return false;
             }
-        } catch (FileError e) {
-            // dir.open method failed.
+        });
+        thread_data.sort.connect((a, b) => {
+            return a.collate(b);
+        });
+        thread_data.update.connect((thread_file_list) => {
+            if (thread_file_list == null || thread_file_list.size == 0) {
+                thread_data.canceled = true;
+            } else {
+                inner_file_list = thread_file_list;
+            }
+            Idle.add(make_list_async.callback);
+            return true;
+        });
+        Thread<int> thread = new Thread<int>(null, thread_data.run);
+        while (!thread_data.canceled && !closed) {
+            if (save_dir_path != this.dir_path) {
+                break;
+            }
+            yield;
+            if (thread_data.canceled || inner_file_list == null || inner_file_list.size == 0) {
+                thread_data.canceled = true;
+                break;
+            }
+            file_list = inner_file_list;
+            updated();
+        }
+        thread_data.terminate();
+        int res = thread.join();
+        if (res < 0) {
             directory_not_found();
+        }
+    }
+
+    public class TatapFileListThreadData : Object {
+        public signal bool file_found(string file_path);
+        public signal bool update(Gee.List<string>? file_list);
+        public signal int sort(string a, string b);
+        public bool canceled { get; set; }
+        private string dir_path;
+
+        public TatapFileListThreadData(string dir_path) {
+            this.dir_path = dir_path;
+            this.canceled = false;
+        }
+
+        public int run() {
+            try {
+                while (!canceled) {
+                    Dir dir = Dir.open(dir_path);
+                    string? name = null;
+                    Gee.List<string> thread_file_list = new Gee.ArrayList<string>();
+                    while ((name = dir.read_name()) != null) {
+                        if (name != "." || name != "..") {
+                            if (file_found(name)) {
+                                thread_file_list.add(name);
+                            }
+                        }
+                    }
+                    thread_file_list.sort((a, b) => sort(a, b));
+                    if (update(thread_file_list)) {
+                        Thread.usleep(3000000);
+                    } else {
+                        return 0;
+                    }
+                }
+                return 0;
+            } catch (FileError e) {
+                return -1;
+            }
+        }
+
+        public void terminate() {
+            canceled = true;
         }
     }
 }

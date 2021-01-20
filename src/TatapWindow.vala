@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Tanaka Takayuki (田中喬之) 
+ *  Copyright 2019-2020 Tanaka Takayuki (田中喬之)
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -41,7 +41,6 @@ public class TatapWindow : Gtk.Window {
     private bool button_pressed = false;
     private double x;
     private double y;
-    private uint? update_view;
 
     public TatapWindow() {
         /* previous, next, open, and save buttons at the left of the headerbar */
@@ -137,23 +136,6 @@ public class TatapWindow : Gtk.Window {
 
         add(window_overlay);
 
-        update_view = Idle.add(() => {
-            if (file_list == null || file_list.size == 0) {
-                stack.visible_child = welcome;
-                header_buttons.set_image_prev_button_sensitivity(false);
-                header_buttons.set_image_next_button_sensitivity(false);
-                header_buttons.set_save_button_sensitivity(false);
-                toolbar_toggle_button.sensitive = false;
-            } else {
-                stack.visible_child = image_container;
-                header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
-                header_buttons.set_image_next_button_sensitivity(!file_list.file_is_last(true));
-                header_buttons.set_save_button_sensitivity(true);
-                toolbar_toggle_button.sensitive = true;
-            }
-            return true;
-        });
-
         set_titlebar(headerbar);
         set_default_size(800, 600);
         event.connect((ev) => {
@@ -169,7 +151,7 @@ public class TatapWindow : Gtk.Window {
             return false;
         });
         destroy.connect(() => {
-            Source.remove(update_view);
+            file_list.close();
             if (image.is_animation) {
                 image.quit_animation();
             }
@@ -203,11 +185,11 @@ public class TatapWindow : Gtk.Window {
             case EventType.SCROLL:
                 if (ModifierType.CONTROL_MASK in ev.scroll.state) {
                     if (ev.scroll.direction == ScrollDirection.UP) {
-                        image.zoom_in();
+                        image.zoom_in(10);
                         set_title_label();
                         toolbar_revealer.set_zoom_fit_button_sensitivity(true);
                     } else if (ev.scroll.direction == ScrollDirection.DOWN) {
-                        image.zoom_out();
+                        image.zoom_out(10);
                         set_title_label();
                         toolbar_revealer.set_zoom_fit_button_sensitivity(true);
                     }
@@ -317,6 +299,9 @@ public class TatapWindow : Gtk.Window {
             image.open(filename);
             string new_file_dir = image.fileref.get_parent().get_path();
             if (old_file_dir == null || old_file_dir != new_file_dir) {
+                if (file_list != null) {
+                    file_list.close();
+                }
                 file_list = new TatapFileList();
                 file_list.directory_not_found.connect(() => {
                     DialogFlags flags = DialogFlags.MODAL;
@@ -333,11 +318,21 @@ public class TatapWindow : Gtk.Window {
                     alert.run();
                     alert.close();
                 });
-                file_list.make_list(image.fileref.get_parent().get_path());
+                file_list.updated.connect(() => {
+                    file_list.set_current(image.fileref);
+                    header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
+                    header_buttons.set_image_next_button_sensitivity(!file_list.file_is_last(true));
+                });
+                file_list.make_list_async.begin(image.fileref.get_parent().get_path());
+                header_buttons.set_image_prev_button_sensitivity(false);
+                header_buttons.set_image_next_button_sensitivity(false);
+                toolbar_revealer.animation_forward_button.sensitive = false;
+                toolbar_revealer.animation_play_pause_button.sensitive = false;
+            } else {
+                file_list.set_current(image.fileref);
+                header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
+                header_buttons.set_image_next_button_sensitivity(!file_list.file_is_last(true));
             }
-            file_list.set_current(image.fileref);
-            header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
-            header_buttons.set_image_next_button_sensitivity(!file_list.file_is_last(true));
             if (image.is_animation) {
                 toolbar_revealer.animation_play_pause_button.icon_name = "media-playback-start-symbolic";
                 toolbar_revealer.animation_play_pause_button.sensitive = true;
@@ -346,6 +341,7 @@ public class TatapWindow : Gtk.Window {
                 toolbar_revealer.animation_play_pause_button.sensitive = false;
                 toolbar_revealer.animation_forward_button.sensitive = false;
             }
+            stack.visible_child = image_container;
             set_title_label();
         } catch (FileError e) {
             DialogFlags flags = DialogFlags.MODAL;
@@ -373,7 +369,7 @@ public class TatapWindow : Gtk.Window {
             var ask_size_label = new Gtk.Label(_("The size of the saved image: "));
             var radio_current_size = new Gtk.RadioButton.with_label(null, _("Currently displayed size"));
             var radio_original_size = new Gtk.RadioButton.with_label_from_widget(radio_current_size, _("Original size"));
-            var radio_hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0) { halign = Gtk.Align.END, margin = 5 };
+            var radio_hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0) { halign = Gtk.Align.END, margin = 10 };
             radio_hbox.pack_start(ask_size_label, false, false);
             radio_hbox.pack_start(radio_current_size, false, false);
             radio_hbox.pack_start(radio_original_size, false, false);
