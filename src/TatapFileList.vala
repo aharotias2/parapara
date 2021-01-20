@@ -148,7 +148,7 @@ public class TatapFileList {
         this.dir_path = dir_path;
         string save_dir_path = dir_path;
         Gee.List<string>? inner_file_list = null;
-        TatapFileListThreadData thread_data = new TatapFileListThreadData(dir_path);
+        MakeListThreadData thread_data = new MakeListThreadData(dir_path);
         thread_data.file_found.connect((file_name) => {
             string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, file_name);
             try {
@@ -191,14 +191,14 @@ public class TatapFileList {
         }
     }
 
-    public class TatapFileListThreadData : Object {
+    public class MakeListThreadData : Object {
         public signal bool file_found(string file_path);
         public signal bool update(Gee.List<string>? file_list);
         public signal int sort(string a, string b);
         public bool canceled { get; set; }
         private string dir_path;
 
-        public TatapFileListThreadData(string dir_path) {
+        public MakeListThreadData(string dir_path) {
             this.dir_path = dir_path;
             this.canceled = false;
         }
