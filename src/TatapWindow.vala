@@ -138,17 +138,13 @@ public class TatapWindow : Gtk.Window {
 
         set_titlebar(headerbar);
         set_default_size(800, 600);
-        event.connect((ev) => {
-            return handle_events(ev);
-        });
+        event.connect(handle_events);
         add_events (Gdk.EventMask.SCROLL_MASK);
-        configure_event.connect((cr) => {
+        image_container.size_allocate.connect((allocation) => {
             if (image.fit) {
-                debug("window::configure_event -> image.fit_image_to_window");
                 image.fit_image_to_window();
                 set_title_label();
             }
-            return false;
         });
         destroy.connect(() => {
             file_list.close();
@@ -168,6 +164,10 @@ public class TatapWindow : Gtk.Window {
                 y = ev.motion.y_root;
                 break;
             case EventType.BUTTON_RELEASE:
+                if (image.fit && x == ev.motion.x_root && y == ev.motion.y_root) {
+                    image.fit_image_to_window();
+                    set_title_label();
+                }
                 button_pressed = false;
                 break;
             case EventType.MOTION_NOTIFY:
