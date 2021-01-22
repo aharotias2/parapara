@@ -36,6 +36,7 @@ public class TatapWindow : Gtk.Window {
     private Revealer message_revealer;
     private Label message_label;
     private Stack stack;
+    private Granite.Widgets.Welcome welcome;
     private ToolBarRevealer toolbar_revealer;
     public TatapFileList? file_list { get; private set; default = null; }
     private bool button_pressed = false;
@@ -69,7 +70,7 @@ public class TatapWindow : Gtk.Window {
         headerbar.pack_end(header_button_box_right);
 
         /* welcome screen */
-        var welcome = new Granite.Widgets.Welcome(
+        welcome = new Granite.Widgets.Welcome(
             _("No Images Open"),
             _("Click 'Open Image' to get started.")
         );
@@ -102,6 +103,10 @@ public class TatapWindow : Gtk.Window {
 
         /* contain buttons that can be opened from the menu */
         toolbar_revealer = new ToolBarRevealer(this);
+        toolbar_revealer.sort_order_changed.connect(() => {
+            set_next_image_button_sensitivity_conditionally();
+            set_prev_image_button_sensitivity_conditionally();
+        });
 
         /* revealer showing error messages */
         message_label = new Label("") {
@@ -258,10 +263,9 @@ public class TatapWindow : Gtk.Window {
 
     public void set_title_label() {
         if (image.has_image) {
-            string title = title_format.printf(image.fileref.get_basename(),
-                                               image.original_width,
-                                               image.original_height,
-                                               image.size_percent);
+            string title = title_format.printf(
+                    image.fileref.get_basename(), image.original_width,
+                    image.original_height, image.size_percent);
             headerbar.title = title;
         }
     }
@@ -270,14 +274,12 @@ public class TatapWindow : Gtk.Window {
         var css_provider = new CssProvider();
         css_provider.load_from_resource ("/com/github/aharotias2/tatap/Application.css");
         Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (),
-                                                    css_provider,
-                                                    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+                css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
 
     public void on_open_button_clicked() {
         var dialog = new Gtk.FileChooserDialog(_("Choose file to open"), this, Gtk.FileChooserAction.OPEN,
-                                           _("Cancel"), Gtk.ResponseType.CANCEL,
-                                           _("Open"), Gtk.ResponseType.ACCEPT);
+                _("Cancel"), Gtk.ResponseType.CANCEL, _("Open"), Gtk.ResponseType.ACCEPT);
         if (image.fileref != null) {
             dialog.set_current_folder(image.fileref.get_parent().get_path());
         }
@@ -302,42 +304,44 @@ public class TatapWindow : Gtk.Window {
                 if (file_list != null) {
                     file_list.close();
                 }
-                file_list = new TatapFileList();
+                file_list = new TatapFileList(image.fileref.get_parent().get_path());
                 file_list.directory_not_found.connect(() => {
                     DialogFlags flags = DialogFlags.MODAL;
                     MessageDialog alert = new MessageDialog(this, flags, MessageType.ERROR,
-                                                    ButtonsType.OK, _("The directory does not found. Exiting."));
+                            ButtonsType.OK, _("The directory does not found. Exiting."));
                     alert.run();
                     alert.close();
-                    Gtk.main_quit();
+                    stack.visible_child = welcome;
                 });
                 file_list.file_not_found.connect(() => {
                     DialogFlags flags = DialogFlags.MODAL;
                     MessageDialog alert = new MessageDialog(this, flags, MessageType.ERROR,
-                                                    ButtonsType.OK, _("The file does not found."));
+                            ButtonsType.OK, _("The file does not found."));
                     alert.run();
                     alert.close();
                 });
                 file_list.updated.connect(() => {
                     file_list.set_current(image.fileref);
-                    header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
-                    header_buttons.set_image_next_button_sensitivity(!file_list.file_is_last(true));
+                    set_next_image_button_sensitivity_conditionally();
+                    set_prev_image_button_sensitivity_conditionally();
                 });
-                file_list.make_list_async.begin(image.fileref.get_parent().get_path());
+                file_list.terminated.connect(() => {
+                    header_buttons.set_image_prev_button_sensitivity(false);
+                    header_buttons.set_image_next_button_sensitivity(false);
+                });
+                file_list.make_list_async.begin();
                 header_buttons.set_image_prev_button_sensitivity(false);
                 header_buttons.set_image_next_button_sensitivity(false);
-                toolbar_revealer.animation_forward_button.sensitive = false;
-                toolbar_revealer.animation_play_pause_button.sensitive = false;
             } else {
                 file_list.set_current(image.fileref);
-                header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
-                header_buttons.set_image_next_button_sensitivity(!file_list.file_is_last(true));
+                set_next_image_button_sensitivity_conditionally();
+                set_prev_image_button_sensitivity_conditionally();
             }
+            toolbar_revealer.animation_play_pause_button.icon_name = "media-playback-start-symbolic";
             if (image.is_animation) {
-                toolbar_revealer.animation_play_pause_button.icon_name = "media-playback-start-symbolic";
                 toolbar_revealer.animation_play_pause_button.sensitive = true;
+                toolbar_revealer.animation_forward_button.sensitive = false;
             } else {
-                toolbar_revealer.animation_play_pause_button.icon_name = "media-playback-start-symbolic";
                 toolbar_revealer.animation_play_pause_button.sensitive = false;
                 toolbar_revealer.animation_forward_button.sensitive = false;
             }
@@ -423,8 +427,8 @@ public class TatapWindow : Gtk.Window {
 
     public void go_prev() {
         if (file_list != null) {
-            File? prev_file = file_list.get_prev_file(image.fileref);
-
+            File? prev_file = toolbar_revealer.sort_order == SortOrder.ASC
+                    ? file_list.get_prev_file(image.fileref) : file_list.get_next_file(image.fileref);
             if (prev_file != null) {
                 open_file(prev_file.get_path());
             }
@@ -433,11 +437,27 @@ public class TatapWindow : Gtk.Window {
 
     public void go_next() {
         if (file_list != null) {
-            File? next_file = file_list.get_next_file(image.fileref);
-
+            File? next_file = toolbar_revealer.sort_order == SortOrder.ASC
+                    ? file_list.get_next_file(image.fileref) : file_list.get_prev_file(image.fileref);
             if (next_file != null) {
                 open_file(next_file.get_path());
             }
+        }
+    }
+
+    private void set_next_image_button_sensitivity_conditionally() {
+        if (toolbar_revealer.sort_order == SortOrder.ASC) {
+            header_buttons.set_image_next_button_sensitivity(!file_list.file_is_last(true));
+        } else {
+            header_buttons.set_image_next_button_sensitivity(!file_list.file_is_first(true));
+        }
+    }
+
+    private void set_prev_image_button_sensitivity_conditionally() {
+        if (toolbar_revealer.sort_order == SortOrder.ASC) {
+            header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
+        } else {
+            header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_last(true));
         }
     }
 }

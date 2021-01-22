@@ -18,6 +18,8 @@
 
 public class ToolBarRevealer : Gtk.Revealer {
     public TatapWindow window { get; construct; }
+    public SortOrder sort_order { get; private set; }
+    public signal void sort_order_changed(SortOrder sort_order);
 
     private Gtk.Button zoom_fit_button;
     public ActionButton animation_forward_button { get; private set; }
@@ -28,6 +30,7 @@ public class ToolBarRevealer : Gtk.Revealer {
             window: window,
             transition_type: Gtk.RevealerTransitionType.SLIDE_DOWN
         );
+        sort_order = SortOrder.ASC;
     }
 
     construct {
@@ -35,7 +38,7 @@ public class ToolBarRevealer : Gtk.Revealer {
         var zoom_in_button = new ActionButton("zoom-in-symbolic", _("Zoom in"));
         zoom_in_button.get_style_context().add_class("image_overlay_button");
         zoom_in_button.clicked.connect(() => {
-            window.image.zoom_in();
+            window.image.zoom_in(10);
             window.set_title_label();
             zoom_fit_button.sensitive = true;
         });
@@ -43,7 +46,7 @@ public class ToolBarRevealer : Gtk.Revealer {
         var zoom_out_button = new ActionButton("zoom-out-symbolic", _("Zoom out"));
         zoom_out_button.get_style_context().add_class("image_overlay_button");
         zoom_out_button.clicked.connect(() => {
-            window.image.zoom_out();
+            window.image.zoom_out(10);
             window.set_title_label();
             zoom_fit_button.sensitive = true;
         });
@@ -105,6 +108,43 @@ public class ToolBarRevealer : Gtk.Revealer {
         image_actions_button_box.pack_start(lrotate_button);
         image_actions_button_box.pack_start(rrotate_button);
 
+        Gtk.ToggleButton sort_desc_button;
+
+        var sort_asc_button = new Gtk.ToggleButton() {
+            tooltip_text = _("Sort Asc"),
+            image = new Gtk.Image.from_icon_name("view-sort-ascending-symbolic", Gtk.IconSize.SMALL_TOOLBAR),
+            active = true
+        };
+        sort_asc_button.get_style_context().add_class("image_overlay_button");
+        sort_asc_button.toggled.connect(() => {
+            if (sort_asc_button.active) {
+                sort_order = SortOrder.ASC;
+                sort_desc_button.active = false;
+                sort_order_changed(sort_order);
+            }
+        });
+
+        sort_desc_button = new Gtk.ToggleButton() {
+            tooltip_text = _("Sort Desc"),
+            image = new Gtk.Image.from_icon_name("view-sort-descending-symbolic", Gtk.IconSize.SMALL_TOOLBAR),
+            active = false
+        };
+        sort_desc_button.get_style_context().add_class("image_overlay_button");
+        sort_desc_button.toggled.connect(() => {
+            if (sort_desc_button.active) {
+                sort_order = SortOrder.DESC;
+                sort_asc_button.active = false;
+                sort_order_changed(sort_order);
+            }
+        });
+
+        var sort_order_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+            margin = 5,
+            layout_style = Gtk.ButtonBoxStyle.EXPAND
+        };
+        sort_order_button_box.pack_start(sort_asc_button);
+        sort_order_button_box.pack_start(sort_desc_button);
+
         animation_forward_button = new ActionButton("media-skip-forward-symbolic", _("Skip forward"));
         animation_forward_button.sensitive = false;
         animation_forward_button.get_style_context().add_class("image_overlay_button");
@@ -159,6 +199,7 @@ public class ToolBarRevealer : Gtk.Revealer {
             valign = Gtk.Align.START
         };
         toolbar_hbox.pack_start(image_actions_button_box, false, false);
+        toolbar_hbox.pack_start(sort_order_button_box, false, false);
         toolbar_hbox.pack_end(animation_actions_button_box, false, false);
         toolbar_hbox.get_style_context().add_class("toolbar");
 

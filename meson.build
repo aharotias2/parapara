@@ -35,6 +35,8 @@ executable(
     'src/Widgets/ActionButton.vala',
     'src/Widgets/HeaderButtons.vala',
     'src/Widgets/ToolBarRevealer.vala',
+    'src/ThreadData/TatapFileListThreadData.vala',
+    'src/SortOrder.vala',
     'src/Application.vala',
     'src/TatapFileList.vala',
     'src/TatapImage.vala',

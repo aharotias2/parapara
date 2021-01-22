@@ -21,7 +21,10 @@
  */
 public class TatapFileList {
     public signal void updated();
-    
+    public signal void terminated();
+    public signal void directory_not_found();
+    public signal void file_not_found();
+
     private string dir_path = "";
     private Gee.List<string> file_list = new Gee.LinkedList<string>();
     private int current_index = -1;
@@ -34,19 +37,13 @@ public class TatapFileList {
         }
     }
 
-    public TatapFileList() {
+    public TatapFileList(string dir_path) {
+        this.dir_path = dir_path;
         closed = false;
     }
 
     public void close() {
         closed = true;
-    }
-
-    public signal void directory_not_found();
-    public signal void file_not_found();
-
-    public void make_list(string dir_path) throws FileError {
-        make_list_async.begin(dir_path);
     }
 
     public void set_current(File file) {
@@ -144,17 +141,15 @@ public class TatapFileList {
         return null;
     }
 
-    public async void make_list_async(string dir_path) {
-        this.dir_path = dir_path;
-        string save_dir_path = dir_path;
+    public async void make_list_async() {
         Gee.List<string>? inner_file_list = null;
-        MakeListThreadData thread_data = new MakeListThreadData(dir_path);
+        TatapFileListThreadData thread_data = new TatapFileListThreadData(dir_path);
         thread_data.file_found.connect((file_name) => {
             string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, file_name);
             try {
                 return TatapFileUtils.check_file_is_image(path);
             } catch (FileError e) {
-                thread_data.canceled = true;
+                thread_data.terminate();
                 file_not_found();
                 return false;
             }
@@ -164,7 +159,7 @@ public class TatapFileList {
         });
         thread_data.update.connect((thread_file_list) => {
             if (thread_file_list == null || thread_file_list.size == 0) {
-                thread_data.canceled = true;
+                thread_data.terminate();
             } else {
                 inner_file_list = thread_file_list;
             }
@@ -173,64 +168,21 @@ public class TatapFileList {
         });
         Thread<int> thread = new Thread<int>(null, thread_data.run);
         while (!thread_data.canceled && !closed) {
-            if (save_dir_path != this.dir_path) {
-                break;
-            }
             yield;
             if (thread_data.canceled || inner_file_list == null || inner_file_list.size == 0) {
-                thread_data.canceled = true;
+                thread_data.terminate();
                 break;
             }
             file_list = inner_file_list;
             updated();
         }
-        thread_data.terminate();
-        int res = thread.join();
-        if (res < 0) {
+        if (closed) {
+            thread_data.terminate();
+        }
+        terminated();
+        int thread_result = thread.join();
+        if (thread_result < 0) {
             directory_not_found();
-        }
-    }
-
-    public class MakeListThreadData : Object {
-        public signal bool file_found(string file_path);
-        public signal bool update(Gee.List<string>? file_list);
-        public signal int sort(string a, string b);
-        public bool canceled { get; set; }
-        private string dir_path;
-
-        public MakeListThreadData(string dir_path) {
-            this.dir_path = dir_path;
-            this.canceled = false;
-        }
-
-        public int run() {
-            try {
-                while (!canceled) {
-                    Dir dir = Dir.open(dir_path);
-                    string? name = null;
-                    Gee.List<string> thread_file_list = new Gee.ArrayList<string>();
-                    while ((name = dir.read_name()) != null) {
-                        if (name != "." || name != "..") {
-                            if (file_found(name)) {
-                                thread_file_list.add(name);
-                            }
-                        }
-                    }
-                    thread_file_list.sort((a, b) => sort(a, b));
-                    if (update(thread_file_list)) {
-                        Thread.usleep(3000000);
-                    } else {
-                        return 0;
-                    }
-                }
-                return 0;
-            } catch (FileError e) {
-                return -1;
-            }
-        }
-
-        public void terminate() {
-            canceled = true;
         }
     }
 }
