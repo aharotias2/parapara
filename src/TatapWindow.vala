@@ -31,13 +31,16 @@ public class TatapWindow : Gtk.Window {
 
     private HeaderBar headerbar;
     private HeaderButtons header_buttons;
+    private ToggleButton toolbar_toggle_button;
     private ScrolledWindow image_container;
     public TatapImage image { get; private set; }
     private Revealer message_revealer;
     private Label message_label;
     private Stack stack;
     private Granite.Widgets.Welcome welcome;
-    private ToolBarRevealer toolbar_revealer;
+    private TatapToolBar toolbar;
+    private Revealer toolbar_revealer_above;
+    private Revealer toolbar_revealer_below;
     public TatapFileList? file_list { get; private set; default = null; }
     private bool button_pressed = false;
     private double x;
@@ -49,12 +52,14 @@ public class TatapWindow : Gtk.Window {
 
         /* menu button at the right of the headerbar */
         var toggle_toolbar_icon = new Image.from_icon_name("view-more-symbolic", ICON_SIZE);
-        var toolbar_toggle_button = new ToggleButton() {
-            tooltip_text = _("Menu")
+        toolbar_toggle_button = new ToggleButton() {
+            tooltip_text = _("Menu"),
+            sensitive = false
         };
+
         toolbar_toggle_button.add(toggle_toolbar_icon);
         toolbar_toggle_button.toggled.connect(() => {
-            toolbar_revealer.reveal_child = toolbar_toggle_button.active;
+            toolbar_revealer_above.reveal_child = toolbar_toggle_button.active;
         });
 
         var header_button_box_right = new ButtonBox(Orientation.HORIZONTAL) {
@@ -81,6 +86,33 @@ public class TatapWindow : Gtk.Window {
             }
         });
 
+        /* contain buttons that can be opened from the menu */
+        toolbar = new TatapToolBar(this);
+        toolbar.sort_order_changed.connect(() => {
+            set_next_image_button_sensitivity_conditionally();
+            set_prev_image_button_sensitivity_conditionally();
+        });
+        toolbar.stick_button_clicked.connect((sticked) => {
+            if (sticked) {
+                toolbar_revealer_above.remove(toolbar);
+                toolbar_revealer_below.add(toolbar);
+                toolbar_revealer_above.reveal_child = false;
+                toolbar_revealer_below.reveal_child = true;
+                toolbar_toggle_button.sensitive = false;
+            } else {
+                toolbar_revealer_below.remove(toolbar);
+                toolbar_revealer_above.add(toolbar);
+                toolbar_revealer_above.reveal_child = true;
+                toolbar_revealer_below.reveal_child = false;
+                toolbar_toggle_button.sensitive = true;
+            }
+        });
+
+        toolbar_revealer_below = new Revealer() {
+            transition_type = RevealerTransitionType.SLIDE_DOWN,
+            reveal_child = false
+        };
+
         /* image area in the center of the window */
         image = new TatapImage(true);
         image.get_style_context().add_class("image-view");
@@ -92,21 +124,24 @@ public class TatapWindow : Gtk.Window {
             return false;
         });
 
+        var bottom_box = new Box(Orientation.VERTICAL, 0);
+        bottom_box.pack_start(toolbar_revealer_below, false, false);
+        bottom_box.pack_start(image_container, true, true);
+
         /* switch welcome screen and image view */
         stack = new Stack() {
             transition_type = StackTransitionType.SLIDE_LEFT_RIGHT
         };
-        stack.add(welcome);
-        stack.add(image_container);
+        stack.add_named(welcome, "welcome");
+        stack.add_named(bottom_box, "picture");
 
-        image.container = stack;
+        image.container = image_container;
 
-        /* contain buttons that can be opened from the menu */
-        toolbar_revealer = new ToolBarRevealer(this);
-        toolbar_revealer.sort_order_changed.connect(() => {
-            set_next_image_button_sensitivity_conditionally();
-            set_prev_image_button_sensitivity_conditionally();
-        });
+        toolbar_revealer_above = new Revealer() {
+            transition_type = RevealerTransitionType.SLIDE_DOWN,
+            reveal_child = false
+        };
+        toolbar_revealer_above.add(toolbar);
 
         /* revealer showing error messages */
         message_label = new Label("") {
@@ -130,7 +165,7 @@ public class TatapWindow : Gtk.Window {
         message_revealer.add(message_bar);
 
         var revealer_box = new Box(Orientation.VERTICAL, 0);
-        revealer_box.pack_start(toolbar_revealer, false, false);
+        revealer_box.pack_start(toolbar_revealer_above, false, false);
         revealer_box.pack_end(message_revealer, false, false);
 
         /* Add images and revealer into overlay */
@@ -147,12 +182,22 @@ public class TatapWindow : Gtk.Window {
         add_events (Gdk.EventMask.SCROLL_MASK);
         image_container.size_allocate.connect((allocation) => {
             if (image.fit) {
-                image.fit_image_to_window();
-                set_title_label();
+                if (toolbar_revealer_below.child_revealed) {
+                    Idle.add(() => {
+                        image.fit_image_to_window();
+                        set_title_label();
+                        return false;
+                    });
+                } else {
+                    image.fit_image_to_window();
+                    set_title_label();
+                }
             }
         });
         destroy.connect(() => {
-            file_list.close();
+            if (file_list != null) {
+                file_list.close();
+            }
             if (image.is_animation) {
                 image.quit_animation();
             }
@@ -192,11 +237,11 @@ public class TatapWindow : Gtk.Window {
                     if (ev.scroll.direction == ScrollDirection.UP) {
                         image.zoom_in(10);
                         set_title_label();
-                        toolbar_revealer.set_zoom_fit_button_sensitivity(true);
+                        toolbar.set_zoom_fit_button_sensitivity(true);
                     } else if (ev.scroll.direction == ScrollDirection.DOWN) {
                         image.zoom_out(10);
                         set_title_label();
-                        toolbar_revealer.set_zoom_fit_button_sensitivity(true);
+                        toolbar.set_zoom_fit_button_sensitivity(true);
                     }
                     return true;
                 } else {
@@ -244,12 +289,12 @@ public class TatapWindow : Gtk.Window {
                         if (image.is_animation) {
                             if (!image.paused) {
                                 image.pause();
-                                toolbar_revealer.animation_play_pause_button.icon_name = "media-playback-pause-symbolic";
-                                toolbar_revealer.animation_forward_button.sensitive = true;
+                                toolbar.animation_play_pause_button.icon_name = "media-playback-pause-symbolic";
+                                toolbar.animation_forward_button.sensitive = true;
                             } else {
                                 image.unpause();
-                                toolbar_revealer.animation_play_pause_button.icon_name = "media-playback-start-symbolic";
-                                toolbar_revealer.animation_forward_button.sensitive = false;
+                                toolbar.animation_play_pause_button.icon_name = "media-playback-start-symbolic";
+                                toolbar.animation_forward_button.sensitive = false;
                             }
                         }
                         return true;
@@ -311,7 +356,7 @@ public class TatapWindow : Gtk.Window {
                             ButtonsType.OK, _("The directory does not found. Exiting."));
                     alert.run();
                     alert.close();
-                    stack.visible_child = welcome;
+                    stack.visible_child_name = "welcome";
                 });
                 file_list.file_not_found.connect(() => {
                     DialogFlags flags = DialogFlags.MODAL;
@@ -337,15 +382,16 @@ public class TatapWindow : Gtk.Window {
                 set_next_image_button_sensitivity_conditionally();
                 set_prev_image_button_sensitivity_conditionally();
             }
-            toolbar_revealer.animation_play_pause_button.icon_name = "media-playback-start-symbolic";
+            toolbar.animation_play_pause_button.icon_name = "media-playback-start-symbolic";
             if (image.is_animation) {
-                toolbar_revealer.animation_play_pause_button.sensitive = true;
-                toolbar_revealer.animation_forward_button.sensitive = false;
+                toolbar.animation_play_pause_button.sensitive = true;
+                toolbar.animation_forward_button.sensitive = false;
             } else {
-                toolbar_revealer.animation_play_pause_button.sensitive = false;
-                toolbar_revealer.animation_forward_button.sensitive = false;
+                toolbar.animation_play_pause_button.sensitive = false;
+                toolbar.animation_forward_button.sensitive = false;
             }
-            stack.visible_child = image_container;
+            stack.visible_child_name = "picture";
+            toolbar_toggle_button.sensitive = true;
             set_title_label();
         } catch (FileError e) {
             DialogFlags flags = DialogFlags.MODAL;
@@ -427,7 +473,7 @@ public class TatapWindow : Gtk.Window {
 
     public void go_prev() {
         if (file_list != null) {
-            File? prev_file = toolbar_revealer.sort_order == SortOrder.ASC
+            File? prev_file = toolbar.sort_order == SortOrder.ASC
                     ? file_list.get_prev_file(image.fileref) : file_list.get_next_file(image.fileref);
             if (prev_file != null) {
                 open_file(prev_file.get_path());
@@ -437,7 +483,7 @@ public class TatapWindow : Gtk.Window {
 
     public void go_next() {
         if (file_list != null) {
-            File? next_file = toolbar_revealer.sort_order == SortOrder.ASC
+            File? next_file = toolbar.sort_order == SortOrder.ASC
                     ? file_list.get_next_file(image.fileref) : file_list.get_prev_file(image.fileref);
             if (next_file != null) {
                 open_file(next_file.get_path());
@@ -446,7 +492,7 @@ public class TatapWindow : Gtk.Window {
     }
 
     private void set_next_image_button_sensitivity_conditionally() {
-        if (toolbar_revealer.sort_order == SortOrder.ASC) {
+        if (toolbar.sort_order == SortOrder.ASC) {
             header_buttons.set_image_next_button_sensitivity(!file_list.file_is_last(true));
         } else {
             header_buttons.set_image_next_button_sensitivity(!file_list.file_is_first(true));
@@ -454,7 +500,7 @@ public class TatapWindow : Gtk.Window {
     }
 
     private void set_prev_image_button_sensitivity_conditionally() {
-        if (toolbar_revealer.sort_order == SortOrder.ASC) {
+        if (toolbar.sort_order == SortOrder.ASC) {
             header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
         } else {
             header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_last(true));

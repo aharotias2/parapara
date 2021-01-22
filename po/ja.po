@@ -37,7 +37,7 @@ msgstr "名前を付けて保存…"
 
 #: src/Widgets/HeaderButtons.vala:60
 msgid "New"
-msgstr ""
+msgstr "新規"
 
 #. action buttons for the image
 #: src/Widgets/ToolBarRevealer.vala:38
@@ -74,11 +74,11 @@ msgstr "左回転"
 
 #: src/Widgets/ToolBarRevealer.vala:114
 msgid "Sort Asc"
-msgstr ""
+msgstr "昇順"
 
 #: src/Widgets/ToolBarRevealer.vala:128
 msgid "Sort Desc"
-msgstr ""
+msgstr "降順"
 
 #: src/Widgets/ToolBarRevealer.vala:148
 msgid "Skip forward"

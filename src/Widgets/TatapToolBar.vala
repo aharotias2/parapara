@@ -16,21 +16,23 @@
  *  Tanaka Takayuki <aharotias2@gmail.com>
  */
 
-public class ToolBarRevealer : Gtk.Revealer {
+public class TatapToolBar : Gtk.Bin {
     public TatapWindow window { get; construct; }
     public SortOrder sort_order { get; private set; }
     public signal void sort_order_changed(SortOrder sort_order);
+    public signal void stick_button_clicked(bool sticked);
 
     private Gtk.Button zoom_fit_button;
+    private bool sticked;
     public ActionButton animation_forward_button { get; private set; }
     public ActionButton animation_play_pause_button { get; private set; }
 
-    public ToolBarRevealer (TatapWindow window) {
+    public TatapToolBar (TatapWindow window) {
         Object (
-            window: window,
-            transition_type: Gtk.RevealerTransitionType.SLIDE_DOWN
+            window: window
         );
         sort_order = SortOrder.ASC;
+        sticked = false;
     }
 
     construct {
@@ -194,12 +196,26 @@ public class ToolBarRevealer : Gtk.Revealer {
         animation_actions_button_box.pack_start(animation_play_pause_button);
         animation_actions_button_box.pack_start(animation_forward_button);
 
+        var stick_button = new ActionButton("pan-down-symbolic", _("Stick")) {
+            margin = 5
+        };
+        stick_button.clicked.connect(() => {
+            if (sticked) {
+                stick_button.icon_name = "pan-down-symbolic";
+            } else {
+                stick_button.icon_name = "pan-up-symbolic";
+            }
+            sticked = !sticked;
+            stick_button_clicked(sticked);
+        });
+
         var toolbar_hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0) {
             vexpand = false,
             valign = Gtk.Align.START
         };
         toolbar_hbox.pack_start(image_actions_button_box, false, false);
         toolbar_hbox.pack_start(sort_order_button_box, false, false);
+        toolbar_hbox.pack_end(stick_button, false, false);
         toolbar_hbox.pack_end(animation_actions_button_box, false, false);
         toolbar_hbox.get_style_context().add_class("toolbar");
 
