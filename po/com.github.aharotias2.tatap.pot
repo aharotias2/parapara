@@ -1,16 +1,17 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the com.github.aharotias2.tatap package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# This file is distributed under the same license as com.github.aharotias2.tatap package.
+# Takayuki Tanaka <aharotias2@gmail.com>, 2021.
+# Ryo Nakano <ryonakaknock3@gmail.com>, 2020-2021.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-22 14:26+0000\n"
+"Report-Msgid-Bugs-To: aharotias2@gmail.com\n"
+"POT-Creation-Date: 2021-01-23 01:37+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Last-Translator: Takayuki Tanaka <aharotias2@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -25,12 +26,11 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#. file buttons
-#: src/Widgets/HeaderButtons.vala:50 src/TatapWindow.vala:282
+#: src/Widgets/HeaderButtons.vala:50 src/TatapWindow.vala:327
 msgid "Open"
 msgstr ""
 
-#: src/Widgets/HeaderButtons.vala:55 src/TatapWindow.vala:380
+#: src/Widgets/HeaderButtons.vala:55 src/TatapWindow.vala:426
 msgid "Save as…"
 msgstr ""
 
@@ -38,120 +38,123 @@ msgstr ""
 msgid "New"
 msgstr ""
 
-#. action buttons for the image
-#: src/Widgets/ToolBarRevealer.vala:38
+#: src/Widgets/TatapToolBar.vala:40
 msgid "Zoom in"
 msgstr ""
 
-#: src/Widgets/ToolBarRevealer.vala:46
+#: src/Widgets/TatapToolBar.vala:48
 msgid "Zoom out"
 msgstr ""
 
-#: src/Widgets/ToolBarRevealer.vala:54
+#: src/Widgets/TatapToolBar.vala:56
 msgid "Fit to the page"
 msgstr ""
 
-#: src/Widgets/ToolBarRevealer.vala:62
+#: src/Widgets/TatapToolBar.vala:64
 msgid "100%"
 msgstr ""
 
-#: src/Widgets/ToolBarRevealer.vala:70
+#: src/Widgets/TatapToolBar.vala:72
 msgid "Flip horizontally"
 msgstr ""
 
-#: src/Widgets/ToolBarRevealer.vala:76
+#: src/Widgets/TatapToolBar.vala:78
 msgid "Flip vertically"
 msgstr ""
 
-#: src/Widgets/ToolBarRevealer.vala:82
+#: src/Widgets/TatapToolBar.vala:84
 msgid "Rotate to the left"
 msgstr ""
 
-#: src/Widgets/ToolBarRevealer.vala:90
+#: src/Widgets/TatapToolBar.vala:92
 msgid "Rotate to the right"
 msgstr ""
 
-#: src/Widgets/ToolBarRevealer.vala:114
+#: src/Widgets/TatapToolBar.vala:116
 msgid "Sort Asc"
 msgstr ""
 
-#: src/Widgets/ToolBarRevealer.vala:128
+#: src/Widgets/TatapToolBar.vala:130
 msgid "Sort Desc"
 msgstr ""
 
-#: src/Widgets/ToolBarRevealer.vala:148
+#: src/Widgets/TatapToolBar.vala:150
 msgid "Skip forward"
 msgstr ""
 
-#: src/Widgets/ToolBarRevealer.vala:157
+#: src/Widgets/TatapToolBar.vala:159
 msgid "Play animation"
 msgstr ""
 
-#: src/TatapWindow.vala:53
+#: src/Widgets/TatapToolBar.vala:199
+msgid "Stick"
+msgstr ""
+
+#: src/TatapWindow.vala:56
 msgid "Menu"
 msgstr ""
 
-#: src/TatapWindow.vala:74
+#: src/TatapWindow.vala:79
 msgid "No Images Open"
 msgstr ""
 
-#: src/TatapWindow.vala:75
+#: src/TatapWindow.vala:80
 msgid "Click 'Open Image' to get started."
 msgstr ""
 
-#: src/TatapWindow.vala:77
+#: src/TatapWindow.vala:82
 msgid "Open Image"
 msgstr ""
 
-#: src/TatapWindow.vala:77
+#: src/TatapWindow.vala:82
 msgid "Show and edit your image."
 msgstr ""
 
-#: src/TatapWindow.vala:281
+#: src/TatapWindow.vala:326
 msgid "Choose file to open"
 msgstr ""
 
-#: src/TatapWindow.vala:282 src/TatapWindow.vala:381
+#: src/TatapWindow.vala:327 src/TatapWindow.vala:427
 msgid "Cancel"
 msgstr ""
 
-#: src/TatapWindow.vala:311
+#: src/TatapWindow.vala:356
 msgid "The directory does not found. Exiting."
 msgstr ""
 
-#: src/TatapWindow.vala:319
+#: src/TatapWindow.vala:364
 msgid "The file does not found."
 msgstr ""
 
-#: src/TatapWindow.vala:353 src/TatapWindow.vala:359
+#: src/TatapWindow.vala:399 src/TatapWindow.vala:405
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr ""
 
-#: src/TatapWindow.vala:369
+#: src/TatapWindow.vala:415
 msgid "Sorry, saving animations is not supported yet."
 msgstr ""
 
-#: src/TatapWindow.vala:373
+#: src/TatapWindow.vala:419
 msgid "The size of the saved image: "
 msgstr ""
 
-#: src/TatapWindow.vala:374
+#: src/TatapWindow.vala:420
 msgid "Currently displayed size"
 msgstr ""
 
-#: src/TatapWindow.vala:375
+#: src/TatapWindow.vala:421
 msgid "Original size"
 msgstr ""
 
-#: src/TatapWindow.vala:381
+#: src/TatapWindow.vala:427
 msgid "Save"
 msgstr ""
 
-#: src/TatapWindow.vala:400
+#: src/TatapWindow.vala:446
 msgid "File already exists. Do you want to overwrite it?"
 msgstr ""
 
-#: src/TatapWindow.vala:415
+#: src/TatapWindow.vala:461
 msgid "The file is saved."
 msgstr ""
