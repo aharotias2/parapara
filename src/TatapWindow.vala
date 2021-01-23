@@ -432,6 +432,8 @@ public class TatapWindow : Gtk.Window {
             radio_hbox.pack_start(radio_original_size, false, false);
             var dialog = new Gtk.FileChooserDialog(_("Save as…"), this, Gtk.FileChooserAction.SAVE,
                     _("Cancel"), Gtk.ResponseType.CANCEL, _("Save"), Gtk.ResponseType.ACCEPT);
+            dialog.set_current_folder(image.fileref.get_parent().get_path());
+            dialog.set_current_name(image.fileref.get_basename());
             dialog.get_content_area().pack_start(radio_hbox, false, false);
             dialog.show_all();
             int save_result = dialog.run();
