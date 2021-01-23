@@ -366,9 +366,13 @@ public class TatapWindow : Gtk.Window {
                     alert.close();
                 });
                 file_list.updated.connect(() => {
-                    file_list.set_current(image.fileref);
-                    set_next_image_button_sensitivity_conditionally();
-                    set_prev_image_button_sensitivity_conditionally();
+                    bool file_in_list = file_list.set_current(image.fileref);
+                    if (!file_in_list) {
+                        file_list.close();
+                    } else {
+                        set_next_image_button_sensitivity_conditionally();
+                        set_prev_image_button_sensitivity_conditionally();
+                    }
                 });
                 file_list.terminated.connect(() => {
                     header_buttons.set_image_prev_button_sensitivity(false);
@@ -404,8 +408,10 @@ public class TatapWindow : Gtk.Window {
             MessageDialog alert = new MessageDialog(this, DialogFlags.MODAL, MessageType.ERROR, ButtonsType.OK, message);
             alert.run();
             alert.close();
-            stack.visible_child_name = "welcome";
-            header_buttons.set_save_button_sensitivity(false);
+            if (!image.has_image) {
+                stack.visible_child_name = "welcome";
+                header_buttons.set_save_button_sensitivity(false);
+            }
         }
     }
 

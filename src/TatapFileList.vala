@@ -46,18 +46,25 @@ public class TatapFileList {
         closed = true;
     }
 
-    public void set_current(File file) {
+    public bool set_current(File file) {
         string name = file.get_basename();
         int new_index = file_list.index_of(name);
         if (new_index >= 0) {
             current_index = new_index;
             current_name = name;
-        } else if (current_index < file_list.size) {
-            current_name = file_list.get(current_index);
-        } else {
+            return true;
+        } else if (current_index >= 0 && current_index < file_list.size) {
+            current_name = file_list[current_index];
+            return true;
+        } else if (current_index >= 0 && current_index >= file_list.size) {
             current_index = file_list.size - 1;
-            current_name = file_list.get(current_index);
+            current_name = file_list[current_index];
+            return true;
+        } else {
+            current_index = -1;
+            current_name = "";
             file_not_found();
+            return false;
         }
     }
 
@@ -154,10 +161,10 @@ public class TatapFileList {
                 return false;
             }
         });
-        thread_data.sort.connect((a, b) => {
+        thread_data.sorted.connect((a, b) => {
             return a.collate(b);
         });
-        thread_data.update.connect((thread_file_list) => {
+        thread_data.updated.connect((thread_file_list) => {
             if (thread_file_list == null || thread_file_list.size == 0) {
                 thread_data.terminate();
             } else {
@@ -170,15 +177,12 @@ public class TatapFileList {
         while (!thread_data.canceled && !closed) {
             yield;
             if (thread_data.canceled || inner_file_list == null || inner_file_list.size == 0) {
-                thread_data.terminate();
                 break;
             }
             file_list = inner_file_list;
             updated();
         }
-        if (closed) {
-            thread_data.terminate();
-        }
+        thread_data.terminate();
         terminated();
         int thread_result = thread.join();
         if (thread_result < 0) {

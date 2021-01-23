@@ -18,8 +18,8 @@
 
 public class TatapFileListThreadData : Object {
     public signal bool file_found(string file_path);
-    public signal bool update(Gee.List<string>? file_list);
-    public signal int sort(string a, string b);
+    public signal bool updated(Gee.List<string>? file_list);
+    public signal int sorted(string a, string b);
     public bool canceled {
         get {
             return !keep_doing;
@@ -63,8 +63,8 @@ public class TatapFileListThreadData : Object {
                 }
             }
         }
-        thread_file_list.sort((a, b) => sort(a, b));
-        return update(thread_file_list);
+        thread_file_list.sort((a, b) => sorted(a, b));
+        return updated(thread_file_list);
     }
 
     private bool sleep(uint time_length, uint check_interval) {

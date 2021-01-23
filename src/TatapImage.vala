@@ -68,12 +68,12 @@ public class TatapImage : Image {
         file_counter = 0;
     }
 
-    public void open(string filename) throws FileError, Error {
-        fileref = File.new_for_path(filename);
-        file_counter++;
+    public void open(string filename) throws Error {
         animation = new PixbufAnimation.from_file(filename);
+        fileref = File.new_for_path(filename);
         tval = TimeVal();
         var animation_iter = animation.get_iter(tval);
+        file_counter++;
         original_pixbuf = animation_iter.get_pixbuf();
         original_max_size = int.max(original_pixbuf.width, original_pixbuf.height);
         original_rate_x = (double) original_pixbuf.width / (double) original_pixbuf.height;
