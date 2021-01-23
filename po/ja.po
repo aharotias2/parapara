@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-22 17:00+0000\n"
+"POT-Creation-Date: 2021-01-23 09:36+0000\n"
 "PO-Revision-Date: 2021-01-14 11:54+0900\n"
 "Last-Translator: Takayuki Tanaka <aharotias2@gmail.com>\n"
 "Language-Team: none\n"
@@ -26,18 +26,20 @@ msgstr "前の画像"
 msgid "Next"
 msgstr "次の画像"
 
+#. file buttons
 #: src/Widgets/HeaderButtons.vala:50 src/TatapWindow.vala:327
 msgid "Open"
 msgstr "開く"
 
-#: src/Widgets/HeaderButtons.vala:55 src/TatapWindow.vala:426
+#: src/Widgets/HeaderButtons.vala:55 src/TatapWindow.vala:433
 msgid "Save as…"
 msgstr "名前を付けて保存…"
 
-#: src/Widgets/HeaderButtons.vala:60
+#: src/Widgets/HeaderButtons.vala:62
 msgid "New"
 msgstr "新規"
 
+#. action buttons for the image
 #: src/Widgets/TatapToolBar.vala:40
 msgid "Zoom in"
 msgstr "拡大"
@@ -114,7 +116,7 @@ msgstr "画像を閲覧/編集できます"
 msgid "Choose file to open"
 msgstr "開くファイルを選択"
 
-#: src/TatapWindow.vala:327 src/TatapWindow.vala:427
+#: src/TatapWindow.vala:327 src/TatapWindow.vala:434
 msgid "Cancel"
 msgstr "キャンセル"
 
@@ -126,35 +128,35 @@ msgstr "ディレクトリが存在しません。終了します。"
 msgid "The file does not found."
 msgstr "ファイルが見つかりません。"
 
-#: src/TatapWindow.vala:399 src/TatapWindow.vala:405
+#: src/TatapWindow.vala:406
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr "ファイルを開けません (理由: %s)"
 
-#: src/TatapWindow.vala:415
+#: src/TatapWindow.vala:422
 msgid "Sorry, saving animations is not supported yet."
 msgstr "申し訳ありませんが、アニメーションの保存には未対応です。"
 
-#: src/TatapWindow.vala:419
+#: src/TatapWindow.vala:426
 msgid "The size of the saved image: "
 msgstr "保存する画像のサイズを選択: "
 
-#: src/TatapWindow.vala:420
+#: src/TatapWindow.vala:427
 msgid "Currently displayed size"
 msgstr "現在表示中のサイズ"
 
-#: src/TatapWindow.vala:421
+#: src/TatapWindow.vala:428
 msgid "Original size"
 msgstr "オリジナルのサイズ"
 
-#: src/TatapWindow.vala:427
+#: src/TatapWindow.vala:434
 msgid "Save"
 msgstr "保存"
 
-#: src/TatapWindow.vala:446
+#: src/TatapWindow.vala:453
 msgid "File already exists. Do you want to overwrite it?"
 msgstr "ファイルはすでに存在します。上書きしてもよろしいですか？"
 
-#: src/TatapWindow.vala:461
+#: src/TatapWindow.vala:468
 msgid "The file is saved."
 msgstr "ファイルを保存しました。"

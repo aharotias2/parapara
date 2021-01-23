@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-22 17:00+0000\n"
+"POT-Creation-Date: 2021-01-23 09:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,18 +25,20 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
+#. file buttons
 #: src/Widgets/HeaderButtons.vala:50 src/TatapWindow.vala:327
 msgid "Open"
 msgstr ""
 
-#: src/Widgets/HeaderButtons.vala:55 src/TatapWindow.vala:426
+#: src/Widgets/HeaderButtons.vala:55 src/TatapWindow.vala:433
 msgid "Save as…"
 msgstr ""
 
-#: src/Widgets/HeaderButtons.vala:60
+#: src/Widgets/HeaderButtons.vala:62
 msgid "New"
 msgstr ""
 
+#. action buttons for the image
 #: src/Widgets/TatapToolBar.vala:40
 msgid "Zoom in"
 msgstr ""
@@ -113,7 +115,7 @@ msgstr ""
 msgid "Choose file to open"
 msgstr ""
 
-#: src/TatapWindow.vala:327 src/TatapWindow.vala:427
+#: src/TatapWindow.vala:327 src/TatapWindow.vala:434
 msgid "Cancel"
 msgstr ""
 
@@ -125,35 +127,35 @@ msgstr ""
 msgid "The file does not found."
 msgstr ""
 
-#: src/TatapWindow.vala:399 src/TatapWindow.vala:405
+#: src/TatapWindow.vala:406
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr ""
 
-#: src/TatapWindow.vala:415
+#: src/TatapWindow.vala:422
 msgid "Sorry, saving animations is not supported yet."
 msgstr ""
 
-#: src/TatapWindow.vala:419
+#: src/TatapWindow.vala:426
 msgid "The size of the saved image: "
 msgstr ""
 
-#: src/TatapWindow.vala:420
+#: src/TatapWindow.vala:427
 msgid "Currently displayed size"
 msgstr ""
 
-#: src/TatapWindow.vala:421
+#: src/TatapWindow.vala:428
 msgid "Original size"
 msgstr ""
 
-#: src/TatapWindow.vala:427
+#: src/TatapWindow.vala:434
 msgid "Save"
 msgstr ""
 
-#: src/TatapWindow.vala:446
+#: src/TatapWindow.vala:453
 msgid "File already exists. Do you want to overwrite it?"
 msgstr ""
 
-#: src/TatapWindow.vala:461
+#: src/TatapWindow.vala:468
 msgid "The file is saved."
 msgstr ""
