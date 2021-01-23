@@ -43,6 +43,7 @@ public class TatapImage : Image {
     public int original_width { get { return original_pixbuf.width; } }
     public bool has_image { get; set; }
     public Pixbuf? original_pixbuf { get; private set; }
+
     private PixbufAnimation? animation;
     private uint zoom_percent = 1000;
     private int? original_max_size;
@@ -68,47 +69,37 @@ public class TatapImage : Image {
     }
 
     public void open(string filename) throws FileError, Error {
-        try {
-            File file = File.new_for_path(filename);
-            string? mime_type = TatapFileUtils.get_mime_type_from_file(file);
-            if (mime_type == null) {
-                throw new TatapError.INVALID_FILE(null);
-            }
-
-            fileref = file;
-            file_counter++;
-            animation = new PixbufAnimation.from_file(filename);
-            tval = TimeVal();
-            var animation_iter = animation.get_iter(tval);
-            original_pixbuf = animation_iter.get_pixbuf();
-            original_max_size = int.max(original_pixbuf.width, original_pixbuf.height);
-            original_rate_x = (double) original_pixbuf.width / (double) original_pixbuf.height;
-            save_width = -1;
-            save_height = -1;
-            hflipped = false;
-            vflipped = false;
-            degree = 0;
-            has_image = true;
-            if (!animation.is_static_image()) {
-                paused_value = false;
-                playing = true;
-                is_animation = true;
-            } else {
-                playing = false;
-                paused = true;
-                animation_iter = null;
-                is_animation = false;
-            }
-            Idle.add(() => {
-                fit_image_to_window();
-                if (is_animation) {
-                    animate.begin(animation_iter);
-                }
-                return false;
-            });
-        } catch (TatapError e) {
-            print("Warning: file type is invalid.\n");
+        fileref = File.new_for_path(filename);
+        file_counter++;
+        animation = new PixbufAnimation.from_file(filename);
+        tval = TimeVal();
+        var animation_iter = animation.get_iter(tval);
+        original_pixbuf = animation_iter.get_pixbuf();
+        original_max_size = int.max(original_pixbuf.width, original_pixbuf.height);
+        original_rate_x = (double) original_pixbuf.width / (double) original_pixbuf.height;
+        save_width = -1;
+        save_height = -1;
+        hflipped = false;
+        vflipped = false;
+        degree = 0;
+        has_image = true;
+        if (!animation.is_static_image()) {
+            paused_value = false;
+            playing = true;
+            is_animation = true;
+        } else {
+            playing = false;
+            paused = true;
+            animation_iter = null;
+            is_animation = false;
         }
+        Idle.add(() => {
+            fit_image_to_window();
+            if (is_animation) {
+                animate.begin(animation_iter);
+            }
+            return false;
+        });
     }
 
     public async void animate(Gdk.PixbufAnimationIter animation_iter) {
@@ -143,8 +134,10 @@ public class TatapImage : Image {
                                         prepared_pixbuf = prepared_pixbuf.rotate_simple(PixbufRotation.COUNTERCLOCKWISE);
                                     }
                                 }
-                                prepared_pixbuf_resized = prepared_pixbuf.scale_simple(pixbuf.width, pixbuf.height, Gdk.InterpType.BILINEAR);
-                                next_zoom_percent = calc_zoom_percent(prepared_pixbuf_resized.height, prepared_pixbuf.height);
+                                prepared_pixbuf_resized
+                                        = prepared_pixbuf.scale_simple(pixbuf.width, pixbuf.height, Gdk.InterpType.BILINEAR);
+                                next_zoom_percent
+                                        = calc_zoom_percent(prepared_pixbuf_resized.height, prepared_pixbuf.height);
                                 run_thread = false;
                                 Idle.add(animate.callback);
                             } else {

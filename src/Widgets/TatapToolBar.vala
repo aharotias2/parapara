@@ -18,21 +18,21 @@
 
 public class TatapToolBar : Gtk.Bin {
     public TatapWindow window { get; construct; }
-    public SortOrder sort_order { get; private set; }
+    public SortOrder sort_order { get; protected set; }
+    public bool sticked { get; protected set; }
     public signal void sort_order_changed(SortOrder sort_order);
     public signal void stick_button_clicked(bool sticked);
 
     private Gtk.Button zoom_fit_button;
-    private bool sticked;
     public ActionButton animation_forward_button { get; private set; }
     public ActionButton animation_play_pause_button { get; private set; }
 
     public TatapToolBar (TatapWindow window) {
         Object (
-            window: window
+            window: window,
+            sort_order: SortOrder.ASC,
+            sticked: false
         );
-        sort_order = SortOrder.ASC;
-        sticked = false;
     }
 
     construct {

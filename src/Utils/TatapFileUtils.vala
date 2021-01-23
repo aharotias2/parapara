@@ -17,24 +17,9 @@
  */
 
 public class TatapFileUtils {
-    public static FileInfo? get_file_info_from_file(File? file) {
-        if (file == null) {
-            return null;
-        }
-
-        try {
-            return file.query_info("standard::*", 0);
-        } catch (Error e) {
-            return null;
-        }
-    }
-
-    public static string? get_mime_type_from_file(File? file) {
-        FileInfo? info = get_file_info_from_file(file);
-        if (info != null) {
-            return info.get_content_type();
-        }
-        return null;
+    public static string? get_mime_type_from_file(File? file) throws Error {
+        FileInfo info = file.query_info("standard::*", 0);
+        return info.get_content_type();
     }
 
     /**
@@ -45,11 +30,11 @@ public class TatapFileUtils {
      * when path is not a image file   => return false
      * when path is a image file       => return true
      */
-    public static bool check_file_is_image(string? path) throws FileError {
+    public static bool check_file_is_image(string? path) throws Error {
         if (FileUtils.test(path, FileTest.EXISTS)) {
             if (FileUtils.test(path, FileTest.IS_REGULAR)) {
                 File f = File.new_for_path(path);
-                string? mime_type = get_mime_type_from_file(f);
+                string mime_type = get_mime_type_from_file(f);
                 if (mime_type.split("/")[0] == "image") {
                     return true;
                 } else {

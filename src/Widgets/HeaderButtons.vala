@@ -18,7 +18,7 @@
 
 public class HeaderButtons : Gtk.Box {
     public TatapWindow window { get; construct; }
-    public Gtk.ToolButton save_button { get; private set; }
+    public ActionButton save_button { get; private set; }
 
     private ActionButton image_prev_button;
     private ActionButton image_next_button;
@@ -52,7 +52,9 @@ public class HeaderButtons : Gtk.Box {
             window.on_open_button_clicked();
         });
 
-        var save_button = new ActionButton("document-save-as-symbolic", _("Save as…"), {"<Control>s"});
+        save_button = new ActionButton("document-save-as-symbolic", _("Save as…"), {"<Control>s"}) {
+            sensitive = false
+        };
         save_button.clicked.connect(() => {
             window.on_save_button_clicked();
         });

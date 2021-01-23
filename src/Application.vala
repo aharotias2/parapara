@@ -45,13 +45,11 @@ public class Application : Gtk.Application {
 
         foreach (var file in files) {
             string? filepath = file.get_path();
-            string mimetype = TatapFileUtils.get_mime_type_from_file(file);
-            if (mimetype != null && mimetype.split("/")[0] == "image") {
-                TatapWindow window = create_new_window();
+            TatapWindow window = create_new_window();
+            Idle.add(() => {
                 window.open_file(filepath);
-            } else {
-                stderr.printf("The argument is not a image file!\n");
-            }
+                return false;
+            });
         }
     }
 

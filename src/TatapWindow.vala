@@ -46,7 +46,7 @@ public class TatapWindow : Gtk.Window {
     private double x;
     private double y;
 
-    public TatapWindow() {
+    construct {
         /* previous, next, open, and save buttons at the left of the headerbar */
         header_buttons = new HeaderButtons(this);
 
@@ -130,7 +130,7 @@ public class TatapWindow : Gtk.Window {
 
         /* switch welcome screen and image view */
         stack = new Stack() {
-            transition_type = StackTransitionType.SLIDE_LEFT_RIGHT
+            transition_type = StackTransitionType.CROSSFADE
         };
         stack.add_named(welcome, "welcome");
         stack.add_named(bottom_box, "picture");
@@ -393,18 +393,19 @@ public class TatapWindow : Gtk.Window {
             stack.visible_child_name = "picture";
             toolbar_toggle_button.sensitive = true;
             set_title_label();
-        } catch (FileError e) {
-            DialogFlags flags = DialogFlags.MODAL;
-            MessageDialog alert = new MessageDialog(this, flags, MessageType.ERROR, ButtonsType.OK,
-                    _("The file could not be opend (cause: %s)").printf(e.message));
-            alert.run();
-            alert.close();
+            header_buttons.set_save_button_sensitivity(true);
         } catch (Error e) {
-            DialogFlags flags = DialogFlags.MODAL;
-            MessageDialog alert = new MessageDialog(this, flags, MessageType.ERROR, ButtonsType.OK,
-                    _("The file could not be opend (cause: %s)").printf(e.message));
+            string message;
+            if (e is TatapError) {
+                message = e.message;
+            } else {
+                message = _("The file could not be opend (cause: %s)").printf(e.message);
+            }
+            MessageDialog alert = new MessageDialog(this, DialogFlags.MODAL, MessageType.ERROR, ButtonsType.OK, message);
             alert.run();
             alert.close();
+            stack.visible_child_name = "welcome";
+            header_buttons.set_save_button_sensitivity(false);
         }
     }
 

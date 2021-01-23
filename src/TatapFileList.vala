@@ -148,7 +148,7 @@ public class TatapFileList {
             string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, file_name);
             try {
                 return TatapFileUtils.check_file_is_image(path);
-            } catch (FileError e) {
+            } catch (Error e) {
                 thread_data.terminate();
                 file_not_found();
                 return false;
