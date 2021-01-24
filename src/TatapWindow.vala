@@ -423,19 +423,21 @@ public class TatapWindow : Gtk.Window {
             alert.run();
             alert.close();
         } else {
-            var ask_size_label = new Gtk.Label(_("The size of the saved image: "));
+            var ask_size_label = new Gtk.Label(_("The size of the saved image:"));
             var radio_current_size = new Gtk.RadioButton.with_label(null, _("Currently displayed size"));
             var radio_original_size = new Gtk.RadioButton.with_label_from_widget(radio_current_size, _("Original size"));
-            var radio_hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0) { halign = Gtk.Align.END, margin = 10 };
+            var radio_hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 12) { halign = Gtk.Align.END, margin = 10 };
             radio_hbox.pack_start(ask_size_label, false, false);
             radio_hbox.pack_start(radio_current_size, false, false);
             radio_hbox.pack_start(radio_original_size, false, false);
+
             var dialog = new Gtk.FileChooserDialog(_("Save as…"), this, Gtk.FileChooserAction.SAVE,
                     _("Cancel"), Gtk.ResponseType.CANCEL, _("Save"), Gtk.ResponseType.ACCEPT);
             dialog.set_current_folder(image.fileref.get_parent().get_path());
             dialog.set_current_name(image.fileref.get_basename());
             dialog.get_content_area().pack_start(radio_hbox, false, false);
             dialog.show_all();
+
             int save_result = dialog.run();
             if (save_result == Gtk.ResponseType.ACCEPT) {
                 string filename = dialog.get_filename();
