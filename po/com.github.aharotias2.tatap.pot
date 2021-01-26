@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-23 09:36+0000\n"
+"POT-Creation-Date: 2021-01-26 15:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,7 +30,7 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
-#: src/Widgets/HeaderButtons.vala:55 src/TatapWindow.vala:433
+#: src/Widgets/HeaderButtons.vala:55 src/TatapWindow.vala:434
 msgid "Save as…"
 msgstr ""
 
@@ -115,7 +115,7 @@ msgstr ""
 msgid "Choose file to open"
 msgstr ""
 
-#: src/TatapWindow.vala:327 src/TatapWindow.vala:434
+#: src/TatapWindow.vala:327 src/TatapWindow.vala:435
 msgid "Cancel"
 msgstr ""
 
@@ -137,7 +137,7 @@ msgid "Sorry, saving animations is not supported yet."
 msgstr ""
 
 #: src/TatapWindow.vala:426
-msgid "The size of the saved image: "
+msgid "The size of the saved image:"
 msgstr ""
 
 #: src/TatapWindow.vala:427
@@ -148,14 +148,14 @@ msgstr ""
 msgid "Original size"
 msgstr ""
 
-#: src/TatapWindow.vala:434
+#: src/TatapWindow.vala:435
 msgid "Save"
 msgstr ""
 
-#: src/TatapWindow.vala:453
+#: src/TatapWindow.vala:457
 msgid "File already exists. Do you want to overwrite it?"
 msgstr ""
 
-#: src/TatapWindow.vala:468
+#: src/TatapWindow.vala:472
 msgid "The file is saved."
 msgstr ""
