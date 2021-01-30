@@ -140,7 +140,7 @@ msgstr "申し訳ありませんが、アニメーションの保存には未対
 #: src/TatapWindow.vala:426
 #, fuzzy
 msgid "The size of the saved image:"
-msgstr "保存する画像のサイズを選択: "
+msgstr "保存する画像のサイズを選択:"
 
 #: src/TatapWindow.vala:427
 msgid "Currently displayed size"
