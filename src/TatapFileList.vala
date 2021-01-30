@@ -84,7 +84,7 @@ public class TatapFileList {
         }
     }
 
-    public File? get_prev_file(File file) {
+    public File? get_prev_file(int offset = 1) {
         if (file_list.size == 0) {
             return null;
         }
@@ -95,8 +95,10 @@ public class TatapFileList {
                 if (file_list.size == 0) {
                     return null;
                 }
-                if (current_index < file_list.size) {
-                    new_index = current_index - 1;
+                if (current_index <= 0) {
+                    continue;
+                } else if (current_index < file_list.size) {
+                    new_index = current_index - offset;
                 } else {
                     new_index = file_list.size - 1;
                 }
@@ -115,7 +117,7 @@ public class TatapFileList {
         return null;
     }
 
-    public File? get_next_file(File file) {
+    public File? get_next_file(int offset = 1) {
         if (file_list.size == 0) {
             return null;
         }
@@ -125,8 +127,8 @@ public class TatapFileList {
             if (file_list.size == 0) {
                 return null;
             }
-            if (current_index < file_list.size - 1) {
-                new_index = current_index + 1;
+            if (current_index < file_list.size - offset) {
+                new_index = current_index + offset;
             } else if (current_index == file_list.size - 1) {
                 continue;
             } else {

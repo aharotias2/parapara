@@ -53,7 +53,7 @@ public class TatapWindow : Gtk.Window {
         /* menu button at the right of the headerbar */
         var toggle_toolbar_icon = new Image.from_icon_name("view-more-symbolic", ICON_SIZE);
         toolbar_toggle_button = new ToggleButton() {
-            tooltip_text = _("Menu"),
+            tooltip_markup = Granite.markup_accel_tooltip({"<control>m"}, _("Menu")),
             sensitive = false
         };
 
@@ -258,6 +258,68 @@ public class TatapWindow : Gtk.Window {
             case EventType.KEY_PRESS:
                 if (Gdk.ModifierType.CONTROL_MASK in ev.key.state) {
                     switch (ev.key.keyval) {
+                        case Gdk.Key.plus:
+                            image.zoom_in(10);
+                            set_title_label();
+                            toolbar.set_zoom_fit_button_sensitivity(true);
+                            break;
+                        case Gdk.Key.minus:
+                            image.zoom_out(10);
+                            set_title_label();
+                            toolbar.set_zoom_fit_button_sensitivity(true);
+                            break;
+                        case Gdk.Key.m:
+                            if (toolbar_toggle_button.sensitive) {
+                                toolbar_toggle_button.active = !toolbar_toggle_button.active;
+                                toolbar_toggle_button.toggled();
+                            }
+                            break;
+                        case Gdk.Key.f:
+                            if (image.has_image) {
+                                toolbar_toggle_button.active = true;
+                                if (!toolbar.sticked) {
+                                    toolbar.stick_toolbar();
+                                } else {
+                                    toolbar.unstick_toolbar();
+                                }
+                            }
+                            break;
+                        case Gdk.Key.@1:
+                            if (image.has_image) {
+                                image.zoom_original();
+                                set_title_label();
+                                toolbar.set_zoom_fit_button_sensitivity(true);
+                            }
+                            break;
+                        case Gdk.Key.@0:
+                            if (image.has_image) {
+                                image.fit_image_to_window();
+                                set_title_label();
+                                toolbar.set_zoom_fit_button_sensitivity(false);
+                            }
+                            break;
+                        case Gdk.Key.h:
+                            if (image.has_image) {
+                                image.hflip();
+                            }
+                            break;
+                        case Gdk.Key.v:
+                            if (image.has_image) {
+                                image.vflip();
+                            }
+                            break;
+                        case Gdk.Key.l:
+                            if (image.has_image) {
+                                image.rotate_right();
+                                set_title_label();
+                            }
+                            break;
+                        case Gdk.Key.r:
+                            if (image.has_image) {
+                                image.rotate_left();
+                                set_title_label();
+                            }
+                            break;
                         case Gdk.Key.n:
                             require_new_window();
                             return true;
@@ -485,7 +547,7 @@ public class TatapWindow : Gtk.Window {
     public void go_prev() {
         if (file_list != null) {
             File? prev_file = toolbar.sort_order == SortOrder.ASC
-                    ? file_list.get_prev_file(image.fileref) : file_list.get_next_file(image.fileref);
+                    ? file_list.get_prev_file() : file_list.get_next_file();
             if (prev_file != null) {
                 open_file(prev_file.get_path());
             }
@@ -495,7 +557,7 @@ public class TatapWindow : Gtk.Window {
     public void go_next() {
         if (file_list != null) {
             File? next_file = toolbar.sort_order == SortOrder.ASC
-                    ? file_list.get_next_file(image.fileref) : file_list.get_prev_file(image.fileref);
+                    ? file_list.get_next_file() : file_list.get_prev_file();
             if (next_file != null) {
                 open_file(next_file.get_path());
             }

@@ -24,6 +24,7 @@ public class TatapToolBar : Gtk.Bin {
     public signal void stick_button_clicked(bool sticked);
 
     private Gtk.Button zoom_fit_button;
+    private ActionButton stick_button;
     public ActionButton animation_forward_button { get; private set; }
     public ActionButton animation_play_pause_button { get; private set; }
 
@@ -37,7 +38,8 @@ public class TatapToolBar : Gtk.Bin {
 
     construct {
         /* action buttons for the image */
-        var zoom_in_button = new ActionButton("zoom-in-symbolic", _("Zoom in"));
+        var zoom_in_button = new ActionButton(
+                "zoom-in-symbolic", _("Zoom in"), {"<control>plus"});
         zoom_in_button.get_style_context().add_class("image_overlay_button");
         zoom_in_button.clicked.connect(() => {
             window.image.zoom_in(10);
@@ -45,7 +47,8 @@ public class TatapToolBar : Gtk.Bin {
             zoom_fit_button.sensitive = true;
         });
 
-        var zoom_out_button = new ActionButton("zoom-out-symbolic", _("Zoom out"));
+        var zoom_out_button = new ActionButton(
+                "zoom-out-symbolic", _("Zoom out"), {"<control>minus"});
         zoom_out_button.get_style_context().add_class("image_overlay_button");
         zoom_out_button.clicked.connect(() => {
             window.image.zoom_out(10);
@@ -53,7 +56,8 @@ public class TatapToolBar : Gtk.Bin {
             zoom_fit_button.sensitive = true;
         });
 
-        zoom_fit_button = new ActionButton("zoom-fit-best-symbolic", _("Fit to the page"));
+        zoom_fit_button = new ActionButton(
+                "zoom-fit-best-symbolic", _("Fit to the page"), {"<control>0"});
         zoom_fit_button.get_style_context().add_class("image_overlay_button");
         zoom_fit_button.clicked.connect(() => {
             window.image.fit_image_to_window();
@@ -61,7 +65,8 @@ public class TatapToolBar : Gtk.Bin {
             zoom_fit_button.sensitive = false;
         });
 
-        var zoom_orig_button = new ActionButton("zoom-original-symbolic", _("100%"));
+        var zoom_orig_button = new ActionButton(
+                "zoom-original-symbolic", _("100%"), {"<control>1"});
         zoom_orig_button.get_style_context().add_class("image_overlay_button");
         zoom_orig_button.clicked.connect(() => {
             window.image.zoom_original();
@@ -69,32 +74,34 @@ public class TatapToolBar : Gtk.Bin {
             zoom_fit_button.sensitive = true;
         });
 
-        var hflip_button = new ActionButton("object-flip-horizontal-symbolic", _("Flip horizontally"));
+        var hflip_button = new ActionButton(
+                "object-flip-horizontal-symbolic", _("Flip horizontally"), {"<control>h"});
         hflip_button.get_style_context().add_class("image_overlay_button");
         hflip_button.clicked.connect(() => {
             window.image.hflip();
         });
 
-        var vflip_button = new ActionButton("object-flip-vertical-symbolic", _("Flip vertically"));
+        var vflip_button = new ActionButton(
+                "object-flip-vertical-symbolic", _("Flip vertically"), {"<control>v"});
         vflip_button.get_style_context().add_class("image_overlay_button");
         vflip_button.clicked.connect(() => {
             window.image.vflip();
         });
 
-        var lrotate_button = new ActionButton("object-rotate-left-symbolic", _("Rotate to the left"));
+        var lrotate_button = new ActionButton(
+                "object-rotate-left-symbolic", _("Rotate to the left"), {"<control>l"});
         lrotate_button.get_style_context().add_class("image_overlay_button");
         lrotate_button.clicked.connect(() => {
             window.image.rotate_left();
             window.set_title_label();
-            zoom_fit_button.sensitive = true;
         });
 
-        var rrotate_button = new ActionButton("object-rotate-right-symbolic", _("Rotate to the right"));
+        var rrotate_button = new ActionButton(
+                "object-rotate-right-symbolic", _("Rotate to the right"), {"<control>r"});
         rrotate_button.get_style_context().add_class("image_overlay_button");
         rrotate_button.clicked.connect(() => {
             window.image.rotate_right();
             window.set_title_label();
-            zoom_fit_button.sensitive = true;
         });
 
         var image_actions_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
@@ -196,17 +203,15 @@ public class TatapToolBar : Gtk.Bin {
         animation_actions_button_box.pack_start(animation_play_pause_button);
         animation_actions_button_box.pack_start(animation_forward_button);
 
-        var stick_button = new ActionButton("pan-down-symbolic", _("Stick")) {
+        stick_button = new ActionButton("pan-down-symbolic", _("Stick"), {"<control>f"}) {
             margin = 5
         };
         stick_button.clicked.connect(() => {
             if (sticked) {
-                stick_button.icon_name = "pan-down-symbolic";
+                unstick_toolbar();
             } else {
-                stick_button.icon_name = "pan-up-symbolic";
+                stick_toolbar();
             }
-            sticked = !sticked;
-            stick_button_clicked(sticked);
         });
 
         var toolbar_hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0) {
@@ -224,5 +229,17 @@ public class TatapToolBar : Gtk.Bin {
 
     public void set_zoom_fit_button_sensitivity(bool is_sensitive) {
         zoom_fit_button.sensitive = is_sensitive;
+    }
+
+    public void stick_toolbar() {
+        stick_button.icon_name = "pan-up-symbolic";
+        sticked = true;
+        stick_button_clicked(true);
+    }
+
+    public void unstick_toolbar() {
+        stick_button.icon_name = "pan-down-symbolic";
+        sticked = false;
+        stick_button_clicked(false);
     }
 }
