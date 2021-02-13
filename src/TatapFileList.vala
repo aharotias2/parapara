@@ -16,6 +16,8 @@
  *  Tanaka Takayuki <aharotias2@gmail.com>
  */
 
+extern int tatap_filename_compare(string str_a, string str_b);
+
 /**
  * TatapFileList is a custome Gee.LinkedList<File>.
  */
@@ -163,9 +165,7 @@ public class TatapFileList {
                 return false;
             }
         });
-        thread_data.sorted.connect((a, b) => {
-            return a.collate(b);
-        });
+        thread_data.sorted.connect(tatap_filename_compare);
         thread_data.updated.connect((thread_file_list) => {
             if (thread_file_list == null || thread_file_list.size == 0) {
                 thread_data.terminate();

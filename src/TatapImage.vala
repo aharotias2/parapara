@@ -155,6 +155,8 @@ public class TatapImage : Image {
                     step_once = false;
                     run_thread = false;
                     Timeout.add(animation_iter.get_delay_time(), animate.callback);
+                } else {
+                    break;
                 }
             } else {
                 run_thread = false;

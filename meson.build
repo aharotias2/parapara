@@ -31,7 +31,6 @@ executable(
     'src/Utils/TatapFileType.vala',
     'src/Utils/TatapFileUtils.vala',
     'src/Utils/TatapMathUtils.vala',
-    'src/Utils/TatapStringUtils.vala',
     'src/Widgets/ActionButton.vala',
     'src/Widgets/HeaderButtons.vala',
     'src/Widgets/TatapToolBar.vala',
@@ -41,6 +40,7 @@ executable(
     'src/TatapFileList.vala',
     'src/TatapImage.vala',
     'src/TatapWindow.vala',
+    'src/Utils/Strings.c',
     dependencies: [
         dependency('gee-0.8'),
         dependency('granite'),
