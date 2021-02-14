@@ -2,6 +2,9 @@
 #include <string.h>
 #include <glib.h>
 
+#ifndef NAME_MAX
+# define NAME_MAX 255
+#endif
 #define PART_TYPE_DIGIT 0
 #define PART_TYPE_NONDIGIT 1
 #define PART_TYPE_EMPTY 2
@@ -52,7 +55,7 @@ int tatap_filename_compare(gchar* str_a, gchar* str_b) {
                 int int_b = atoi(part_b.data);
                 result = int_a - int_b;
             } else {
-                result = tatap_string_compare_nondigit(part_a.data, part_b.data);
+                result = g_ascii_strncasecmp(part_a.data, part_b.data, NAME_MAX);
             }
             g_free(part_a.data);
             g_free(part_b.data);
@@ -78,7 +81,7 @@ gchar* tatap_string_get_next_part(gchar* str, struct StrPart* part) {
     int type = g_ascii_isdigit(str[0]) ? PART_TYPE_DIGIT : PART_TYPE_NONDIGIT;
     int prev_type = type;
     int i = 1;
-    while (1) {
+    do {
         if (str[i] == '\0') {
             i++;
             break;
@@ -86,26 +89,11 @@ gchar* tatap_string_get_next_part(gchar* str, struct StrPart* part) {
         prev_type = type;
         type = g_ascii_isdigit(str[i]) ? PART_TYPE_DIGIT : PART_TYPE_NONDIGIT;
         i++;
-        if (prev_type != type) {
-            break;
-        }
-    }
+    } while (prev_type == type);
     part->type = prev_type;
     part->data = g_strndup(str, i - 1);
     part->length = i - 1;
     return str + i - 1;
-}
-
-int tatap_string_compare_nondigit(gchar *str_a, gchar *str_b) {
-    gchar ca, cb;
-    do {
-        ca = *str_a++;
-        cb = *str_b++;
-        if (ca == '\0') {
-            return g_ascii_tolower(ca) - g_ascii_tolower(cb);
-        }
-    } while (ca == cb);
-    return g_ascii_tolower(ca) - g_ascii_tolower(cb);
 }
 
 int tatap_string_last_index_of_char(gchar *str, gchar needle) {
