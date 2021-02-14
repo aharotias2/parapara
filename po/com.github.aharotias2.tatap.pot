@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-30 10:58+0000\n"
+"POT-Creation-Date: 2021-02-14 07:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,6 +25,7 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
+#. file buttons
 #: src/Widgets/HeaderButtons.vala:50 src/TatapWindow.vala:389
 msgid "Open"
 msgstr ""
@@ -37,55 +38,56 @@ msgstr ""
 msgid "New"
 msgstr ""
 
-#: src/Widgets/TatapToolBar.vala:42
+#. action buttons for the image
+#: src/Widgets/TatapToolBar.vala:41
 msgid "Zoom in"
 msgstr ""
 
-#: src/Widgets/TatapToolBar.vala:51
+#: src/Widgets/TatapToolBar.vala:49
 msgid "Zoom out"
 msgstr ""
 
-#: src/Widgets/TatapToolBar.vala:60
+#: src/Widgets/TatapToolBar.vala:57
 msgid "Fit to the page"
 msgstr ""
 
-#: src/Widgets/TatapToolBar.vala:69
+#: src/Widgets/TatapToolBar.vala:65
 msgid "100%"
 msgstr ""
 
-#: src/Widgets/TatapToolBar.vala:78
+#: src/Widgets/TatapToolBar.vala:73
 msgid "Flip horizontally"
 msgstr ""
 
-#: src/Widgets/TatapToolBar.vala:85
+#: src/Widgets/TatapToolBar.vala:79
 msgid "Flip vertically"
 msgstr ""
 
-#: src/Widgets/TatapToolBar.vala:92
+#: src/Widgets/TatapToolBar.vala:85
 msgid "Rotate to the left"
 msgstr ""
 
-#: src/Widgets/TatapToolBar.vala:100
+#: src/Widgets/TatapToolBar.vala:92
 msgid "Rotate to the right"
 msgstr ""
 
-#: src/Widgets/TatapToolBar.vala:123
+#: src/Widgets/TatapToolBar.vala:115
 msgid "Sort Asc"
 msgstr ""
 
-#: src/Widgets/TatapToolBar.vala:137
+#: src/Widgets/TatapToolBar.vala:129
 msgid "Sort Desc"
 msgstr ""
 
-#: src/Widgets/TatapToolBar.vala:157
+#: src/Widgets/TatapToolBar.vala:149
 msgid "Skip forward"
 msgstr ""
 
-#: src/Widgets/TatapToolBar.vala:166
+#: src/Widgets/TatapToolBar.vala:158
 msgid "Play animation"
 msgstr ""
 
-#: src/Widgets/TatapToolBar.vala:206
+#: src/Widgets/TatapToolBar.vala:198
 msgid "Stick"
 msgstr ""
 
