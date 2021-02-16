@@ -5,9 +5,9 @@
 #ifndef NAME_MAX
 # define NAME_MAX 255
 #endif
-#define PART_TYPE_DIGIT 0
-#define PART_TYPE_NONDIGIT 1
-#define PART_TYPE_EMPTY 2
+#define PART_TYPE_EMPTY 0
+#define PART_TYPE_DIGIT 1
+#define PART_TYPE_NONDIGIT 2
 
 struct StrPart {
     int type;
@@ -32,22 +32,19 @@ int tatap_filename_compare(gchar* str_a, gchar* str_b) {
     struct StrPart part_b = {0};
     int result = 0;
     gchar *next_a = name_a, *next_b = name_b;
-    int end_flag = 0;
     do {
         next_a = tatap_string_get_next_part(next_a, &part_a);
         next_b = tatap_string_get_next_part(next_b, &part_b);
         if (part_a.type == PART_TYPE_EMPTY) {
             if (part_b.type == PART_TYPE_EMPTY) {
                 result = 0;
-                end_flag = 1;
+                break;
             } else {
                 result = -1;
-                end_flag = 1;
                 g_free(part_b.data);
             }
         } else if (part_b.type == PART_TYPE_EMPTY) {
             result = 1;
-            end_flag = 1;
             g_free(part_a.data);
         } else {
             if (part_a.type == PART_TYPE_DIGIT && part_b.type == PART_TYPE_DIGIT) {
@@ -60,7 +57,7 @@ int tatap_filename_compare(gchar* str_a, gchar* str_b) {
             g_free(part_a.data);
             g_free(part_b.data);
         }
-    } while (result == 0 && end_flag == 0);
+    } while (result == 0);
     g_free(name_a);
     g_free(name_b);
     if (result == 0) {
@@ -78,19 +75,19 @@ gchar* tatap_string_get_next_part(gchar* str, struct StrPart* part) {
         part->data = NULL;
         return NULL;
     }
-    int type = g_ascii_isdigit(str[0]) ? PART_TYPE_DIGIT : PART_TYPE_NONDIGIT;
-    int prev_type = type;
+    gboolean isdigit = g_ascii_isdigit(str[0]);
+    gboolean prev_isdigit = isdigit;
     int i = 1;
     do {
         if (str[i] == '\0') {
             i++;
             break;
         }
-        prev_type = type;
-        type = g_ascii_isdigit(str[i]) ? PART_TYPE_DIGIT : PART_TYPE_NONDIGIT;
+        prev_isdigit = isdigit;
+        isdigit = g_ascii_isdigit(str[i]);
         i++;
-    } while (prev_type == type);
-    part->type = prev_type;
+    } while (prev_isdigit == isdigit);
+    part->type = prev_isdigit ? PART_TYPE_DIGIT : PART_TYPE_NONDIGIT;
     part->data = g_strndup(str, i - 1);
     part->length = i - 1;
     return str + i - 1;

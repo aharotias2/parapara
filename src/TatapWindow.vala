@@ -54,6 +54,7 @@ public class TatapWindow : Gtk.Window {
         var toggle_toolbar_icon = new Image.from_icon_name("view-more-symbolic", ICON_SIZE);
         toolbar_toggle_button = new ToggleButton() {
             tooltip_markup = Granite.markup_accel_tooltip({"<control>m"}, _("Menu")),
+            relief = Gtk.ReliefStyle.NONE,
             sensitive = false
         };
 
