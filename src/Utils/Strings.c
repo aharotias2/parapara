@@ -100,5 +100,5 @@ int tatap_string_last_index_of_char(gchar *str, gchar needle) {
             return i;
         }
     }
-    return -1;
+    return len - 1;
 }
