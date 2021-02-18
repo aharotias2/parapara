@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-14 07:14+0000\n"
+"POT-Creation-Date: 2021-02-18 16:05+0000\n"
 "PO-Revision-Date: 2021-01-14 11:54+0900\n"
 "Last-Translator: Takayuki Tanaka <aharotias2@gmail.com>\n"
 "Language-Team: none\n"
@@ -26,12 +26,11 @@ msgstr "前の画像"
 msgid "Next"
 msgstr "次の画像"
 
-#. file buttons
-#: src/Widgets/HeaderButtons.vala:50 src/TatapWindow.vala:389
+#: src/Widgets/HeaderButtons.vala:50 src/TatapWindow.vala:390
 msgid "Open"
 msgstr "開く"
 
-#: src/Widgets/HeaderButtons.vala:55 src/TatapWindow.vala:496
+#: src/Widgets/HeaderButtons.vala:55 src/TatapWindow.vala:497
 msgid "Save as…"
 msgstr "名前を付けて保存…"
 
@@ -39,7 +38,6 @@ msgstr "名前を付けて保存…"
 msgid "New"
 msgstr "新規"
 
-#. action buttons for the image
 #: src/Widgets/TatapToolBar.vala:41
 msgid "Zoom in"
 msgstr "拡大"
@@ -96,68 +94,68 @@ msgstr "固定"
 msgid "Menu"
 msgstr "メニュー"
 
-#: src/TatapWindow.vala:79
+#: src/TatapWindow.vala:80
 msgid "No Images Open"
 msgstr "画像が開いていません"
 
-#: src/TatapWindow.vala:80
+#: src/TatapWindow.vala:81
 msgid "Click 'Open Image' to get started."
 msgstr "「画像を開く」をクリックして開始しましょう。"
 
-#: src/TatapWindow.vala:82
+#: src/TatapWindow.vala:83
 msgid "Open Image"
 msgstr "画像を開く"
 
-#: src/TatapWindow.vala:82
+#: src/TatapWindow.vala:83
 msgid "Show and edit your image."
 msgstr "画像を閲覧/編集できます"
 
-#: src/TatapWindow.vala:388
+#: src/TatapWindow.vala:389
 msgid "Choose file to open"
 msgstr "開くファイルを選択"
 
-#: src/TatapWindow.vala:389 src/TatapWindow.vala:497
+#: src/TatapWindow.vala:390 src/TatapWindow.vala:498
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: src/TatapWindow.vala:418
+#: src/TatapWindow.vala:419
 msgid "The directory does not found. Exiting."
 msgstr "ディレクトリが存在しません。終了します。"
 
-#: src/TatapWindow.vala:426
+#: src/TatapWindow.vala:427
 msgid "The file does not found."
 msgstr "ファイルが見つかりません。"
 
-#: src/TatapWindow.vala:468
+#: src/TatapWindow.vala:469
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr "ファイルを開けません (理由: %s)"
 
-#: src/TatapWindow.vala:484
+#: src/TatapWindow.vala:485
 msgid "Sorry, saving animations is not supported yet."
 msgstr "申し訳ありませんが、アニメーションの保存には未対応です。"
 
-#: src/TatapWindow.vala:488
+#: src/TatapWindow.vala:489
 #, fuzzy
 msgid "The size of the saved image:"
 msgstr "保存する画像のサイズを選択:"
 
-#: src/TatapWindow.vala:489
+#: src/TatapWindow.vala:490
 msgid "Currently displayed size"
 msgstr "現在表示中のサイズ"
 
-#: src/TatapWindow.vala:490
+#: src/TatapWindow.vala:491
 msgid "Original size"
 msgstr "オリジナルのサイズ"
 
-#: src/TatapWindow.vala:497
+#: src/TatapWindow.vala:498
 msgid "Save"
 msgstr "保存"
 
-#: src/TatapWindow.vala:519
+#: src/TatapWindow.vala:520
 msgid "File already exists. Do you want to overwrite it?"
 msgstr "ファイルはすでに存在します。上書きしてもよろしいですか？"
 
-#: src/TatapWindow.vala:534
+#: src/TatapWindow.vala:535
 msgid "The file is saved."
 msgstr "ファイルを保存しました。"
