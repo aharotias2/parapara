@@ -61,9 +61,13 @@ int tatap_filename_compare(gchar* str_a, gchar* str_b) {
     g_free(name_a);
     g_free(name_b);
     if (result == 0) {
-        gchar *ext_a = str_a + last_dot_a + 1;
-        gchar *ext_b = str_b + last_dot_b + 1;
-        result = strcmp(ext_a, ext_b);
+        if (str_a[last_dot_a] != '\0' && str_b[last_dot_b] != '\0') {
+            gchar *ext_a = str_a + last_dot_a + 1;
+            gchar *ext_b = str_b + last_dot_b + 1;
+            result = strcmp(ext_a, ext_b);
+        } else {
+            result = last_dot_a - last_dot_b;
+        }
     }
     return result;
 }
@@ -76,29 +80,25 @@ gchar* tatap_string_get_next_part(gchar* str, struct StrPart* part) {
         return NULL;
     }
     gboolean isdigit = g_ascii_isdigit(str[0]);
-    gboolean prev_isdigit = isdigit;
     int i = 1;
-    do {
-        if (str[i] == '\0') {
-            i++;
-            break;
-        }
-        prev_isdigit = isdigit;
-        isdigit = g_ascii_isdigit(str[i]);
+    while (str[i] != '\0' && isdigit == g_ascii_isdigit(str[i])) {
         i++;
-    } while (prev_isdigit == isdigit);
-    part->type = prev_isdigit ? PART_TYPE_DIGIT : PART_TYPE_NONDIGIT;
-    part->data = g_strndup(str, i - 1);
-    part->length = i - 1;
-    return str + i - 1;
+    }
+    part->type = isdigit ? PART_TYPE_DIGIT : PART_TYPE_NONDIGIT;
+    part->data = g_strndup(str, i);
+    part->length = i;
+    return str + i;
 }
 
 int tatap_string_last_index_of_char(gchar *str, gchar needle) {
     int len = strlen(str);
-    for (int i = len - 1; i >= 0; i--) {
-        if (str[i] == needle) {
-            return i;
-        }
+    int offset = 0;
+    while (str[offset] == '.') {
+        offset++;
     }
-    return len - 1;
+    int i = len - 1;
+    while (i > offset && str[i] != needle) {
+        i--;
+    }
+    return i == offset ? len : i;
 }
