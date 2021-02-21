@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-21 14:43+0900\n"
+"POT-Creation-Date: 2021-02-21 05:54+0000\n"
 "PO-Revision-Date: 2021-01-14 11:54+0900\n"
 "Last-Translator: Takayuki Tanaka <aharotias2@gmail.com>\n"
 "Language-Team: none\n"
@@ -18,94 +18,32 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/TatapWindow.vala:56
-msgid "Menu"
-msgstr "メニュー"
+#: src/Widgets/HeaderButtons.vala:34
+msgid "Previous"
+msgstr "前の画像"
 
-#: src/TatapWindow.vala:80
-msgid "No Images Open"
-msgstr "画像が開いていません"
+#: src/Widgets/HeaderButtons.vala:38
+msgid "Next"
+msgstr "次の画像"
 
-#: src/TatapWindow.vala:81
-msgid "Click 'Open Image' to get started."
-msgstr "「画像を開く」をクリックして開始しましょう。"
-
-#: src/TatapWindow.vala:83
-msgid "Open Image"
-msgstr "画像を開く"
-
-#: src/TatapWindow.vala:83
-msgid "Show and edit your image."
-msgstr "画像を閲覧/編集できます"
-
-#: src/TatapWindow.vala:394
-msgid "Choose file to open"
-msgstr "開くファイルを選択"
-
-#: src/TatapWindow.vala:395 src/TatapWindow.vala:504
-msgid "Cancel"
-msgstr "キャンセル"
-
-#: src/TatapWindow.vala:395 src/Widgets/HeaderButtons.vala:49
+#. file buttons
+#: src/Widgets/HeaderButtons.vala:49 src/TatapWindow.vala:395
 msgid "Open"
 msgstr "開く"
 
-#: src/TatapWindow.vala:424
-msgid "The directory does not found. Exiting."
-msgstr "ディレクトリが存在しません。終了します。"
+#: src/Widgets/HeaderButtons.vala:54
+msgid "New"
+msgstr "新規"
 
-#: src/TatapWindow.vala:432
-msgid "The file does not found."
-msgstr "ファイルが見つかりません。"
-
-#: src/TatapWindow.vala:474
-#, c-format
-msgid "The file could not be opend (cause: %s)"
-msgstr "ファイルを開けません (理由: %s)"
-
-#: src/TatapWindow.vala:490
-msgid "Sorry, saving animations is not supported yet."
-msgstr "申し訳ありませんが、アニメーションの保存には未対応です。"
-
-#: src/TatapWindow.vala:495
-#, fuzzy
-msgid "The size of the saved image:"
-msgstr "保存する画像のサイズを選択:"
-
-#: src/TatapWindow.vala:496
-msgid "Currently displayed size"
-msgstr "現在表示中のサイズ"
-
-#: src/TatapWindow.vala:497
-msgid "Original size"
-msgstr "オリジナルのサイズ"
-
-#: src/TatapWindow.vala:503 src/Widgets/TatapToolBar.vala:51
-msgid "Save as…"
-msgstr "名前を付けて保存…"
-
-#: src/TatapWindow.vala:504
+#: src/Widgets/TatapToolBar.vala:43 src/TatapWindow.vala:504
 msgid "Save"
 msgstr "保存"
 
-#: src/TatapWindow.vala:524
-msgid "File already exists. Do you want to overwrite it?"
-msgstr "ファイルはすでに存在します。上書きしてもよろしいですか？"
+#: src/Widgets/TatapToolBar.vala:51 src/TatapWindow.vala:503
+msgid "Save as…"
+msgstr "名前を付けて保存…"
 
-#: src/TatapWindow.vala:529
-#, fuzzy
-msgid "The file save was canceled."
-msgstr "ファイルを保存しました。"
-
-#: src/TatapWindow.vala:538
-msgid "Do you save this file as displayed size?"
-msgstr "画像を現在表示されているサイズで保存しますか？"
-
-#: src/TatapWindow.vala:559
-#, fuzzy
-msgid "The file was saved"
-msgstr "ファイルを保存しました。"
-
+#. action buttons for the image
 #: src/Widgets/TatapToolBar.vala:65
 msgid "Zoom in"
 msgstr "拡大"
@@ -158,14 +96,78 @@ msgstr "アニメーションを再生"
 msgid "Stick"
 msgstr "固定"
 
-#: src/Widgets/HeaderButtons.vala:34
-msgid "Previous"
-msgstr "前の画像"
+#: src/TatapWindow.vala:56
+msgid "Menu"
+msgstr "メニュー"
 
-#: src/Widgets/HeaderButtons.vala:38
-msgid "Next"
-msgstr "次の画像"
+#: src/TatapWindow.vala:80
+msgid "No Images Open"
+msgstr "画像が開いていません"
 
-#: src/Widgets/HeaderButtons.vala:54
-msgid "New"
-msgstr "新規"
+#: src/TatapWindow.vala:81
+msgid "Click 'Open Image' to get started."
+msgstr "「画像を開く」をクリックして開始しましょう。"
+
+#: src/TatapWindow.vala:83
+msgid "Open Image"
+msgstr "画像を開く"
+
+#: src/TatapWindow.vala:83
+msgid "Show and edit your image."
+msgstr "画像を閲覧/編集できます"
+
+#: src/TatapWindow.vala:394
+msgid "Choose file to open"
+msgstr "開くファイルを選択"
+
+#: src/TatapWindow.vala:395 src/TatapWindow.vala:504
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: src/TatapWindow.vala:424
+msgid "The directory does not found. Exiting."
+msgstr "ディレクトリが存在しません。終了します。"
+
+#: src/TatapWindow.vala:432
+msgid "The file does not found."
+msgstr "ファイルが見つかりません。"
+
+#: src/TatapWindow.vala:474
+#, c-format
+msgid "The file could not be opend (cause: %s)"
+msgstr "ファイルを開けません (理由: %s)"
+
+#: src/TatapWindow.vala:490
+msgid "Sorry, saving animations is not supported yet."
+msgstr "申し訳ありませんが、アニメーションの保存には未対応です。"
+
+#: src/TatapWindow.vala:495
+#, fuzzy
+msgid "The size of the saved image:"
+msgstr "保存する画像のサイズを選択:"
+
+#: src/TatapWindow.vala:496
+msgid "Currently displayed size"
+msgstr "現在表示中のサイズ"
+
+#: src/TatapWindow.vala:497
+msgid "Original size"
+msgstr "オリジナルのサイズ"
+
+#: src/TatapWindow.vala:524
+msgid "File already exists. Do you want to overwrite it?"
+msgstr "ファイルはすでに存在します。上書きしてもよろしいですか？"
+
+#: src/TatapWindow.vala:529
+#, fuzzy
+msgid "The file save was canceled."
+msgstr "ファイルを保存しました。"
+
+#: src/TatapWindow.vala:538
+msgid "Do you save this file as displayed size?"
+msgstr "画像を現在表示されているサイズで保存しますか？"
+
+#: src/TatapWindow.vala:559
+#, fuzzy
+msgid "The file was saved"
+msgstr "ファイルを保存しました。"
