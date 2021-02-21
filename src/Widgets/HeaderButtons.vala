@@ -18,7 +18,6 @@
 
 public class HeaderButtons : Gtk.Box {
     public TatapWindow window { get; construct; }
-    public ActionButton save_button { get; private set; }
 
     private ActionButton image_prev_button;
     private ActionButton image_next_button;
@@ -52,13 +51,6 @@ public class HeaderButtons : Gtk.Box {
             window.on_open_button_clicked();
         });
 
-        save_button = new ActionButton("document-save-as-symbolic", _("Save as…"), {"<Control>s"}) {
-            sensitive = false
-        };
-        save_button.clicked.connect(() => {
-            window.on_save_button_clicked();
-        });
-
         var new_button = new ActionButton("document-new-symbolic", _("New"), {"<Control>n"});
         new_button.clicked.connect(() => {
             window.require_new_window();
@@ -69,7 +61,6 @@ public class HeaderButtons : Gtk.Box {
         };
         file_box.pack_start(new_button);
         file_box.pack_start(open_button);
-        file_box.pack_start(save_button);
 
         pack_start(navigation_box, false, false);
         pack_start(file_box, false, false);
@@ -81,9 +72,5 @@ public class HeaderButtons : Gtk.Box {
 
     public void set_image_next_button_sensitivity(bool is_sensitive) {
         image_next_button.sensitive = is_sensitive;
-    }
-
-    public void set_save_button_sensitivity(bool is_sensitive) {
-        save_button.sensitive = is_sensitive;
     }
 }

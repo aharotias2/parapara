@@ -21,6 +21,10 @@ using Gtk, Gdk;
 public enum TatapFileType {
     JPEG, PNG, BMP, ICO, GIF;
 
+    public static string? of(string filename) {
+        return to_pixbuf_type(filename.substring(filename.last_index_of_char('.') + 1));
+    }
+
     public string? to_string() {
         switch (this) {
             case JPEG: return "jpg";

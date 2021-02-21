@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-19 15:53+0000\n"
+"POT-Creation-Date: 2021-02-21 14:43+0900\n"
 "PO-Revision-Date: 2021-01-14 11:54+0900\n"
 "Last-Translator: Takayuki Tanaka <aharotias2@gmail.com>\n"
 "Language-Team: none\n"
@@ -17,80 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#: src/Widgets/HeaderButtons.vala:35
-msgid "Previous"
-msgstr "前の画像"
-
-#: src/Widgets/HeaderButtons.vala:39
-msgid "Next"
-msgstr "次の画像"
-
-#. file buttons
-#: src/Widgets/HeaderButtons.vala:50 src/TatapWindow.vala:390
-msgid "Open"
-msgstr "開く"
-
-#: src/Widgets/HeaderButtons.vala:55 src/TatapWindow.vala:497
-msgid "Save as…"
-msgstr "名前を付けて保存…"
-
-#: src/Widgets/HeaderButtons.vala:62
-msgid "New"
-msgstr "新規"
-
-#. action buttons for the image
-#: src/Widgets/TatapToolBar.vala:41
-msgid "Zoom in"
-msgstr "拡大"
-
-#: src/Widgets/TatapToolBar.vala:49
-msgid "Zoom out"
-msgstr "縮小"
-
-#: src/Widgets/TatapToolBar.vala:57
-msgid "Fit to the page"
-msgstr "ページに合わせる"
-
-#: src/Widgets/TatapToolBar.vala:65
-msgid "100%"
-msgstr "100%"
-
-#: src/Widgets/TatapToolBar.vala:73
-msgid "Flip horizontally"
-msgstr "上下反転"
-
-#: src/Widgets/TatapToolBar.vala:79
-msgid "Flip vertically"
-msgstr "左右反転"
-
-#: src/Widgets/TatapToolBar.vala:85
-msgid "Rotate to the left"
-msgstr "右回転"
-
-#: src/Widgets/TatapToolBar.vala:92
-msgid "Rotate to the right"
-msgstr "左回転"
-
-#: src/Widgets/TatapToolBar.vala:115
-msgid "Sort Asc"
-msgstr "昇順"
-
-#: src/Widgets/TatapToolBar.vala:129
-msgid "Sort Desc"
-msgstr "降順"
-
-#: src/Widgets/TatapToolBar.vala:149
-msgid "Skip forward"
-msgstr "進む"
-
-#: src/Widgets/TatapToolBar.vala:158
-msgid "Play animation"
-msgstr "アニメーションを再生"
-
-#: src/Widgets/TatapToolBar.vala:198
-msgid "Stick"
-msgstr "固定"
 
 #: src/TatapWindow.vala:56
 msgid "Menu"
@@ -112,52 +38,134 @@ msgstr "画像を開く"
 msgid "Show and edit your image."
 msgstr "画像を閲覧/編集できます"
 
-#: src/TatapWindow.vala:389
+#: src/TatapWindow.vala:394
 msgid "Choose file to open"
 msgstr "開くファイルを選択"
 
-#: src/TatapWindow.vala:390 src/TatapWindow.vala:498
+#: src/TatapWindow.vala:395 src/TatapWindow.vala:504
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: src/TatapWindow.vala:419
+#: src/TatapWindow.vala:395 src/Widgets/HeaderButtons.vala:49
+msgid "Open"
+msgstr "開く"
+
+#: src/TatapWindow.vala:424
 msgid "The directory does not found. Exiting."
 msgstr "ディレクトリが存在しません。終了します。"
 
-#: src/TatapWindow.vala:427
+#: src/TatapWindow.vala:432
 msgid "The file does not found."
 msgstr "ファイルが見つかりません。"
 
-#: src/TatapWindow.vala:469
+#: src/TatapWindow.vala:474
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr "ファイルを開けません (理由: %s)"
 
-#: src/TatapWindow.vala:485
+#: src/TatapWindow.vala:490
 msgid "Sorry, saving animations is not supported yet."
 msgstr "申し訳ありませんが、アニメーションの保存には未対応です。"
 
-#: src/TatapWindow.vala:489
+#: src/TatapWindow.vala:495
 #, fuzzy
 msgid "The size of the saved image:"
 msgstr "保存する画像のサイズを選択:"
 
-#: src/TatapWindow.vala:490
+#: src/TatapWindow.vala:496
 msgid "Currently displayed size"
 msgstr "現在表示中のサイズ"
 
-#: src/TatapWindow.vala:491
+#: src/TatapWindow.vala:497
 msgid "Original size"
 msgstr "オリジナルのサイズ"
 
-#: src/TatapWindow.vala:498
+#: src/TatapWindow.vala:503 src/Widgets/TatapToolBar.vala:51
+msgid "Save as…"
+msgstr "名前を付けて保存…"
+
+#: src/TatapWindow.vala:504
 msgid "Save"
 msgstr "保存"
 
-#: src/TatapWindow.vala:520
+#: src/TatapWindow.vala:524
 msgid "File already exists. Do you want to overwrite it?"
 msgstr "ファイルはすでに存在します。上書きしてもよろしいですか？"
 
-#: src/TatapWindow.vala:535
-msgid "The file is saved."
+#: src/TatapWindow.vala:529
+#, fuzzy
+msgid "The file save was canceled."
 msgstr "ファイルを保存しました。"
+
+#: src/TatapWindow.vala:538
+msgid "Do you save this file as displayed size?"
+msgstr "画像を現在表示されているサイズで保存しますか？"
+
+#: src/TatapWindow.vala:559
+#, fuzzy
+msgid "The file was saved"
+msgstr "ファイルを保存しました。"
+
+#: src/Widgets/TatapToolBar.vala:65
+msgid "Zoom in"
+msgstr "拡大"
+
+#: src/Widgets/TatapToolBar.vala:73
+msgid "Zoom out"
+msgstr "縮小"
+
+#: src/Widgets/TatapToolBar.vala:81
+msgid "Fit to the page"
+msgstr "ページに合わせる"
+
+#: src/Widgets/TatapToolBar.vala:89
+msgid "100%"
+msgstr "100%"
+
+#: src/Widgets/TatapToolBar.vala:97
+msgid "Flip horizontally"
+msgstr "上下反転"
+
+#: src/Widgets/TatapToolBar.vala:103
+msgid "Flip vertically"
+msgstr "左右反転"
+
+#: src/Widgets/TatapToolBar.vala:109
+msgid "Rotate to the left"
+msgstr "右回転"
+
+#: src/Widgets/TatapToolBar.vala:116
+msgid "Rotate to the right"
+msgstr "左回転"
+
+#: src/Widgets/TatapToolBar.vala:139
+msgid "Sort Asc"
+msgstr "昇順"
+
+#: src/Widgets/TatapToolBar.vala:153
+msgid "Sort Desc"
+msgstr "降順"
+
+#: src/Widgets/TatapToolBar.vala:173
+msgid "Skip forward"
+msgstr "進む"
+
+#: src/Widgets/TatapToolBar.vala:182
+msgid "Play animation"
+msgstr "アニメーションを再生"
+
+#: src/Widgets/TatapToolBar.vala:222
+msgid "Stick"
+msgstr "固定"
+
+#: src/Widgets/HeaderButtons.vala:34
+msgid "Previous"
+msgstr "前の画像"
+
+#: src/Widgets/HeaderButtons.vala:38
+msgid "Next"
+msgstr "次の画像"
+
+#: src/Widgets/HeaderButtons.vala:54
+msgid "New"
+msgstr "新規"

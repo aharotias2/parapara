@@ -329,7 +329,12 @@ public class TatapWindow : Gtk.Window {
                             return true;
                         case Gdk.Key.s:
                             if (image.has_image) {
-                                on_save_button_clicked();
+                                on_save_button_clicked.begin(false);
+                            }
+                            return true;
+                        case Gdk.Key.S:
+                            if (image.has_image) {
+                                on_save_button_clicked.begin(true);
                             }
                             return true;
                         case Gdk.Key.w:
@@ -460,7 +465,7 @@ public class TatapWindow : Gtk.Window {
             stack.visible_child_name = "picture";
             toolbar_toggle_button.sensitive = true;
             set_title_label();
-            header_buttons.set_save_button_sensitivity(true);
+            toolbar.set_save_button_sensitivity(true);
         } catch (Error e) {
             string message;
             if (e is TatapError) {
@@ -473,12 +478,12 @@ public class TatapWindow : Gtk.Window {
             alert.close();
             if (!image.has_image) {
                 stack.visible_child_name = "welcome";
-                header_buttons.set_save_button_sensitivity(false);
+                toolbar.set_save_button_sensitivity(false);
             }
         }
     }
 
-    public void on_save_button_clicked() {
+    public async void on_save_button_clicked(bool with_renaming) {
         if (image.is_animation) {
             Gtk.DialogFlags flags = Gtk.DialogFlags.MODAL;
             Gtk.MessageDialog alert = new Gtk.MessageDialog(this, flags, Gtk.MessageType.ERROR,
@@ -486,63 +491,85 @@ public class TatapWindow : Gtk.Window {
             alert.run();
             alert.close();
         } else {
-            var ask_size_label = new Gtk.Label(_("The size of the saved image:"));
-            var radio_current_size = new Gtk.RadioButton.with_label(null, _("Currently displayed size"));
-            var radio_original_size = new Gtk.RadioButton.with_label_from_widget(radio_current_size, _("Original size"));
-            var radio_hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 12) { halign = Gtk.Align.END, margin = 10 };
-            radio_hbox.pack_start(ask_size_label, false, false);
-            radio_hbox.pack_start(radio_current_size, false, false);
-            radio_hbox.pack_start(radio_original_size, false, false);
+            if (with_renaming) {
+                var ask_size_label = new Gtk.Label(_("The size of the saved image:"));
+                var radio_current_size = new Gtk.RadioButton.with_label(null, _("Currently displayed size"));
+                var radio_original_size = new Gtk.RadioButton.with_label_from_widget(radio_current_size, _("Original size"));
+                var radio_hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 12) { halign = Gtk.Align.END, margin = 10 };
+                radio_hbox.pack_start(ask_size_label, false, false);
+                radio_hbox.pack_start(radio_current_size, false, false);
+                radio_hbox.pack_start(radio_original_size, false, false);
 
-            var dialog = new Gtk.FileChooserDialog(_("Save as…"), this, Gtk.FileChooserAction.SAVE,
-                    _("Cancel"), Gtk.ResponseType.CANCEL, _("Save"), Gtk.ResponseType.ACCEPT);
-            dialog.set_current_folder(image.fileref.get_parent().get_path());
-            dialog.set_current_name(image.fileref.get_basename());
-            dialog.get_content_area().pack_start(radio_hbox, false, false);
-            dialog.show_all();
+                var file_dialog = new Gtk.FileChooserDialog(_("Save as…"), this, Gtk.FileChooserAction.SAVE,
+                        _("Cancel"), Gtk.ResponseType.CANCEL, _("Save"), Gtk.ResponseType.ACCEPT);
+                file_dialog.set_current_folder(image.fileref.get_parent().get_path());
+                file_dialog.set_current_name(image.fileref.get_basename());
+                file_dialog.get_content_area().pack_start(radio_hbox, false, false);
+                file_dialog.show_all();
 
-            int save_result = dialog.run();
-            if (save_result == Gtk.ResponseType.ACCEPT) {
-                string filename = dialog.get_filename();
-                save_file(filename, radio_current_size.active);
+                int save_result = file_dialog.run();
+                string filename = "";
+
+                if (save_result == Gtk.ResponseType.ACCEPT) {
+                    filename = file_dialog.get_filename();
+                }
+                file_dialog.close();
+
+                if (save_result == Gtk.ResponseType.ACCEPT) {
+                    Idle.add(on_save_button_clicked.callback);
+                    yield;
+                    if (FileUtils.test(filename, FileTest.EXISTS)) {
+                        DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
+                        MessageDialog alert = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL,
+                                _("File already exists. Do you want to overwrite it?"));
+                        int res = alert.run();
+                        alert.close();
+
+                        if (res == ResponseType.CANCEL) {
+                            show_message.begin(_("The file save was canceled."));
+                            return;
+                        }
+                    }
+                    save_file.begin(filename, radio_current_size.active);
+                }
+            } else {
+                DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
+                MessageDialog confirm_resize = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.YES_NO,
+                        _("Do you save this file as displayed size?"));
+                int res = confirm_resize.run();
+                confirm_resize.close();
+
+                bool keep_size_flag = false;
+                if (res == ResponseType.YES) {
+                    keep_size_flag = false;
+                } else {
+                    keep_size_flag = true;
+                }
+                save_file.begin(image.fileref.get_path(), keep_size_flag);
             }
-            dialog.close();
         }
     }
 
-    public void save_file(string filename, bool resizing_accepted) {
+    public async void save_file(string filename, bool resizing_accepted) {
         debug("The file name for save: %s", filename);
-        File file = File.new_for_path(filename);
-        string full_path = file.get_path();
-        if (FileUtils.test(full_path, FileTest.EXISTS)) {
-            DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
-            MessageDialog alert = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL,
-                    _("File already exists. Do you want to overwrite it?"));
-            int res = alert.run();
-            alert.close();
-
-            if (res != ResponseType.OK) {
-                return;
-            }
-        }
 
         Pixbuf pixbuf = resizing_accepted ? image.pixbuf : image.original_pixbuf;
-        string[] tmp = full_path.split(".");
         try {
-            string extension = tmp[tmp.length - 1];
-            pixbuf.save(full_path, TatapFileType.to_pixbuf_type(extension));
-            Idle.add(() => {
-                message_label.label = _("The file is saved.");
-                message_revealer.reveal_child = true;
-                Timeout.add(2000, () => {
-                    message_revealer.reveal_child = false;
-                    return Source.REMOVE;
-                });
-                return Source.REMOVE;
-            });
+            pixbuf.save(filename, TatapFileType.of(filename));
+            show_message.begin(_("The file was saved"));
         } catch (Error e) {
             stderr.printf("Error: %s\n", e.message);
         }
+    }
+
+    private async void show_message(string message) {
+        Idle.add(show_message.callback);
+        yield;
+        message_label.label = message;
+        message_revealer.reveal_child = true;
+        Timeout.add(2000, show_message.callback);
+        yield;
+        message_revealer.reveal_child = false;
     }
 
     public void go_prev() {

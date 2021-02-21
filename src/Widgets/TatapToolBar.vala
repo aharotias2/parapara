@@ -23,6 +23,9 @@ public class TatapToolBar : Gtk.Bin {
     public signal void sort_order_changed(SortOrder sort_order);
     public signal void stick_button_clicked(bool sticked);
 
+    public ActionButton save_button { get; private set; }
+    public ActionButton save_as_button { get; private set; }
+
     private Gtk.Button zoom_fit_button;
     private ActionButton stick_button;
     public ActionButton animation_forward_button { get; private set; }
@@ -37,6 +40,27 @@ public class TatapToolBar : Gtk.Bin {
     }
 
     construct {
+        save_button = new ActionButton("document-save-symbolic", _("Save"), {"<Control>s"}) {
+            sensitive = false
+        };
+        save_button.get_style_context().add_class("image_overlay_button");
+        save_button.clicked.connect(() => {
+            window.on_save_button_clicked.begin(false);
+        });
+
+        save_as_button = new ActionButton("document-save-as-symbolic", _("Save as…"), {"<Control><Shift>s"});
+        save_as_button.get_style_context().add_class("image_overlay_button");
+        save_as_button.clicked.connect(() => {
+            window.on_save_button_clicked.begin(true);
+        });
+
+        var save_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+            margin = 5,
+            layout_style = Gtk.ButtonBoxStyle.EXPAND
+        };
+        save_button_box.pack_start(save_button);
+        save_button_box.pack_start(save_as_button);
+
         /* action buttons for the image */
         var zoom_in_button = new ActionButton("zoom-in-symbolic", _("Zoom in"), {"<control>plus"});
         zoom_in_button.get_style_context().add_class("image_overlay_button");
@@ -210,6 +234,7 @@ public class TatapToolBar : Gtk.Bin {
             vexpand = false,
             valign = Gtk.Align.START
         };
+        toolbar_hbox.pack_start(save_button_box, false, false);
         toolbar_hbox.pack_start(image_actions_button_box, false, false);
         toolbar_hbox.pack_start(sort_order_button_box, false, false);
         toolbar_hbox.pack_end(stick_button, false, false);
@@ -217,6 +242,10 @@ public class TatapToolBar : Gtk.Bin {
         toolbar_hbox.get_style_context().add_class("toolbar");
 
         add(toolbar_hbox);
+    }
+
+    public void set_save_button_sensitivity(bool is_sensitive) {
+        save_button.sensitive = is_sensitive;
     }
 
     public void set_zoom_fit_button_sensitivity(bool is_sensitive) {
