@@ -45,13 +45,13 @@ public class TatapToolBar : Gtk.Bin {
         };
         save_button.get_style_context().add_class("image_overlay_button");
         save_button.clicked.connect(() => {
-            window.on_save_button_clicked.begin(false);
+            window.save_file.begin(false);
         });
 
         save_as_button = new ActionButton("document-save-as-symbolic", _("Save as…"), {"<Control><Shift>s"});
         save_as_button.get_style_context().add_class("image_overlay_button");
         save_as_button.clicked.connect(() => {
-            window.on_save_button_clicked.begin(true);
+            window.save_file.begin(true);
         });
 
         var save_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
@@ -62,6 +62,12 @@ public class TatapToolBar : Gtk.Bin {
         save_button_box.pack_start(save_as_button);
 
         /* action buttons for the image */
+        var resize_button = new ActionButton("edit-find-replace-symbolic", _("Resize"), {"<control>e"});
+        resize_button.get_style_context().add_class("image_overlay_button");
+        resize_button.clicked.connect(() => {
+            window.resize_image();
+        });
+
         var zoom_in_button = new ActionButton("zoom-in-symbolic", _("Zoom in"), {"<control>plus"});
         zoom_in_button.get_style_context().add_class("image_overlay_button");
         zoom_in_button.clicked.connect(() => {
@@ -124,6 +130,7 @@ public class TatapToolBar : Gtk.Bin {
             margin = 5,
             layout_style = Gtk.ButtonBoxStyle.EXPAND
         };
+        image_actions_button_box.pack_start(resize_button);
         image_actions_button_box.pack_start(zoom_in_button);
         image_actions_button_box.pack_start(zoom_out_button);
         image_actions_button_box.pack_start(zoom_fit_button);

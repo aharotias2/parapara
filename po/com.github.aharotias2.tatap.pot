@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the com.github.aharotias2.tatap package.
+# This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: com.github.aharotias2.tatap\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-21 05:54+0000\n"
+"POT-Creation-Date: 2021-02-21 23:22+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,153 +17,168 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Widgets/HeaderButtons.vala:34
-msgid "Previous"
-msgstr ""
-
-#: src/Widgets/HeaderButtons.vala:38
-msgid "Next"
-msgstr ""
-
-#. file buttons
-#: src/Widgets/HeaderButtons.vala:49 src/TatapWindow.vala:395
-msgid "Open"
-msgstr ""
-
-#: src/Widgets/HeaderButtons.vala:54
-msgid "New"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:43 src/TatapWindow.vala:504
-msgid "Save"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:51 src/TatapWindow.vala:503
-msgid "Save as…"
-msgstr ""
-
-#. action buttons for the image
-#: src/Widgets/TatapToolBar.vala:65
-msgid "Zoom in"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:73
-msgid "Zoom out"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:81
-msgid "Fit to the page"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:89
+#: src/Widgets/TatapToolBar.vala:95
 msgid "100%"
 msgstr ""
 
-#: src/Widgets/TatapToolBar.vala:97
-msgid "Flip horizontally"
+#: src/TatapWindow.vala:398 src/TatapWindow.vala:501
+#: src/Widgets/ResizeDialog.vala:132
+msgid "Cancel"
 msgstr ""
 
-#: src/Widgets/TatapToolBar.vala:103
-msgid "Flip vertically"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:109
-msgid "Rotate to the left"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:116
-msgid "Rotate to the right"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:139
-msgid "Sort Asc"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:153
-msgid "Sort Desc"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:173
-msgid "Skip forward"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:182
-msgid "Play animation"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:222
-msgid "Stick"
-msgstr ""
-
-#: src/TatapWindow.vala:56
-msgid "Menu"
-msgstr ""
-
-#: src/TatapWindow.vala:80
-msgid "No Images Open"
+#: src/TatapWindow.vala:397
+msgid "Choose file to open"
 msgstr ""
 
 #: src/TatapWindow.vala:81
 msgid "Click 'Open Image' to get started."
 msgstr ""
 
+#: src/TatapWindow.vala:534
+msgid "Do you really overwrite this file?"
+msgstr ""
+
+#: src/TatapWindow.vala:520
+msgid "File already exists. Do you want to overwrite it?"
+msgstr ""
+
+#: src/Widgets/TatapToolBar.vala:87
+msgid "Fit to the page"
+msgstr ""
+
+#: src/Widgets/TatapToolBar.vala:103
+msgid "Flip horizontally"
+msgstr ""
+
+#: src/Widgets/TatapToolBar.vala:109
+msgid "Flip vertically"
+msgstr ""
+
+#: src/Widgets/ResizeDialog.vala:87
+msgid "Height:"
+msgstr ""
+
+#: src/TatapWindow.vala:56
+msgid "Menu"
+msgstr ""
+
+#: src/Widgets/HeaderButtons.vala:54
+msgid "New"
+msgstr ""
+
+#: src/Widgets/HeaderButtons.vala:38
+msgid "Next"
+msgstr ""
+
+#: src/TatapWindow.vala:80
+msgid "No Images Open"
+msgstr ""
+
+#: src/Widgets/ResizeDialog.vala:131
+msgid "OK"
+msgstr ""
+
+#: src/TatapWindow.vala:398 src/Widgets/HeaderButtons.vala:49
+msgid "Open"
+msgstr ""
+
 #: src/TatapWindow.vala:83
 msgid "Open Image"
+msgstr ""
+
+#: src/Widgets/TatapToolBar.vala:189
+msgid "Play animation"
+msgstr ""
+
+#: src/Widgets/HeaderButtons.vala:34
+msgid "Previous"
+msgstr ""
+
+#: src/Widgets/TatapToolBar.vala:65
+msgid "Resize"
+msgstr ""
+
+#: src/TatapWindow.vala:615
+msgid "Resizing of the image was canceled."
+msgstr ""
+
+#: src/Widgets/TatapToolBar.vala:115
+msgid "Rotate to the left"
+msgstr ""
+
+#: src/Widgets/TatapToolBar.vala:122
+msgid "Rotate to the right"
+msgstr ""
+
+#: src/TatapWindow.vala:501 src/Widgets/TatapToolBar.vala:43
+msgid "Save"
+msgstr ""
+
+#: src/TatapWindow.vala:500 src/Widgets/TatapToolBar.vala:51
+msgid "Save as…"
+msgstr ""
+
+#: src/Widgets/ResizeDialog.vala:58
+msgid "Set the width and the height"
 msgstr ""
 
 #: src/TatapWindow.vala:83
 msgid "Show and edit your image."
 msgstr ""
 
-#: src/TatapWindow.vala:394
-msgid "Choose file to open"
+#: src/Widgets/TatapToolBar.vala:180
+msgid "Skip forward"
 msgstr ""
 
-#: src/TatapWindow.vala:395 src/TatapWindow.vala:504
-msgid "Cancel"
+#: src/TatapWindow.vala:493
+msgid "Sorry, saving animations is not supported yet."
 msgstr ""
 
-#: src/TatapWindow.vala:424
+#: src/Widgets/TatapToolBar.vala:146
+msgid "Sort Asc"
+msgstr ""
+
+#: src/Widgets/TatapToolBar.vala:160
+msgid "Sort Desc"
+msgstr ""
+
+#: src/Widgets/TatapToolBar.vala:229
+msgid "Stick"
+msgstr ""
+
+#: src/TatapWindow.vala:427
 msgid "The directory does not found. Exiting."
 msgstr ""
 
-#: src/TatapWindow.vala:432
-msgid "The file does not found."
-msgstr ""
-
-#: src/TatapWindow.vala:474
+#: src/TatapWindow.vala:477
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr ""
 
-#: src/TatapWindow.vala:490
-msgid "Sorry, saving animations is not supported yet."
+#: src/TatapWindow.vala:435
+msgid "The file does not found."
 msgstr ""
 
-#: src/TatapWindow.vala:495
-msgid "The size of the saved image:"
-msgstr ""
-
-#: src/TatapWindow.vala:496
-msgid "Currently displayed size"
-msgstr ""
-
-#: src/TatapWindow.vala:497
-msgid "Original size"
-msgstr ""
-
-#: src/TatapWindow.vala:524
-msgid "File already exists. Do you want to overwrite it?"
-msgstr ""
-
-#: src/TatapWindow.vala:529
+#: src/TatapWindow.vala:547
 msgid "The file save was canceled."
 msgstr ""
 
-#: src/TatapWindow.vala:538
-msgid "Do you save this file as displayed size?"
+#: src/TatapWindow.vala:552
+msgid "The file was saved"
 msgstr ""
 
-#: src/TatapWindow.vala:559
-msgid "The file was saved"
+#: src/TatapWindow.vala:613
+msgid "The image was resized."
+msgstr ""
+
+#: src/Widgets/ResizeDialog.vala:60
+msgid "Width:"
+msgstr ""
+
+#: src/Widgets/TatapToolBar.vala:71
+msgid "Zoom in"
+msgstr ""
+
+#: src/Widgets/TatapToolBar.vala:79
+msgid "Zoom out"
 msgstr ""

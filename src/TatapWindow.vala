@@ -259,6 +259,9 @@ public class TatapWindow : Gtk.Window {
             case EventType.KEY_PRESS:
                 if (Gdk.ModifierType.CONTROL_MASK in ev.key.state) {
                     switch (ev.key.keyval) {
+                        case Gdk.Key.e:
+                            resize_image();
+                            break;
                         case Gdk.Key.plus:
                             image.zoom_in(10);
                             set_title_label();
@@ -329,12 +332,12 @@ public class TatapWindow : Gtk.Window {
                             return true;
                         case Gdk.Key.s:
                             if (image.has_image) {
-                                on_save_button_clicked.begin(false);
+                                save_file.begin(false);
                             }
                             return true;
                         case Gdk.Key.S:
                             if (image.has_image) {
-                                on_save_button_clicked.begin(true);
+                                save_file.begin(true);
                             }
                             return true;
                         case Gdk.Key.w:
@@ -483,7 +486,7 @@ public class TatapWindow : Gtk.Window {
         }
     }
 
-    public async void on_save_button_clicked(bool with_renaming) {
+    public async void save_file(bool with_renaming) {
         if (image.is_animation) {
             Gtk.DialogFlags flags = Gtk.DialogFlags.MODAL;
             Gtk.MessageDialog alert = new Gtk.MessageDialog(this, flags, Gtk.MessageType.ERROR,
@@ -491,33 +494,26 @@ public class TatapWindow : Gtk.Window {
             alert.run();
             alert.close();
         } else {
+            bool canceled = false;
+            string filename = image.fileref.get_path();
             if (with_renaming) {
-                var ask_size_label = new Gtk.Label(_("The size of the saved image:"));
-                var radio_current_size = new Gtk.RadioButton.with_label(null, _("Currently displayed size"));
-                var radio_original_size = new Gtk.RadioButton.with_label_from_widget(radio_current_size, _("Original size"));
-                var radio_hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 12) { halign = Gtk.Align.END, margin = 10 };
-                radio_hbox.pack_start(ask_size_label, false, false);
-                radio_hbox.pack_start(radio_current_size, false, false);
-                radio_hbox.pack_start(radio_original_size, false, false);
-
                 var file_dialog = new Gtk.FileChooserDialog(_("Save as…"), this, Gtk.FileChooserAction.SAVE,
                         _("Cancel"), Gtk.ResponseType.CANCEL, _("Save"), Gtk.ResponseType.ACCEPT);
                 file_dialog.set_current_folder(image.fileref.get_parent().get_path());
                 file_dialog.set_current_name(image.fileref.get_basename());
-                file_dialog.get_content_area().pack_start(radio_hbox, false, false);
                 file_dialog.show_all();
 
                 int save_result = file_dialog.run();
-                string filename = "";
 
                 if (save_result == Gtk.ResponseType.ACCEPT) {
                     filename = file_dialog.get_filename();
                 }
                 file_dialog.close();
 
+                Idle.add(save_file.callback);
+                yield;
+
                 if (save_result == Gtk.ResponseType.ACCEPT) {
-                    Idle.add(on_save_button_clicked.callback);
-                    yield;
                     if (FileUtils.test(filename, FileTest.EXISTS)) {
                         DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
                         MessageDialog alert = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL,
@@ -526,43 +522,42 @@ public class TatapWindow : Gtk.Window {
                         alert.close();
 
                         if (res == ResponseType.CANCEL) {
-                            show_message.begin(_("The file save was canceled."));
-                            return;
+                            canceled = true;
                         }
                     }
-                    save_file.begin(filename, radio_current_size.active);
+                } else {
+                    canceled = true;
                 }
             } else {
                 DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
                 MessageDialog confirm_resize = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.YES_NO,
-                        _("Do you save this file as displayed size?"));
+                        _("Do you really overwrite this file?"));
                 int res = confirm_resize.run();
                 confirm_resize.close();
 
-                bool keep_size_flag = false;
-                if (res == ResponseType.YES) {
-                    keep_size_flag = false;
-                } else {
-                    keep_size_flag = true;
+                if (res == ResponseType.NO) {
+                    canceled = true;
                 }
-                save_file.begin(image.fileref.get_path(), keep_size_flag);
+            }
+
+            Idle.add(save_file.callback);
+            yield;
+
+            if (canceled) {
+                show_message.begin(_("The file save was canceled."));
+            } else {
+                try {
+                    debug("The file name for save: %s", filename);
+                    image.original_pixbuf.save(filename, TatapFileType.of(filename));
+                    show_message.begin(_("The file was saved"));
+                } catch (Error e) {
+                    stderr.printf("Error: %s\n", e.message);
+                }
             }
         }
     }
 
-    public async void save_file(string filename, bool resizing_accepted) {
-        debug("The file name for save: %s", filename);
-
-        Pixbuf pixbuf = resizing_accepted ? image.pixbuf : image.original_pixbuf;
-        try {
-            pixbuf.save(filename, TatapFileType.of(filename));
-            show_message.begin(_("The file was saved"));
-        } catch (Error e) {
-            stderr.printf("Error: %s\n", e.message);
-        }
-    }
-
-    private async void show_message(string message) {
+    public async void show_message(string message) {
         Idle.add(show_message.callback);
         yield;
         message_label.label = message;
@@ -605,6 +600,19 @@ public class TatapWindow : Gtk.Window {
             header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
         } else {
             header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_last(true));
+        }
+    }
+
+    public void resize_image() {
+        var dialog = new ResizeDialog(image.original_width, image.original_height);
+        int res = dialog.run();
+        dialog.close();
+        if (res == Gtk.ResponseType.OK) {
+            image.resize(dialog.width_value, dialog.height_value);
+            set_title_label();
+            show_message.begin(_("The image was resized."));
+        } else {
+            show_message.begin(_("Resizing of the image was canceled."));
         }
     }
 }

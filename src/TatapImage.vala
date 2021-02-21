@@ -277,6 +277,11 @@ public class TatapImage : Image {
         }
     }
 
+    public void resize(uint new_width, uint new_height) {
+        original_pixbuf = original_pixbuf.scale_simple(
+                (int) new_width, (int) new_height, Gdk.InterpType.BILINEAR);
+    }
+
     private void scale(uint max_size) {
         if (original_pixbuf != null) {
             debug("TatapImage::scale(%u)", max_size);
