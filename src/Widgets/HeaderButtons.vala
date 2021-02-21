@@ -19,8 +19,8 @@
 public class HeaderButtons : Gtk.Box {
     public TatapWindow window { get; construct; }
 
-    private ActionButton image_prev_button;
-    private ActionButton image_next_button;
+    public ActionButton image_prev_button { get; private set; }
+    public ActionButton image_next_button { get; private set; }
 
     public HeaderButtons (TatapWindow window) {
         Object (
@@ -64,13 +64,5 @@ public class HeaderButtons : Gtk.Box {
 
         pack_start(navigation_box, false, false);
         pack_start(file_box, false, false);
-    }
-
-    public void set_image_prev_button_sensitivity(bool is_sensitive) {
-        image_prev_button.sensitive = is_sensitive;
-    }
-
-    public void set_image_next_button_sensitivity(bool is_sensitive) {
-        image_next_button.sensitive = is_sensitive;
     }
 }

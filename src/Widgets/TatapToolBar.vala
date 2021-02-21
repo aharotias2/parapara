@@ -25,9 +25,9 @@ public class TatapToolBar : Gtk.Bin {
 
     public ActionButton save_button { get; private set; }
     public ActionButton save_as_button { get; private set; }
-
-    private Gtk.Button zoom_fit_button;
-    private ActionButton stick_button;
+    public ActionButton resize_button { get; private set; }
+    public ActionButton zoom_fit_button { get; private set; }
+    public ActionButton stick_button { get; private set; }
     public ActionButton animation_forward_button { get; private set; }
     public ActionButton animation_play_pause_button { get; private set; }
 
@@ -62,7 +62,7 @@ public class TatapToolBar : Gtk.Bin {
         save_button_box.pack_start(save_as_button);
 
         /* action buttons for the image */
-        var resize_button = new ActionButton("edit-find-replace-symbolic", _("Resize"), {"<control>e"});
+        resize_button = new ActionButton("edit-find-replace-symbolic", _("Resize"), {"<control>e"});
         resize_button.get_style_context().add_class("image_overlay_button");
         resize_button.clicked.connect(() => {
             window.resize_image();
@@ -249,14 +249,6 @@ public class TatapToolBar : Gtk.Bin {
         toolbar_hbox.get_style_context().add_class("toolbar");
 
         add(toolbar_hbox);
-    }
-
-    public void set_save_button_sensitivity(bool is_sensitive) {
-        save_button.sensitive = is_sensitive;
-    }
-
-    public void set_zoom_fit_button_sensitivity(bool is_sensitive) {
-        zoom_fit_button.sensitive = is_sensitive;
     }
 
     public void stick_toolbar() {

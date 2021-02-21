@@ -238,11 +238,11 @@ public class TatapWindow : Gtk.Window {
                     if (ev.scroll.direction == ScrollDirection.UP) {
                         image.zoom_in(10);
                         set_title_label();
-                        toolbar.set_zoom_fit_button_sensitivity(true);
+                        toolbar.zoom_fit_button.sensitive = true;
                     } else if (ev.scroll.direction == ScrollDirection.DOWN) {
                         image.zoom_out(10);
                         set_title_label();
-                        toolbar.set_zoom_fit_button_sensitivity(true);
+                        toolbar.zoom_fit_button.sensitive = true;
                     }
                     return true;
                 } else {
@@ -260,17 +260,23 @@ public class TatapWindow : Gtk.Window {
                 if (Gdk.ModifierType.CONTROL_MASK in ev.key.state) {
                     switch (ev.key.keyval) {
                         case Gdk.Key.e:
-                            resize_image();
+                            if (image.has_image && !image.is_animation) {
+                                resize_image();
+                            }
                             break;
                         case Gdk.Key.plus:
-                            image.zoom_in(10);
-                            set_title_label();
-                            toolbar.set_zoom_fit_button_sensitivity(true);
+                            if (image.has_image) {
+                                image.zoom_in(10);
+                                set_title_label();
+                                toolbar.zoom_fit_button.sensitive = true;
+                            }
                             break;
                         case Gdk.Key.minus:
-                            image.zoom_out(10);
-                            set_title_label();
-                            toolbar.set_zoom_fit_button_sensitivity(true);
+                            if (image.has_image) {
+                                image.zoom_out(10);
+                                set_title_label();
+                                toolbar.zoom_fit_button.sensitive = true;
+                            }
                             break;
                         case Gdk.Key.m:
                             if (toolbar_toggle_button.sensitive) {
@@ -292,14 +298,14 @@ public class TatapWindow : Gtk.Window {
                             if (image.has_image) {
                                 image.zoom_original();
                                 set_title_label();
-                                toolbar.set_zoom_fit_button_sensitivity(true);
+                                toolbar.zoom_fit_button.sensitive = true;
                             }
                             break;
                         case Gdk.Key.@0:
                             if (image.has_image) {
                                 image.fit_image_to_window();
                                 set_title_label();
-                                toolbar.set_zoom_fit_button_sensitivity(false);
+                                toolbar.zoom_fit_button.sensitive = false;
                             }
                             break;
                         case Gdk.Key.h:
@@ -351,10 +357,14 @@ public class TatapWindow : Gtk.Window {
 
                 switch (ev.key.keyval) {
                     case Gdk.Key.Left:
-                        go_prev();
+                        if (image.has_image) {
+                            go_prev();
+                        }
                         return true;
                     case Gdk.Key.Right:
-                        go_next();
+                        if (image.has_image) {
+                            go_next();
+                        }
                         return true;
                     case Gdk.Key.space:
                         if (image.is_animation) {
@@ -446,12 +456,12 @@ public class TatapWindow : Gtk.Window {
                     }
                 });
                 file_list.terminated.connect(() => {
-                    header_buttons.set_image_prev_button_sensitivity(false);
-                    header_buttons.set_image_next_button_sensitivity(false);
+                    header_buttons.image_prev_button.sensitive = false;
+                    header_buttons.image_next_button.sensitive = false;
                 });
                 file_list.make_list_async.begin();
-                header_buttons.set_image_prev_button_sensitivity(false);
-                header_buttons.set_image_next_button_sensitivity(false);
+                header_buttons.image_prev_button.sensitive = false;
+                header_buttons.image_next_button.sensitive = false;
             } else {
                 file_list.set_current(image.fileref);
                 set_next_image_button_sensitivity_conditionally();
@@ -461,14 +471,16 @@ public class TatapWindow : Gtk.Window {
             if (image.is_animation) {
                 toolbar.animation_play_pause_button.sensitive = true;
                 toolbar.animation_forward_button.sensitive = false;
+                toolbar.resize_button.sensitive = false;
             } else {
                 toolbar.animation_play_pause_button.sensitive = false;
                 toolbar.animation_forward_button.sensitive = false;
+                toolbar.resize_button.sensitive = true;
             }
             stack.visible_child_name = "picture";
             toolbar_toggle_button.sensitive = true;
             set_title_label();
-            toolbar.set_save_button_sensitivity(true);
+            toolbar.save_button.sensitive = true;
         } catch (Error e) {
             string message;
             if (e is TatapError) {
@@ -481,7 +493,7 @@ public class TatapWindow : Gtk.Window {
             alert.close();
             if (!image.has_image) {
                 stack.visible_child_name = "welcome";
-                toolbar.set_save_button_sensitivity(false);
+                toolbar.save_button.sensitive = false;
             }
         }
     }
@@ -589,17 +601,17 @@ public class TatapWindow : Gtk.Window {
 
     private void set_next_image_button_sensitivity_conditionally() {
         if (toolbar.sort_order == SortOrder.ASC) {
-            header_buttons.set_image_next_button_sensitivity(!file_list.file_is_last(true));
+            header_buttons.image_next_button.sensitive = !file_list.file_is_last(true);
         } else {
-            header_buttons.set_image_next_button_sensitivity(!file_list.file_is_first(true));
+            header_buttons.image_next_button.sensitive = !file_list.file_is_first(true);
         }
     }
 
     private void set_prev_image_button_sensitivity_conditionally() {
         if (toolbar.sort_order == SortOrder.ASC) {
-            header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_first(true));
+            header_buttons.image_prev_button.sensitive = !file_list.file_is_first(true);
         } else {
-            header_buttons.set_image_prev_button_sensitivity(!file_list.file_is_last(true));
+            header_buttons.image_prev_button.sensitive = !file_list.file_is_last(true);
         }
     }
 

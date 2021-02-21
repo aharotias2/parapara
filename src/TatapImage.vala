@@ -118,21 +118,10 @@ public class TatapImage : Image {
                     inner_thread = new Thread<int>(null, () => {
                         while (count_holder == file_counter) {
                             if (run_thread) {
-                                prepared_pixbuf = animation_iter.get_pixbuf();
+                                prepared_pixbuf = modify_pixbuf(animation_iter.get_pixbuf());
                                 if (prepared_pixbuf == null) {
                                     Idle.add(animate.callback);
                                     return -1;
-                                }
-                                if (hflipped) {
-                                    prepared_pixbuf = prepared_pixbuf.flip(true);
-                                }
-                                if (vflipped) {
-                                    prepared_pixbuf = prepared_pixbuf.flip(false);
-                                }
-                                if (degree != 0) {
-                                    for (int i_degree = 0; i_degree < degree; i_degree += 90) {
-                                        prepared_pixbuf = prepared_pixbuf.rotate_simple(PixbufRotation.COUNTERCLOCKWISE);
-                                    }
                                 }
                                 prepared_pixbuf_resized
                                         = prepared_pixbuf.scale_simple(pixbuf.width, pixbuf.height, Gdk.InterpType.BILINEAR);
@@ -213,7 +202,10 @@ public class TatapImage : Image {
 
     public void set_scale_percent(uint percentage) {
         if (original_pixbuf != null) {
-            scale(percentage);
+            int new_width = (int) ((double) original_width * ((double) percentage / 100.0));
+            int new_height = (int) ((double) original_height * ((double) percentage / 100.0));
+            pixbuf = original_pixbuf.scale_simple(new_width, new_height, Gdk.InterpType.BILINEAR);
+            adjust_zoom_percent();
         }
     }
 
@@ -278,8 +270,32 @@ public class TatapImage : Image {
     }
 
     public void resize(uint new_width, uint new_height) {
-        original_pixbuf = original_pixbuf.scale_simple(
-                (int) new_width, (int) new_height, Gdk.InterpType.BILINEAR);
+        var animation_iter = animation.get_iter(tval);
+        var fresh_pixbuf = animation_iter.get_pixbuf();
+        original_pixbuf = modify_pixbuf(fresh_pixbuf);
+        original_pixbuf = original_pixbuf.scale_simple((int) new_width, (int) new_height, Gdk.InterpType.BILINEAR);
+        original_max_size = int.max(original_pixbuf.width, original_pixbuf.height);
+        original_rate_x = (double) original_pixbuf.width / (double) original_pixbuf.height;
+        set_scale_percent((int) ((double) original_pixbuf.width / (double) fresh_pixbuf.width * 100.0));
+    }
+
+    private Gdk.Pixbuf? modify_pixbuf(Gdk.Pixbuf old_pixbuf) {
+        if (old_pixbuf == null) {
+            return null;
+        }
+        Gdk.Pixbuf? new_pixbuf = old_pixbuf;
+        if (hflipped) {
+            new_pixbuf = new_pixbuf.flip(true);
+        }
+        if (vflipped) {
+            new_pixbuf = new_pixbuf.flip(false);
+        }
+        if (degree != 0) {
+            for (int i_degree = 0; i_degree < degree; i_degree += 90) {
+                new_pixbuf = new_pixbuf.rotate_simple(PixbufRotation.COUNTERCLOCKWISE);
+            }
+        }
+        return new_pixbuf;
     }
 
     private void scale(uint max_size) {
