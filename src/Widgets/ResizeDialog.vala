@@ -73,15 +73,8 @@ public class ResizeDialog : Gtk.Dialog {
         width_unit_box.append(null, "%");
         width_unit_box.active = 0;
         width_unit_box.changed.connect(() => {
-            if (width_unit_box.active == 0) {
-                double curr = double.parse(width_entry.text);
-                int new_value = (int) (original_width * curr / 100);
-                width_entry.text = new_value.to_string();
-            } else {
-                int curr = int.parse(width_entry.text);
-                double new_value = (double) curr / (double) original_width * 100.0;
-                width_entry.text = FLOAT_FORMAT.printf(new_value);
-            }
+            width_entry.text = unit_calc(
+                    width_unit_box.get_active_text(), width_entry.text, original_width);
         });
 
         var height_label = new Gtk.Label(_("Height:"));
@@ -100,15 +93,8 @@ public class ResizeDialog : Gtk.Dialog {
         height_unit_box.append(null, "%");
         height_unit_box.active = 0;
         height_unit_box.changed.connect(() => {
-            if (height_unit_box.active == 0) {
-                double curr = double.parse(height_entry.text);
-                int new_value = (int) (original_height * curr / 100);
-                height_entry.text = new_value.to_string();
-            } else {
-                int curr = int.parse(height_entry.text);
-                double new_value = (double) curr / (double) original_height * 100.0;
-                height_entry.text = FLOAT_FORMAT.printf(new_value);
-            }
+            height_entry.text = unit_calc(
+                    height_unit_box.get_active_text(), height_entry.text, original_height);
         });
 
         var form_grid = new Gtk.Grid() {
@@ -149,6 +135,18 @@ public class ResizeDialog : Gtk.Dialog {
             width_entry.text = new_width.to_string();
         } else {
             width_entry.text = FLOAT_FORMAT.printf((double) new_width / (double) original_width * 100.0);
+        }
+    }
+
+    private static string unit_calc(string unit, string text, int original_value) {
+        if (unit == "px") {
+            double curr = double.parse(text);
+            int new_value = (int) (original_value * curr / 100);
+            return new_value.to_string();
+        } else {
+            int curr = int.parse(text);
+            double new_value = (double) curr / (double) original_value * 100.0;
+            return FLOAT_FORMAT.printf(new_value);
         }
     }
 }

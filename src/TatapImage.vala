@@ -96,13 +96,13 @@ public class TatapImage : Image {
         Idle.add(() => {
             fit_image_to_window();
             if (is_animation) {
-                animate.begin(animation_iter);
+                animate_async.begin(animation_iter);
             }
             return false;
         });
     }
 
-    public async void animate(Gdk.PixbufAnimationIter animation_iter) {
+    public async void animate_async(Gdk.PixbufAnimationIter animation_iter) {
         uint count_holder = file_counter;
         Thread<int>? inner_thread = null;
         bool run_thread = false;
@@ -118,9 +118,10 @@ public class TatapImage : Image {
                     inner_thread = new Thread<int>(null, () => {
                         while (count_holder == file_counter) {
                             if (run_thread) {
-                                prepared_pixbuf = modify_pixbuf(animation_iter.get_pixbuf());
+                                prepared_pixbuf
+                                        = PixbufUtils.modify(animation_iter.get_pixbuf(), hflipped, vflipped, degree);
                                 if (prepared_pixbuf == null) {
-                                    Idle.add(animate.callback);
+                                    Idle.add(animate_async.callback);
                                     return -1;
                                 }
                                 prepared_pixbuf_resized
@@ -128,7 +129,7 @@ public class TatapImage : Image {
                                 next_zoom_percent
                                         = calc_zoom_percent(prepared_pixbuf_resized.height, prepared_pixbuf.height);
                                 run_thread = false;
-                                Idle.add(animate.callback);
+                                Idle.add(animate_async.callback);
                             } else {
                                 Thread.yield();
                             }
@@ -143,13 +144,13 @@ public class TatapImage : Image {
                     zoom_percent = next_zoom_percent;
                     step_once = false;
                     run_thread = false;
-                    Timeout.add(animation_iter.get_delay_time(), animate.callback);
+                    Timeout.add(animation_iter.get_delay_time(), animate_async.callback);
                 } else {
                     break;
                 }
             } else {
                 run_thread = false;
-                Idle.add(animate.callback);
+                Idle.add(animate_async.callback);
             }
             yield;
         }
@@ -184,7 +185,6 @@ public class TatapImage : Image {
     public void fit_image_to_window() {
         if (original_pixbuf != null) {
             fit = true;
-            debug("TatapImage::fit_image_to_window");
             int max_width = container.get_allocated_width();
             int max_height = container.get_allocated_height();
             double r0 = (double) max_width / (double) max_height;
@@ -272,30 +272,11 @@ public class TatapImage : Image {
     public void resize(uint new_width, uint new_height) {
         var animation_iter = animation.get_iter(tval);
         var fresh_pixbuf = animation_iter.get_pixbuf();
-        original_pixbuf = modify_pixbuf(fresh_pixbuf);
+        original_pixbuf = PixbufUtils.modify(fresh_pixbuf, hflipped, vflipped, degree);
         original_pixbuf = original_pixbuf.scale_simple((int) new_width, (int) new_height, Gdk.InterpType.BILINEAR);
         original_max_size = int.max(original_pixbuf.width, original_pixbuf.height);
         original_rate_x = (double) original_pixbuf.width / (double) original_pixbuf.height;
         set_scale_percent((int) ((double) original_pixbuf.width / (double) fresh_pixbuf.width * 100.0));
-    }
-
-    private Gdk.Pixbuf? modify_pixbuf(Gdk.Pixbuf old_pixbuf) {
-        if (old_pixbuf == null) {
-            return null;
-        }
-        Gdk.Pixbuf? new_pixbuf = old_pixbuf;
-        if (hflipped) {
-            new_pixbuf = new_pixbuf.flip(true);
-        }
-        if (vflipped) {
-            new_pixbuf = new_pixbuf.flip(false);
-        }
-        if (degree != 0) {
-            for (int i_degree = 0; i_degree < degree; i_degree += 90) {
-                new_pixbuf = new_pixbuf.rotate_simple(PixbufRotation.COUNTERCLOCKWISE);
-            }
-        }
-        return new_pixbuf;
     }
 
     private void scale(uint max_size) {

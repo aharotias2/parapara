@@ -1,13 +1,4 @@
-src/Utils/PixbufUtils.vala
-src/Utils/TatapFileType.vala
-src/Utils/TatapFileUtils.vala
-src/Utils/TatapMathUtils.vala
-src/Widgets/ActionButton.vala
-src/Widgets/HeaderButtons.vala
-src/Widgets/TatapToolBar.vala
-src/ThreadData/TatapFileListThreadData.vala
-src/SortOrder.vala
-src/Application.vala
-src/TatapFileList.vala
-src/TatapImage.vala
 src/TatapWindow.vala
+src/Widgets/HeaderButtons.vala
+src/Widgets/ResizeDialog.vala
+src/Widgets/TatapToolBar.vala

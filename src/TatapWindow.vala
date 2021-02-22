@@ -338,12 +338,12 @@ public class TatapWindow : Gtk.Window {
                             return true;
                         case Gdk.Key.s:
                             if (image.has_image) {
-                                save_file.begin(false);
+                                save_file_async.begin(false);
                             }
                             return true;
                         case Gdk.Key.S:
                             if (image.has_image) {
-                                save_file.begin(true);
+                                save_file_async.begin(true);
                             }
                             return true;
                         case Gdk.Key.w:
@@ -498,7 +498,7 @@ public class TatapWindow : Gtk.Window {
         }
     }
 
-    public async void save_file(bool with_renaming) {
+    public async void save_file_async(bool with_renaming) {
         if (image.is_animation) {
             Gtk.DialogFlags flags = Gtk.DialogFlags.MODAL;
             Gtk.MessageDialog alert = new Gtk.MessageDialog(this, flags, Gtk.MessageType.ERROR,
@@ -522,23 +522,21 @@ public class TatapWindow : Gtk.Window {
                 }
                 file_dialog.close();
 
-                Idle.add(save_file.callback);
+                Idle.add(save_file_async.callback);
                 yield;
 
-                if (save_result == Gtk.ResponseType.ACCEPT) {
-                    if (FileUtils.test(filename, FileTest.EXISTS)) {
-                        DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
-                        MessageDialog alert = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL,
-                                _("File already exists. Do you want to overwrite it?"));
-                        int res = alert.run();
-                        alert.close();
-
-                        if (res == ResponseType.CANCEL) {
-                            canceled = true;
-                        }
-                    }
-                } else {
+                if (save_result == Gtk.ResponseType.CANCEL) {
                     canceled = true;
+                } else if (FileUtils.test(filename, FileTest.EXISTS)) {
+                    DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
+                    MessageDialog alert = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL,
+                            _("File already exists. Do you want to overwrite it?"));
+                    int res = alert.run();
+                    alert.close();
+
+                    if (res == ResponseType.CANCEL) {
+                        canceled = true;
+                    }
                 }
             } else {
                 DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
@@ -552,16 +550,16 @@ public class TatapWindow : Gtk.Window {
                 }
             }
 
-            Idle.add(save_file.callback);
+            Idle.add(save_file_async.callback);
             yield;
 
             if (canceled) {
-                show_message.begin(_("The file save was canceled."));
+                show_message_async.begin(_("The file save was canceled."));
             } else {
                 try {
                     debug("The file name for save: %s", filename);
                     image.original_pixbuf.save(filename, TatapFileType.of(filename));
-                    show_message.begin(_("The file was saved"));
+                    show_message_async.begin(_("The file was saved"));
                 } catch (Error e) {
                     stderr.printf("Error: %s\n", e.message);
                 }
@@ -569,12 +567,12 @@ public class TatapWindow : Gtk.Window {
         }
     }
 
-    public async void show_message(string message) {
-        Idle.add(show_message.callback);
+    public async void show_message_async(string message) {
+        Idle.add(show_message_async.callback);
         yield;
         message_label.label = message;
         message_revealer.reveal_child = true;
-        Timeout.add(2000, show_message.callback);
+        Timeout.add(2000, show_message_async.callback);
         yield;
         message_revealer.reveal_child = false;
     }
@@ -620,11 +618,13 @@ public class TatapWindow : Gtk.Window {
         int res = dialog.run();
         dialog.close();
         if (res == Gtk.ResponseType.OK) {
+            double old_size_percent = image.size_percent;
             image.resize(dialog.width_value, dialog.height_value);
+            image.set_scale_percent((uint) (old_size_percent));
             set_title_label();
-            show_message.begin(_("The image was resized."));
+            show_message_async.begin(_("The image was resized."));
         } else {
-            show_message.begin(_("Resizing of the image was canceled."));
+            show_message_async.begin(_("Resizing of the image was canceled."));
         }
     }
 }

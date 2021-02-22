@@ -22,11 +22,11 @@ using Gdk;
  * PixbufUtils is used by TatapImage.
  * This contains image scale function.
  */
-public class PixbufUtils {
+namespace PixbufUtils {
     /**
      * Scales the image to fit in a square of the specified size.
      */
-    public static Pixbuf scale_limited(Pixbuf pixbuf, int size) {
+    public Pixbuf scale_limited(Pixbuf pixbuf, int size) {
         size = int.max(10, size);
         if (pixbuf.width > pixbuf.height) {
             return pixbuf.scale_simple(size, (int) (size * ((double) pixbuf.height / pixbuf.width)), InterpType.BILINEAR);
@@ -40,7 +40,7 @@ public class PixbufUtils {
     /**
      * Specify the maximum width to maintain the aspect ratio and zoom in/out
      */
-    public static Pixbuf scale_by_max_width(Pixbuf src_pixbuf, int max_width) {
+    public Pixbuf scale_by_max_width(Pixbuf src_pixbuf, int max_width) {
         int height = (int) (src_pixbuf.height * ((double) max_width / (double) src_pixbuf.width));
         return src_pixbuf.scale_simple(max_width, height, InterpType.BILINEAR);
     }
@@ -48,8 +48,27 @@ public class PixbufUtils {
     /**
      * Specify the maximum height to maintain the aspect ratio and zoom in/out
      */
-    public static Pixbuf scale_by_max_height(Pixbuf src_pixbuf, int max_height) {
+    public Pixbuf scale_by_max_height(Pixbuf src_pixbuf, int max_height) {
         int width = (int) (src_pixbuf.width * ((double) max_height / (double) src_pixbuf.height));
         return src_pixbuf.scale_simple(width, max_height, InterpType.BILINEAR);
+    }
+
+    public Gdk.Pixbuf? modify(Gdk.Pixbuf old_pixbuf, bool hflipped, bool vflipped, int rotate_degree) {
+        if (old_pixbuf == null) {
+            return null;
+        }
+        Gdk.Pixbuf? new_pixbuf = old_pixbuf;
+        if (hflipped) {
+            new_pixbuf = new_pixbuf.flip(true);
+        }
+        if (vflipped) {
+            new_pixbuf = new_pixbuf.flip(false);
+        }
+        if (rotate_degree != 0) {
+            for (int i_degree = 0; i_degree < rotate_degree; i_degree += 90) {
+                new_pixbuf = new_pixbuf.rotate_simple(PixbufRotation.COUNTERCLOCKWISE);
+            }
+        }
+        return new_pixbuf;
     }
 }

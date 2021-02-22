@@ -45,13 +45,13 @@ public class TatapToolBar : Gtk.Bin {
         };
         save_button.get_style_context().add_class("image_overlay_button");
         save_button.clicked.connect(() => {
-            window.save_file.begin(false);
+            window.save_file_async.begin(false);
         });
 
         save_as_button = new ActionButton("document-save-as-symbolic", _("Save as…"), {"<Control><Shift>s"});
         save_as_button.get_style_context().add_class("image_overlay_button");
         save_as_button.clicked.connect(() => {
-            window.save_file.begin(true);
+            window.save_file_async.begin(true);
         });
 
         var save_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
