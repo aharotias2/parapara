@@ -152,7 +152,7 @@ public class TatapFileList {
         return null;
     }
 
-    public async void make_list_async() {
+    public async void make_list_async(bool loop = true) {
         Gee.List<string>? inner_file_list = null;
         TatapFileListThreadData thread_data = new TatapFileListThreadData(dir_path);
         thread_data.file_found.connect((file_name) => {
@@ -176,14 +176,14 @@ public class TatapFileList {
             return true;
         });
         Thread<int> thread = new Thread<int>(null, thread_data.run);
-        while (!thread_data.canceled && !closed) {
+        do {
             yield;
             if (thread_data.canceled || inner_file_list == null || inner_file_list.size == 0) {
                 break;
             }
             file_list = inner_file_list;
             updated();
-        }
+        } while (loop && !thread_data.canceled && !closed);
         thread_data.terminate();
         terminated();
         int thread_result = thread.join();

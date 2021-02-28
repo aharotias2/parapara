@@ -23,6 +23,18 @@ public errordomain TatapError {
 }
 
 public class Application : Gtk.Application {
+    public static bool config_repeat_updating_file_list = false;
+    public static bool version = false;
+    public static string desc_version;
+    public static string desc_update_file_list_constantly;
+
+    private const GLib.OptionEntry[] options = {
+        { "version", 'v', OptionFlags.NONE, OptionArg.NONE, ref version, "Display version number", null },
+        { "repeat-updating-file-list", 'u', OptionFlags.NONE, OptionArg.NONE, ref config_repeat_updating_file_list,
+                "Have this app search the directory repeatedly to see if the contained files have modified", null },
+        { null }
+    };
+
     /**
     * The Program Entry Proint.
     * It initializes Gtk, and create a new window to start program.
@@ -54,7 +66,9 @@ public class Application : Gtk.Application {
     }
 
     private TatapWindow create_new_window() {
-        var window = new TatapWindow();
+        var window = new TatapWindow() {
+            repeat_updating_file_list = config_repeat_updating_file_list
+        };
         window.set_application(this);
         window.require_new_window.connect(() => create_new_window());
         window.require_quit.connect(() => quit());
@@ -66,9 +80,26 @@ public class Application : Gtk.Application {
         var app = new Application();
 
         if (args.length > 1) {
+            try {
+                var opt_context = new OptionContext("- Options");
+                opt_context.set_help_enabled(true);
+                opt_context.add_main_entries(options, null);
+                opt_context.parse(ref args);
+            } catch (OptionError e) {
+                printerr("error: %s\n", e.message);
+                printerr ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
+                return 1;
+            }
+
+            if (version) {
+                print(@"$(app.application_id) 3.0\n");
+                return 0;
+            }
+
             File[]? files = null;
 
             for (int i = 0; i < args.length; i++) {
+                FileUtils.test(args[i], FileTest.IS_REGULAR | FileTest.EXISTS);
                 files += File.new_for_path(args[i]);
             }
 

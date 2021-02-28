@@ -29,6 +29,7 @@ public class TatapWindow : Gtk.Window {
     public signal void require_new_window();
     public signal void require_quit();
 
+    public bool repeat_updating_file_list { get; construct set; }
     private HeaderBar headerbar;
     private HeaderButtons header_buttons;
     private ToggleButton toolbar_toggle_button;
@@ -456,10 +457,12 @@ public class TatapWindow : Gtk.Window {
                     }
                 });
                 file_list.terminated.connect(() => {
-                    header_buttons.image_prev_button.sensitive = false;
-                    header_buttons.image_next_button.sensitive = false;
+                    if (repeat_updating_file_list) {
+                        header_buttons.image_prev_button.sensitive = false;
+                        header_buttons.image_next_button.sensitive = false;
+                    }
                 });
-                file_list.make_list_async.begin();
+                file_list.make_list_async.begin(repeat_updating_file_list);
                 header_buttons.image_prev_button.sensitive = false;
                 header_buttons.image_next_button.sensitive = false;
             } else {
