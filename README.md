@@ -1,7 +1,7 @@
 # tatap
 A simple picture viewer written in Vala
 
-![Screenshot](tatap-screenshot.png "Screenshot")
+![Screenshot](tatap-screenshot.jpg "Screenshot")
 
 ## Building and Installation
 You'll need the following dependencies:
