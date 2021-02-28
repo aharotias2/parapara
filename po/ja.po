@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-28 07:59+0000\n"
+"POT-Creation-Date: 2021-02-28 09:30+0000\n"
 "PO-Revision-Date: 2021-01-14 11:54+0900\n"
 "Last-Translator: Takayuki Tanaka <aharotias2@gmail.com>\n"
 "Language-Team: none\n"
@@ -47,7 +47,6 @@ msgstr "開くファイルを選択"
 msgid "Cancel"
 msgstr "キャンセル"
 
-#. file buttons
 #: src/TatapWindow.vala:409 src/Widgets/HeaderButtons.vala:49
 msgid "Open"
 msgstr "開く"
@@ -129,7 +128,6 @@ msgstr "高さ:"
 msgid "OK"
 msgstr "OK"
 
-#. action buttons for the image
 #: src/Widgets/TatapToolBar.vala:65
 msgid "Resize"
 msgstr "リサイズ"
