@@ -16,68 +16,70 @@
  *  Tanaka Takayuki <aharotias2@gmail.com>
  */
 
-public class TatapFileListThreadData : Object {
-    public signal bool file_found(string file_path);
-    public signal bool updated(Gee.List<string>? file_list);
-    public signal int sorted(string a, string b);
-    public bool canceled {
-        get {
-            return !keep_doing;
+namespace Tatap {
+    public class FileListThreadData : Object {
+        public signal bool file_found(string file_path);
+        public signal bool updated(Gee.List<string>? file_list);
+        public signal int sorted(string a, string b);
+        public bool canceled {
+            get {
+                return !keep_doing;
+            }
+            private set {
+                keep_doing = !value;
+            }
         }
-        private set {
-            keep_doing = !value;
+        private string dir_path;
+        private bool keep_doing;
+
+        public FileListThreadData(string dir_path) {
+            this.dir_path = dir_path;
+            this.canceled = false;
         }
-    }
-    private string dir_path;
-    private bool keep_doing;
 
-    public TatapFileListThreadData(string dir_path) {
-        this.dir_path = dir_path;
-        this.canceled = false;
-    }
+        public int run() {
+            try {
+                while (keep_doing) {
+                    keep_doing = do_task();
+                    if (keep_doing) {
+                        sleep(3000000, 10000);
+                    }
+                }
+                return 0;
+            } catch (FileError e) {
+                return -1;
+            }
+        }
 
-    public int run() {
-        try {
-            while (keep_doing) {
-                keep_doing = do_task();
-                if (keep_doing) {
-                    sleep(3000000, 10000);
+        private bool do_task() throws FileError {
+            Dir dir = Dir.open(dir_path);
+            string? name = null;
+            Gee.List<string> thread_file_list = new Gee.ArrayList<string>();
+            while ((name = dir.read_name()) != null) {
+                if (name != "." && name != "..") {
+                    if (file_found(name)) {
+                        thread_file_list.add(name);
+                    } else if (canceled) {
+                        return false;
+                    }
                 }
             }
-            return 0;
-        } catch (FileError e) {
-            return -1;
+            thread_file_list.sort((a, b) => sorted(a, b));
+            return updated(thread_file_list);
         }
-    }
 
-    private bool do_task() throws FileError {
-        Dir dir = Dir.open(dir_path);
-        string? name = null;
-        Gee.List<string> thread_file_list = new Gee.ArrayList<string>();
-        while ((name = dir.read_name()) != null) {
-            if (name != "." && name != "..") {
-                if (file_found(name)) {
-                    thread_file_list.add(name);
-                } else if (canceled) {
+        private bool sleep(uint time_length, uint check_interval) {
+            for (uint i = 0; i < time_length; i += check_interval) {
+                if (canceled) {
                     return false;
                 }
+                Thread.usleep(check_interval);
             }
+            return true;
         }
-        thread_file_list.sort((a, b) => sorted(a, b));
-        return updated(thread_file_list);
-    }
 
-    private bool sleep(uint time_length, uint check_interval) {
-        for (uint i = 0; i < time_length; i += check_interval) {
-            if (canceled) {
-                return false;
-            }
-            Thread.usleep(check_interval);
+        public void terminate() {
+            keep_doing = false;
         }
-        return true;
-    }
-
-    public void terminate() {
-        keep_doing = false;
     }
 }

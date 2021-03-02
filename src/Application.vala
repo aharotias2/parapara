@@ -16,96 +16,99 @@
  *  Tanaka Takayuki <aharotias2@gmail.com>
  */
 
-public errordomain TatapError {
-    INVALID_FILE,
-    INVALID_EXTENSION,
-    FILE_NOT_EXISTS
-}
-
-public class Application : Gtk.Application {
-    public static bool config_repeat_updating_file_list = false;
-    public static bool version = false;
-    public static string desc_version;
-    public static string desc_update_file_list_constantly;
-
-    private const GLib.OptionEntry[] options = {
-        { "version", 'v', OptionFlags.NONE, OptionArg.NONE, ref version, "Display version number", null },
-        { "repeat-updating-file-list", 'u', OptionFlags.NONE, OptionArg.NONE, ref config_repeat_updating_file_list,
-                "Have this app search the directory repeatedly to see if the contained files have modified", null },
-        { null }
-    };
-
-    /**
-    * The Program Entry Proint.
-    * It initializes Gtk, and create a new window to start program.
-    */
-    public Application () {
-        Object (
-            application_id: "com.github.aharotias2.tatap",
-            flags: ApplicationFlags.HANDLES_OPEN
-        );
+namespace Tatap {
+    public errordomain Error {
+        INVALID_FILE,
+        INVALID_EXTENSION,
+        FILE_NOT_EXISTS
     }
 
-    protected override void activate() {
-        create_new_window();
-    }
+    public class Application : Gtk.Application {
+        public static bool config_repeat_updating_file_list = false;
+        public static bool version = false;
+        public static string desc_version;
+        public static string desc_update_file_list_constantly;
 
-    protected override void open(File[] files, string hint) {
-        if (files.length == 0) {
-            return;
-        }
-
-        foreach (var file in files) {
-            string? filepath = file.get_path();
-            TatapWindow window = create_new_window();
-            Idle.add(() => {
-                window.open_file(filepath);
-                return false;
-            });
-        }
-    }
-
-    private TatapWindow create_new_window() {
-        var window = new TatapWindow() {
-            repeat_updating_file_list = config_repeat_updating_file_list
+        private const GLib.OptionEntry[] options = {
+            { "version", 'v', OptionFlags.NONE, OptionArg.NONE, ref version, "Display version number", null },
+            { "repeat-updating-file-list", 'u', OptionFlags.NONE, OptionArg.NONE, ref config_repeat_updating_file_list,
+                    "Have this app search the directory repeatedly to see if the contained files have modified", null },
+            { null }
         };
-        window.set_application(this);
-        window.require_new_window.connect(() => create_new_window());
-        window.require_quit.connect(() => quit());
-        window.show_all();
-        return window;
-    }
 
-    public static int main(string[] args) {
-        var app = new Application();
-
-        if (args.length > 1) {
-            try {
-                var opt_context = new OptionContext("- Options");
-                opt_context.set_help_enabled(true);
-                opt_context.add_main_entries(options, null);
-                opt_context.parse(ref args);
-            } catch (OptionError e) {
-                printerr("error: %s\n", e.message);
-                printerr ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
-                return 1;
-            }
-
-            if (version) {
-                print(@"$(app.application_id) 3.0\n");
-                return 0;
-            }
-
-            File[]? files = null;
-
-            for (int i = 0; i < args.length; i++) {
-                FileUtils.test(args[i], FileTest.IS_REGULAR | FileTest.EXISTS);
-                files += File.new_for_path(args[i]);
-            }
-
-            app.open(files, "Open specified files");
+        /**
+        * The Program Entry Proint.
+        * It initializes Gtk, and create a new window to start program.
+        */
+        public Application () {
+            Object (
+                application_id: "com.github.aharotias2.tatap",
+                flags: ApplicationFlags.HANDLES_OPEN
+            );
         }
 
-        return app.run(args);
+        protected override void activate() {
+            create_new_window();
+        }
+
+        protected override void open(File[] files, string hint) {
+            if (files.length == 0) {
+                return;
+            }
+
+            foreach (var file in files) {
+                string? filepath = file.get_path();
+                Tatap.Window window = create_new_window();
+                Idle.add(() => {
+                    window.open_file(filepath);
+                    return false;
+                });
+            }
+        }
+
+        private Tatap.Window create_new_window() {
+            var window = new Tatap.Window() {
+                repeat_updating_file_list = config_repeat_updating_file_list
+            };
+            window.set_application(this);
+            window.require_new_window.connect(() => create_new_window());
+            window.require_quit.connect(() => quit());
+            window.show_all();
+            return window;
+        }
+
+        public static int main(string[] args) {
+            var app = new Tatap.Application();
+
+            if (args.length > 1) {
+                try {
+                    var opt_context = new OptionContext("- Options");
+                    opt_context.set_help_enabled(true);
+                    opt_context.add_main_entries(options, null);
+                    opt_context.parse(ref args);
+                } catch (OptionError e) {
+                    printerr("error: %s\n", e.message);
+                    printerr ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
+                    return 1;
+                }
+
+                if (version) {
+                    print(@"$(app.application_id) 3.0\n");
+                    return 0;
+                }
+
+                File[]? files = null;
+
+                for (int i = 0; i < args.length; i++) {
+                    if (GLib.FileUtils.test(args[i], FileTest.IS_REGULAR | FileTest.EXISTS)) {
+                        files += File.new_for_path(args[i]);
+                    }
+                }
+
+                app.open(files, "Open specified files");
+            }
+
+            return app.run(args);
+        }
     }
 }

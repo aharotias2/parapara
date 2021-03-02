@@ -16,35 +16,37 @@
  *  Tanaka Takayuki <aharotias2@gmail.com>
  */
 
-public class TatapFileUtils {
-    public static string? get_mime_type_from_file(File? file) throws Error {
-        FileInfo info = file.query_info("standard::*", 0);
-        return info.get_content_type();
-    }
+namespace Tatap {
+    namespace FileUtils {
+        public string? get_mime_type_from_file(File? file) throws GLib.Error {
+            FileInfo info = file.query_info("standard::*", 0);
+            return info.get_content_type();
+        }
 
-    /**
-     * This function checks an argument as a file path pointing to an image file or not.
-     *
-     * when path does not exist        => throw Error
-     * when path is not a regular file => return false
-     * when path is not a image file   => return false
-     * when path is a image file       => return true
-     */
-    public static bool check_file_is_image(string? path) throws Error {
-        if (FileUtils.test(path, FileTest.EXISTS)) {
-            if (FileUtils.test(path, FileTest.IS_REGULAR)) {
-                File f = File.new_for_path(path);
-                string mime_type = get_mime_type_from_file(f);
-                if (mime_type.split("/")[0] == "image") {
-                    return true;
+        /**
+         * This function checks an argument as a file path pointing to an image file or not.
+         *
+         * when path does not exist        => throw Error
+         * when path is not a regular file => return false
+         * when path is not a image file   => return false
+         * when path is a image file       => return true
+         */
+        public bool check_file_is_image(string? path) throws GLib.Error {
+            if (GLib.FileUtils.test(path, GLib.FileTest.EXISTS)) {
+                if (GLib.FileUtils.test(path, GLib.FileTest.IS_REGULAR)) {
+                    File f = File.new_for_path(path);
+                    string mime_type = get_mime_type_from_file(f);
+                    if (mime_type.split("/")[0] == "image") {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 } else {
                     return false;
                 }
             } else {
-                return false;
+                throw new FileError.EXIST("The file path is invalid. it does not exist or is not a regular file.");
             }
-        } else {
-            throw new FileError.EXIST("The file path is invalid. it does not exist or is not a regular file.");
         }
     }
 }

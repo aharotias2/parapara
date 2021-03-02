@@ -16,53 +16,55 @@
  *  Tanaka Takayuki <aharotias2@gmail.com>
  */
 
-public class HeaderButtons : Gtk.Box {
-    public TatapWindow window { get; construct; }
+namespace Tatap {
+    public class HeaderButtons : Gtk.Box {
+        public Tatap.Window window { get; construct; }
 
-    public ActionButton image_prev_button { get; private set; }
-    public ActionButton image_next_button { get; private set; }
+        public ActionButton image_prev_button { get; private set; }
+        public ActionButton image_next_button { get; private set; }
 
-    public HeaderButtons (TatapWindow window) {
-        Object (
-            window: window,
-            orientation: Gtk.Orientation.HORIZONTAL,
-            spacing: 12
-        );
-    }
+        public HeaderButtons (Tatap.Window window) {
+            Object (
+                window: window,
+                orientation: Gtk.Orientation.HORIZONTAL,
+                spacing: 12
+            );
+        }
 
-    construct {
-        image_prev_button = new ActionButton("go-previous-symbolic", _("Previous"), {"Left"});
-        image_prev_button.get_style_context().add_class("image_button");
-        image_prev_button.clicked.connect(window.go_prev);
+        construct {
+            image_prev_button = new ActionButton("go-previous-symbolic", _("Previous"), {"Left"});
+            image_prev_button.get_style_context().add_class("image_button");
+            image_prev_button.clicked.connect(window.go_prev);
 
-        image_next_button = new ActionButton("go-next-symbolic", _("Next"), {"Right"});
-        image_next_button.get_style_context().add_class("image_button");
-        image_next_button.clicked.connect(window.go_next);
+            image_next_button = new ActionButton("go-next-symbolic", _("Next"), {"Right"});
+            image_next_button.get_style_context().add_class("image_button");
+            image_next_button.clicked.connect(window.go_next);
 
-        var navigation_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
-            layout_style = Gtk.ButtonBoxStyle.EXPAND
-        };
-        navigation_box.pack_start(image_prev_button);
-        navigation_box.pack_start(image_next_button);
+            var navigation_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+                layout_style = Gtk.ButtonBoxStyle.EXPAND
+            };
+            navigation_box.pack_start(image_prev_button);
+            navigation_box.pack_start(image_next_button);
 
-        /* file buttons */
-        var open_button = new ActionButton("document-open-symbolic", _("Open"), {"<Control>o"});
-        open_button.clicked.connect(() => {
-            window.on_open_button_clicked();
-        });
+            /* file buttons */
+            var open_button = new ActionButton("document-open-symbolic", _("Open"), {"<Control>o"});
+            open_button.clicked.connect(() => {
+                window.on_open_button_clicked();
+            });
 
-        var new_button = new ActionButton("document-new-symbolic", _("New"), {"<Control>n"});
-        new_button.clicked.connect(() => {
-            window.require_new_window();
-        });
+            var new_button = new ActionButton("document-new-symbolic", _("New"), {"<Control>n"});
+            new_button.clicked.connect(() => {
+                window.require_new_window();
+            });
 
-        var file_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
-            layout_style = Gtk.ButtonBoxStyle.EXPAND
-        };
-        file_box.pack_start(new_button);
-        file_box.pack_start(open_button);
+            var file_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+                layout_style = Gtk.ButtonBoxStyle.EXPAND
+            };
+            file_box.pack_start(new_button);
+            file_box.pack_start(open_button);
 
-        pack_start(navigation_box, false, false);
-        pack_start(file_box, false, false);
+            pack_start(navigation_box, false, false);
+            pack_start(file_box, false, false);
+        }
     }
 }

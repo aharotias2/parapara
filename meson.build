@@ -37,6 +37,7 @@ executable(
     'src/Widgets/ResizeDialog.vala',
     'src/ThreadData/TatapFileListThreadData.vala',
     'src/SortOrder.vala',
+    'src/ViewMode.vala',
     'src/Application.vala',
     'src/TatapFileList.vala',
     'src/TatapImage.vala',

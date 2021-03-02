@@ -16,22 +16,24 @@
  *  Tanaka Takayuki <aharotias2@gmail.com>
  */
 
-public class ActionButton : Gtk.Button {
-    private string _icon_name;
-    public string icon_name {
-        get {
-            return _icon_name;
+namespace Tatap {
+    public class ActionButton : Gtk.Button {
+        private string _icon_name;
+        public string icon_name {
+            get {
+                return _icon_name;
+            }
+            set {
+                _icon_name = value;
+                image = new Gtk.Image.from_icon_name(_icon_name, Gtk.IconSize.SMALL_TOOLBAR);
+            }
         }
-        set {
-            _icon_name = value;
-            image = new Gtk.Image.from_icon_name(_icon_name, Gtk.IconSize.SMALL_TOOLBAR);
-        }
-    }
 
-    public ActionButton (string icon_name, string tooltip_text, string[]? accels = null) {
-        Object (
-            icon_name: icon_name,
-            tooltip_markup: accels != null ? Granite.markup_accel_tooltip(accels, tooltip_text) : tooltip_text
-        );
+        public ActionButton (string icon_name, string tooltip_text, string[]? accels = null) {
+            Object (
+                icon_name: icon_name,
+                tooltip_markup: accels != null ? Granite.markup_accel_tooltip(accels, tooltip_text) : tooltip_text
+            );
+        }
     }
 }

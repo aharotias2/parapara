@@ -17,7 +17,8 @@
  */
 
 namespace Tatap {
-    public enum SortOrder {
-        ASC, DESC
+    public enum ViewMode {
+        SINGLE_VIEW_MODE, SCROLL_VIEW_MODE, DUAL_VIEW_MODE
     }
 }
+
