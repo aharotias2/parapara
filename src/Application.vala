@@ -17,12 +17,6 @@
  */
 
 namespace Tatap {
-    public errordomain Error {
-        INVALID_FILE,
-        INVALID_EXTENSION,
-        FILE_NOT_EXISTS
-    }
-
     public class Application : Gtk.Application {
         public static bool config_repeat_updating_file_list = false;
         public static bool version = false;
@@ -57,10 +51,9 @@ namespace Tatap {
             }
 
             foreach (var file in files) {
-                string? filepath = file.get_path();
                 Tatap.Window window = create_new_window();
                 Idle.add(() => {
-                    window.open_file(filepath);
+                    window.open_file(file);
                     return false;
                 });
             }

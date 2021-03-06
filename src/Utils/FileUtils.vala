@@ -18,7 +18,7 @@
 
 namespace Tatap {
     namespace FileUtils {
-        public string? get_mime_type_from_file(File? file) throws GLib.Error {
+        public string? get_mime_type_from_file(File? file) throws Error {
             FileInfo info = file.query_info("standard::*", 0);
             return info.get_content_type();
         }
@@ -31,7 +31,7 @@ namespace Tatap {
          * when path is not a image file   => return false
          * when path is a image file       => return true
          */
-        public bool check_file_is_image(string? path) throws GLib.Error {
+        public bool check_file_is_image(string? path) throws Error {
             if (GLib.FileUtils.test(path, GLib.FileTest.EXISTS)) {
                 if (GLib.FileUtils.test(path, GLib.FileTest.IS_REGULAR)) {
                     File f = File.new_for_path(path);
@@ -45,7 +45,7 @@ namespace Tatap {
                     return false;
                 }
             } else {
-                throw new FileError.EXIST("The file path is invalid. it does not exist or is not a regular file.");
+                throw new FileError.EXIST(_("The file path is invalid. it does not exist or is not a regular file."));
             }
         }
     }

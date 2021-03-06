@@ -20,9 +20,6 @@ namespace Tatap {
     public class HeaderButtons : Gtk.Box {
         public Tatap.Window window { get; construct; }
 
-        public ActionButton image_prev_button { get; private set; }
-        public ActionButton image_next_button { get; private set; }
-
         public HeaderButtons (Tatap.Window window) {
             Object (
                 window: window,

@@ -18,9 +18,10 @@
 
 namespace Tatap {
     public class ToolBar : Gtk.Bin {
-        public Tatap.Window window { get; construct; }
+        public Tatap.Window main_window { get; construct; }
         public SortOrder sort_order { get; protected set; }
         public bool sticked { get; protected set; }
+        public unowned SingleImageView single_image_view { get; set; }
         public signal void sort_order_changed(SortOrder sort_order);
         public signal void stick_button_clicked(bool sticked);
         public signal void view_mode_changed(ViewMode view_mode);
@@ -80,15 +81,23 @@ namespace Tatap {
                             dual_view_button.active = true;
                             break;
                     }
-                    toolbar_hbox.show_all();
                     view_mode_changed(_view_mode);
+                    switch (_view_mode) {
+                    case ViewMode.SINGLE_VIEW_MODE:
+                        single_image_view = main_window.image_view as SingleImageView;
+                        break;
+                    case ViewMode.DUAL_VIEW_MODE:
+                    case ViewMode.SCROLL_VIEW_MODE:
+                        break;
+                    }
+                    toolbar_hbox.show_all();
                 }
             }
         }
 
-        public ToolBar (Tatap.Window window) {
+        public ToolBar (Tatap.Window main_window) {
             Object (
-                window: window,
+                main_window: main_window,
                 sort_order: SortOrder.ASC,
                 sticked: false,
                 view_mode: ViewMode.SINGLE_VIEW_MODE
@@ -101,17 +110,17 @@ namespace Tatap {
             };
             save_button.get_style_context().add_class("image_overlay_button");
             save_button.clicked.connect(() => {
-                window.save_file_async.begin(false);
+                single_image_view.save_file_async.begin(false);
             });
 
             save_as_button = new ActionButton("document-save-as-symbolic", _("Save as…"), {"<Control><Shift>s"});
             save_as_button.get_style_context().add_class("image_overlay_button");
             save_as_button.clicked.connect(() => {
-                window.save_file_async.begin(true);
+                single_image_view.save_file_async.begin(true);
             });
 
             var save_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
-                margin = 5,
+                margin = 3,
                 layout_style = Gtk.ButtonBoxStyle.EXPAND
             };
             save_button_box.pack_start(save_button);
@@ -121,69 +130,69 @@ namespace Tatap {
             resize_button = new ActionButton("edit-find-replace-symbolic", _("Resize"), {"<control>e"});
             resize_button.get_style_context().add_class("image_overlay_button");
             resize_button.clicked.connect(() => {
-                window.resize_image();
+                single_image_view.resize_image();
             });
 
             var zoom_in_button = new ActionButton("zoom-in-symbolic", _("Zoom in"), {"<control>plus"});
             zoom_in_button.get_style_context().add_class("image_overlay_button");
             zoom_in_button.clicked.connect(() => {
-                window.image.zoom_in(10);
-                window.set_title_label();
+                single_image_view.image.zoom_in(10);
+                single_image_view.update_title();
                 zoom_fit_button.sensitive = true;
             });
 
             var zoom_out_button = new ActionButton("zoom-out-symbolic", _("Zoom out"), {"<control>minus"});
             zoom_out_button.get_style_context().add_class("image_overlay_button");
             zoom_out_button.clicked.connect(() => {
-                window.image.zoom_out(10);
-                window.set_title_label();
+                single_image_view.image.zoom_out(10);
+                single_image_view.update_title();
                 zoom_fit_button.sensitive = true;
             });
 
             zoom_fit_button = new ActionButton("zoom-fit-best-symbolic", _("Fit to the page"), {"<control>0"});
             zoom_fit_button.get_style_context().add_class("image_overlay_button");
             zoom_fit_button.clicked.connect(() => {
-                window.image.fit_image_to_window();
-                window.set_title_label();
+                single_image_view.image.fit_size_to_window();
+                single_image_view.update_title();
                 zoom_fit_button.sensitive = false;
             });
 
             var zoom_orig_button = new ActionButton("zoom-original-symbolic", _("100%"), {"<control>1"});
             zoom_orig_button.get_style_context().add_class("image_overlay_button");
             zoom_orig_button.clicked.connect(() => {
-                window.image.zoom_original();
-                window.set_title_label();
+                single_image_view.image.zoom_original();
+                single_image_view.update_title();
                 zoom_fit_button.sensitive = true;
             });
 
             var hflip_button = new ActionButton("object-flip-horizontal-symbolic", _("Flip horizontally"), {"<control>h"});
             hflip_button.get_style_context().add_class("image_overlay_button");
             hflip_button.clicked.connect(() => {
-                window.image.hflip();
+                single_image_view.image.hflip();
             });
 
             var vflip_button = new ActionButton("object-flip-vertical-symbolic", _("Flip vertically"), {"<control>v"});
             vflip_button.get_style_context().add_class("image_overlay_button");
             vflip_button.clicked.connect(() => {
-                window.image.vflip();
+                single_image_view.image.vflip();
             });
 
             var lrotate_button = new ActionButton("object-rotate-left-symbolic", _("Rotate to the left"), {"<control>l"});
             lrotate_button.get_style_context().add_class("image_overlay_button");
             lrotate_button.clicked.connect(() => {
-                window.image.rotate_left();
-                window.set_title_label();
+                single_image_view.image.rotate_left();
+                single_image_view.update_title();
             });
 
             var rrotate_button = new ActionButton("object-rotate-right-symbolic", _("Rotate to the right"), {"<control>r"});
             rrotate_button.get_style_context().add_class("image_overlay_button");
             rrotate_button.clicked.connect(() => {
-                window.image.rotate_right();
-                window.set_title_label();
+                single_image_view.image.rotate_right();
+                single_image_view.update_title();
             });
 
             var image_actions_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
-                margin = 5,
+                margin = 3,
                 layout_style = Gtk.ButtonBoxStyle.EXPAND
             };
             image_actions_button_box.pack_start(resize_button);
@@ -227,7 +236,7 @@ namespace Tatap {
             });
 
             var sort_order_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
-                margin = 5,
+                margin = 3,
                 layout_style = Gtk.ButtonBoxStyle.EXPAND
             };
             sort_order_button_box.pack_start(sort_asc_button);
@@ -237,28 +246,28 @@ namespace Tatap {
             animation_forward_button.sensitive = false;
             animation_forward_button.get_style_context().add_class("image_overlay_button");
             animation_forward_button.clicked.connect(() => {
-                if (window.image.paused) {
-                    window.image.animate_step_once();
+                if (single_image_view.image.paused) {
+                    single_image_view.image.animate_step_once();
                 }
             });
 
-            animation_play_pause_button = new ActionButton("media-playback-start-symbolic", _("Play animation"));
+            animation_play_pause_button = new ActionButton("media-playback-start-symbolic", _("Play/Pause animation"));
             animation_play_pause_button.sensitive = false;
             animation_play_pause_button.get_style_context().add_class("image_overlay_button");
             animation_play_pause_button.clicked.connect(() => {
-                if (!window.image.paused) {
-                    window.image.pause();
+                if (!single_image_view.image.paused) {
+                    single_image_view.image.pause();
                     animation_play_pause_button.icon_name = "media-playback-pause-symbolic";
                     animation_forward_button.sensitive = true;
                 } else {
-                    window.image.unpause();
+                    single_image_view.image.unpause();
                     animation_play_pause_button.icon_name = "media-playback-start-symbolic";
                     animation_forward_button.sensitive = false;
                 }
             });
             animation_play_pause_button.enter_notify_event.connect((ex) => {
-                if (window.image.is_animation) {
-                    if (window.image.paused) {
+                if (single_image_view.image.is_animation) {
+                    if (single_image_view.image.paused) {
                         animation_play_pause_button.icon_name = "media-playback-start-symbolic";
                     } else {
                         animation_play_pause_button.icon_name = "media-playback-pause-symbolic";
@@ -266,8 +275,8 @@ namespace Tatap {
                 }
             });
             animation_play_pause_button.leave_notify_event.connect((ex) => {
-                if (window.image.is_animation) {
-                    if (window.image.paused) {
+                if (single_image_view.image.is_animation) {
+                    if (single_image_view.image.paused) {
                         animation_play_pause_button.icon_name = "media-playback-pause-symbolic";
                     } else {
                         animation_play_pause_button.icon_name = "media-playback-start-symbolic";
@@ -276,7 +285,7 @@ namespace Tatap {
             });
 
             var animation_actions_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
-                margin = 5,
+                margin = 3,
                 layout_style = Gtk.ButtonBoxStyle.EXPAND
             };
             animation_actions_button_box.pack_start(animation_play_pause_button);
@@ -293,7 +302,7 @@ namespace Tatap {
             });
 
             scroll_view_button = new Gtk.ToggleButton() {
-                tooltip_text = _("Rolling View Mode"),
+                tooltip_text = _("Scroll View Mode"),
                 image = new Gtk.Image.from_icon_name("view-continuous-symbolic", Gtk.IconSize.SMALL_TOOLBAR),
                 active = false
             };
@@ -313,16 +322,14 @@ namespace Tatap {
             });
 
             var mode_switch_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
-                margin = 5,
+                margin = 3,
                 layout_style = Gtk.ButtonBoxStyle.EXPAND
             };
             mode_switch_button_box.pack_start(single_view_button);
             mode_switch_button_box.pack_start(scroll_view_button);
             mode_switch_button_box.pack_start(dual_view_button);
 
-            stick_button = new ActionButton("pan-down-symbolic", _("Stick"), {"<control>f"}) {
-                margin = 5
-            };
+            stick_button = new ActionButton("pan-down-symbolic", _("Stick"), {"<control>f"});
             stick_button.clicked.connect(() => {
                 if (sticked) {
                     unstick_toolbar();
@@ -330,6 +337,12 @@ namespace Tatap {
                     stick_toolbar();
                 }
             });
+
+            var stick_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+                margin = 3,
+                layout_style = Gtk.ButtonBoxStyle.EXPAND
+            };
+            stick_button_box.pack_start(stick_button);
 
             single_view_mode_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0) {
                 vexpand = false,
@@ -355,8 +368,8 @@ namespace Tatap {
                 valign = Gtk.Align.START
             };
             toolbar_hbox.pack_start(single_view_mode_box, false, false);
-            toolbar_hbox.pack_end(stick_button, false, false);
-            toolbar_hbox.pack_end(mode_switch_button_box, false, false);
+            toolbar_hbox.pack_end(stick_button_box, false, false);
+//            toolbar_hbox.pack_end(mode_switch_button_box, false, false);
             toolbar_hbox.get_style_context().add_class("toolbar");
 
             add(toolbar_hbox);

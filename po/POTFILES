@@ -1,4 +1,8 @@
-src/TatapWindow.vala
+src/Model/FileList.vala
+src/Model/SingleFileAccessor.vala
+src/Utils/FileUtils.vala
 src/Widgets/HeaderButtons.vala
 src/Widgets/ResizeDialog.vala
-src/Widgets/TatapToolBar.vala
+src/Widgets/SingleImageView.vala
+src/Widgets/ToolBar.vala
+src/Widgets/Window.vala

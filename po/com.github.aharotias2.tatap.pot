@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-28 09:30+0000\n"
+"POT-Creation-Date: 2021-03-06 12:43+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,168 +17,199 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/TatapWindow.vala:57
-msgid "Menu"
+#: src/Widgets/ToolBar.vala:160
+msgid "100%"
 msgstr ""
 
-#: src/TatapWindow.vala:81
-msgid "No Images Open"
-msgstr ""
-
-#: src/TatapWindow.vala:82
-msgid "Click 'Open Image' to get started."
-msgstr ""
-
-#: src/TatapWindow.vala:84
-msgid "Open Image"
-msgstr ""
-
-#: src/TatapWindow.vala:84
-msgid "Show and edit your image."
-msgstr ""
-
-#: src/TatapWindow.vala:408
-msgid "Choose file to open"
-msgstr ""
-
-#: src/TatapWindow.vala:409 src/TatapWindow.vala:516
-#: src/Widgets/ResizeDialog.vala:118
+#: src/Widgets/Window.vala:286 src/Widgets/ResizeDialog.vala:119
+#: src/Widgets/SingleImageView.vala:363
 msgid "Cancel"
 msgstr ""
 
-#: src/TatapWindow.vala:409 src/Widgets/HeaderButtons.vala:49
+#: src/Widgets/Window.vala:285
+msgid "Choose file to open"
+msgstr ""
+
+#: src/Widgets/Window.vala:131
+msgid "Click 'Open Image' to get started."
+msgstr ""
+
+#: src/Widgets/SingleImageView.vala:394
+msgid "Do you really overwrite this file?"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:315
+msgid "Dual View Mode"
+msgstr ""
+
+#: src/Widgets/SingleImageView.vala:383
+msgid "File already exists. Do you want to overwrite it?"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:152
+msgid "Fit to the page"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:168
+msgid "Flip horizontally"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:174
+msgid "Flip vertically"
+msgstr ""
+
+#: src/Widgets/ResizeDialog.vala:81
+msgid "Height:"
+msgstr ""
+
+#: src/Widgets/Window.vala:106
+msgid "Menu"
+msgstr ""
+
+#: src/Widgets/Window.vala:87 src/Widgets/HeaderButtons.vala:52
+msgid "New"
+msgstr ""
+
+#: src/Widgets/Window.vala:63 src/Widgets/HeaderButtons.vala:36
+msgid "Next"
+msgstr ""
+
+#: src/Widgets/Window.vala:130
+msgid "No Images Open"
+msgstr ""
+
+#: src/Widgets/ResizeDialog.vala:118
+msgid "OK"
+msgstr ""
+
+#: src/Widgets/Window.vala:82 src/Widgets/Window.vala:286
+#: src/Widgets/HeaderButtons.vala:47
 msgid "Open"
 msgstr ""
 
-#: src/TatapWindow.vala:438
+#: src/Widgets/Window.vala:133
+msgid "Open Image"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:254
+msgid "Play/Pause animation"
+msgstr ""
+
+#: src/Widgets/Window.vala:51 src/Widgets/HeaderButtons.vala:32
+msgid "Previous"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:130
+msgid "Resize"
+msgstr ""
+
+#: src/Widgets/SingleImageView.vala:347
+msgid "Resizing of the image was canceled."
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:180
+msgid "Rotate to the left"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:187
+msgid "Rotate to the right"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:108 src/Widgets/SingleImageView.vala:363
+msgid "Save"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:116 src/Widgets/SingleImageView.vala:362
+msgid "Save as…"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:305
+msgid "Scroll View Mode"
+msgstr ""
+
+#: src/Widgets/ResizeDialog.vala:59
+msgid "Set the width and the height"
+msgstr ""
+
+#: src/Widgets/Window.vala:133
+msgid "Show and edit your image."
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:295
+msgid "Single View Mode"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:245
+msgid "Skip forward"
+msgstr ""
+
+#: src/Widgets/SingleImageView.vala:355
+msgid "Sorry, saving animations is not supported yet."
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:211
+msgid "Sort Asc"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:225
+msgid "Sort Desc"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:332
+msgid "Stick"
+msgstr ""
+
+#: src/Widgets/Window.vala:312
 msgid "The directory does not found. Exiting."
 msgstr ""
 
-#: src/TatapWindow.vala:446
-msgid "The file does not found."
-msgstr ""
-
-#: src/TatapWindow.vala:492
+#: src/Widgets/Window.vala:345
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr ""
 
-#: src/TatapWindow.vala:508
-msgid "Sorry, saving animations is not supported yet."
+#: src/Widgets/Window.vala:316
+msgid "The file does not found."
 msgstr ""
 
-#: src/TatapWindow.vala:515 src/Widgets/TatapToolBar.vala:51
-msgid "Save as…"
+#: src/Model/FileList.vala:54 src/Model/FileList.vala:66
+msgid "The file list is not initialized!"
 msgstr ""
 
-#: src/TatapWindow.vala:516 src/Widgets/TatapToolBar.vala:43
-msgid "Save"
+#: src/Utils/FileUtils.vala:48
+msgid "The file path is invalid. it does not exist or is not a regular file."
 msgstr ""
 
-#: src/TatapWindow.vala:536
-msgid "File already exists. Do you want to overwrite it?"
-msgstr ""
-
-#: src/TatapWindow.vala:547
-msgid "Do you really overwrite this file?"
-msgstr ""
-
-#: src/TatapWindow.vala:560
+#: src/Widgets/SingleImageView.vala:407
 msgid "The file save was canceled."
 msgstr ""
 
-#: src/TatapWindow.vala:565
+#: src/Widgets/SingleImageView.vala:412
 msgid "The file was saved"
 msgstr ""
 
-#: src/TatapWindow.vala:628
+#: src/Widgets/SingleImageView.vala:345
 msgid "The image was resized."
 msgstr ""
 
-#: src/TatapWindow.vala:630
-msgid "Resizing of the image was canceled."
+#: src/Model/FileList.vala:58 src/Model/SingleFileAccessor.vala:43
+#, c-format
+msgid "The index is out of the bounds (%d/%d)"
 msgstr ""
 
-#: src/Widgets/HeaderButtons.vala:34
-msgid "Previous"
-msgstr ""
-
-#: src/Widgets/HeaderButtons.vala:38
-msgid "Next"
-msgstr ""
-
-#: src/Widgets/HeaderButtons.vala:54
-msgid "New"
-msgstr ""
-
-#: src/Widgets/ResizeDialog.vala:58
-msgid "Set the width and the height"
-msgstr ""
-
-#: src/Widgets/ResizeDialog.vala:60
+#: src/Widgets/ResizeDialog.vala:61
 msgid "Width:"
 msgstr ""
 
-#: src/Widgets/ResizeDialog.vala:80
-msgid "Height:"
-msgstr ""
-
-#: src/Widgets/ResizeDialog.vala:117
-msgid "OK"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:65
-msgid "Resize"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:71
+#: src/Widgets/ToolBar.vala:136
 msgid "Zoom in"
 msgstr ""
 
-#: src/Widgets/TatapToolBar.vala:79
+#: src/Widgets/ToolBar.vala:144
 msgid "Zoom out"
 msgstr ""
 
-#: src/Widgets/TatapToolBar.vala:87
-msgid "Fit to the page"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:95
-msgid "100%"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:103
-msgid "Flip horizontally"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:109
-msgid "Flip vertically"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:115
-msgid "Rotate to the left"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:122
-msgid "Rotate to the right"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:146
-msgid "Sort Asc"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:160
-msgid "Sort Desc"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:180
-msgid "Skip forward"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:189
-msgid "Play animation"
-msgstr ""
-
-#: src/Widgets/TatapToolBar.vala:229
-msgid "Stick"
+#: src/Model/SingleFileAccessor.vala:56
+#, c-format
+msgid "file list does not contains this name! (%s)"
 msgstr ""

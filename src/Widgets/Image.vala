@@ -80,7 +80,7 @@ namespace Tatap {
             file_counter = 0;
         }
 
-        public void open(string filename) throws GLib.Error {
+        public void open(string filename) throws AppError, Error {
             animation = new PixbufAnimation.from_file(filename);
             fileref = File.new_for_path(filename);
             tval = TimeVal();
@@ -105,13 +105,10 @@ namespace Tatap {
                 animation_iter = null;
                 is_animation = false;
             }
-            Idle.add(() => {
-                fit_image_to_window();
-                if (is_animation) {
-                    animate_async.begin(animation_iter);
-                }
-                return false;
-            });
+            fit_size_to_window();
+            if (is_animation) {
+                animate_async.begin(animation_iter);
+            }
         }
 
         public async void animate_async(Gdk.PixbufAnimationIter animation_iter) {
@@ -130,8 +127,8 @@ namespace Tatap {
                         inner_thread = new Thread<int>(null, () => {
                             while (count_holder == file_counter) {
                                 if (run_thread) {
-                                    prepared_pixbuf
-                                            = PixbufUtils.modify(animation_iter.get_pixbuf(), hflipped, vflipped, degree);
+                                    var next_pixbuf = animation_iter.get_pixbuf();
+                                    prepared_pixbuf = PixbufUtils.modify(next_pixbuf, hflipped, vflipped, degree);
                                     if (prepared_pixbuf == null) {
                                         Idle.add(animate_async.callback);
                                         return -1;
@@ -194,7 +191,7 @@ namespace Tatap {
             }
         }
 
-        public void fit_image_to_window() {
+        public void fit_size_to_window() {
             if (original_pixbuf != null) {
                 fit = true;
                 int max_width = container.get_allocated_width();
@@ -243,7 +240,7 @@ namespace Tatap {
                 degree = degree == 0 ? 270 : degree - 90;
                 original_rate_x = (double) original_pixbuf.width / (double) original_pixbuf.height;
                 if (fit) {
-                    fit_image_to_window();
+                    fit_size_to_window();
                     adjust_zoom_percent();
                 } else {
                     scale(uint.max((uint) pixbuf.width, (uint) pixbuf.height));
@@ -257,7 +254,7 @@ namespace Tatap {
                 degree = degree == 270 ? 0 : degree + 90;
                 original_rate_x = (double) original_pixbuf.width / (double) original_pixbuf.height;
                 if (fit) {
-                    fit_image_to_window();
+                    fit_size_to_window();
                     adjust_zoom_percent();
                 } else {
                     scale(uint.max((uint) pixbuf.width, (uint)pixbuf.height));
@@ -293,7 +290,6 @@ namespace Tatap {
 
         private void scale(uint max_size) {
             if (original_pixbuf != null) {
-                debug("Tatap.Image::scale(%u)", max_size);
                 if (max_size != uint.max(save_width, save_height)) {
                     pixbuf = PixbufUtils.scale_limited(original_pixbuf, (int) max_size);
                     if (fit) {
@@ -305,7 +301,6 @@ namespace Tatap {
 
         private void adjust_zoom_percent() {
             zoom_percent = calc_zoom_percent(pixbuf.height, original_pixbuf.height);
-            debug("zoom: %.1f%%", (double) zoom_percent / 10.0);
         }
 
         private int calc_zoom_percent(int resized, int original) {
