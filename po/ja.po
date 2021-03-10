@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-06 03:56+0000\n"
+"POT-Creation-Date: 2021-03-10 22:50+0000\n"
 "PO-Revision-Date: 2021-01-14 11:54+0900\n"
 "Last-Translator: Takayuki Tanaka <aharotias2@gmail.com>\n"
 "Language-Team: none\n"
@@ -44,7 +44,6 @@ msgstr "前の画像"
 msgid "Next"
 msgstr "次の画像"
 
-#. file buttons
 #: src/Widgets/HeaderButtons.vala:47 src/Widgets/Window.vala:82
 #: src/Widgets/Window.vala:286
 msgid "Open"
@@ -111,7 +110,6 @@ msgstr "ファイルの保存はキャンセルされました。"
 msgid "The file was saved"
 msgstr "ファイルを保存しました。"
 
-#. action buttons for the image
 #: src/Widgets/ToolBar.vala:130
 msgid "Resize"
 msgstr "リサイズ"

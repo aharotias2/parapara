@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-06 03:56+0000\n"
+"POT-Creation-Date: 2021-03-10 22:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,7 +43,6 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#. file buttons
 #: src/Widgets/HeaderButtons.vala:47 src/Widgets/Window.vala:82
 #: src/Widgets/Window.vala:286
 msgid "Open"
@@ -110,7 +109,6 @@ msgstr ""
 msgid "The file was saved"
 msgstr ""
 
-#. action buttons for the image
 #: src/Widgets/ToolBar.vala:130
 msgid "Resize"
 msgstr ""
