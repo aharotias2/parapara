@@ -22,6 +22,7 @@ namespace Tatap {
         public SortOrder sort_order { get; protected set; }
         public bool sticked { get; protected set; }
         public unowned SingleImageView single_image_view { get; set; }
+        public unowned DualImageView dual_image_view { get; set; }
         public signal void sort_order_changed(SortOrder sort_order);
         public signal void stick_button_clicked(bool sticked);
         public signal void view_mode_changed(ViewMode view_mode);
@@ -41,6 +42,7 @@ namespace Tatap {
         private Gtk.Box single_view_mode_box;
         private Gtk.Box scroll_view_mode_box;
         private Gtk.Box dual_view_mode_box;
+        private Gtk.ButtonBox mode_switch_button_box;
         private ViewMode _view_mode;
 
         public ViewMode view_mode {
@@ -321,12 +323,12 @@ namespace Tatap {
                 view_mode = ViewMode.DUAL_VIEW_MODE;
             });
 
-            var mode_switch_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+            mode_switch_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
                 margin = 3,
                 layout_style = Gtk.ButtonBoxStyle.EXPAND
             };
             mode_switch_button_box.pack_start(single_view_button);
-            mode_switch_button_box.pack_start(scroll_view_button);
+//            mode_switch_button_box.pack_start(scroll_view_button);
             mode_switch_button_box.pack_start(dual_view_button);
 
             stick_button = new ActionButton("pan-down-symbolic", _("Stick"), {"<control>f"});
@@ -350,7 +352,6 @@ namespace Tatap {
             };
             single_view_mode_box.pack_start(save_button_box, false, false);
             single_view_mode_box.pack_start(image_actions_button_box, false, false);
-            single_view_mode_box.pack_start(sort_order_button_box, false, false);
             single_view_mode_box.pack_start(animation_actions_button_box, false, false);
 
             scroll_view_mode_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0) {
@@ -368,8 +369,9 @@ namespace Tatap {
                 valign = Gtk.Align.START
             };
             toolbar_hbox.pack_start(single_view_mode_box, false, false);
+            toolbar_hbox.pack_start(sort_order_button_box, false, false);
             toolbar_hbox.pack_end(stick_button_box, false, false);
-//            toolbar_hbox.pack_end(mode_switch_button_box, false, false);
+            toolbar_hbox.pack_end(mode_switch_button_box, false, false);
             toolbar_hbox.get_style_context().add_class("toolbar");
 
             add(toolbar_hbox);

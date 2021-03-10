@@ -18,12 +18,11 @@
 
 namespace Tatap {
     public class SingleFileAccessor : Object {
-        public signal void file_not_found();
+
+        public FileList file_list { get; construct; }
 
         private int current_index = 0;
         private string? current_name = null;
-
-        public FileList file_list { get; construct set; }
 
         public SingleFileAccessor.with_file_list(FileList file_list) {
             Object(
