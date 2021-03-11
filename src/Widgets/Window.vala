@@ -53,9 +53,17 @@ namespace Tatap {
             };
             image_prev_button.get_style_context().add_class("image_button");
             image_prev_button.clicked.connect(() => {
+                int offset = 1;
+                if (image_view.view_mode == ViewMode.DUAL_VIEW_MODE) {
+                    offset = 2;
+                }
                 try {
-                    image_view.go_backward();
-                } catch (AppError error) {
+                    if (toolbar.sort_order == SortOrder.ASC) {
+                        image_view.go_backward(offset);
+                    } else {
+                        image_view.go_forward(offset);
+                    }
+                } catch (Error error) {
                     show_error_dialog(error.message);
                 }
             });
@@ -65,9 +73,17 @@ namespace Tatap {
             };
             image_next_button.get_style_context().add_class("image_button");
             image_next_button.clicked.connect(() => {
+                int offset = 1;
+                if (image_view.view_mode == ViewMode.DUAL_VIEW_MODE) {
+                    offset = 2;
+                }
                 try {
-                    image_view.go_forward();
-                } catch (AppError error) {
+                    if (toolbar.sort_order == SortOrder.ASC) {
+                        image_view.go_forward(offset);
+                    } else {
+                        image_view.go_backward(offset);
+                    }
+                } catch (Error error) {
                     show_error_dialog(error.message);
                 }
             });
@@ -140,8 +156,13 @@ namespace Tatap {
             /* contain buttons that can be opened from the menu */
             toolbar = new Tatap.ToolBar(this);
             toolbar.sort_order_changed.connect(() => {
-                set_next_image_button_sensitivity_conditionally();
-                set_prev_image_button_sensitivity_conditionally();
+                image_next_button.sensitive = image_view.is_next_button_sensitive();
+                image_prev_button.sensitive = image_view.is_prev_button_sensitive();
+                try {
+                    image_view.reopen();
+                } catch (Error e) {
+                    show_error_dialog(e.message);
+                }
             });
             toolbar.stick_button_clicked.connect((sticked) => {
                 if (sticked) {
@@ -176,7 +197,6 @@ namespace Tatap {
             image_view.title_changed.connect((title) => {
                 headerbar.title = title;
             });
-            toolbar.single_image_view = image_view as SingleImageView;
 
             bottom_box = new Box(Orientation.VERTICAL, 0);
             bottom_box.pack_start(toolbar_revealer_below, false, false);
@@ -321,17 +341,25 @@ namespace Tatap {
                             image_next_button.sensitive = false;
                         }
                     });
-                    file_list.make_list_async.begin(repeat_updating_file_list);
+                    file_list.make_list_async.begin(repeat_updating_file_list, (obj, res) => {
+                        if (image_view.view_mode != ViewMode.SINGLE_VIEW_MODE) {
+                            try {
+                                image_view.open(file);
+                                image_view.update_title();
+                            } catch (Error e) {
+                                show_error_dialog(e.message);
+                            }
+                        }
+                    });
                     image_view.file_list = file_list;
                     image_prev_button.sensitive = false;
                     image_next_button.sensitive = false;
-                } else {
-                    set_next_image_button_sensitivity_conditionally();
-                    set_prev_image_button_sensitivity_conditionally();
                 }
 
-                image_view.open(file);
-                image_view.update_title();
+                if (image_view.view_mode == ViewMode.SINGLE_VIEW_MODE || file_list.has_list) {
+                    image_view.open(file);
+                    image_view.update_title();
+                }
 
                 toolbar.animation_play_pause_button.icon_name = "media-playback-start-symbolic";
                 stack.visible_child_name = "picture";
@@ -365,30 +393,25 @@ namespace Tatap {
         public void update_image_view(ViewMode view_mode) throws Error {
             if (image_view.view_mode != view_mode) {
                 File file = image_view.get_file();
+                bottom_box.remove(image_view);
                 switch (view_mode) {
                 case SINGLE_VIEW_MODE:
-                    bottom_box.remove(image_view);
-                    image_view = new SingleImageView(this);
-                    image_view.title_changed.connect((title) => {
-                        headerbar.title = title;
-                    });
-                    toolbar.single_image_view = image_view as SingleImageView;
-                    bottom_box.pack_start(image_view, true, true);
-                    open_file(file);
+                    image_view = new SingleImageView.with_file_list(this, file_list);
                     break;
                 case DUAL_VIEW_MODE:
-                case SCROLL_VIEW_MODE:
+                    image_view = new DualImageView.with_file_list(this, file_list);
                     break;
+                case SCROLL_VIEW_MODE:
+                    // TODO: Implement later.
+                    return;
                 }
+                bottom_box.pack_start(image_view, true, true);
+                image_view.title_changed.connect((title) => {
+                    headerbar.title = title;
+                });
+                open_file(file);
+                bottom_box.show_all();
             }
-        }
-
-        public void set_next_image_button_sensitivity_conditionally() {
-            image_next_button.sensitive = image_view.is_next_button_sensitive();
-        }
-
-        public void set_prev_image_button_sensitivity_conditionally() {
-            image_prev_button.sensitive = image_view.is_prev_button_sensitive();
         }
 
         public void show_error_dialog(string message) {

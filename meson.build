@@ -40,11 +40,13 @@ executable(
     'src/Model/Error.vala',
     'src/Model/FileList.vala',
     'src/Model/SingleFileAccessor.vala',
+    'src/Model/DualFileAccessor.vala',
     'src/Widgets/ImageView.vala',
     'src/Widgets/Window.vala',
     'src/Widgets/ResizeDialog.vala',
     'src/Widgets/ToolBar.vala',
     'src/Widgets/SingleImageView.vala',
+    'src/Widgets/DualImageView.vala',
     'src/Widgets/Image.vala',
     'src/Widgets/ActionButton.vala',
     dependencies: [

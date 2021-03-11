@@ -30,7 +30,7 @@ namespace Tatap {
             }
         }
 
-        private FileList? _file_list = null;
+        private unowned FileList? _file_list = null;
         public SingleFileAccessor accessor { get; private set; }
         private bool button_pressed = false;
         private double x;
@@ -47,8 +47,8 @@ namespace Tatap {
                 _file_list.updated.connect(() => {
                     try {
                         accessor.set_file(image.fileref);
-                        main_window.set_next_image_button_sensitivity_conditionally();
-                        main_window.set_prev_image_button_sensitivity_conditionally();
+                        main_window.image_next_button.sensitive = is_next_button_sensitive();
+                        main_window.image_prev_button.sensitive = is_prev_button_sensitive();
                     } catch (Error e) {
                         file_list.close();
                     }
@@ -67,6 +67,14 @@ namespace Tatap {
             Object(
                 main_window: window,
                 view_mode: ViewMode.SINGLE_VIEW_MODE
+            );
+        }
+
+        public SingleImageView.with_file_list(Window window, FileList file_list) {
+            Object(
+                main_window: window,
+                view_mode: ViewMode.SINGLE_VIEW_MODE,
+                file_list: file_list
             );
         }
 
@@ -92,7 +100,7 @@ namespace Tatap {
             add(scrolled);
         }
 
-        public bool handle_event(Event ev) throws AppError {
+        public bool handle_event(Event ev) throws Error {
             switch (ev.type) {
                 case EventType.BUTTON_PRESS:
                     button_pressed = true;
@@ -269,6 +277,8 @@ namespace Tatap {
             if (file_list.has_list) {
                 accessor.set_name(file.get_basename());
             }
+            main_window.image_next_button.sensitive = is_next_button_sensitive();
+            main_window.image_prev_button.sensitive = is_prev_button_sensitive();
             if (image.is_animation) {
                 main_window.toolbar.animation_play_pause_button.sensitive = true;
                 main_window.toolbar.animation_forward_button.sensitive = false;
@@ -280,13 +290,13 @@ namespace Tatap {
             }
         }
 
-        public void go_backward(int offset = 1) throws AppError {
+        public void reopen() throws Error {
+            return;
+        }
+
+        public void go_backward(int offset = 1) throws Error {
             if (file_list != null) {
-                if (main_window.toolbar.sort_order == SortOrder.ASC) {
-                    accessor.go_backward();
-                } else {
-                    accessor.go_forward();
-                }
+                accessor.go_backward();
                 File? prev_file = accessor.get_file();
                 if (prev_file != null) {
                     main_window.open_file(prev_file);
@@ -294,13 +304,9 @@ namespace Tatap {
             }
         }
 
-        public void go_forward(int offset = 1) throws AppError {
+        public void go_forward(int offset = 1) throws Error {
             if (file_list != null) {
-                if (main_window.toolbar.sort_order == SortOrder.ASC) {
-                    accessor.go_forward();
-                } else {
-                    accessor.go_backward();
-                }
+                accessor.go_forward();
                 File? next_file = accessor.get_file();
                 if (next_file != null) {
                     main_window.open_file(next_file);
