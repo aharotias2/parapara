@@ -18,7 +18,7 @@
 
 namespace Tatap {
     public class DualFileAccessor : Object {
-        public FileList file_list { get; construct; }
+        public unowned FileList file_list { get; construct; }
 
         private int index1 = 0;
         private int index2 = 1;
@@ -146,12 +146,12 @@ namespace Tatap {
             }
         }
 
-        public bool go_backward(int offset = 1) throws Error {
+        public bool go_backward(int offset = 2) throws Error {
             if (index2 < 0) {
                 index2 = index1 + 1;
             }
-            index1 = index1 - 2;
-            index2 = index2 - 2;
+            index1 = index1 - offset;
+            index2 = index2 - offset;
             if (index1 < 0) {
                 index1 = -1;
             }
@@ -161,9 +161,9 @@ namespace Tatap {
             return !(index1 < 0 && index2 < 0);
         }
 
-        public bool go_forward(int offset = 1) throws AppError {
-            index1 += 2;
-            index2 += 2;
+        public bool go_forward(int offset = 2) throws AppError {
+            index1 += offset;
+            index2 += offset;
             if (index1 >= file_list.size) {
                 index1 = -1;
             }

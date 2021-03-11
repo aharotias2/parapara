@@ -30,7 +30,7 @@ namespace Tatap {
             }
         }
 
-        private FileList? _file_list = null;
+        private unowned FileList? _file_list = null;
         public SingleFileAccessor accessor { get; private set; }
         private bool button_pressed = false;
         private double x;

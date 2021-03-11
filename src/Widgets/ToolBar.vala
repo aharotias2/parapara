@@ -21,8 +21,6 @@ namespace Tatap {
         public Tatap.Window main_window { get; construct; }
         public SortOrder sort_order { get; protected set; }
         public bool sticked { get; protected set; }
-        public unowned SingleImageView single_image_view { get; set; }
-        public unowned DualImageView dual_image_view { get; set; }
         public signal void sort_order_changed(SortOrder sort_order);
         public signal void stick_button_clicked(bool sticked);
         public signal void view_mode_changed(ViewMode view_mode);
@@ -44,6 +42,18 @@ namespace Tatap {
         private Gtk.Box dual_view_mode_box;
         private Gtk.ButtonBox mode_switch_button_box;
         private ViewMode _view_mode;
+
+        private SingleImageView? single_image_view {
+            get {
+                return main_window.image_view as SingleImageView;
+            }
+        }
+
+        private DualImageView? dual_image_view {
+            get {
+                return main_window.image_view as DualImageView;
+            }
+        }
 
         public ViewMode view_mode {
             get {
@@ -71,27 +81,22 @@ namespace Tatap {
                     _view_mode = value;
                     switch (_view_mode) {
                         case SINGLE_VIEW_MODE:
-                            toolbar_hbox.pack_start(single_view_mode_box);
+                            toolbar_hbox.pack_start(single_view_mode_box, false, false);
+                            toolbar_hbox.reorder_child(single_view_mode_box, 0);
                             single_view_button.active = true;
                             break;
                         case SCROLL_VIEW_MODE:
-                            toolbar_hbox.pack_start(scroll_view_mode_box);
+                            toolbar_hbox.pack_start(scroll_view_mode_box, false, false);
+                            toolbar_hbox.reorder_child(scroll_view_mode_box, 0);
                             scroll_view_button.active = true;
                             break;
                         case DUAL_VIEW_MODE:
-                            toolbar_hbox.pack_start(dual_view_mode_box);
+                            toolbar_hbox.pack_start(dual_view_mode_box, false, false);
+                            toolbar_hbox.reorder_child(dual_view_mode_box, 0);
                             dual_view_button.active = true;
                             break;
                     }
                     view_mode_changed(_view_mode);
-                    switch (_view_mode) {
-                    case ViewMode.SINGLE_VIEW_MODE:
-                        single_image_view = main_window.image_view as SingleImageView;
-                        break;
-                    case ViewMode.DUAL_VIEW_MODE:
-                    case ViewMode.SCROLL_VIEW_MODE:
-                        break;
-                    }
                     toolbar_hbox.show_all();
                 }
             }
@@ -303,6 +308,76 @@ namespace Tatap {
                 view_mode = ViewMode.SINGLE_VIEW_MODE;
             });
 
+            Gtk.ToggleButton r2lbutton;
+
+            var l2rbutton = new Gtk.ToggleButton() {
+                tooltip_text = _("Left to Right"),
+                label = "1 >> 2",
+                active = true
+            };
+            l2rbutton.get_style_context().add_class("image_overlay_button");
+            l2rbutton.toggled.connect(() => {
+                if (l2rbutton.active) {
+                    sort_order = SortOrder.ASC;
+                    r2lbutton.active = false;
+                    sort_order_changed(sort_order);
+                }
+            });
+
+            r2lbutton = new Gtk.ToggleButton() {
+                tooltip_text = _("Right to Left"),
+                label = "2 << 1",
+                active = false
+            };
+            r2lbutton.get_style_context().add_class("image_overlay_button");
+            r2lbutton.toggled.connect(() => {
+                if (r2lbutton.active) {
+                    sort_order = SortOrder.DESC;
+                    l2rbutton.active = false;
+                    sort_order_changed(sort_order);
+                }
+            });
+
+            var l1button = new Gtk.Button.with_label("<1") {
+                tooltip_text =  _("Slide 1 page to Left")
+            };
+            l1button.clicked.connect(() => {
+                try {
+                    if (sort_order == SortOrder.ASC) {
+                        dual_image_view.go_backward(1);
+                    } else {
+                        dual_image_view.go_forward(1);
+                    }
+                } catch (Error error) {
+                    main_window.show_error_dialog(error.message);
+                }
+            });
+
+            var r1button = new Gtk.Button.with_label("1>") {
+                tooltip_text = _("Slide 1 page to Right")
+            };
+            r1button.clicked.connect(() => {
+                try {
+                    if (sort_order == SortOrder.ASC) {
+                        dual_image_view.go_forward(1);
+                    } else {
+                        dual_image_view.go_backward(1);
+                    }
+                } catch (Error error) {
+                    main_window.show_error_dialog(error.message);
+                }
+            });
+
+            var dual_sort_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+                margin = 3,
+                layout_style = Gtk.ButtonBoxStyle.EXPAND
+            };
+
+            dual_sort_button_box.pack_start(l1button);
+            dual_sort_button_box.pack_start(r2lbutton);
+            dual_sort_button_box.pack_start(l2rbutton);
+            dual_sort_button_box.pack_start(r1button);
+
             scroll_view_button = new Gtk.ToggleButton() {
                 tooltip_text = _("Scroll View Mode"),
                 image = new Gtk.Image.from_icon_name("view-continuous-symbolic", Gtk.IconSize.SMALL_TOOLBAR),
@@ -351,6 +426,7 @@ namespace Tatap {
                 valign = Gtk.Align.START
             };
             single_view_mode_box.pack_start(save_button_box, false, false);
+            single_view_mode_box.pack_start(sort_order_button_box, false, false);
             single_view_mode_box.pack_start(image_actions_button_box, false, false);
             single_view_mode_box.pack_start(animation_actions_button_box, false, false);
 
@@ -363,13 +439,13 @@ namespace Tatap {
                 vexpand = false,
                 valign = Gtk.Align.START
             };
+            dual_view_mode_box.pack_start(dual_sort_button_box, false, false);
 
             toolbar_hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0) {
                 vexpand = false,
                 valign = Gtk.Align.START
             };
             toolbar_hbox.pack_start(single_view_mode_box, false, false);
-            toolbar_hbox.pack_start(sort_order_button_box, false, false);
             toolbar_hbox.pack_end(stick_button_box, false, false);
             toolbar_hbox.pack_end(mode_switch_button_box, false, false);
             toolbar_hbox.get_style_context().add_class("toolbar");

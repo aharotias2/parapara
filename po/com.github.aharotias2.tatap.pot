@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-06 03:56+0000\n"
+"POT-Creation-Date: 2021-03-12 00:36+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,201 +17,215 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Model/FileList.vala:54 src/Model/FileList.vala:66
-msgid "The file list is not initialized!"
+#: src/Widgets/ToolBar.vala:167
+msgid "100%"
 msgstr ""
 
-#: src/Model/FileList.vala:58 src/Model/SingleFileAccessor.vala:43
-#, c-format
-msgid "The index is out of the bounds (%d/%d)"
+#: src/Widgets/Window.vala:306 src/Widgets/ResizeDialog.vala:119
+#: src/Widgets/SingleImageView.vala:369
+msgid "Cancel"
 msgstr ""
 
-#: src/Model/SingleFileAccessor.vala:56
-#, c-format
-msgid "file list does not contains this name! (%s)"
+#: src/Widgets/Window.vala:305
+msgid "Choose file to open"
 msgstr ""
 
-#: src/Utils/FileUtils.vala:48
-msgid "The file path is invalid. it does not exist or is not a regular file."
+#: src/Widgets/Window.vala:147
+msgid "Click 'Open Image' to get started."
 msgstr ""
 
-#: src/Widgets/HeaderButtons.vala:32 src/Widgets/Window.vala:51
-msgid "Previous"
+#: src/Widgets/SingleImageView.vala:400
+msgid "Do you really overwrite this file?"
 msgstr ""
 
-#: src/Widgets/HeaderButtons.vala:36 src/Widgets/Window.vala:63
-msgid "Next"
+#: src/Widgets/ToolBar.vala:392
+msgid "Dual View Mode"
 msgstr ""
 
-#. file buttons
-#: src/Widgets/HeaderButtons.vala:47 src/Widgets/Window.vala:82
-#: src/Widgets/Window.vala:286
-msgid "Open"
+#: src/Widgets/SingleImageView.vala:389
+msgid "File already exists. Do you want to overwrite it?"
 msgstr ""
 
-#: src/Widgets/HeaderButtons.vala:52 src/Widgets/Window.vala:87
-msgid "New"
+#: src/Widgets/ToolBar.vala:159
+msgid "Fit to the page"
 msgstr ""
 
-#: src/Widgets/ResizeDialog.vala:59
-msgid "Set the width and the height"
+#: src/Widgets/ToolBar.vala:175
+msgid "Flip horizontally"
 msgstr ""
 
-#: src/Widgets/ResizeDialog.vala:61
-msgid "Width:"
+#: src/Widgets/ToolBar.vala:181
+msgid "Flip vertically"
 msgstr ""
 
 #: src/Widgets/ResizeDialog.vala:81
 msgid "Height:"
 msgstr ""
 
+#: src/Widgets/ToolBar.vala:314
+msgid "Left to Right"
+msgstr ""
+
+#: src/Widgets/Window.vala:122
+msgid "Menu"
+msgstr ""
+
+#: src/Widgets/Window.vala:103 src/Widgets/HeaderButtons.vala:52
+msgid "New"
+msgstr ""
+
+#: src/Widgets/Window.vala:71 src/Widgets/HeaderButtons.vala:36
+msgid "Next"
+msgstr ""
+
+#: src/Widgets/Window.vala:146
+msgid "No Images Open"
+msgstr ""
+
 #: src/Widgets/ResizeDialog.vala:118
 msgid "OK"
 msgstr ""
 
-#: src/Widgets/ResizeDialog.vala:119 src/Widgets/SingleImageView.vala:363
-#: src/Widgets/Window.vala:286
-msgid "Cancel"
+#: src/Widgets/Window.vala:98 src/Widgets/Window.vala:306
+#: src/Widgets/HeaderButtons.vala:47
+msgid "Open"
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:345
-msgid "The image was resized."
-msgstr ""
-
-#: src/Widgets/SingleImageView.vala:347
-msgid "Resizing of the image was canceled."
-msgstr ""
-
-#: src/Widgets/SingleImageView.vala:355
-msgid "Sorry, saving animations is not supported yet."
-msgstr ""
-
-#: src/Widgets/SingleImageView.vala:362 src/Widgets/ToolBar.vala:116
-msgid "Save as…"
-msgstr ""
-
-#: src/Widgets/SingleImageView.vala:363 src/Widgets/ToolBar.vala:108
-msgid "Save"
-msgstr ""
-
-#: src/Widgets/SingleImageView.vala:383
-msgid "File already exists. Do you want to overwrite it?"
-msgstr ""
-
-#: src/Widgets/SingleImageView.vala:394
-msgid "Do you really overwrite this file?"
-msgstr ""
-
-#: src/Widgets/SingleImageView.vala:407
-msgid "The file save was canceled."
-msgstr ""
-
-#: src/Widgets/SingleImageView.vala:412
-msgid "The file was saved"
-msgstr ""
-
-#. action buttons for the image
-#: src/Widgets/ToolBar.vala:130
-msgid "Resize"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:136
-msgid "Zoom in"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:144
-msgid "Zoom out"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:152
-msgid "Fit to the page"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:160
-msgid "100%"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:168
-msgid "Flip horizontally"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:174
-msgid "Flip vertically"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:180
-msgid "Rotate to the left"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:187
-msgid "Rotate to the right"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:211
-msgid "Sort Asc"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:225
-msgid "Sort Desc"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:245
-msgid "Skip forward"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:254
-msgid "Play/Pause animation"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:295
-msgid "Single View Mode"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:305
-msgid "Scroll View Mode"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:315
-msgid "Dual View Mode"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:332
-msgid "Stick"
-msgstr ""
-
-#: src/Widgets/Window.vala:106
-msgid "Menu"
-msgstr ""
-
-#: src/Widgets/Window.vala:130
-msgid "No Images Open"
-msgstr ""
-
-#: src/Widgets/Window.vala:131
-msgid "Click 'Open Image' to get started."
-msgstr ""
-
-#: src/Widgets/Window.vala:133
+#: src/Widgets/Window.vala:149
 msgid "Open Image"
 msgstr ""
 
-#: src/Widgets/Window.vala:133
+#: src/Widgets/ToolBar.vala:261
+msgid "Play/Pause animation"
+msgstr ""
+
+#: src/Widgets/Window.vala:51 src/Widgets/HeaderButtons.vala:32
+msgid "Previous"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:137
+msgid "Resize"
+msgstr ""
+
+#: src/Widgets/SingleImageView.vala:353
+msgid "Resizing of the image was canceled."
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:328
+msgid "Right to Left"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:187
+msgid "Rotate to the left"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:194
+msgid "Rotate to the right"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:115 src/Widgets/SingleImageView.vala:369
+msgid "Save"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:123 src/Widgets/SingleImageView.vala:368
+msgid "Save as…"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:382
+msgid "Scroll View Mode"
+msgstr ""
+
+#: src/Widgets/ResizeDialog.vala:59
+msgid "Set the width and the height"
+msgstr ""
+
+#: src/Widgets/Window.vala:149
 msgid "Show and edit your image."
 msgstr ""
 
-#: src/Widgets/Window.vala:285
-msgid "Choose file to open"
+#: src/Widgets/ToolBar.vala:302
+msgid "Single View Mode"
 msgstr ""
 
-#: src/Widgets/Window.vala:312
+#: src/Widgets/ToolBar.vala:252
+msgid "Skip forward"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:342
+msgid "Slide 1 page to Left"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:357
+msgid "Slide 1 page to Right"
+msgstr ""
+
+#: src/Widgets/SingleImageView.vala:361
+msgid "Sorry, saving animations is not supported yet."
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:218
+msgid "Sort Asc"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:232
+msgid "Sort Desc"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:409
+msgid "Stick"
+msgstr ""
+
+#: src/Widgets/Window.vala:332
 msgid "The directory does not found. Exiting."
 msgstr ""
 
-#: src/Widgets/Window.vala:316
+#: src/Widgets/Window.vala:373
+#, c-format
+msgid "The file could not be opend (cause: %s)"
+msgstr ""
+
+#: src/Widgets/Window.vala:336
 msgid "The file does not found."
 msgstr ""
 
-#: src/Widgets/Window.vala:345
+#: src/Model/FileList.vala:54 src/Model/FileList.vala:66
+msgid "The file list is not initialized!"
+msgstr ""
+
+#: src/Utils/FileUtils.vala:48
+msgid "The file path is invalid. it does not exist or is not a regular file."
+msgstr ""
+
+#: src/Widgets/SingleImageView.vala:413
+msgid "The file save was canceled."
+msgstr ""
+
+#: src/Widgets/SingleImageView.vala:418
+msgid "The file was saved"
+msgstr ""
+
+#: src/Widgets/SingleImageView.vala:351
+msgid "The image was resized."
+msgstr ""
+
+#: src/Model/FileList.vala:58 src/Model/SingleFileAccessor.vala:42
 #, c-format
-msgid "The file could not be opend (cause: %s)"
+msgid "The index is out of the bounds (%d/%d)"
+msgstr ""
+
+#: src/Widgets/ResizeDialog.vala:61
+msgid "Width:"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:143
+msgid "Zoom in"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:151
+msgid "Zoom out"
+msgstr ""
+
+#: src/Model/SingleFileAccessor.vala:55
+#, c-format
+msgid "file list does not contains this name! (%s)"
 msgstr ""

@@ -60,7 +60,7 @@ namespace Tatap {
         private Image left_image;
         private Image right_image;
         private DualFileAccessor accessor;
-        private FileList _file_list;
+        private unowned FileList _file_list;
 
         private const string TITLE_FORMAT = "%s (%dx%d : %.2f%%), %s (%dx%d : %.2f%%)";
 
@@ -158,15 +158,16 @@ namespace Tatap {
         }
 
         public bool handle_event(Event ev) throws Error {
+            bool shift_masked = ModifierType.SHIFT_MASK in ev.scroll.state;
             switch (ev.type) {
               case EventType.SCROLL:
                 if (ev.scroll.direction == ScrollDirection.UP) {
                     if (!accessor.is_first()) {
-                        go_backward();
+                        go_backward(shift_masked ? 1 : 2);
                     }
                 } else if (ev.scroll.direction == ScrollDirection.DOWN) {
                     if (!accessor.is_last()) {
-                        go_forward();
+                        go_forward(shift_masked ? 1 : 2);
                     }
                 }
                 break;
@@ -176,11 +177,11 @@ namespace Tatap {
                     if (left_image.has_image || right_image.has_image) {
                         if (main_window.toolbar.sort_order == SortOrder.ASC) {
                             if (!accessor.is_first()) {
-                                go_backward();
+                                go_backward(shift_masked ? 1 : 2);
                             }
                         } else {
                             if (!accessor.is_last()) {
-                                go_forward();
+                                go_forward(shift_masked ? 1 : 2);
                             }
                         }
                     }
@@ -190,11 +191,11 @@ namespace Tatap {
                         if (!accessor.is_last()) {
                             if (main_window.toolbar.sort_order == SortOrder.ASC) {
                                 if (!accessor.is_last()) {
-                                    go_forward();
+                                    go_forward(shift_masked ? 1 : 2);
                                 }
                             } else {
                                 if (!accessor.is_first()) {
-                                    go_backward();
+                                    go_backward(shift_masked ? 1 : 2);
                                 }
                             }
                         }
@@ -208,18 +209,17 @@ namespace Tatap {
             return false;
         }
 
-        public void go_forward(int offset = 1) throws Error {
-            accessor.go_forward();
+        public void go_forward(int offset = 2) throws Error {
+            accessor.go_forward(offset);
             open_by_accessor_current_index();
         }
 
-        public void go_backward(int offset = 1) throws Error {
-            accessor.go_backward();
+        public void go_backward(int offset = 2) throws Error {
+            accessor.go_backward(offset);
             open_by_accessor_current_index();
         }
 
         private void open_by_accessor_current_index() throws Error {
-            print("Open images at %d, %d\n", accessor.get_index1(), accessor.get_index2());
             if (accessor.first == 0) {
                 if (main_window.toolbar.sort_order == SortOrder.ASC) {
                     if (accessor.get_index1() >= 0) {

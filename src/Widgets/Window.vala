@@ -46,8 +46,6 @@ namespace Tatap {
         private Stack stack;
         private Box bottom_box;
         private Granite.Widgets.Welcome welcome;
-        private SingleImageView single_image_view;
-        private DualImageView dual_image_view;
 
         construct {
             image_prev_button = new ActionButton("go-previous-symbolic", _("Previous"), {"Left"}) {
@@ -55,11 +53,15 @@ namespace Tatap {
             };
             image_prev_button.get_style_context().add_class("image_button");
             image_prev_button.clicked.connect(() => {
+                int offset = 1;
+                if (image_view.view_mode == ViewMode.DUAL_VIEW_MODE) {
+                    offset = 2;
+                }
                 try {
                     if (toolbar.sort_order == SortOrder.ASC) {
-                        image_view.go_backward();
+                        image_view.go_backward(offset);
                     } else {
-                        image_view.go_forward();
+                        image_view.go_forward(offset);
                     }
                 } catch (Error error) {
                     show_error_dialog(error.message);
@@ -71,11 +73,15 @@ namespace Tatap {
             };
             image_next_button.get_style_context().add_class("image_button");
             image_next_button.clicked.connect(() => {
+                int offset = 1;
+                if (image_view.view_mode == ViewMode.DUAL_VIEW_MODE) {
+                    offset = 2;
+                }
                 try {
                     if (toolbar.sort_order == SortOrder.ASC) {
-                        image_view.go_forward();
+                        image_view.go_forward(offset);
                     } else {
-                        image_view.go_backward();
+                        image_view.go_backward(offset);
                     }
                 } catch (Error error) {
                     show_error_dialog(error.message);
@@ -187,12 +193,10 @@ namespace Tatap {
             };
 
             /* image area in the center of the window */
-            single_image_view = new SingleImageView(this);
-            image_view = single_image_view;
+            image_view = new SingleImageView(this);
             image_view.title_changed.connect((title) => {
                 headerbar.title = title;
             });
-            toolbar.single_image_view = image_view as SingleImageView;
 
             bottom_box = new Box(Orientation.VERTICAL, 0);
             bottom_box.pack_start(toolbar_revealer_below, false, false);
@@ -393,11 +397,9 @@ namespace Tatap {
                 switch (view_mode) {
                 case SINGLE_VIEW_MODE:
                     image_view = new SingleImageView.with_file_list(this, file_list);
-                    toolbar.single_image_view = image_view as SingleImageView;
                     break;
                 case DUAL_VIEW_MODE:
                     image_view = new DualImageView.with_file_list(this, file_list);
-                    toolbar.dual_image_view = dual_image_view as DualImageView;
                     break;
                 case SCROLL_VIEW_MODE:
                     // TODO: Implement later.
