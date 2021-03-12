@@ -44,15 +44,6 @@ namespace Tatap {
             }
             set {
                 _file_list = value;
-                _file_list.updated.connect(() => {
-                    try {
-                        accessor.set_file(image.fileref);
-                        main_window.image_next_button.sensitive = is_next_button_sensitive();
-                        main_window.image_prev_button.sensitive = is_prev_button_sensitive();
-                    } catch (Error e) {
-                        file_list.close();
-                    }
-                });
                 accessor = new SingleFileAccessor.with_file_list(_file_list);
             }
         }
@@ -420,6 +411,16 @@ namespace Tatap {
                         stderr.printf("Error: %s\n", e.message);
                     }
                 }
+            }
+        }
+
+        public void update() {
+            try {
+                accessor.set_file(image.fileref);
+                main_window.image_next_button.sensitive = is_next_button_sensitive();
+                main_window.image_prev_button.sensitive = is_prev_button_sensitive();
+            } catch (Error e) {
+                file_list.close();
             }
         }
 

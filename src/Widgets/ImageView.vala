@@ -34,6 +34,7 @@ namespace Tatap {
         public abstract void open(File file) throws Error;
         public abstract void reopen() throws Error;
         public abstract void update_title();
+        public abstract void update();
         public abstract void close();
         public signal void title_changed(string title);
     }

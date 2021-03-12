@@ -35,7 +35,10 @@ namespace Tatap {
         public Gtk.ToggleButton single_view_button { get; private set; }
         public Gtk.ToggleButton scroll_view_button { get; private set; }
         public Gtk.ToggleButton dual_view_button { get; private set; }
-
+        public Gtk.Button l1button { get; private set; }
+        public Gtk.Button r1button { get; private set; }
+        public Gtk.ToggleButton l2rbutton { get; private set; }
+        public Gtk.ToggleButton r2lbutton { get; private set; }
         private Gtk.Box toolbar_hbox;
         private Gtk.Box single_view_mode_box;
         private Gtk.Box scroll_view_mode_box;
@@ -308,9 +311,7 @@ namespace Tatap {
                 view_mode = ViewMode.SINGLE_VIEW_MODE;
             });
 
-            Gtk.ToggleButton r2lbutton;
-
-            var l2rbutton = new Gtk.ToggleButton() {
+            l2rbutton = new Gtk.ToggleButton() {
                 tooltip_text = _("Left to Right"),
                 label = "1 >> 2",
                 active = true
@@ -338,7 +339,7 @@ namespace Tatap {
                 }
             });
 
-            var l1button = new Gtk.Button.with_label("<1") {
+            l1button = new Gtk.Button.with_label("<1") {
                 tooltip_text =  _("Slide 1 page to Left")
             };
             l1button.clicked.connect(() => {
@@ -353,7 +354,7 @@ namespace Tatap {
                 }
             });
 
-            var r1button = new Gtk.Button.with_label("1>") {
+            r1button = new Gtk.Button.with_label("1>") {
                 tooltip_text = _("Slide 1 page to Right")
             };
             r1button.clicked.connect(() => {

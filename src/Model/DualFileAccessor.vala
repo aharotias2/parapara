@@ -22,25 +22,10 @@ namespace Tatap {
 
         private int index1 = 0;
         private int index2 = 1;
-        private int _first;
-
-        public int first {
-            get {
-                return _first;
-            }
-            set {
-                if (value % 2 == 0) {
-                    _first = index1;
-                } else {
-                    _first = index2;
-                }
-            }
-        }
 
         public DualFileAccessor.with_file_list(FileList file_list) {
             Object(
-                file_list: file_list,
-                first: 0
+                file_list: file_list
             );
         }
 

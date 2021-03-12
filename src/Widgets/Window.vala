@@ -335,6 +335,9 @@ namespace Tatap {
                     file_list.file_not_found.connect(() => {
                         show_error_dialog(_("The file does not found."));
                     });
+                    file_list.updated.connect(() => {
+                        image_view.update();
+                    });
                     file_list.terminated.connect(() => {
                         if (repeat_updating_file_list) {
                             image_prev_button.sensitive = false;

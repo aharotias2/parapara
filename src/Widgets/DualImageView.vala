@@ -29,15 +29,6 @@ namespace Tatap {
             }
             set {
                 _file_list = value;
-                _file_list.updated.connect(() => {
-                    try {
-                        accessor.set_file1(left_image.fileref);
-                        main_window.image_next_button.sensitive = is_next_button_sensitive();
-                        main_window.image_prev_button.sensitive = is_prev_button_sensitive();
-                    } catch (Error e) {
-                        file_list.close();
-                    }
-                });
                 accessor = new DualFileAccessor.with_file_list(_file_list);
             }
         }
@@ -220,63 +211,58 @@ namespace Tatap {
         }
 
         private void open_by_accessor_current_index() throws Error {
-            if (accessor.first == 0) {
-                if (main_window.toolbar.sort_order == SortOrder.ASC) {
-                    if (accessor.get_index1() >= 0) {
-                        left_image.visible = true;
-                        left_image.open(accessor.get_file1().get_path());
-                    } else {
-                        left_image.visible = false;
-                    }
-                    if (accessor.get_index2() >= 0) {
-                        right_image.visible = true;
-                        right_image.open(accessor.get_file2().get_path());
-                    } else {
-                        right_image.visible = false;
-                    }
+            if (main_window.toolbar.sort_order == SortOrder.ASC) {
+                if (accessor.get_index1() >= 0) {
+                    left_image.visible = true;
+                    left_image.open(accessor.get_file1().get_path());
                 } else {
-                    if (accessor.get_index1() >= 0) {
-                        right_image.visible = true;
-                        right_image.open(accessor.get_file1().get_path());
-                    } else {
-                        right_image.visible = false;
-                    }
-                    if (accessor.get_index2() >= 0) {
-                        left_image.visible = true;
-                        left_image.open(accessor.get_file2().get_path());
-                    } else {
-                        left_image.visible = false;
-                    }
+                    left_image.visible = false;
+                }
+                if (accessor.get_index2() >= 0) {
+                    right_image.visible = true;
+                    right_image.open(accessor.get_file2().get_path());
+                } else {
+                    right_image.visible = false;
+                }
+                if (accessor.get_index1() < 0) {
+                    main_window.toolbar.l1button.sensitive = false;
+                } else {
+                    main_window.toolbar.l1button.sensitive = true;
+                }
+                if (accessor.get_index1() >= _file_list.size - 1) {
+                    main_window.toolbar.r1button.sensitive = false;
+                } else {
+                    main_window.toolbar.r1button.sensitive = true;
                 }
             } else {
-                if (main_window.toolbar.sort_order == SortOrder.ASC) {
-                    if (accessor.get_index1() >= 0) {
-                        right_image.visible = true;
-                        right_image.open(accessor.get_file1().get_path());
-                    } else {
-                        right_image.visible = false;
-                    }
-                    if (accessor.get_index2() >= 0) {
-                        left_image.visible = true;
-                        left_image.open(accessor.get_file2().get_path());
-                    } else {
-                        left_image.visible = false;
-                    }
+                if (accessor.get_index1() >= 0) {
+                    right_image.visible = true;
+                    right_image.open(accessor.get_file1().get_path());
                 } else {
-                    if (accessor.get_index1() >= 0) {
-                        left_image.visible = true;
-                        left_image.open(accessor.get_file1().get_path());
-                    } else {
-                        left_image.visible = false;
-                    }
-                    if (accessor.get_index2() >= 0) {
-                        right_image.visible = true;
-                        right_image.open(accessor.get_file2().get_path());
-                    } else {
-                        right_image.visible = false;
-                    }
+                    right_image.visible = false;
+                }
+                if (accessor.get_index2() >= 0) {
+                    left_image.visible = true;
+                    left_image.open(accessor.get_file2().get_path());
+                } else {
+                    left_image.visible = false;
+                }
+                if (accessor.get_index1() < 0) {
+                    main_window.toolbar.r1button.sensitive = false;
+                } else {
+                    main_window.toolbar.r1button.sensitive = true;
+                }
+                if (accessor.get_index1() >= _file_list.size - 1) {
+                    main_window.toolbar.l1button.sensitive = false;
+                } else {
+                    main_window.toolbar.l1button.sensitive = true;
                 }
             }
+            Idle.add(() => {
+                left_image.fit_size_to_window();
+                right_image.fit_size_to_window();
+                return false;
+            });
             main_window.image_next_button.sensitive = is_next_button_sensitive();
             main_window.image_prev_button.sensitive = is_prev_button_sensitive();
         }
@@ -298,6 +284,16 @@ namespace Tatap {
                         right_image.fileref.get_basename(), right_image.original_width,
                         right_image.original_height, right_image.size_percent);
                 title_changed(title);
+            }
+        }
+
+        public void update() {
+            try {
+                accessor.set_file1(left_image.fileref);
+                main_window.image_next_button.sensitive = is_next_button_sensitive();
+                main_window.image_prev_button.sensitive = is_prev_button_sensitive();
+            } catch (Error e) {
+                _file_list.close();
             }
         }
 
