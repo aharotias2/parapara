@@ -32,7 +32,6 @@ executable(
     'src/Utils/StringUtils.c',
     'src/Utils/PixbufUtils.vala',
     'src/Utils/FileUtils.vala',
-    'src/Utils/MathUtils.vala',
     'src/Utils/FileType.vala',
     'src/Utils/StringUtils.vala',
     'src/Model/SortOrder.vala',
