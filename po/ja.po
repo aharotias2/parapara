@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-12 13:21+0000\n"
+"POT-Creation-Date: 2021-03-13 02:42+0000\n"
 "PO-Revision-Date: 2021-01-14 11:54+0900\n"
 "Last-Translator: Takayuki Tanaka <aharotias2@gmail.com>\n"
 "Language-Team: none\n"
@@ -52,47 +52,48 @@ msgstr "高さ:"
 msgid "OK"
 msgstr "OK"
 
-#: src/Widgets/ResizeDialog.vala:119 src/Widgets/SingleImageView.vala:360
+#: src/Widgets/ResizeDialog.vala:119 src/Widgets/SingleImageView.vala:345
 #: src/Widgets/Window.vala:306
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: src/Widgets/SingleImageView.vala:342
+#: src/Widgets/SingleImageView.vala:327
 msgid "The image was resized."
 msgstr "ファイルをリサイズしました。"
 
-#: src/Widgets/SingleImageView.vala:344
+#: src/Widgets/SingleImageView.vala:329
 msgid "Resizing of the image was canceled."
 msgstr "リサイズはキャンセルされました。"
 
-#: src/Widgets/SingleImageView.vala:352
+#: src/Widgets/SingleImageView.vala:337
 msgid "Sorry, saving animations is not supported yet."
 msgstr "申し訳ありませんが、アニメーションの保存には未対応です。"
 
-#: src/Widgets/SingleImageView.vala:359 src/Widgets/ToolBar.vala:126
+#: src/Widgets/SingleImageView.vala:344 src/Widgets/ToolBar.vala:126
 msgid "Save as…"
 msgstr "名前を付けて保存…"
 
-#: src/Widgets/SingleImageView.vala:360 src/Widgets/ToolBar.vala:118
+#: src/Widgets/SingleImageView.vala:345 src/Widgets/ToolBar.vala:118
 msgid "Save"
 msgstr "保存"
 
-#: src/Widgets/SingleImageView.vala:380
+#: src/Widgets/SingleImageView.vala:365
 msgid "File already exists. Do you want to overwrite it?"
 msgstr "ファイルはすでに存在します。上書きしてもよろしいですか？"
 
-#: src/Widgets/SingleImageView.vala:391
+#: src/Widgets/SingleImageView.vala:376
 msgid "Do you really overwrite this file?"
 msgstr "本当にこのファイルを上書きしますか？"
 
-#: src/Widgets/SingleImageView.vala:404
+#: src/Widgets/SingleImageView.vala:389
 msgid "The file save was canceled."
 msgstr "ファイルの保存はキャンセルされました。"
 
-#: src/Widgets/SingleImageView.vala:409
+#: src/Widgets/SingleImageView.vala:394
 msgid "The file was saved"
 msgstr "ファイルを保存しました。"
 
+#. action buttons for the image
 #: src/Widgets/ToolBar.vala:140
 msgid "Resize"
 msgstr "リサイズ"
@@ -173,6 +174,7 @@ msgstr "スクロール ビュー モード"
 msgid "Dual View Mode"
 msgstr "デュアル ビュー モード"
 
+#. mode_switch_button_box.pack_start(scroll_view_button);
 #: src/Widgets/ToolBar.vala:410
 msgid "Stick"
 msgstr "固定"
@@ -185,6 +187,7 @@ msgstr "前の画像"
 msgid "Next"
 msgstr "次の画像"
 
+#. file buttons
 #: src/Widgets/Window.vala:98 src/Widgets/Window.vala:306
 msgid "Open"
 msgstr "開く"

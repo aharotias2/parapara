@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-12 13:21+0000\n"
+"POT-Creation-Date: 2021-03-13 02:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,47 +51,48 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: src/Widgets/ResizeDialog.vala:119 src/Widgets/SingleImageView.vala:360
+#: src/Widgets/ResizeDialog.vala:119 src/Widgets/SingleImageView.vala:345
 #: src/Widgets/Window.vala:306
 msgid "Cancel"
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:342
+#: src/Widgets/SingleImageView.vala:327
 msgid "The image was resized."
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:344
+#: src/Widgets/SingleImageView.vala:329
 msgid "Resizing of the image was canceled."
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:352
+#: src/Widgets/SingleImageView.vala:337
 msgid "Sorry, saving animations is not supported yet."
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:359 src/Widgets/ToolBar.vala:126
+#: src/Widgets/SingleImageView.vala:344 src/Widgets/ToolBar.vala:126
 msgid "Save as…"
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:360 src/Widgets/ToolBar.vala:118
+#: src/Widgets/SingleImageView.vala:345 src/Widgets/ToolBar.vala:118
 msgid "Save"
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:380
+#: src/Widgets/SingleImageView.vala:365
 msgid "File already exists. Do you want to overwrite it?"
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:391
+#: src/Widgets/SingleImageView.vala:376
 msgid "Do you really overwrite this file?"
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:404
+#: src/Widgets/SingleImageView.vala:389
 msgid "The file save was canceled."
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:409
+#: src/Widgets/SingleImageView.vala:394
 msgid "The file was saved"
 msgstr ""
 
+#. action buttons for the image
 #: src/Widgets/ToolBar.vala:140
 msgid "Resize"
 msgstr ""
@@ -172,6 +173,7 @@ msgstr ""
 msgid "Dual View Mode"
 msgstr ""
 
+#. mode_switch_button_box.pack_start(scroll_view_button);
 #: src/Widgets/ToolBar.vala:410
 msgid "Stick"
 msgstr ""
@@ -184,6 +186,7 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
+#. file buttons
 #: src/Widgets/Window.vala:98 src/Widgets/Window.vala:306
 msgid "Open"
 msgstr ""
