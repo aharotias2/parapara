@@ -330,10 +330,6 @@ namespace Tatap {
 
             set_titlebar(headerbar);
             set_default_size(800, 600);
-            motion_notify_event.connect((event) => handle_motion_event(event.motion));
-            key_press_event.connect((event) => handle_key_event(event.key));
-            leave_notify_event.connect((event) => handle_leave_event(event));
-            event.connect(handle_other_events);
             add_events(Gdk.EventMask.SCROLL_MASK);
             destroy.connect(() => {
                 if (file_list != null) {
@@ -361,16 +357,23 @@ namespace Tatap {
             return win_y_root <= (y - allocation.y) <= win_y_root + allocation.height * 0.2;
         }
 
-        private bool handle_motion_event(EventMotion ev) {
+        private bool reveal_progress_flag = false;
+
+        public override bool motion_notify_event(EventMotion ev) {
             if (stack.visible_child_name == "picture") {
                 if (in_progress_area(ev.x_root, ev.y_root)) {
                     if (!progress_revealer.child_revealed) {
+                        reveal_progress_flag = true;
                         Timeout.add(300, () => {
-                            progress_revealer.reveal_child = true;
+                            if (reveal_progress_flag) {
+                                progress_revealer.reveal_child = true;
+                                reveal_progress_flag = false;
+                            }
                             return false;
                         });
                     }
                 } else {
+                    reveal_progress_flag = false;
                     if (progress_revealer.child_revealed) {
                         Timeout.add(300, () => {
                             progress_revealer.reveal_child = false;
@@ -401,7 +404,8 @@ namespace Tatap {
             return false;
         }
 
-        private bool handle_leave_event(EventCrossing event) {
+        public override bool leave_notify_event(EventCrossing event) {
+            reveal_progress_flag = false;
             if (progress_revealer.child_revealed) {
                 Timeout.add(300, () => {
                     progress_revealer.reveal_child = false;
@@ -411,7 +415,7 @@ namespace Tatap {
             return false;
         }
 
-        private bool handle_key_event(EventKey ev) {
+        public override bool key_press_event(EventKey ev) {
             if (Gdk.ModifierType.CONTROL_MASK in ev.state) {
                 switch (ev.keyval) {
                 case Gdk.Key.m:
@@ -451,7 +455,7 @@ namespace Tatap {
             return false;
         }
 
-        private bool handle_other_events(Event ev) {
+        public override bool event(Event ev) {
             try {
                 return image_view.handle_event(ev);
             } catch (Error error) {
