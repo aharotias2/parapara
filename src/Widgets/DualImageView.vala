@@ -149,53 +149,62 @@ namespace Tatap {
         }
 
         public bool handle_event(Event ev) throws Error {
-            bool shift_masked = ModifierType.SHIFT_MASK in ev.scroll.state;
+            if (!left_image.has_image && !right_image.has_image) {
+                return false;
+            }
+            bool shift_masked = false;
             switch (ev.type) {
               case EventType.SCROLL:
-                if (ev.scroll.direction == ScrollDirection.UP) {
+                shift_masked = ModifierType.SHIFT_MASK in ev.scroll.state;
+                switch (ev.scroll.direction) {
+                  case ScrollDirection.UP:
                     if (!accessor.is_first()) {
                         go_backward(shift_masked ? 1 : 2);
                     }
-                } else if (ev.scroll.direction == ScrollDirection.DOWN) {
+                    break;
+                  case ScrollDirection.DOWN:
                     if (!accessor.is_last()) {
                         go_forward(shift_masked ? 1 : 2);
                     }
+                    break;
+                  default: break;
                 }
                 break;
               case EventType.KEY_PRESS:
+                shift_masked = ModifierType.SHIFT_MASK in ev.key.state;
                 switch (ev.key.keyval) {
                   case Gdk.Key.Left:
-                    if (left_image.has_image || right_image.has_image) {
-                        if (main_window.toolbar.sort_order == SortOrder.ASC) {
-                            if (!accessor.is_first()) {
-                                go_backward(shift_masked ? 1 : 2);
-                            }
-                        } else {
-                            if (!accessor.is_last()) {
-                                go_forward(shift_masked ? 1 : 2);
-                            }
+                    switch (main_window.toolbar.sort_order) {
+                      case SortOrder.ASC:
+                        if (!accessor.is_first()) {
+                            go_backward(shift_masked ? 1 : 2);
                         }
-                    }
-                    return true;
-                  case Gdk.Key.Right:
-                    if (left_image.has_image || right_image.has_image) {
+                        break;
+                      case SortOrder.DESC:
                         if (!accessor.is_last()) {
-                            if (main_window.toolbar.sort_order == SortOrder.ASC) {
-                                if (!accessor.is_last()) {
-                                    go_forward(shift_masked ? 1 : 2);
-                                }
-                            } else {
-                                if (!accessor.is_first()) {
-                                    go_backward(shift_masked ? 1 : 2);
-                                }
-                            }
+                            go_forward(shift_masked ? 1 : 2);
                         }
+                        break;
                     }
-                    return true;
+                    break;
+                  case Gdk.Key.Right:
+                    switch (main_window.toolbar.sort_order) {
+                      case SortOrder.ASC:
+                        if (!accessor.is_last()) {
+                            go_forward(shift_masked ? 1 : 2);
+                        }
+                        break;
+                      case SortOrder.DESC:
+                        if (!accessor.is_first()) {
+                            go_backward(shift_masked ? 1 : 2);
+                        }
+                        break;
+                    }
+                    break;
+                  default: break;
                 }
                 break;
-              default:
-                break;
+              default: break;
             }
             return false;
         }
@@ -211,7 +220,8 @@ namespace Tatap {
         }
 
         private void open_by_accessor_current_index() throws Error {
-            if (main_window.toolbar.sort_order == SortOrder.ASC) {
+            switch (main_window.toolbar.sort_order) {
+              case SortOrder.ASC:
                 if (accessor.get_index1() >= 0) {
                     left_image.visible = true;
                     left_image.open(accessor.get_file1().get_path());
@@ -234,7 +244,8 @@ namespace Tatap {
                 } else {
                     main_window.toolbar.r1button.sensitive = true;
                 }
-            } else {
+                break;
+              case SortOrder.DESC:
                 if (accessor.get_index1() >= 0) {
                     right_image.visible = true;
                     right_image.open(accessor.get_file1().get_path());
@@ -257,6 +268,7 @@ namespace Tatap {
                 } else {
                     main_window.toolbar.l1button.sensitive = true;
                 }
+                break;
             }
             Idle.add(() => {
                 left_image.fit_size_to_window();

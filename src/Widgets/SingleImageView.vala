@@ -92,169 +92,154 @@ namespace Tatap {
         }
 
         public bool handle_event(Event ev) throws Error {
+            if (!image.has_image) {
+                return false;
+            }
             switch (ev.type) {
-                case EventType.BUTTON_PRESS:
-                    button_pressed = true;
-                    x = ev.motion.x_root;
-                    y = ev.motion.y_root;
-                    break;
-                case EventType.BUTTON_RELEASE:
-                    if (image.fit && x == ev.motion.x_root && y == ev.motion.y_root) {
+              case EventType.BUTTON_PRESS:
+                button_pressed = true;
+                x = ev.motion.x_root;
+                y = ev.motion.y_root;
+                break;
+              case EventType.BUTTON_RELEASE:
+                if (image.fit && x == ev.motion.x_root && y == ev.motion.y_root) {
+                    image.fit_size_to_window();
+                    update_title();
+                }
+                button_pressed = false;
+                break;
+              case EventType.MOTION_NOTIFY:
+                if (button_pressed) {
+                    double new_x = ev.motion.x_root;
+                    double new_y = ev.motion.y_root;
+                    int x_move = (int) (new_x - x);
+                    int y_move = (int) (new_y - y);
+                    scrolled.hadjustment.value -= x_move;
+                    scrolled.vadjustment.value -= y_move;
+                    x = new_x;
+                    y = new_y;
+                }
+                break;
+              case EventType.SCROLL:
+                if (ModifierType.CONTROL_MASK in ev.scroll.state) {
+                    switch (ev.scroll.direction) {
+                      case ScrollDirection.UP:
+                        image.zoom_in(10);
+                        update_title();
+                        main_window.toolbar.zoom_fit_button.sensitive = true;
+                        break;
+                      case ScrollDirection.DOWN:
+                        image.zoom_out(10);
+                        update_title();
+                        main_window.toolbar.zoom_fit_button.sensitive = true;
+                        break;
+                      default: break;
+                    }
+                } else {
+                    if (scrolled.get_allocated_height() >= scrolled.get_vadjustment().upper
+                            && scrolled.get_allocated_width() >= scrolled.get_hadjustment().upper) {
+                        switch (ev.scroll.direction) {
+                          case ScrollDirection.UP:
+                            go_backward(1);
+                            break;
+                          case ScrollDirection.DOWN:
+                            go_forward(1);
+                            break;
+                          default: break;
+                        }
+                    }
+                }
+                break;
+              case EventType.KEY_PRESS:
+                if (Gdk.ModifierType.CONTROL_MASK in ev.key.state) {
+                    switch (ev.key.keyval) {
+                      case Gdk.Key.e:
+                        if (!image.is_animation) {
+                            resize_image();
+                        }
+                        break;
+                      case Gdk.Key.plus:
+                        image.zoom_in(10);
+                        update_title();
+                        main_window.toolbar.zoom_fit_button.sensitive = true;
+                        break;
+                      case Gdk.Key.minus:
+                        image.zoom_out(10);
+                        update_title();
+                        main_window.toolbar.zoom_fit_button.sensitive = true;
+                        break;
+                      case Gdk.Key.m:
+                        if (main_window.toolbar_toggle_button.sensitive) {
+                            main_window.toolbar_toggle_button.active = !main_window.toolbar_toggle_button.active;
+                            main_window.toolbar_toggle_button.toggled();
+                        }
+                        break;
+                      case Gdk.Key.f:
+                        main_window.toolbar_toggle_button.active = true;
+                        if (!main_window.toolbar.sticked) {
+                            main_window.toolbar.stick_toolbar();
+                        } else {
+                            main_window.toolbar.unstick_toolbar();
+                        }
+                        break;
+                      case Gdk.Key.@1:
+                        image.zoom_original();
+                        update_title();
+                        main_window.toolbar.zoom_fit_button.sensitive = true;
+                        break;
+                      case Gdk.Key.@0:
                         image.fit_size_to_window();
                         update_title();
+                        main_window.toolbar.zoom_fit_button.sensitive = false;
+                        break;
+                      case Gdk.Key.h:
+                        image.hflip();
+                        break;
+                      case Gdk.Key.v:
+                        image.vflip();
+                        break;
+                      case Gdk.Key.l:
+                        image.rotate_right();
+                        update_title();
+                        break;
+                      case Gdk.Key.r:
+                        image.rotate_left();
+                        update_title();
+                        break;
+                      case Gdk.Key.s:
+                        save_file_async.begin(false);
+                        break;
+                      case Gdk.Key.S:
+                        save_file_async.begin(true);
+                        break;
+                      default: break;
                     }
-                    button_pressed = false;
-                    break;
-                case EventType.MOTION_NOTIFY:
-                    if (button_pressed) {
-                        double new_x = ev.motion.x_root;
-                        double new_y = ev.motion.y_root;
-                        int x_move = (int) (new_x - x);
-                        int y_move = (int) (new_y - y);
-                        scrolled.hadjustment.value -= x_move;
-                        scrolled.vadjustment.value -= y_move;
-                        x = new_x;
-                        y = new_y;
-                    }
-                    break;
-                case EventType.SCROLL:
-                    if (ModifierType.CONTROL_MASK in ev.scroll.state) {
-                        if (ev.scroll.direction == ScrollDirection.UP) {
-                            image.zoom_in(10);
-                            update_title();
-                            main_window.toolbar.zoom_fit_button.sensitive = true;
-                        } else if (ev.scroll.direction == ScrollDirection.DOWN) {
-                            image.zoom_out(10);
-                            update_title();
-                            main_window.toolbar.zoom_fit_button.sensitive = true;
-                        }
-                        return true;
-                    } else {
-                        if (scrolled.get_allocated_height() >= scrolled.get_vadjustment().upper
-                                && scrolled.get_allocated_width() >= scrolled.get_hadjustment().upper) {
-                            if (ev.scroll.direction == ScrollDirection.UP) {
-                                go_backward(1);
-                            } else if (ev.scroll.direction == ScrollDirection.DOWN) {
-                                go_forward(1);
+                } else {
+                    switch (ev.key.keyval) {
+                      case Gdk.Key.Left:
+                        go_backward(1);
+                        break;
+                      case Gdk.Key.Right:
+                        go_forward(1);
+                        break;
+                      case Gdk.Key.space:
+                        if (image.is_animation) {
+                            if (!image.paused) {
+                                image.pause();
+                                main_window.toolbar.animation_play_pause_button.icon_name = "media-playback-pause-symbolic";
+                                main_window.toolbar.animation_forward_button.sensitive = true;
+                            } else {
+                                image.unpause();
+                                main_window.toolbar.animation_play_pause_button.icon_name = "media-playback-start-symbolic";
+                                main_window.toolbar.animation_forward_button.sensitive = false;
                             }
                         }
+                        break;
+                      default: break;
                     }
-                    break;
-                case EventType.KEY_PRESS:
-                    if (Gdk.ModifierType.CONTROL_MASK in ev.key.state) {
-                        switch (ev.key.keyval) {
-                            case Gdk.Key.e:
-                                if (image.has_image && !image.is_animation) {
-                                    resize_image();
-                                }
-                                break;
-                            case Gdk.Key.plus:
-                                if (image.has_image) {
-                                    image.zoom_in(10);
-                                    update_title();
-                                    main_window.toolbar.zoom_fit_button.sensitive = true;
-                                }
-                                break;
-                            case Gdk.Key.minus:
-                                if (image.has_image) {
-                                    image.zoom_out(10);
-                                    update_title();
-                                    main_window.toolbar.zoom_fit_button.sensitive = true;
-                                }
-                                break;
-                            case Gdk.Key.m:
-                                if (main_window.toolbar_toggle_button.sensitive) {
-                                    main_window.toolbar_toggle_button.active = !main_window.toolbar_toggle_button.active;
-                                    main_window.toolbar_toggle_button.toggled();
-                                }
-                                break;
-                            case Gdk.Key.f:
-                                if (image.has_image) {
-                                    main_window.toolbar_toggle_button.active = true;
-                                    if (!main_window.toolbar.sticked) {
-                                        main_window.toolbar.stick_toolbar();
-                                    } else {
-                                        main_window.toolbar.unstick_toolbar();
-                                    }
-                                }
-                                break;
-                            case Gdk.Key.@1:
-                                if (image.has_image) {
-                                    image.zoom_original();
-                                    update_title();
-                                    main_window.toolbar.zoom_fit_button.sensitive = true;
-                                }
-                                break;
-                            case Gdk.Key.@0:
-                                if (image.has_image) {
-                                    image.fit_size_to_window();
-                                    update_title();
-                                    main_window.toolbar.zoom_fit_button.sensitive = false;
-                                }
-                                break;
-                            case Gdk.Key.h:
-                                if (image.has_image) {
-                                    image.hflip();
-                                }
-                                break;
-                            case Gdk.Key.v:
-                                if (image.has_image) {
-                                    image.vflip();
-                                }
-                                break;
-                            case Gdk.Key.l:
-                                if (image.has_image) {
-                                    image.rotate_right();
-                                    update_title();
-                                }
-                                break;
-                            case Gdk.Key.r:
-                                if (image.has_image) {
-                                    image.rotate_left();
-                                    update_title();
-                                }
-                                break;
-                            case Gdk.Key.s:
-                                if (image.has_image) {
-                                    save_file_async.begin(false);
-                                }
-                                return true;
-                            case Gdk.Key.S:
-                                if (image.has_image) {
-                                    save_file_async.begin(true);
-                                }
-                                return true;
-                        }
-                    } else {
-                        switch (ev.key.keyval) {
-                            case Gdk.Key.Left:
-                                if (image.has_image) {
-                                    go_backward(1);
-                                }
-                                return true;
-                            case Gdk.Key.Right:
-                                if (image.has_image) {
-                                    go_forward(1);
-                                }
-                                return true;
-                            case Gdk.Key.space:
-                                if (image.is_animation) {
-                                    if (!image.paused) {
-                                        image.pause();
-                                        main_window.toolbar.animation_play_pause_button.icon_name = "media-playback-pause-symbolic";
-                                        main_window.toolbar.animation_forward_button.sensitive = true;
-                                    } else {
-                                        image.unpause();
-                                        main_window.toolbar.animation_play_pause_button.icon_name = "media-playback-start-symbolic";
-                                        main_window.toolbar.animation_forward_button.sensitive = false;
-                                    }
-                                }
-                                return true;
-                        }
-                    }
-                    break;
-                default:
-                    break;
+                }
+                break;
+              default: break;
             }
             return false;
         }
