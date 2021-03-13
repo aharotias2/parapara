@@ -13,3 +13,7 @@
 .message_bar_label {
     color: @theme_fg_color;
 }
+
+.progress_bar {
+    background-color: @theme_bg_color;
+}

@@ -105,7 +105,6 @@ namespace Tatap {
                 animation_iter = null;
                 is_animation = false;
             }
-            fit_size_to_window();
             if (is_animation) {
                 animate_async.begin(animation_iter);
             }
@@ -191,20 +190,38 @@ namespace Tatap {
             }
         }
 
-        public void fit_size_to_window() {
+        public void fit_size_in_window() {
             if (original_pixbuf != null) {
                 fit = true;
                 int max_width = container.get_allocated_width();
                 int max_height = container.get_allocated_height();
-                double r0 = (double) max_width / (double) max_height;
-                double r1 = original_rate_x;
-                if (r0 >= r1) {
-                    pixbuf = PixbufUtils.scale_by_max_height(original_pixbuf, max_height);
-                } else if (r0 < r1) {
-                    pixbuf = PixbufUtils.scale_by_max_width(original_pixbuf, max_width);
-                }
+                scale_fit_in_width_and_height(max_width, max_height);
                 if (fit) {
                     adjust_zoom_percent();
+                }
+            }
+        }
+
+        public void scale_fit_in_width(int new_width) {
+            if (original_pixbuf != null) {
+                pixbuf = PixbufUtils.scale_fit_in_width(original_pixbuf, new_width);
+            }
+        }
+
+        public void scale_fit_in_height(int new_height) {
+            if (original_pixbuf != null) {
+                pixbuf = PixbufUtils.scale_fit_in_height(original_pixbuf, new_height);
+            }
+        }
+
+        public void scale_fit_in_width_and_height(int new_width, int new_height) {
+            if (original_pixbuf != null) {
+                double r0 = (double) new_width / (double) new_height;
+                double r1 = original_rate_x;
+                if (r0 >= r1) {
+                    pixbuf = PixbufUtils.scale_fit_in_height(original_pixbuf, new_height);
+                } else if (r0 < r1) {
+                    pixbuf = PixbufUtils.scale_fit_in_width(original_pixbuf, new_width);
                 }
             }
         }
@@ -240,7 +257,7 @@ namespace Tatap {
                 degree = degree == 0 ? 270 : degree - 90;
                 original_rate_x = (double) original_pixbuf.width / (double) original_pixbuf.height;
                 if (fit) {
-                    fit_size_to_window();
+                    fit_size_in_window();
                     adjust_zoom_percent();
                 } else {
                     scale(uint.max((uint) pixbuf.width, (uint) pixbuf.height));
@@ -254,7 +271,7 @@ namespace Tatap {
                 degree = degree == 270 ? 0 : degree + 90;
                 original_rate_x = (double) original_pixbuf.width / (double) original_pixbuf.height;
                 if (fit) {
-                    fit_size_to_window();
+                    fit_size_in_window();
                     adjust_zoom_percent();
                 } else {
                     scale(uint.max((uint) pixbuf.width, (uint)pixbuf.height));

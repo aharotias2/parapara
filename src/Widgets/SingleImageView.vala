@@ -29,6 +29,11 @@ namespace Tatap {
                 return image.has_image;
             }
         }
+        public override double position {
+            get {
+                return (double) accessor.get_index() / (double) _file_list.size;
+            }
+        }
 
         private unowned FileList? _file_list = null;
         public SingleFileAccessor accessor { get; private set; }
@@ -82,7 +87,7 @@ namespace Tatap {
                 scrolled.size_allocate.connect((allocation) => {
                     if (image.fit) {
                         debug("size_allocated");
-                        image.fit_size_to_window();
+                        image.fit_size_in_window();
                         update_title();
                     }
                 });
@@ -103,7 +108,7 @@ namespace Tatap {
                 break;
               case EventType.BUTTON_RELEASE:
                 if (image.fit && x == ev.motion.x_root && y == ev.motion.y_root) {
-                    image.fit_size_to_window();
+                    image.fit_size_in_window();
                     update_title();
                 }
                 button_pressed = false;
@@ -140,10 +145,24 @@ namespace Tatap {
                             && scrolled.get_allocated_width() >= scrolled.get_hadjustment().upper) {
                         switch (ev.scroll.direction) {
                           case ScrollDirection.UP:
-                            go_backward(1);
+                            switch (main_window.toolbar.sort_order) {
+                              case SortOrder.ASC:
+                                go_backward(1);
+                                break;
+                              case SortOrder.DESC:
+                                go_forward(1);
+                                break;
+                            }
                             break;
                           case ScrollDirection.DOWN:
-                            go_forward(1);
+                            switch (main_window.toolbar.sort_order) {
+                              case SortOrder.ASC:
+                                go_forward(1);
+                                break;
+                              case SortOrder.DESC:
+                                go_backward(1);
+                                break;
+                            }
                             break;
                           default: break;
                         }
@@ -168,27 +187,13 @@ namespace Tatap {
                         update_title();
                         main_window.toolbar.zoom_fit_button.sensitive = true;
                         break;
-                      case Gdk.Key.m:
-                        if (main_window.toolbar_toggle_button.sensitive) {
-                            main_window.toolbar_toggle_button.active = !main_window.toolbar_toggle_button.active;
-                            main_window.toolbar_toggle_button.toggled();
-                        }
-                        break;
-                      case Gdk.Key.f:
-                        main_window.toolbar_toggle_button.active = true;
-                        if (!main_window.toolbar.sticked) {
-                            main_window.toolbar.stick_toolbar();
-                        } else {
-                            main_window.toolbar.unstick_toolbar();
-                        }
-                        break;
                       case Gdk.Key.@1:
                         image.zoom_original();
                         update_title();
                         main_window.toolbar.zoom_fit_button.sensitive = true;
                         break;
                       case Gdk.Key.@0:
-                        image.fit_size_to_window();
+                        image.fit_size_in_window();
                         update_title();
                         main_window.toolbar.zoom_fit_button.sensitive = false;
                         break;
@@ -217,10 +222,24 @@ namespace Tatap {
                 } else {
                     switch (ev.key.keyval) {
                       case Gdk.Key.Left:
-                        go_backward(1);
+                        switch (main_window.toolbar.sort_order) {
+                          case SortOrder.ASC:
+                            go_backward(1);
+                            break;
+                          case SortOrder.DESC:
+                            go_forward(1);
+                            break;
+                        }
                         break;
                       case Gdk.Key.Right:
-                        go_forward(1);
+                        switch (main_window.toolbar.sort_order) {
+                          case SortOrder.ASC:
+                            go_forward(1);
+                            break;
+                          case SortOrder.DESC:
+                            go_backward(1);
+                            break;
+                        }
                         break;
                       case Gdk.Key.space:
                         if (image.is_animation) {
@@ -250,6 +269,7 @@ namespace Tatap {
 
         public void open(File file) throws Error {
             image.open(file.get_path());
+            image.fit_size_in_window();
             if (file_list.has_list) {
                 accessor.set_name(file.get_basename());
             }
@@ -264,6 +284,11 @@ namespace Tatap {
                 main_window.toolbar.animation_forward_button.sensitive = false;
                 main_window.toolbar.resize_button.sensitive = true;
             }
+            image_opened(accessor.get_name(), accessor.get_index());
+        }
+
+        public void open_at(int index) throws Error {
+            open(File.new_for_path(Path.build_path(Path.DIR_SEPARATOR_S, _file_list.dir_path, _file_list.get_filename_at(index))));
         }
 
         public void reopen() throws Error {

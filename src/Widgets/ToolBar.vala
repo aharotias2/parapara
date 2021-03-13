@@ -37,6 +37,8 @@ namespace Tatap {
         public Gtk.ToggleButton dual_view_button { get; private set; }
         public Gtk.Button l1button { get; private set; }
         public Gtk.Button r1button { get; private set; }
+        public Gtk.ToggleButton sort_asc_button { get; private set; }
+        public Gtk.ToggleButton sort_desc_button { get; private set; }
         public Gtk.ToggleButton l2rbutton { get; private set; }
         public Gtk.ToggleButton r2lbutton { get; private set; }
         private Gtk.Box toolbar_hbox;
@@ -69,16 +71,19 @@ namespace Tatap {
                             toolbar_hbox.remove(single_view_mode_box);
                             single_view_mode_box.hide();
                             single_view_button.active = false;
+                            single_view_button.sensitive = true;
                             break;
                         case SCROLL_VIEW_MODE:
                             toolbar_hbox.remove(scroll_view_mode_box);
                             scroll_view_mode_box.hide();
                             scroll_view_button.active = false;
+                            scroll_view_button.sensitive = true;
                             break;
                         case DUAL_VIEW_MODE:
                             toolbar_hbox.remove(dual_view_mode_box);
                             dual_view_mode_box.hide();
                             dual_view_button.active = false;
+                            dual_view_button.sensitive = true;
                             break;
                     }
                     _view_mode = value;
@@ -87,16 +92,31 @@ namespace Tatap {
                             toolbar_hbox.pack_start(single_view_mode_box, false, false);
                             toolbar_hbox.reorder_child(single_view_mode_box, 0);
                             single_view_button.active = true;
+                            single_view_button.sensitive = false;
+                            if (sort_order == SortOrder.ASC && !sort_asc_button.active) {
+                                sort_asc_button.active = true;
+                            }
+                            if (sort_order == SortOrder.DESC && !sort_desc_button.active) {
+                                sort_desc_button.active = true;
+                            }
                             break;
                         case SCROLL_VIEW_MODE:
                             toolbar_hbox.pack_start(scroll_view_mode_box, false, false);
                             toolbar_hbox.reorder_child(scroll_view_mode_box, 0);
                             scroll_view_button.active = true;
+                            scroll_view_button.sensitive = false;
                             break;
                         case DUAL_VIEW_MODE:
                             toolbar_hbox.pack_start(dual_view_mode_box, false, false);
                             toolbar_hbox.reorder_child(dual_view_mode_box, 0);
                             dual_view_button.active = true;
+                            dual_view_button.sensitive = false;
+                            if (sort_order == SortOrder.ASC && !l2rbutton.active) {
+                                l2rbutton.active = true;
+                            }
+                            if (sort_order == SortOrder.DESC && !r2lbutton.active) {
+                                r2lbutton.active = true;
+                            }
                             break;
                     }
                     view_mode_changed(_view_mode);
@@ -162,7 +182,7 @@ namespace Tatap {
             zoom_fit_button = new ActionButton("zoom-fit-best-symbolic", _("Fit to the page"), {"<control>0"});
             zoom_fit_button.get_style_context().add_class("image_overlay_button");
             zoom_fit_button.clicked.connect(() => {
-                single_image_view.image.fit_size_to_window();
+                single_image_view.image.fit_size_in_window();
                 single_image_view.update_title();
                 zoom_fit_button.sensitive = false;
             });
@@ -215,18 +235,19 @@ namespace Tatap {
             image_actions_button_box.pack_start(lrotate_button);
             image_actions_button_box.pack_start(rrotate_button);
 
-            Gtk.ToggleButton sort_desc_button;
-
-            var sort_asc_button = new Gtk.ToggleButton() {
+            sort_asc_button = new Gtk.ToggleButton() {
                 tooltip_text = _("Sort Asc"),
                 image = new Gtk.Image.from_icon_name("view-sort-ascending-symbolic", Gtk.IconSize.SMALL_TOOLBAR),
-                active = true
+                active = true,
+                sensitive = false
             };
             sort_asc_button.get_style_context().add_class("image_overlay_button");
             sort_asc_button.toggled.connect(() => {
                 if (sort_asc_button.active) {
-                    sort_order = SortOrder.ASC;
+                    sort_asc_button.sensitive = false;
                     sort_desc_button.active = false;
+                    sort_desc_button.sensitive = true;
+                    sort_order = SortOrder.ASC;
                     sort_order_changed(sort_order);
                 }
             });
@@ -239,8 +260,10 @@ namespace Tatap {
             sort_desc_button.get_style_context().add_class("image_overlay_button");
             sort_desc_button.toggled.connect(() => {
                 if (sort_desc_button.active) {
-                    sort_order = SortOrder.DESC;
+                    sort_desc_button.sensitive = false;
                     sort_asc_button.active = false;
+                    sort_asc_button.sensitive = true;
+                    sort_order = SortOrder.DESC;
                     sort_order_changed(sort_order);
                 }
             });
@@ -301,26 +324,19 @@ namespace Tatap {
             animation_actions_button_box.pack_start(animation_play_pause_button);
             animation_actions_button_box.pack_start(animation_forward_button);
 
-            single_view_button = new Gtk.ToggleButton() {
-                tooltip_text = _("Single View Mode"),
-                image = new Gtk.Image.from_icon_name("view-paged-symbolic", Gtk.IconSize.SMALL_TOOLBAR),
-                active = true
-            };
-            single_view_button.get_style_context().add_class("image_overlay_button");
-            single_view_button.button_release_event.connect(() => {
-                view_mode = ViewMode.SINGLE_VIEW_MODE;
-            });
-
             l2rbutton = new Gtk.ToggleButton() {
                 tooltip_text = _("Left to Right"),
                 label = "1 >> 2",
-                active = true
+                active = true,
+                sensitive = false
             };
             l2rbutton.get_style_context().add_class("image_overlay_button");
             l2rbutton.toggled.connect(() => {
                 if (l2rbutton.active) {
-                    sort_order = SortOrder.ASC;
+                    l2rbutton.sensitive = false;
                     r2lbutton.active = false;
+                    r2lbutton.sensitive = true;
+                    sort_order = SortOrder.ASC;
                     sort_order_changed(sort_order);
                 }
             });
@@ -332,9 +348,12 @@ namespace Tatap {
             };
             r2lbutton.get_style_context().add_class("image_overlay_button");
             r2lbutton.toggled.connect(() => {
+                print("r2lbutton toggled %s\n", r2lbutton.active ? "active" : "inactive");
                 if (r2lbutton.active) {
-                    sort_order = SortOrder.DESC;
+                    r2lbutton.sensitive = false;
                     l2rbutton.active = false;
+                    l2rbutton.sensitive = true;
+                    sort_order = SortOrder.DESC;
                     sort_order_changed(sort_order);
                 }
             });
@@ -379,13 +398,36 @@ namespace Tatap {
             dual_sort_button_box.pack_start(l2rbutton);
             dual_sort_button_box.pack_start(r1button);
 
+            var fullscreen_button = new ActionButton("view-fullscreen-symbolic", _("Fullscreen"), {"f11"});
+            fullscreen_button.clicked.connect(() => {
+                main_window.fullscreen_mode = !main_window.fullscreen_mode;
+            });
+
+            var fullscreen_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+                margin = 3,
+                layout_style = Gtk.ButtonBoxStyle.EXPAND
+            };
+
+            fullscreen_button_box.pack_start(fullscreen_button);
+
+            single_view_button = new Gtk.ToggleButton() {
+                tooltip_text = _("Single View Mode"),
+                image = new Gtk.Image.from_icon_name("view-paged-symbolic", Gtk.IconSize.SMALL_TOOLBAR),
+                active = true,
+                sensitive = false
+            };
+            single_view_button.get_style_context().add_class("image_overlay_button");
+            single_view_button.toggled.connect(() => {
+                view_mode = ViewMode.SINGLE_VIEW_MODE;
+            });
+
             scroll_view_button = new Gtk.ToggleButton() {
                 tooltip_text = _("Scroll View Mode"),
                 image = new Gtk.Image.from_icon_name("view-continuous-symbolic", Gtk.IconSize.SMALL_TOOLBAR),
                 active = false
             };
             scroll_view_button.get_style_context().add_class("image_overlay_button");
-            scroll_view_button.button_release_event.connect(() => {
+            scroll_view_button.toggled.connect(() => {
                 view_mode = ViewMode.SCROLL_VIEW_MODE;
             });
 
@@ -395,7 +437,7 @@ namespace Tatap {
                 active = false
             };
             dual_view_button.get_style_context().add_class("image_overlay_button");
-            dual_view_button.button_release_event.connect(() => {
+            dual_view_button.toggled.connect(() => {
                 view_mode = ViewMode.DUAL_VIEW_MODE;
             });
 
@@ -449,6 +491,7 @@ namespace Tatap {
             toolbar_hbox.pack_start(single_view_mode_box, false, false);
             toolbar_hbox.pack_end(stick_button_box, false, false);
             toolbar_hbox.pack_end(mode_switch_button_box, false, false);
+            toolbar_hbox.pack_end(fullscreen_button_box, false, false);
             toolbar_hbox.get_style_context().add_class("toolbar");
 
             add(toolbar_hbox);

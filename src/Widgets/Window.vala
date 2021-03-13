@@ -32,9 +32,33 @@ namespace Tatap {
         public ToggleButton toolbar_toggle_button { get; private set; }
         public Revealer toolbar_revealer_above { get; private set; }
         public Revealer toolbar_revealer_below { get; private set; }
+        public Revealer progress_revealer { get; private set; }
+        public Scale progress_scale { get; private set; }
         public ImageView image_view { get; private set; }
         public ActionButton image_prev_button { get; private set; }
         public ActionButton image_next_button { get; private set; }
+
+        public bool fullscreen_mode {
+            get {
+                return _fullscreen_mode;
+            }
+            set {
+                _fullscreen_mode = value;
+                if (_fullscreen_mode) {
+                    get_window().fullscreen();
+                } else {
+                    get_window().unfullscreen();
+                    Timeout.add(100, () => {
+                        try {
+                            image_view.reopen();
+                        } catch (Error e) {
+                            show_error_dialog(e.message);
+                        }
+                        return false;
+                    });
+                }
+            }
+        }
 
         public signal void require_new_window();
         public signal void require_quit();
@@ -46,213 +70,271 @@ namespace Tatap {
         private Stack stack;
         private Box bottom_box;
         private Granite.Widgets.Welcome welcome;
+        private bool _fullscreen_mode = false;
 
         construct {
-            image_prev_button = new ActionButton("go-previous-symbolic", _("Previous"), {"Left"}) {
-                sensitive = false
-            };
-            image_prev_button.get_style_context().add_class("image_button");
-            image_prev_button.clicked.connect(() => {
-                int offset = 1;
-                if (image_view.view_mode == ViewMode.DUAL_VIEW_MODE) {
-                    offset = 2;
-                }
-                try {
-                    if (toolbar.sort_order == SortOrder.ASC) {
-                        image_view.go_backward(offset);
-                    } else {
-                        image_view.go_forward(offset);
-                    }
-                } catch (Error error) {
-                    show_error_dialog(error.message);
-                }
-            });
-
-            image_next_button = new ActionButton("go-next-symbolic", _("Next"), {"Right"}) {
-                sensitive = false
-            };
-            image_next_button.get_style_context().add_class("image_button");
-            image_next_button.clicked.connect(() => {
-                int offset = 1;
-                if (image_view.view_mode == ViewMode.DUAL_VIEW_MODE) {
-                    offset = 2;
-                }
-                try {
-                    if (toolbar.sort_order == SortOrder.ASC) {
-                        image_view.go_forward(offset);
-                    } else {
-                        image_view.go_backward(offset);
-                    }
-                } catch (Error error) {
-                    show_error_dialog(error.message);
-                }
-            });
-
-            var navigation_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
-                layout_style = Gtk.ButtonBoxStyle.EXPAND
-            };
-            navigation_box.pack_start(image_prev_button);
-            navigation_box.pack_start(image_next_button);
-
-            /* file buttons */
-            var open_button = new ActionButton("document-open-symbolic", _("Open"), {"<Control>o"});
-            open_button.clicked.connect(() => {
-                on_open_button_clicked();
-            });
-
-            var new_button = new ActionButton("document-new-symbolic", _("New"), {"<Control>n"});
-            new_button.clicked.connect(() => {
-                require_new_window();
-            });
-
-            var file_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
-                layout_style = Gtk.ButtonBoxStyle.EXPAND
-            };
-            file_box.pack_start(new_button);
-            file_box.pack_start(open_button);
-
-            /* previous, next, open, and save buttons at the left of the headerbar */
-            header_buttons = new Box(Orientation.HORIZONTAL, 12);
-            header_buttons.pack_start(navigation_box, false, false);
-            header_buttons.pack_start(file_box, false, false);
-
-            /* menu button at the right of the headerbar */
-            var toggle_toolbar_icon = new Gtk.Image.from_icon_name("view-more-symbolic", ICON_SIZE);
-            toolbar_toggle_button = new ToggleButton() {
-                tooltip_markup = Granite.markup_accel_tooltip({"<control>m"}, _("Menu")),
-                relief = Gtk.ReliefStyle.NONE,
-                sensitive = false
-            };
-
-            toolbar_toggle_button.add(toggle_toolbar_icon);
-            toolbar_toggle_button.toggled.connect(() => {
-                toolbar_revealer_above.reveal_child = toolbar_toggle_button.active;
-            });
-
-            var header_button_box_right = new ButtonBox(Orientation.HORIZONTAL) {
-                layout_style = ButtonBoxStyle.EXPAND
-            };
-            header_button_box_right.add(toolbar_toggle_button);
-
             /* the headerbar itself */
             headerbar = new HeaderBar() {
-                show_close_button = true
-            };
-            headerbar.pack_start(header_buttons);
-            headerbar.pack_end(header_button_box_right);
+                    show_close_button = true };
+            {
+                /* previous, next, open, and save buttons at the left of the headerbar */
+                header_buttons = new Box(Orientation.HORIZONTAL, 12);
+                {
+                    var navigation_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+                            layout_style = Gtk.ButtonBoxStyle.EXPAND };
+                    {
+                        image_prev_button = new ActionButton("go-previous-symbolic", _("Previous"), {"Left"}) {
+                                sensitive = false };
+                        {
+                            image_prev_button.get_style_context().add_class("image_button");
+                            image_prev_button.clicked.connect(() => {
+                                int offset = 1;
+                                if (image_view.view_mode == ViewMode.DUAL_VIEW_MODE) {
+                                    offset = 2;
+                                }
+                                try {
+                                    if (toolbar.sort_order == SortOrder.ASC) {
+                                        image_view.go_backward(offset);
+                                    } else {
+                                        image_view.go_forward(offset);
+                                    }
+                                } catch (Error error) {
+                                    show_error_dialog(error.message);
+                                }
+                            });
+                        }
 
-            /* welcome screen */
-            welcome = new Granite.Widgets.Welcome(
-                _("No Images Open"),
-                _("Click 'Open Image' to get started.")
-            );
-            welcome.append("document-open", _("Open Image"), _("Show and edit your image."));
-            welcome.activated.connect((i) => {
-                if (i == 0) {
-                    on_open_button_clicked();
+                        image_next_button = new ActionButton("go-next-symbolic", _("Next"), {"Right"}) {
+                                sensitive = false };
+                        {
+                            image_next_button.get_style_context().add_class("image_button");
+                            image_next_button.clicked.connect(() => {
+                                int offset = 1;
+                                if (image_view.view_mode == ViewMode.DUAL_VIEW_MODE) {
+                                    offset = 2;
+                                }
+                                try {
+                                    if (toolbar.sort_order == SortOrder.ASC) {
+                                        image_view.go_forward(offset);
+                                    } else {
+                                        image_view.go_backward(offset);
+                                    }
+                                } catch (Error error) {
+                                    show_error_dialog(error.message);
+                                }
+                            });
+                        }
+
+                        navigation_box.pack_start(image_prev_button);
+                        navigation_box.pack_start(image_next_button);
+                    }
+
+
+                    var file_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+                            layout_style = Gtk.ButtonBoxStyle.EXPAND };
+                    {
+                        /* file buttons */
+                        var open_button = new ActionButton("document-open-symbolic", _("Open"), {"<Control>o"});
+                        {
+                            open_button.clicked.connect(() => {
+                                on_open_button_clicked();
+                            });
+                        }
+
+                        var new_button = new ActionButton("document-new-symbolic", _("New"), {"<Control>n"});
+                        {
+                            new_button.clicked.connect(() => {
+                                require_new_window();
+                            });
+                        }
+
+                        file_box.pack_start(new_button);
+                        file_box.pack_start(open_button);
+                    }
+
+                    header_buttons.pack_start(navigation_box, false, false);
+                    header_buttons.pack_start(file_box, false, false);
                 }
-            });
 
-            /* contain buttons that can be opened from the menu */
-            toolbar = new Tatap.ToolBar(this);
-            toolbar.sort_order_changed.connect(() => {
-                image_next_button.sensitive = image_view.is_next_button_sensitive();
-                image_prev_button.sensitive = image_view.is_prev_button_sensitive();
-                try {
-                    image_view.reopen();
-                } catch (Error e) {
-                    show_error_dialog(e.message);
+                var header_button_box_right = new ButtonBox(Orientation.HORIZONTAL) {
+                        layout_style = ButtonBoxStyle.EXPAND };
+                {
+                    /* menu button at the right of the headerbar */
+                    toolbar_toggle_button = new ToggleButton() {
+                            tooltip_markup = Granite.markup_accel_tooltip({"<control>m"}, _("Menu")),
+                            relief = Gtk.ReliefStyle.NONE,
+                            sensitive = false };
+                    {
+                        var toggle_toolbar_icon = new Gtk.Image.from_icon_name("view-more-symbolic", ICON_SIZE);
+                        toolbar_toggle_button.add(toggle_toolbar_icon);
+                        toolbar_toggle_button.toggled.connect(() => {
+                            toolbar_revealer_above.reveal_child = toolbar_toggle_button.active;
+                        });
+                    }
+
+                    header_button_box_right.add(toolbar_toggle_button);
                 }
-            });
-            toolbar.stick_button_clicked.connect((sticked) => {
-                if (sticked) {
-                    toolbar_revealer_above.remove(toolbar);
-                    toolbar_revealer_below.add(toolbar);
-                    toolbar_revealer_above.reveal_child = false;
-                    toolbar_revealer_below.reveal_child = true;
-                    toolbar_toggle_button.sensitive = false;
-                } else {
-                    toolbar_revealer_below.remove(toolbar);
-                    toolbar_revealer_above.add(toolbar);
-                    toolbar_revealer_above.reveal_child = true;
-                    toolbar_revealer_below.reveal_child = false;
-                    toolbar_toggle_button.sensitive = true;
-                }
-            });
-            toolbar.view_mode_changed.connect((view_mode) => {
-                try {
-                    update_image_view(view_mode);
-                } catch (Error error) {
-                    show_error_dialog(error.message);
-                }
-            });
 
-            toolbar_revealer_below = new Revealer() {
-                transition_type = RevealerTransitionType.SLIDE_DOWN,
-                reveal_child = false
-            };
-
-            /* image area in the center of the window */
-            image_view = new SingleImageView(this);
-            image_view.title_changed.connect((title) => {
-                headerbar.title = title;
-            });
-
-            bottom_box = new Box(Orientation.VERTICAL, 0);
-            bottom_box.pack_start(toolbar_revealer_below, false, false);
-            bottom_box.pack_start(image_view, true, true);
+                headerbar.pack_start(header_buttons);
+                headerbar.pack_end(header_button_box_right);
+            }
 
             /* switch welcome screen and image view */
-            stack = new Stack() {
-                transition_type = StackTransitionType.CROSSFADE
-            };
-            stack.add_named(welcome, "welcome");
-            stack.add_named(bottom_box, "picture");
+            stack = new Stack() { transition_type = StackTransitionType.CROSSFADE };
+            {
+                /* welcome screen */
+                welcome = new Granite.Widgets.Welcome(_("No Images Open"), _("Click 'Open Image' to get started."));
+                {
+                    welcome.append("document-open", _("Open Image"), _("Show and edit your image."));
+                    welcome.activated.connect((i) => {
+                        if (i == 0) {
+                            on_open_button_clicked();
+                        }
+                    });
+                }
 
-            toolbar_revealer_above = new Revealer() {
-                transition_type = RevealerTransitionType.SLIDE_DOWN,
-                reveal_child = false
-            };
-            toolbar_revealer_above.add(toolbar);
+                /* Add images and revealer into overlay */
+                var window_overlay = new Overlay();
+                {
+                    bottom_box = new Box(Orientation.VERTICAL, 0);
+                    {
+                        /* contain buttons that can be opened from the menu */
+                        toolbar = new Tatap.ToolBar(this);
+                        {
+                            toolbar.sort_order_changed.connect(() => {
+                                image_next_button.sensitive = image_view.is_next_button_sensitive();
+                                image_prev_button.sensitive = image_view.is_prev_button_sensitive();
+                                try {
+                                    image_view.reopen();
+                                } catch (Error e) {
+                                    show_error_dialog(e.message);
+                                }
+                                progress_scale.inverted = toolbar.sort_order == SortOrder.DESC;
+                            });
 
-            /* revealer showing error messages */
-            message_label = new Label("") {
-                margin = 10
-            };
-            message_label.get_style_context().add_class("message_label");
+                            toolbar.stick_button_clicked.connect((sticked) => {
+                                if (sticked) {
+                                    toolbar_revealer_above.remove(toolbar);
+                                    toolbar_revealer_below.add(toolbar);
+                                    toolbar_revealer_above.reveal_child = false;
+                                    toolbar_revealer_below.reveal_child = true;
+                                    toolbar_toggle_button.sensitive = false;
+                                } else {
+                                    toolbar_revealer_below.remove(toolbar);
+                                    toolbar_revealer_above.add(toolbar);
+                                    toolbar_revealer_above.reveal_child = true;
+                                    toolbar_revealer_below.reveal_child = false;
+                                    toolbar_toggle_button.sensitive = true;
+                                }
+                            });
 
-            var message_bar = new Box(Orientation.HORIZONTAL, 0) {
-                valign = Align.END,
-                hexpand = true,
-                vexpand = false
-            };
-            message_bar.pack_start(message_label);
-            message_bar.get_style_context().add_class("message_bar");
+                            toolbar.view_mode_changed.connect((view_mode) => {
+                                try {
+                                    update_image_view(view_mode);
+                                } catch (Error error) {
+                                    show_error_dialog(error.message);
+                                }
+                            });
 
-            message_revealer = new Revealer() {
-                transition_type = RevealerTransitionType.SLIDE_UP,
-                transition_duration = 100,
-                reveal_child = false
-            };
-            message_revealer.add(message_bar);
+                            toolbar_revealer_below = new Revealer() {
+                                transition_type = RevealerTransitionType.SLIDE_DOWN,
+                                reveal_child = false
+                            };
+                        }
 
-            var revealer_box = new Box(Orientation.VERTICAL, 0);
-            revealer_box.pack_start(toolbar_revealer_above, false, false);
-            revealer_box.pack_end(message_revealer, false, false);
+                        /* image area in the center of the window */
+                        image_view = new SingleImageView(this);
+                        {
+                            image_view.title_changed.connect((title) => {
+                                headerbar.title = title;
+                            });
+                            image_view.image_opened.connect((name, index) => {
+                                progress_scale.set_value((double) index);
+                            });
+                        }
 
-            /* Add images and revealer into overlay */
-            var window_overlay = new Overlay();
-            window_overlay.add(stack);
-            window_overlay.add_overlay(revealer_box);
-            window_overlay.set_overlay_pass_through(revealer_box, true);
+                        bottom_box.pack_start(toolbar_revealer_below, false, false);
+                        bottom_box.pack_start(image_view, true, true);
+                    }
 
-            add(window_overlay);
+                    var revealer_box = new Box(Orientation.VERTICAL, 0);
+                    {
+                        toolbar_revealer_above = new Revealer() {
+                                transition_type = RevealerTransitionType.SLIDE_DOWN,
+                                reveal_child = false };
+                        {
+                            toolbar_revealer_above.add(toolbar);
+                        }
+
+                        message_revealer = new Revealer() {
+                                transition_type = RevealerTransitionType.SLIDE_UP,
+                                transition_duration = 100, reveal_child = false };
+                        {
+                            var message_bar = new Box(Orientation.HORIZONTAL, 0) {
+                                    valign = Align.END, hexpand = true, vexpand = false };
+                            {
+                                /* revealer showing error messages */
+                                message_label = new Label("") {
+                                        margin = 10 };
+                                {
+                                    message_label.get_style_context().add_class("message_label");
+                                }
+
+                                message_bar.pack_start(message_label);
+                                message_bar.get_style_context().add_class("message_bar");
+                            }
+
+                            message_revealer.add(message_bar);
+                        }
+
+                        progress_revealer = new Revealer() {
+                                transition_type = RevealerTransitionType.SLIDE_UP,
+                                transition_duration = 200, reveal_child = false };
+                        {
+                            var progress_box = new Box(Orientation.HORIZONTAL, 0);
+                            {
+                                progress_scale = new Scale.with_range(Orientation.HORIZONTAL, 0.0, 1.0, 0.1) {
+                                        draw_value = false, has_origin = true, margin = 5 };
+                                {
+                                    progress_scale.change_value.connect(() => {
+                                        try {
+                                            image_view.open_at((int) progress_scale.get_value());
+                                        } catch (Error e) {
+                                            show_error_dialog(e.message);
+                                        }
+                                    });
+                                }
+
+                                progress_box.pack_start(progress_scale, true, true);
+                                progress_box.get_style_context().add_class("progress_bar");
+                            }
+
+                            progress_revealer.add(progress_box);
+                        }
+
+                        revealer_box.pack_start(toolbar_revealer_above, false, false);
+                        revealer_box.pack_end(progress_revealer, false, false);
+                        revealer_box.pack_end(message_revealer, false, false);
+                    }
+
+                    window_overlay.add(bottom_box);
+                    window_overlay.add_overlay(revealer_box);
+                    window_overlay.set_overlay_pass_through(revealer_box, false);
+                }
+
+                stack.add_named(welcome, "welcome");
+                stack.add_named(window_overlay, "picture");
+            }
+
+            add(stack);
 
             set_titlebar(headerbar);
             set_default_size(800, 600);
-            event.connect(handle_events);
-            add_events (Gdk.EventMask.SCROLL_MASK);
-
+            motion_notify_event.connect((event) => handle_motion_event(event.motion));
+            key_press_event.connect((event) => handle_key_event(event.key));
+            leave_notify_event.connect((event) => handle_leave_event(event));
+            event.connect(handle_other_events);
+            add_events(Gdk.EventMask.SCROLL_MASK);
             destroy.connect(() => {
                 if (file_list != null) {
                     file_list.close();
@@ -263,29 +345,113 @@ namespace Tatap {
             setup_css();
         }
 
-        private bool handle_events(Event ev) {
-            switch (ev.type) {
-            case EventType.KEY_PRESS:
-                if (Gdk.ModifierType.CONTROL_MASK in ev.key.state) {
-                    switch (ev.key.keyval) {
-                    case Gdk.Key.n:
-                        require_new_window();
-                        return true;
-                    case Gdk.Key.o:
-                        on_open_button_clicked();
-                        return true;
-                    case Gdk.Key.w:
-                        close();
-                        return true;
-                    case Gdk.Key.q:
-                        require_quit();
-                        return true;
+        private bool in_progress_area(double x, double y) {
+            int win_x_root, win_y_root;
+            get_window().get_origin(out win_x_root, out win_y_root);
+            Allocation allocation;
+            get_allocation(out allocation);
+            return (win_y_root + allocation.height * 0.8) < ((int) y) <= win_y_root + allocation.height;
+        }
+
+        private bool in_toolbar_area(double x, double y) {
+            int win_x_root, win_y_root;
+            get_window().get_origin(out win_x_root, out win_y_root);
+            Allocation allocation;
+            get_allocation(out allocation);
+            return win_y_root <= (y - allocation.y) <= win_y_root + allocation.height * 0.2;
+        }
+
+        private bool handle_motion_event(EventMotion ev) {
+            if (stack.visible_child_name == "picture") {
+                if (in_progress_area(ev.x_root, ev.y_root)) {
+                    if (!progress_revealer.child_revealed) {
+                        Timeout.add(300, () => {
+                            progress_revealer.reveal_child = true;
+                            return false;
+                        });
+                    }
+                } else {
+                    if (progress_revealer.child_revealed) {
+                        Timeout.add(300, () => {
+                            progress_revealer.reveal_child = false;
+                            return false;
+                        });
                     }
                 }
-                break;
-            default:
-                break;
+                if (fullscreen_mode) {
+                    if (!toolbar.sticked) {
+                        if (in_toolbar_area(ev.x_root, ev.y_root)) {
+                            if (!toolbar_revealer_above.child_revealed) {
+                                Timeout.add(300, () => {
+                                    toolbar_revealer_above.reveal_child = true;
+                                    return false;
+                                });
+                            }
+                        } else {
+                            if (toolbar_revealer_above.child_revealed) {
+                                Timeout.add(300, () => {
+                                    toolbar_revealer_above.reveal_child = false;
+                                    return false;
+                                });
+                            }
+                        }
+                    }
+                }
             }
+            return false;
+        }
+
+        private bool handle_leave_event(EventCrossing event) {
+            if (progress_revealer.child_revealed) {
+                Timeout.add(300, () => {
+                    progress_revealer.reveal_child = false;
+                    return false;
+                });
+            }
+            return false;
+        }
+
+        private bool handle_key_event(EventKey ev) {
+            if (Gdk.ModifierType.CONTROL_MASK in ev.state) {
+                switch (ev.keyval) {
+                case Gdk.Key.m:
+                    if (toolbar_toggle_button.sensitive) {
+                        toolbar_toggle_button.active = !toolbar_toggle_button.active;
+                        toolbar_toggle_button.toggled();
+                    }
+                    break;
+                case Gdk.Key.f:
+                    if (toolbar_revealer_above.child_revealed && !toolbar.sticked) {
+                        toolbar_toggle_button.active = true;
+                        toolbar.stick_toolbar();
+                    } else if (toolbar_revealer_below.child_revealed) {
+                        toolbar.unstick_toolbar();
+                    }
+                    break;
+                case Gdk.Key.n:
+                    require_new_window();
+                    break;
+                case Gdk.Key.o:
+                    on_open_button_clicked();
+                    break;
+                case Gdk.Key.w:
+                    close();
+                    break;
+                case Gdk.Key.q:
+                    require_quit();
+                    break;
+                }
+            } else {
+                switch (ev.keyval) {
+                  case Gdk.Key.F11:
+                    fullscreen_mode = !fullscreen_mode;
+                    break;
+                }
+            }
+            return false;
+        }
+
+        private bool handle_other_events(Event ev) {
             try {
                 return image_view.handle_event(ev);
             } catch (Error error) {
@@ -337,6 +503,8 @@ namespace Tatap {
                     });
                     file_list.updated.connect(() => {
                         image_view.update();
+                        progress_scale.set_range(0.0, (double) (file_list.size - 1));
+                        progress_scale.set_value(image_view.position);
                     });
                     file_list.terminated.connect(() => {
                         if (repeat_updating_file_list) {
@@ -403,6 +571,9 @@ namespace Tatap {
                     break;
                 case DUAL_VIEW_MODE:
                     image_view = new DualImageView.with_file_list(this, file_list);
+                    image_view.image_opened.connect((name, index) => {
+                        progress_scale.set_value((double) index);
+                    });
                     break;
                 case SCROLL_VIEW_MODE:
                     // TODO: Implement later.
@@ -411,6 +582,9 @@ namespace Tatap {
                 bottom_box.pack_start(image_view, true, true);
                 image_view.title_changed.connect((title) => {
                     headerbar.title = title;
+                });
+                image_view.image_opened.connect((name, index) => {
+                    progress_scale.set_value((double) index);
                 });
                 open_file(file);
                 bottom_box.show_all();

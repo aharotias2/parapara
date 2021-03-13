@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the com.github.aharotias2.tatap package.
+# This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: com.github.aharotias2.tatap\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-13 02:42+0000\n"
+"POT-Creation-Date: 2021-03-13 18:29+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,8 +17,198 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: src/Widgets/ToolBar.vala:190
+msgid "100%"
+msgstr ""
+
+#: src/Widgets/Window.vala:472 src/Widgets/ResizeDialog.vala:119
+#: src/Widgets/SingleImageView.vala:370
+msgid "Cancel"
+msgstr ""
+
+#: src/Widgets/Window.vala:471
+msgid "Choose file to open"
+msgstr ""
+
+#: src/Widgets/Window.vala:186
+msgid "Click 'Open Image' to get started."
+msgstr ""
+
+#: src/Widgets/SingleImageView.vala:401
+msgid "Do you really overwrite this file?"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:435
+msgid "Dual View Mode"
+msgstr ""
+
+#: src/Widgets/SingleImageView.vala:390
+msgid "File already exists. Do you want to overwrite it?"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:182
+msgid "Fit to the page"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:198
+msgid "Flip horizontally"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:204
+msgid "Flip vertically"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:401
+msgid "Fullscreen"
+msgstr ""
+
+#: src/Widgets/ResizeDialog.vala:81
+msgid "Height:"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:328
+msgid "Left to Right"
+msgstr ""
+
+#: src/Widgets/Window.vala:164
+msgid "Menu"
+msgstr ""
+
+#: src/Widgets/Window.vala:144
+msgid "New"
+msgstr ""
+
+#: src/Widgets/Window.vala:107
+msgid "Next"
+msgstr ""
+
+#: src/Widgets/Window.vala:186
+msgid "No Images Open"
+msgstr ""
+
+#: src/Widgets/ResizeDialog.vala:118
+msgid "OK"
+msgstr ""
+
+#: src/Widgets/Window.vala:137 src/Widgets/Window.vala:472
+msgid "Open"
+msgstr ""
+
+#: src/Widgets/Window.vala:188
+msgid "Open Image"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:287
+msgid "Play/Pause animation"
+msgstr ""
+
+#: src/Widgets/Window.vala:86
+msgid "Previous"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:160
+msgid "Resize"
+msgstr ""
+
+#: src/Widgets/SingleImageView.vala:354
+msgid "Resizing of the image was canceled."
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:345
+msgid "Right to Left"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:210
+msgid "Rotate to the left"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:217
+msgid "Rotate to the right"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:138 src/Widgets/SingleImageView.vala:370
+msgid "Save"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:146 src/Widgets/SingleImageView.vala:369
+msgid "Save as…"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:425
+msgid "Scroll View Mode"
+msgstr ""
+
+#: src/Widgets/ResizeDialog.vala:59
+msgid "Set the width and the height"
+msgstr ""
+
+#: src/Widgets/Window.vala:188
+msgid "Show and edit your image."
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:414
+msgid "Single View Mode"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:278
+msgid "Skip forward"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:362
+msgid "Slide 1 page to Left"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:377
+msgid "Slide 1 page to Right"
+msgstr ""
+
+#: src/Widgets/SingleImageView.vala:362
+msgid "Sorry, saving animations is not supported yet."
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:239
+msgid "Sort Asc"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:256
+msgid "Sort Desc"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:452
+msgid "Stick"
+msgstr ""
+
+#: src/Widgets/Window.vala:498
+msgid "The directory does not found. Exiting."
+msgstr ""
+
+#: src/Widgets/Window.vala:544
+#, c-format
+msgid "The file could not be opend (cause: %s)"
+msgstr ""
+
+#: src/Widgets/Window.vala:502
+msgid "The file does not found."
+msgstr ""
+
 #: src/Model/FileList.vala:54 src/Model/FileList.vala:66
 msgid "The file list is not initialized!"
+msgstr ""
+
+#: src/Utils/FileUtils.vala:48
+msgid "The file path is invalid. it does not exist or is not a regular file."
+msgstr ""
+
+#: src/Widgets/SingleImageView.vala:414
+msgid "The file save was canceled."
+msgstr ""
+
+#: src/Widgets/SingleImageView.vala:419
+msgid "The file was saved"
+msgstr ""
+
+#: src/Widgets/SingleImageView.vala:352
+msgid "The image was resized."
 msgstr ""
 
 #: src/Model/FileList.vala:58 src/Model/SingleFileAccessor.vala:42
@@ -26,208 +216,19 @@ msgstr ""
 msgid "The index is out of the bounds (%d/%d)"
 msgstr ""
 
-#: src/Model/SingleFileAccessor.vala:55
-#, c-format
-msgid "file list does not contains this name! (%s)"
-msgstr ""
-
-#: src/Utils/FileUtils.vala:48
-msgid "The file path is invalid. it does not exist or is not a regular file."
-msgstr ""
-
-#: src/Widgets/ResizeDialog.vala:59
-msgid "Set the width and the height"
-msgstr ""
-
 #: src/Widgets/ResizeDialog.vala:61
 msgid "Width:"
 msgstr ""
 
-#: src/Widgets/ResizeDialog.vala:81
-msgid "Height:"
-msgstr ""
-
-#: src/Widgets/ResizeDialog.vala:118
-msgid "OK"
-msgstr ""
-
-#: src/Widgets/ResizeDialog.vala:119 src/Widgets/SingleImageView.vala:345
-#: src/Widgets/Window.vala:306
-msgid "Cancel"
-msgstr ""
-
-#: src/Widgets/SingleImageView.vala:327
-msgid "The image was resized."
-msgstr ""
-
-#: src/Widgets/SingleImageView.vala:329
-msgid "Resizing of the image was canceled."
-msgstr ""
-
-#: src/Widgets/SingleImageView.vala:337
-msgid "Sorry, saving animations is not supported yet."
-msgstr ""
-
-#: src/Widgets/SingleImageView.vala:344 src/Widgets/ToolBar.vala:126
-msgid "Save as…"
-msgstr ""
-
-#: src/Widgets/SingleImageView.vala:345 src/Widgets/ToolBar.vala:118
-msgid "Save"
-msgstr ""
-
-#: src/Widgets/SingleImageView.vala:365
-msgid "File already exists. Do you want to overwrite it?"
-msgstr ""
-
-#: src/Widgets/SingleImageView.vala:376
-msgid "Do you really overwrite this file?"
-msgstr ""
-
-#: src/Widgets/SingleImageView.vala:389
-msgid "The file save was canceled."
-msgstr ""
-
-#: src/Widgets/SingleImageView.vala:394
-msgid "The file was saved"
-msgstr ""
-
-#. action buttons for the image
-#: src/Widgets/ToolBar.vala:140
-msgid "Resize"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:146
+#: src/Widgets/ToolBar.vala:166
 msgid "Zoom in"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:154
+#: src/Widgets/ToolBar.vala:174
 msgid "Zoom out"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:162
-msgid "Fit to the page"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:170
-msgid "100%"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:178
-msgid "Flip horizontally"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:184
-msgid "Flip vertically"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:190
-msgid "Rotate to the left"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:197
-msgid "Rotate to the right"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:221
-msgid "Sort Asc"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:235
-msgid "Sort Desc"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:255
-msgid "Skip forward"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:264
-msgid "Play/Pause animation"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:305
-msgid "Single View Mode"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:315
-msgid "Left to Right"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:329
-msgid "Right to Left"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:343
-msgid "Slide 1 page to Left"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:358
-msgid "Slide 1 page to Right"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:383
-msgid "Scroll View Mode"
-msgstr ""
-
-#: src/Widgets/ToolBar.vala:393
-msgid "Dual View Mode"
-msgstr ""
-
-#. mode_switch_button_box.pack_start(scroll_view_button);
-#: src/Widgets/ToolBar.vala:410
-msgid "Stick"
-msgstr ""
-
-#: src/Widgets/Window.vala:51
-msgid "Previous"
-msgstr ""
-
-#: src/Widgets/Window.vala:71
-msgid "Next"
-msgstr ""
-
-#. file buttons
-#: src/Widgets/Window.vala:98 src/Widgets/Window.vala:306
-msgid "Open"
-msgstr ""
-
-#: src/Widgets/Window.vala:103
-msgid "New"
-msgstr ""
-
-#: src/Widgets/Window.vala:122
-msgid "Menu"
-msgstr ""
-
-#: src/Widgets/Window.vala:146
-msgid "No Images Open"
-msgstr ""
-
-#: src/Widgets/Window.vala:147
-msgid "Click 'Open Image' to get started."
-msgstr ""
-
-#: src/Widgets/Window.vala:149
-msgid "Open Image"
-msgstr ""
-
-#: src/Widgets/Window.vala:149
-msgid "Show and edit your image."
-msgstr ""
-
-#: src/Widgets/Window.vala:305
-msgid "Choose file to open"
-msgstr ""
-
-#: src/Widgets/Window.vala:332
-msgid "The directory does not found. Exiting."
-msgstr ""
-
-#: src/Widgets/Window.vala:336
-msgid "The file does not found."
-msgstr ""
-
-#: src/Widgets/Window.vala:376
+#: src/Model/SingleFileAccessor.vala:55
 #, c-format
-msgid "The file could not be opend (cause: %s)"
+msgid "file list does not contains this name! (%s)"
 msgstr ""

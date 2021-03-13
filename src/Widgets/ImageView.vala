@@ -25,6 +25,7 @@ namespace Tatap {
         public abstract FileList file_list { get; set; }
         public abstract string dir_path { owned get; }
         public abstract bool has_image { get; }
+        public abstract double position { get; }
         public abstract File get_file() throws Error;
         public abstract bool is_next_button_sensitive();
         public abstract bool is_prev_button_sensitive();
@@ -33,9 +34,11 @@ namespace Tatap {
         public abstract void go_backward(int offset = 1) throws Error;
         public abstract void open(File file) throws Error;
         public abstract void reopen() throws Error;
+        public abstract void open_at(int index) throws Error;
         public abstract void update_title();
         public abstract void update();
         public abstract void close();
         public signal void title_changed(string title);
+        public signal void image_opened(string name, int index);
     }
 }

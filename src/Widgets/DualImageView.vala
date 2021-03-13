@@ -45,9 +45,13 @@ namespace Tatap {
             }
         }
 
+        public override double position {
+            get {
+                return (double) accessor.get_index1() / (double) _file_list.size;
+            }
+        }
+
         private Box dual_box;
-        private ScrolledWindow left_frame;
-        private ScrolledWindow right_frame;
         private Image left_image;
         private Image right_image;
         private DualFileAccessor accessor;
@@ -75,44 +79,43 @@ namespace Tatap {
             {
                 dual_box = new Box(Orientation.HORIZONTAL, 0);
                 {
-                    left_frame = new ScrolledWindow(null, null);
+                    left_image = new Image(true);
                     {
-                        left_image = new Image(true);
-                        {
-                            left_image.halign = Align.END;
-                            left_image.container = left_frame;
-                            left_image.get_style_context().add_class("image-view");
-                        }
-
-                        left_frame.add(left_image);
+                        left_image.halign = Align.END;
+                        left_image.container = scroll;
+                        left_image.get_style_context().add_class("image-view");
                     }
 
-                    right_frame = new ScrolledWindow(null, null);
+                    right_image = new Image(true);
                     {
-                        right_image = new Image(true);
-                        {
-                            right_image.halign = Align.START;
-                            right_image.container = right_frame;
-                            right_image.get_style_context().add_class("image-view");
-                        }
-
-                        right_frame.add(right_image);
+                        right_image.halign = Align.START;
+                        right_image.container = scroll;
+                        right_image.get_style_context().add_class("image-view");
                     }
 
-                    dual_box.pack_start(left_frame, true, true);
-                    dual_box.pack_start(right_frame, true, true);
+                    dual_box.pack_start(left_image, true, true);
+                    dual_box.pack_start(right_image, true, true);
                     dual_box.get_style_context().add_class("image-view");
                 }
 
                 scroll.add(dual_box);
                 scroll.size_allocate.connect((allocation) => {
-                    left_frame.width_request = allocation.width / 2;
-                    left_frame.height_request = allocation.height;
-                    left_image.fit_size_to_window();
-                    right_frame.width_request = allocation.width / 2;
-                    right_frame.height_request = allocation.height;
-                    right_image.fit_size_to_window();
-                    update_title();
+                    int new_width = allocation.width / 2;
+                    int new_height = allocation.height;
+                    Idle.add(() => {
+                        if (left_image.visible) {
+                            left_image.scale_fit_in_width_and_height(new_width, new_height);
+                        } else {
+                            right_image.margin_start = new_width;
+                        }
+                        if (right_image.visible) {
+                            right_image.scale_fit_in_width_and_height(new_width, new_height);
+                        } else {
+                            left_image.margin_end = new_width;
+                        }
+                        update_title();
+                        return false;
+                    });
                 });
             }
 
@@ -211,81 +214,125 @@ namespace Tatap {
 
         public void go_forward(int offset = 2) throws Error {
             accessor.go_forward(offset);
-            open_by_accessor_current_index();
+            reopen();
         }
 
         public void go_backward(int offset = 2) throws Error {
             accessor.go_backward(offset);
-            open_by_accessor_current_index();
+            reopen();
         }
 
-        private void open_by_accessor_current_index() throws Error {
-            switch (main_window.toolbar.sort_order) {
-              case SortOrder.ASC:
-                if (accessor.get_index1() >= 0) {
-                    left_image.visible = true;
-                    left_image.open(accessor.get_file1().get_path());
-                } else {
-                    left_image.visible = false;
-                }
-                if (accessor.get_index2() >= 0) {
-                    right_image.visible = true;
-                    right_image.open(accessor.get_file2().get_path());
-                } else {
-                    right_image.visible = false;
-                }
-                if (accessor.get_index1() < 0) {
-                    main_window.toolbar.l1button.sensitive = false;
-                } else {
-                    main_window.toolbar.l1button.sensitive = true;
-                }
-                if (accessor.get_index1() >= _file_list.size - 1) {
-                    main_window.toolbar.r1button.sensitive = false;
-                } else {
-                    main_window.toolbar.r1button.sensitive = true;
-                }
-                break;
-              case SortOrder.DESC:
-                if (accessor.get_index1() >= 0) {
-                    right_image.visible = true;
-                    right_image.open(accessor.get_file1().get_path());
-                } else {
-                    right_image.visible = false;
-                }
-                if (accessor.get_index2() >= 0) {
-                    left_image.visible = true;
-                    left_image.open(accessor.get_file2().get_path());
-                } else {
-                    left_image.visible = false;
-                }
-                if (accessor.get_index1() < 0) {
-                    main_window.toolbar.r1button.sensitive = false;
-                } else {
-                    main_window.toolbar.r1button.sensitive = true;
-                }
-                if (accessor.get_index1() >= _file_list.size - 1) {
-                    main_window.toolbar.l1button.sensitive = false;
-                } else {
-                    main_window.toolbar.l1button.sensitive = true;
-                }
-                break;
+        private bool in_progress = false;
+
+        private async void open_by_accessor_current_index() throws Error {
+            if (in_progress) {
+                return;
             }
-            Idle.add(() => {
-                left_image.fit_size_to_window();
-                right_image.fit_size_to_window();
-                return false;
-            });
-            main_window.image_next_button.sensitive = is_next_button_sensitive();
-            main_window.image_prev_button.sensitive = is_prev_button_sensitive();
+            try {
+                in_progress = true;
+                string? left_file_path = null;
+                string? right_file_path = null;
+                bool left_visible = false;
+                bool right_visible = false;
+                int index1 = accessor.get_index1();
+                int index2 = accessor.get_index2();
+                switch (main_window.toolbar.sort_order) {
+                  case SortOrder.ASC:
+                    if (index1 >= 0) {
+                        left_visible = true;
+                        left_file_path = accessor.get_file1().get_path();
+                    }
+                    if (index2 >= 0) {
+                        right_visible = true;
+                        right_file_path = accessor.get_file2().get_path();
+                    }
+                    if (index1 < 0) {
+                        main_window.toolbar.l1button.sensitive = false;
+                    } else {
+                        main_window.toolbar.l1button.sensitive = true;
+                    }
+                    if (index1 >= _file_list.size - 1) {
+                        main_window.toolbar.r1button.sensitive = false;
+                    } else {
+                        main_window.toolbar.r1button.sensitive = true;
+                    }
+                    break;
+                  case SortOrder.DESC:
+                    if (index1 >= 0) {
+                        right_visible = true;
+                        right_file_path = accessor.get_file1().get_path();
+                    }
+                    if (index2 >= 0) {
+                        left_visible = true;
+                        left_file_path = accessor.get_file2().get_path();
+                    }
+                    if (index1 < 0) {
+                        main_window.toolbar.r1button.sensitive = false;
+                    } else {
+                        main_window.toolbar.r1button.sensitive = true;
+                    }
+                    if (index1 >= _file_list.size - 1) {
+                        main_window.toolbar.l1button.sensitive = false;
+                    } else {
+                        main_window.toolbar.l1button.sensitive = true;
+                    }
+                    break;
+                }
+                main_window.image_next_button.sensitive = is_next_button_sensitive();
+                main_window.image_prev_button.sensitive = is_prev_button_sensitive();
+                Idle.add(open_by_accessor_current_index.callback);
+                yield;
+                int width = get_allocated_width() / 2;
+                int height = get_allocated_height();
+                if (left_file_path != null) {
+                    left_image.open(left_file_path);
+                    left_image.scale_fit_in_width_and_height(width, height);
+                }
+                if (right_file_path != null) {
+                    right_image.open(right_file_path);
+                    right_image.scale_fit_in_width_and_height(width, height);
+                }
+                left_image.visible = left_visible;
+                right_image.visible = right_visible;
+                if (!left_visible) {
+                    right_image.margin_start = width;
+                } else {
+                    right_image.margin_start = 0;
+                }
+                if (!right_visible) {
+                    left_image.margin_end = width;
+                } else {
+                    left_image.margin_end = 0;
+                }
+                if (index1 < 0) {
+                    image_opened(accessor.get_name2(), 0);
+                } else {
+                    image_opened(accessor.get_name1(), index1);
+                }
+                in_progress = false;
+            } catch (Error e) {
+                in_progress = false;
+                throw e;
+            }
         }
 
         public void open(File file1) throws Error {
             accessor.set_file1(file1);
-            open_by_accessor_current_index();
+            reopen();
+        }
+
+        public void open_at(int index) throws Error {
+            open(File.new_for_path(Path.build_path(Path.DIR_SEPARATOR_S, _file_list.dir_path, _file_list.get_filename_at(index))));
         }
 
         public void reopen() throws Error {
-            open_by_accessor_current_index();
+            open_by_accessor_current_index.begin((obj, res) => {
+                try {
+                    open_by_accessor_current_index.end(res);
+                } catch (Error e) {
+                    main_window.show_error_dialog(e.message);
+                }
+            });
         }
 
         public void update_title() {
