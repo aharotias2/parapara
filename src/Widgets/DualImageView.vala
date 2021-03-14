@@ -215,11 +215,21 @@ namespace Tatap {
         public void go_forward(int offset = 2) throws Error {
             accessor.go_forward(offset);
             reopen();
+            if (accessor.get_index1() < 0) {
+                image_opened(accessor.get_name2(), 0);
+            } else {
+                image_opened(accessor.get_name1(), accessor.get_index1());
+            }
         }
 
         public void go_backward(int offset = 2) throws Error {
             accessor.go_backward(offset);
             reopen();
+            if (accessor.get_index1() < 0) {
+                image_opened(accessor.get_name2(), 0);
+            } else {
+                image_opened(accessor.get_name1(), accessor.get_index1());
+            }
         }
 
         private bool in_progress = false;
