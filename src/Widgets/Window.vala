@@ -298,6 +298,9 @@ namespace Tatap {
                                 {
                                     progress_scale.change_value.connect(() => {
                                         try {
+                                            debug("change progress value: %f", progress_scale.get_value());
+                                            debug("progress_adjustment %f, %f", progress_scale.adjustment.upper,
+                                                    progress_scale.adjustment.lower);
                                             image_view.open_at((int) progress_scale.get_value());
                                         } catch (Error e) {
                                             show_error_dialog(e.message);
@@ -575,9 +578,6 @@ namespace Tatap {
                     break;
                 case DUAL_VIEW_MODE:
                     image_view = new DualImageView.with_file_list(this, file_list);
-                    image_view.image_opened.connect((name, index) => {
-                        progress_scale.set_value((double) index);
-                    });
                     break;
                 case SCROLL_VIEW_MODE:
                     // TODO: Implement later.

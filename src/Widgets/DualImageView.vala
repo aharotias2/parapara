@@ -304,11 +304,6 @@ namespace Tatap {
                 } else {
                     left_image.margin_end = 0;
                 }
-                if (index1 < 0) {
-                    image_opened(accessor.get_name2(), 0);
-                } else {
-                    image_opened(accessor.get_name1(), index1);
-                }
                 in_progress = false;
             } catch (Error e) {
                 in_progress = false;
@@ -319,13 +314,22 @@ namespace Tatap {
         public void open(File file1) throws Error {
             accessor.set_file1(file1);
             reopen();
+
+            if (accessor.get_index1() < 0) {
+                image_opened(accessor.get_name2(), 0);
+            } else {
+                image_opened(accessor.get_name1(), accessor.get_index1());
+            }
         }
 
         public void open_at(int index) throws Error {
-            open(File.new_for_path(Path.build_path(Path.DIR_SEPARATOR_S, _file_list.dir_path, _file_list.get_filename_at(index))));
+            debug("open at: %d", index);
+            accessor.set_index1(index);
+            reopen();
         }
 
         public void reopen() throws Error {
+            debug("open: %d, %d", accessor.get_index1(), accessor.get_index2());
             open_by_accessor_current_index.begin((obj, res) => {
                 try {
                     open_by_accessor_current_index.end(res);

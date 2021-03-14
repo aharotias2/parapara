@@ -288,7 +288,8 @@ namespace Tatap {
         }
 
         public void open_at(int index) throws Error {
-            open(File.new_for_path(Path.build_path(Path.DIR_SEPARATOR_S, _file_list.dir_path, _file_list.get_filename_at(index))));
+            accessor.set_index(index);
+            open(accessor.get_file());
         }
 
         public void reopen() throws Error {
