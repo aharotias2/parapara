@@ -26,6 +26,7 @@ namespace Tatap {
         public abstract string dir_path { owned get; }
         public abstract bool has_image { get; }
         public abstract double position { get; }
+        public abstract int index { get; }
         public abstract File get_file() throws Error;
         public abstract bool is_next_button_sensitive();
         public abstract bool is_prev_button_sensitive();

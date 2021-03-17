@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-13 18:29+0900\n"
+"POT-Creation-Date: 2021-03-17 23:31+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,20 +21,20 @@ msgstr ""
 msgid "100%"
 msgstr ""
 
-#: src/Widgets/Window.vala:472 src/Widgets/ResizeDialog.vala:119
-#: src/Widgets/SingleImageView.vala:370
+#: src/Widgets/Window.vala:486 src/Widgets/ResizeDialog.vala:119
+#: src/Widgets/SingleImageView.vala:376
 msgid "Cancel"
 msgstr ""
 
-#: src/Widgets/Window.vala:471
+#: src/Widgets/Window.vala:485
 msgid "Choose file to open"
 msgstr ""
 
-#: src/Widgets/Window.vala:186
+#: src/Widgets/Window.vala:187
 msgid "Click 'Open Image' to get started."
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:401
+#: src/Widgets/SingleImageView.vala:407
 msgid "Do you really overwrite this file?"
 msgstr ""
 
@@ -42,7 +42,7 @@ msgstr ""
 msgid "Dual View Mode"
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:390
+#: src/Widgets/SingleImageView.vala:396
 msgid "File already exists. Do you want to overwrite it?"
 msgstr ""
 
@@ -70,19 +70,25 @@ msgstr ""
 msgid "Left to Right"
 msgstr ""
 
-#: src/Widgets/Window.vala:164
+#: src/Widgets/Window.vala:254 src/Widgets/Window.vala:522
+#: src/Widgets/Window.vala:600
+#, c-format
+msgid "Location: %d / %d (%d%%)"
+msgstr ""
+
+#: src/Widgets/Window.vala:165
 msgid "Menu"
 msgstr ""
 
-#: src/Widgets/Window.vala:144
+#: src/Widgets/Window.vala:145
 msgid "New"
 msgstr ""
 
-#: src/Widgets/Window.vala:107
+#: src/Widgets/Window.vala:108
 msgid "Next"
 msgstr ""
 
-#: src/Widgets/Window.vala:186
+#: src/Widgets/Window.vala:187
 msgid "No Images Open"
 msgstr ""
 
@@ -90,11 +96,11 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: src/Widgets/Window.vala:137 src/Widgets/Window.vala:472
+#: src/Widgets/Window.vala:138 src/Widgets/Window.vala:486
 msgid "Open"
 msgstr ""
 
-#: src/Widgets/Window.vala:188
+#: src/Widgets/Window.vala:189
 msgid "Open Image"
 msgstr ""
 
@@ -102,7 +108,7 @@ msgstr ""
 msgid "Play/Pause animation"
 msgstr ""
 
-#: src/Widgets/Window.vala:86
+#: src/Widgets/Window.vala:87
 msgid "Previous"
 msgstr ""
 
@@ -110,7 +116,7 @@ msgstr ""
 msgid "Resize"
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:354
+#: src/Widgets/SingleImageView.vala:360
 msgid "Resizing of the image was canceled."
 msgstr ""
 
@@ -126,11 +132,11 @@ msgstr ""
 msgid "Rotate to the right"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:138 src/Widgets/SingleImageView.vala:370
+#: src/Widgets/ToolBar.vala:138 src/Widgets/SingleImageView.vala:376
 msgid "Save"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:146 src/Widgets/SingleImageView.vala:369
+#: src/Widgets/ToolBar.vala:146 src/Widgets/SingleImageView.vala:375
 msgid "Save as…"
 msgstr ""
 
@@ -142,7 +148,7 @@ msgstr ""
 msgid "Set the width and the height"
 msgstr ""
 
-#: src/Widgets/Window.vala:188
+#: src/Widgets/Window.vala:189
 msgid "Show and edit your image."
 msgstr ""
 
@@ -162,7 +168,7 @@ msgstr ""
 msgid "Slide 1 page to Right"
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:362
+#: src/Widgets/SingleImageView.vala:368
 msgid "Sorry, saving animations is not supported yet."
 msgstr ""
 
@@ -178,16 +184,16 @@ msgstr ""
 msgid "Stick"
 msgstr ""
 
-#: src/Widgets/Window.vala:498
+#: src/Widgets/Window.vala:512
 msgid "The directory does not found. Exiting."
 msgstr ""
 
-#: src/Widgets/Window.vala:544
+#: src/Widgets/Window.vala:559
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr ""
 
-#: src/Widgets/Window.vala:502
+#: src/Widgets/Window.vala:516
 msgid "The file does not found."
 msgstr ""
 
@@ -199,15 +205,15 @@ msgstr ""
 msgid "The file path is invalid. it does not exist or is not a regular file."
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:414
+#: src/Widgets/SingleImageView.vala:420
 msgid "The file save was canceled."
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:419
+#: src/Widgets/SingleImageView.vala:425
 msgid "The file was saved"
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:352
+#: src/Widgets/SingleImageView.vala:358
 msgid "The image was resized."
 msgstr ""
 

@@ -34,6 +34,7 @@ namespace Tatap {
         public Revealer toolbar_revealer_below { get; private set; }
         public Revealer progress_revealer { get; private set; }
         public Scale progress_scale { get; private set; }
+        public Label progress_label { get; private set; }
         public ImageView image_view { get; private set; }
         public ActionButton image_prev_button { get; private set; }
         public ActionButton image_next_button { get; private set; }
@@ -250,6 +251,8 @@ namespace Tatap {
                             });
                             image_view.image_opened.connect((name, index) => {
                                 progress_scale.set_value((double) index);
+                                progress_label.label = _("Location: %d / %d (%d%%)").printf(
+                                        index + 1, file_list.size, (int) (image_view.position * 100));
                             });
                         }
 
@@ -291,7 +294,7 @@ namespace Tatap {
                                 transition_type = RevealerTransitionType.SLIDE_UP,
                                 transition_duration = 200, reveal_child = false };
                         {
-                            var progress_box = new Box(Orientation.HORIZONTAL, 0);
+                            var progress_box = new Box(Orientation.VERTICAL, 0);
                             {
                                 progress_scale = new Scale.with_range(Orientation.HORIZONTAL, 0.0, 1.0, 0.1) {
                                         draw_value = false, has_origin = true, margin = 5 };
@@ -308,7 +311,10 @@ namespace Tatap {
                                     });
                                 }
 
-                                progress_box.pack_start(progress_scale, true, true);
+                                progress_label = new Label("");
+
+                                progress_box.pack_start(progress_scale, false, false);
+                                progress_box.pack_start(progress_label, false, false);
                                 progress_box.get_style_context().add_class("progress_bar");
                             }
 
@@ -421,13 +427,13 @@ namespace Tatap {
         public override bool key_press_event(EventKey ev) {
             if (Gdk.ModifierType.CONTROL_MASK in ev.state) {
                 switch (ev.keyval) {
-                case Gdk.Key.m:
+                  case Gdk.Key.m:
                     if (toolbar_toggle_button.sensitive) {
                         toolbar_toggle_button.active = !toolbar_toggle_button.active;
                         toolbar_toggle_button.toggled();
                     }
                     break;
-                case Gdk.Key.f:
+                  case Gdk.Key.f:
                     if (toolbar_revealer_above.child_revealed && !toolbar.sticked) {
                         toolbar_toggle_button.active = true;
                         toolbar.stick_toolbar();
@@ -435,16 +441,16 @@ namespace Tatap {
                         toolbar.unstick_toolbar();
                     }
                     break;
-                case Gdk.Key.n:
+                  case Gdk.Key.n:
                     require_new_window();
                     break;
-                case Gdk.Key.o:
+                  case Gdk.Key.o:
                     on_open_button_clicked();
                     break;
-                case Gdk.Key.w:
+                  case Gdk.Key.w:
                     close();
                     break;
-                case Gdk.Key.q:
+                  case Gdk.Key.q:
                     require_quit();
                     break;
                 }
@@ -453,6 +459,7 @@ namespace Tatap {
                   case Gdk.Key.F11:
                     fullscreen_mode = !fullscreen_mode;
                     break;
+                  default: break;
                 }
             }
             return false;
@@ -511,7 +518,8 @@ namespace Tatap {
                     file_list.updated.connect(() => {
                         image_view.update();
                         progress_scale.set_range(0.0, (double) (file_list.size - 1));
-                        progress_scale.set_value(image_view.position);
+                        progress_scale.set_value(image_view.index);
+                        progress_label.label = _("Location: %d / %d (%d%%)").printf(image_view.index + 1, file_list.size, (int) (image_view.position * 100));
                     });
                     file_list.terminated.connect(() => {
                         if (repeat_updating_file_list) {
@@ -589,6 +597,7 @@ namespace Tatap {
                 });
                 image_view.image_opened.connect((name, index) => {
                     progress_scale.set_value((double) index);
+                    progress_label.label = _("Location: %d / %d (%d%%)").printf(index + 1, file_list.size, (int) (image_view.position * 100));
                 });
                 open_file(file);
                 bottom_box.show_all();

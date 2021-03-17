@@ -20,16 +20,21 @@ using Gdk, Gtk;
 
 namespace Tatap {
     public class SingleImageView : ImageView, Bin {
-        public override Tatap.Window main_window { get; construct; }
+        public Tatap.Window main_window { get; construct; }
         public Image image { get; private set; }
         public ScrolledWindow scrolled { get; private set; }
-        public override ViewMode view_mode { get; construct; }
-        public override bool has_image {
+        public ViewMode view_mode { get; construct; }
+        public bool has_image {
             get {
                 return image.has_image;
             }
         }
-        public override double position {
+        public int index {
+            get {
+                return accessor.get_index();
+            }
+        }
+        public double position {
             get {
                 return (double) accessor.get_index() / (double) _file_list.size;
             }
@@ -43,7 +48,7 @@ namespace Tatap {
 
         private const string TITLE_FORMAT = "%s (%dx%d : %.2f%%)";
 
-        public override FileList file_list {
+        public FileList file_list {
             get {
                 return _file_list;
             }
@@ -293,7 +298,7 @@ namespace Tatap {
         }
 
         public void reopen() throws Error {
-            return;
+            open(accessor.get_file());
         }
 
         public void go_backward(int offset = 1) throws Error {

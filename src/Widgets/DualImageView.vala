@@ -20,10 +20,10 @@ using Gdk, Gtk;
 
 namespace Tatap {
     public class DualImageView : ImageView, Bin {
-        public override ViewMode view_mode { get; construct; }
-        public override Tatap.Window main_window { get; construct; }
+        public ViewMode view_mode { get; construct; }
+        public Tatap.Window main_window { get; construct; }
 
-        public override FileList file_list {
+        public FileList file_list {
             get {
                 return _file_list;
             }
@@ -33,19 +33,35 @@ namespace Tatap {
             }
         }
 
-        public override string dir_path {
+        public string dir_path {
             owned get {
                 return _file_list.dir_path;
             }
         }
 
-        public override bool has_image {
+        public bool has_image {
             get {
                 return left_image.has_image || right_image.has_image;
             }
         }
 
-        public override double position {
+        public int index {
+            get {
+                int index1 = accessor.get_index1();
+                int index2 = accessor.get_index2();
+                if (index1 < 0) {
+                    if (index2 < 0) {
+                        return 0;
+                    } else {
+                        return index2;
+                    }
+                } else {
+                    return index1;
+                }
+            }
+        }
+
+        public double position {
             get {
                 return (double) accessor.get_index1() / (double) _file_list.size;
             }
