@@ -72,6 +72,7 @@ namespace Tatap {
         private Box bottom_box;
         private Granite.Widgets.Welcome welcome;
         private bool _fullscreen_mode = false;
+        private bool reveal_progress_flag = false;
 
         construct {
             /* the headerbar itself */
@@ -366,106 +367,101 @@ namespace Tatap {
             return win_y_root <= (y - allocation.y) <= win_y_root + allocation.height * 0.2;
         }
 
-        private bool reveal_progress_flag = false;
-
-        public override bool motion_notify_event(EventMotion ev) {
-            if (stack.visible_child_name == "picture") {
-                if (in_progress_area(ev.x_root, ev.y_root)) {
-                    if (!progress_revealer.child_revealed) {
-                        reveal_progress_flag = true;
-                        Timeout.add(300, () => {
-                            if (reveal_progress_flag) {
-                                progress_revealer.reveal_child = true;
-                                reveal_progress_flag = false;
-                            }
-                            return false;
-                        });
+        public override bool event(Event ev) {
+            switch (ev.type) {
+              case EventType.MOTION_NOTIFY:
+                if (stack.visible_child_name == "picture") {
+                    if (in_progress_area(ev.motion.x_root, ev.motion.y_root)) {
+                        if (!progress_revealer.child_revealed) {
+                            reveal_progress_flag = true;
+                            Timeout.add(300, () => {
+                                if (reveal_progress_flag) {
+                                    progress_revealer.reveal_child = true;
+                                    reveal_progress_flag = false;
+                                }
+                                return false;
+                            });
+                        }
+                    } else {
+                        reveal_progress_flag = false;
+                        if (progress_revealer.child_revealed) {
+                            Timeout.add(300, () => {
+                                progress_revealer.reveal_child = false;
+                                return false;
+                            });
+                        }
                     }
-                } else {
-                    reveal_progress_flag = false;
-                    if (progress_revealer.child_revealed) {
-                        Timeout.add(300, () => {
-                            progress_revealer.reveal_child = false;
-                            return false;
-                        });
-                    }
-                }
-                if (fullscreen_mode) {
-                    if (!toolbar.sticked) {
-                        if (in_toolbar_area(ev.x_root, ev.y_root)) {
-                            if (!toolbar_revealer_above.child_revealed) {
-                                Timeout.add(300, () => {
-                                    toolbar_revealer_above.reveal_child = true;
-                                    return false;
-                                });
-                            }
-                        } else {
-                            if (toolbar_revealer_above.child_revealed) {
-                                Timeout.add(300, () => {
-                                    toolbar_revealer_above.reveal_child = false;
-                                    return false;
-                                });
+                    if (fullscreen_mode) {
+                        if (!toolbar.sticked) {
+                            if (in_toolbar_area(ev.motion.x_root, ev.motion.y_root)) {
+                                if (!toolbar_revealer_above.child_revealed) {
+                                    Timeout.add(300, () => {
+                                        toolbar_revealer_above.reveal_child = true;
+                                        return false;
+                                    });
+                                }
+                            } else {
+                                if (toolbar_revealer_above.child_revealed) {
+                                    Timeout.add(300, () => {
+                                        toolbar_revealer_above.reveal_child = false;
+                                        return false;
+                                    });
+                                }
                             }
                         }
                     }
                 }
-            }
-            return false;
-        }
-
-        public override bool leave_notify_event(EventCrossing event) {
-            reveal_progress_flag = false;
-            if (progress_revealer.child_revealed) {
-                Timeout.add(300, () => {
-                    progress_revealer.reveal_child = false;
-                    return false;
-                });
-            }
-            return false;
-        }
-
-        public override bool key_press_event(EventKey ev) {
-            if (Gdk.ModifierType.CONTROL_MASK in ev.state) {
-                switch (ev.keyval) {
-                  case Gdk.Key.m:
-                    if (toolbar_toggle_button.sensitive) {
-                        toolbar_toggle_button.active = !toolbar_toggle_button.active;
-                        toolbar_toggle_button.toggled();
-                    }
-                    break;
-                  case Gdk.Key.f:
-                    if (toolbar_revealer_above.child_revealed && !toolbar.sticked) {
-                        toolbar_toggle_button.active = true;
-                        toolbar.stick_toolbar();
-                    } else if (toolbar_revealer_below.child_revealed) {
-                        toolbar.unstick_toolbar();
-                    }
-                    break;
-                  case Gdk.Key.n:
-                    require_new_window();
-                    break;
-                  case Gdk.Key.o:
-                    on_open_button_clicked();
-                    break;
-                  case Gdk.Key.w:
-                    close();
-                    break;
-                  case Gdk.Key.q:
-                    require_quit();
-                    break;
+                break;
+              case EventType.LEAVE_NOTIFY:
+                reveal_progress_flag = false;
+                if (progress_revealer.child_revealed) {
+                    Timeout.add(300, () => {
+                        progress_revealer.reveal_child = false;
+                        return false;
+                    });
                 }
-            } else {
-                switch (ev.keyval) {
-                  case Gdk.Key.F11:
-                    fullscreen_mode = !fullscreen_mode;
-                    break;
-                  default: break;
+                break;
+              case EventType.KEY_PRESS:
+                if (Gdk.ModifierType.CONTROL_MASK in ev.key.state) {
+                    switch (ev.key.keyval) {
+                      case Gdk.Key.m:
+                        if (toolbar_toggle_button.sensitive) {
+                            toolbar_toggle_button.active = !toolbar_toggle_button.active;
+                            toolbar_toggle_button.toggled();
+                        }
+                        break;
+                      case Gdk.Key.f:
+                        if (toolbar_revealer_above.child_revealed && !toolbar.sticked) {
+                            toolbar_toggle_button.active = true;
+                            toolbar.stick_toolbar();
+                        } else if (toolbar_revealer_below.child_revealed) {
+                            toolbar.unstick_toolbar();
+                        }
+                        break;
+                      case Gdk.Key.n:
+                        require_new_window();
+                        break;
+                      case Gdk.Key.o:
+                        on_open_button_clicked();
+                        break;
+                      case Gdk.Key.w:
+                        close();
+                        break;
+                      case Gdk.Key.q:
+                        require_quit();
+                        break;
+                    }
+                } else {
+                    switch (ev.key.keyval) {
+                      case Gdk.Key.F11:
+                        fullscreen_mode = !fullscreen_mode;
+                        break;
+                      default: break;
+                    }
                 }
+                break;
+              default: break;
             }
-            return false;
-        }
-
-        public override bool event(Event ev) {
             try {
                 return image_view.handle_event(ev);
             } catch (Error error) {
