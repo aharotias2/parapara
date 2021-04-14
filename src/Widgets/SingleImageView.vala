@@ -101,6 +101,15 @@ namespace Tatap {
             add(scrolled);
         }
 
+        private int get_hposition_percent(double x) {
+            Allocation allocation;
+            get_allocation(out allocation);
+            double a = x - allocation.x;
+            double b = a / (double) allocation.width * 100.0;
+            debug("SingleImageView::x = %f, allocation.x = %f, allocation.width = %f", x, allocation.x, allocation.width);
+            return (int) b;
+        }
+
         public bool handle_event(Event ev) throws Error {
             if (!image.has_image) {
                 return false;
@@ -111,8 +120,32 @@ namespace Tatap {
                 x = ev.motion.x_root;
                 y = ev.motion.y_root;
                 break;
+              case EventType.@2BUTTON_PRESS:
+                main_window.fullscreen_mode = ! main_window.fullscreen_mode;
+                return true;
               case EventType.BUTTON_RELEASE:
-                if (image.fit && x == ev.motion.x_root && y == ev.motion.y_root) {
+                if (image.fit && x == ev.button.x_root && y == ev.button.y_root) {
+                    int hpos = get_hposition_percent(ev.button.x);
+                    debug("SingleImageView::hpos = %d", hpos);
+                    if (hpos < 25) {
+                        switch (main_window.toolbar.sort_order) {
+                          case ASC:
+                            go_backward(1);
+                            return true;
+                          case DESC:
+                            go_forward(1);
+                            return true;
+                        }
+                    } else if (hpos > 75) {
+                        switch (main_window.toolbar.sort_order) {
+                          case ASC:
+                            go_forward(1);
+                            return true;
+                          case DESC:
+                            go_backward(1);
+                            return true;
+                        }
+                    }
                     image.fit_size_in_window();
                     update_title();
                 }
@@ -137,13 +170,14 @@ namespace Tatap {
                         image.zoom_in(10);
                         update_title();
                         main_window.toolbar.zoom_fit_button.sensitive = true;
-                        break;
+                        return true;
                       case ScrollDirection.DOWN:
                         image.zoom_out(10);
                         update_title();
                         main_window.toolbar.zoom_fit_button.sensitive = true;
+                        return true;
+                      default:
                         break;
-                      default: break;
                     }
                 } else {
                     if (scrolled.get_allocated_height() >= scrolled.get_vadjustment().upper
@@ -153,24 +187,27 @@ namespace Tatap {
                             switch (main_window.toolbar.sort_order) {
                               case SortOrder.ASC:
                                 go_backward(1);
-                                break;
+                                return true;
                               case SortOrder.DESC:
                                 go_forward(1);
-                                break;
+                                return true;
                             }
                             break;
                           case ScrollDirection.DOWN:
                             switch (main_window.toolbar.sort_order) {
                               case SortOrder.ASC:
                                 go_forward(1);
-                                break;
+                                return true;
                               case SortOrder.DESC:
                                 go_backward(1);
-                                break;
+                                return true;
                             }
                             break;
-                          default: break;
+                          default:
+                            break;
                         }
+                    } else {
+                        break;
                     }
                 }
                 break;
@@ -222,7 +259,8 @@ namespace Tatap {
                       case Gdk.Key.S:
                         save_file_async.begin(true);
                         break;
-                      default: break;
+                      default:
+                        return false;
                     }
                 } else {
                     switch (ev.key.keyval) {
@@ -259,11 +297,13 @@ namespace Tatap {
                             }
                         }
                         break;
-                      default: break;
+                      default:
+                        return false;
                     }
                 }
+                return true;
+              default:
                 break;
-              default: break;
             }
             return false;
         }
