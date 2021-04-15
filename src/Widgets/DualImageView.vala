@@ -72,6 +72,9 @@ namespace Tatap {
         private Image right_image;
         private DualFileAccessor accessor;
         private unowned FileList _file_list;
+        private bool button_pressed = false;
+        private double x;
+        private double y;
 
         private const string TITLE_FORMAT = "%s (%dx%d : %.2f%%), %s (%dx%d : %.2f%%)";
 
@@ -118,6 +121,7 @@ namespace Tatap {
                 scroll.size_allocate.connect((allocation) => {
                     int new_width = allocation.width / 2;
                     int new_height = allocation.height;
+                    debug("scroll.size_allocated");
                     Idle.add(() => {
                         if (left_image.visible) {
                             left_image.scale_fit_in_width_and_height(new_width, new_height);
@@ -167,12 +171,55 @@ namespace Tatap {
             }
         }
 
+        private int get_hposition_percent(double x) {
+            Allocation allocation;
+            get_allocation(out allocation);
+            double a = x - allocation.x;
+            double b = a / (double) allocation.width * 100.0;
+            debug("SingleImageView::x = %f, allocation.x = %f, allocation.width = %f", x, allocation.x, allocation.width);
+            return (int) b;
+        }
+
         public bool handle_event(Event ev) throws Error {
             if (!left_image.has_image && !right_image.has_image) {
                 return false;
             }
             bool shift_masked = false;
             switch (ev.type) {
+              case EventType.BUTTON_PRESS:
+                button_pressed = true;
+                x = ev.motion.x_root;
+                y = ev.motion.y_root;
+                break;
+              case EventType.@2BUTTON_PRESS:
+                main_window.fullscreen_mode = ! main_window.fullscreen_mode;
+                return true;
+              case EventType.BUTTON_RELEASE:
+                if (x == ev.button.x_root && y == ev.button.y_root) {
+                    int hpos = get_hposition_percent(ev.button.x);
+                    debug("DualImageView::hpos = %d", hpos);
+                    if (hpos < 25) {
+                        switch (main_window.toolbar.sort_order) {
+                          case ASC:
+                            go_backward(shift_masked ? 1 : 2);
+                            return true;
+                          case DESC:
+                            go_forward(shift_masked ? 1 : 2);
+                            return true;
+                        }
+                    } else if (hpos > 75) {
+                        switch (main_window.toolbar.sort_order) {
+                          case ASC:
+                            go_forward(shift_masked ? 1 : 2);
+                            return true;
+                          case DESC:
+                            go_backward(shift_masked ? 1 : 2);
+                            return true;
+                        }
+                    }
+                }
+                button_pressed = false;
+                break;
               case EventType.SCROLL:
                 shift_masked = ModifierType.SHIFT_MASK in ev.scroll.state;
                 switch (ev.scroll.direction) {
@@ -229,22 +276,28 @@ namespace Tatap {
         }
 
         public void go_forward(int offset = 2) throws Error {
-            accessor.go_forward(offset);
-            reopen();
-            if (accessor.get_index1() < 0) {
-                image_opened(accessor.get_name2(), 0);
-            } else {
-                image_opened(accessor.get_name1(), accessor.get_index1());
+            debug("accessor.get_index1 == %d", accessor.get_index1());
+            if (accessor.get_index1() + offset <= file_list.size) {
+                accessor.go_forward(offset);
+                reopen();
+                if (accessor.get_index1() < 0) {
+                    image_opened(accessor.get_name2(), 0);
+                } else {
+                    image_opened(accessor.get_name1(), accessor.get_index1());
+                }
             }
         }
 
         public void go_backward(int offset = 2) throws Error {
-            accessor.go_backward(offset);
-            reopen();
-            if (accessor.get_index1() < 0) {
-                image_opened(accessor.get_name2(), 0);
-            } else {
-                image_opened(accessor.get_name1(), accessor.get_index1());
+            debug("accessor.get_index1 == %d", accessor.get_index1());
+            if (accessor.get_index1() - offset >= -1) {
+                accessor.go_backward(offset);
+                reopen();
+                if (accessor.get_index1() < 0) {
+                    image_opened(accessor.get_name2(), 0);
+                } else {
+                    image_opened(accessor.get_name1(), accessor.get_index1());
+                }
             }
         }
 
