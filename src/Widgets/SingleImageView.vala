@@ -110,44 +110,60 @@ namespace Tatap {
             return (int) b;
         }
 
+        private bool is_button_event_in_area(EventButton ev) {
+            int root_x, root_y;
+            get_window().get_root_coords(0, 0, out root_x, out root_y);
+            Allocation alloc;
+            get_allocation(out alloc);
+            return root_x <= ev.x_root && ev.x_root <= root_x + alloc.width && root_y <= ev.y_root && ev.y_root <= root_y + alloc.height;
+        }
+        
         public bool handle_event(Event ev) throws Error {
             if (!image.has_image) {
                 return false;
             }
             switch (ev.type) {
               case EventType.BUTTON_PRESS:
-                button_pressed = true;
-                x = ev.motion.x_root;
-                y = ev.motion.y_root;
+                if (is_button_event_in_area(ev.button)) {
+                    button_pressed = true;
+                    x = ev.motion.x_root;
+                    y = ev.motion.y_root;
+                }
                 break;
               case EventType.@2BUTTON_PRESS:
-                main_window.fullscreen_mode = ! main_window.fullscreen_mode;
-                return true;
+                if (is_button_event_in_area(ev.button)) {
+                    main_window.fullscreen_mode = ! main_window.fullscreen_mode;
+                    return true;
+                } else {
+                    return false;
+                }
               case EventType.BUTTON_RELEASE:
-                if (image.fit && x == ev.button.x_root && y == ev.button.y_root) {
-                    int hpos = get_hposition_percent(ev.button.x);
-                    debug("SingleImageView::hpos = %d", hpos);
-                    if (hpos < 25) {
-                        switch (main_window.toolbar.sort_order) {
-                          case ASC:
-                            go_backward(1);
-                            return true;
-                          case DESC:
-                            go_forward(1);
-                            return true;
+                if (is_button_event_in_area(ev.button)) {
+                    if (image.fit && x == ev.button.x_root && y == ev.button.y_root) {
+                        int hpos = get_hposition_percent(ev.button.x);
+                        debug("SingleImageView::hpos = %d", hpos);
+                        if (hpos < 25) {
+                            switch (main_window.toolbar.sort_order) {
+                              case ASC:
+                                go_backward(1);
+                                return true;
+                              case DESC:
+                                go_forward(1);
+                                return true;
+                            }
+                        } else if (hpos > 75) {
+                            switch (main_window.toolbar.sort_order) {
+                              case ASC:
+                                go_forward(1);
+                                return true;
+                              case DESC:
+                                go_backward(1);
+                                return true;
+                            }
                         }
-                    } else if (hpos > 75) {
-                        switch (main_window.toolbar.sort_order) {
-                          case ASC:
-                            go_forward(1);
-                            return true;
-                          case DESC:
-                            go_backward(1);
-                            return true;
-                        }
+                        image.fit_size_in_window();
+                        update_title();
                     }
-                    image.fit_size_in_window();
-                    update_title();
                 }
                 button_pressed = false;
                 break;
