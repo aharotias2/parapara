@@ -255,10 +255,12 @@ namespace Tatap {
                                 progress_label.label = _("Location: %d / %d (%d%%)").printf(
                                         index + 1, file_list.size, (int) (image_view.position * 100));
                             });
+
+                            image_view.events = ALL_EVENTS_MASK;
                         }
 
                         bottom_box.pack_start(toolbar_revealer_below, false, false);
-                        bottom_box.pack_start(image_view, true, true);
+                        bottom_box.pack_start(image_view as EventBox, true, true);
                     }
 
                     var revealer_box = new Box(Orientation.VERTICAL, 0);
@@ -323,8 +325,8 @@ namespace Tatap {
                         }
 
                         revealer_box.pack_start(toolbar_revealer_above, false, false);
-                        revealer_box.pack_end(progress_revealer, false, false);
                         revealer_box.pack_end(message_revealer, false, false);
+                        revealer_box.pack_end(progress_revealer, false, false);
                     }
 
                     window_overlay.add(bottom_box);
@@ -367,107 +369,105 @@ namespace Tatap {
             return win_y_root <= (y - allocation.y) <= win_y_root + allocation.height * 0.2;
         }
 
-        public override bool event(Event ev) {
-            switch (ev.type) {
-              case EventType.MOTION_NOTIFY:
-                if (stack.visible_child_name == "picture") {
-                    if (in_progress_area(ev.motion.x_root, ev.motion.y_root)) {
-                        if (!progress_revealer.child_revealed) {
-                            reveal_progress_flag = true;
-                            Timeout.add(300, () => {
-                                if (reveal_progress_flag) {
-                                    progress_revealer.reveal_child = true;
-                                    reveal_progress_flag = false;
-                                }
-                                return false;
-                            });
-                        }
-                    } else {
-                        reveal_progress_flag = false;
-                        if (progress_revealer.child_revealed) {
-                            Timeout.add(300, () => {
-                                progress_revealer.reveal_child = false;
-                                return false;
-                            });
-                        }
+        public override bool motion_notify_event(EventMotion ev) {
+            if (stack.visible_child_name == "picture") {
+                if (in_progress_area(ev.x_root, ev.y_root)) {
+                    if (!progress_revealer.child_revealed) {
+                        reveal_progress_flag = true;
+                        Timeout.add(300, () => {
+                            if (reveal_progress_flag) {
+                                progress_revealer.reveal_child = true;
+                                reveal_progress_flag = false;
+                            }
+                            return false;
+                        });
                     }
-                    if (fullscreen_mode) {
-                        if (!toolbar.sticked) {
-                            if (in_toolbar_area(ev.motion.x_root, ev.motion.y_root)) {
-                                if (!toolbar_revealer_above.child_revealed) {
-                                    Timeout.add(300, () => {
-                                        toolbar_revealer_above.reveal_child = true;
-                                        return false;
-                                    });
-                                }
-                            } else {
-                                if (toolbar_revealer_above.child_revealed) {
-                                    Timeout.add(300, () => {
-                                        toolbar_revealer_above.reveal_child = false;
-                                        return false;
-                                    });
-                                }
+                } else {
+                    reveal_progress_flag = false;
+                    if (progress_revealer.child_revealed) {
+                        Timeout.add(300, () => {
+                            progress_revealer.reveal_child = false;
+                            return false;
+                        });
+                    }
+                }
+                if (fullscreen_mode) {
+                    if (!toolbar.sticked) {
+                        if (in_toolbar_area(ev.x_root, ev.y_root)) {
+                            if (!toolbar_revealer_above.child_revealed) {
+                                Timeout.add(300, () => {
+                                    toolbar_revealer_above.reveal_child = true;
+                                    return false;
+                                });
+                            }
+                        } else {
+                            if (toolbar_revealer_above.child_revealed) {
+                                Timeout.add(300, () => {
+                                    toolbar_revealer_above.reveal_child = false;
+                                    return false;
+                                });
                             }
                         }
                     }
                 }
-                break;
-              case EventType.LEAVE_NOTIFY:
-                reveal_progress_flag = false;
-                if (progress_revealer.child_revealed) {
-                    Timeout.add(300, () => {
-                        progress_revealer.reveal_child = false;
-                        return false;
-                    });
-                }
-                break;
-              case EventType.KEY_PRESS:
-                if (Gdk.ModifierType.CONTROL_MASK in ev.key.state) {
-                    switch (ev.key.keyval) {
-                      case Gdk.Key.m:
-                        if (toolbar_toggle_button.sensitive) {
-                            toolbar_toggle_button.active = !toolbar_toggle_button.active;
-                            toolbar_toggle_button.toggled();
-                        }
-                        break;
-                      case Gdk.Key.f:
-                        if (toolbar_revealer_above.child_revealed && !toolbar.sticked) {
-                            toolbar_toggle_button.active = true;
-                            toolbar.stick_toolbar();
-                        } else if (toolbar_revealer_below.child_revealed) {
-                            toolbar.unstick_toolbar();
-                        }
-                        break;
-                      case Gdk.Key.n:
-                        require_new_window();
-                        break;
-                      case Gdk.Key.o:
-                        on_open_button_clicked();
-                        break;
-                      case Gdk.Key.w:
-                        close();
-                        break;
-                      case Gdk.Key.q:
-                        require_quit();
-                        break;
-                    }
-                } else {
-                    switch (ev.key.keyval) {
-                      case Gdk.Key.F11:
-                        fullscreen_mode = !fullscreen_mode;
-                        break;
-                      default: break;
-                    }
-                }
-                break;
-              default: break;
             }
-            try {
-                return image_view.handle_event(ev);
-            } catch (Error error) {
-                show_error_dialog(error.message);
-                return false;
+            return false;
+        }
+
+        public override bool leave_notify_event(EventCrossing ev) {
+            reveal_progress_flag = false;
+            if (progress_revealer.child_revealed) {
+                Timeout.add(300, () => {
+                    progress_revealer.reveal_child = false;
+                    return false;
+                });
             }
+            return false;
+        }
+
+        public override bool key_press_event(EventKey ev) {
+            if (Gdk.ModifierType.CONTROL_MASK in ev.state) {
+                switch (ev.keyval) {
+                  case Gdk.Key.m:
+                    if (toolbar_toggle_button.sensitive) {
+                        toolbar_toggle_button.active = !toolbar_toggle_button.active;
+                        toolbar_toggle_button.toggled();
+                    }
+                    break;
+                  case Gdk.Key.f:
+                    if (toolbar_revealer_above.child_revealed && !toolbar.sticked) {
+                        toolbar_toggle_button.active = true;
+                        toolbar.stick_toolbar();
+                    } else if (toolbar_revealer_below.child_revealed) {
+                        toolbar.unstick_toolbar();
+                    }
+                    break;
+                  case Gdk.Key.n:
+                    require_new_window();
+                    break;
+                  case Gdk.Key.o:
+                    on_open_button_clicked();
+                    break;
+                  case Gdk.Key.w:
+                    close();
+                    break;
+                  case Gdk.Key.q:
+                    require_quit();
+                    break;
+                }
+            } else {
+                switch (ev.keyval) {
+                  case Gdk.Key.F11:
+                    fullscreen_mode = !fullscreen_mode;
+                    break;
+                  default: break;
+                }
+            }
+            return image_view.key_press_event(ev);
+        }
+
+        public override bool scroll_event(EventScroll ev) {
+            return image_view.scroll_event(ev);
         }
 
         private void setup_css() {
@@ -587,7 +587,7 @@ namespace Tatap {
                     // TODO: Implement later.
                     return;
                 }
-                bottom_box.pack_start(image_view, true, true);
+                bottom_box.pack_start(image_view as EventBox, true, true);
                 image_view.title_changed.connect((title) => {
                     headerbar.title = title;
                 });
@@ -595,6 +595,7 @@ namespace Tatap {
                     progress_scale.set_value((double) index);
                     progress_label.label = _("Location: %d / %d (%d%%)").printf(index + 1, file_list.size, (int) (image_view.position * 100));
                 });
+                image_view.events = ALL_EVENTS_MASK;
                 open_file(file);
                 bottom_box.show_all();
             }

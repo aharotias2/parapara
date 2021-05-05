@@ -19,7 +19,7 @@
 using Gdk, Gtk;
 
 namespace Tatap {
-    public class SingleImageView : ImageView, Bin {
+    public class SingleImageView : ImageView, EventBox {
         public Tatap.Window main_window { get; construct; }
         public Image image { get; private set; }
         public ScrolledWindow scrolled { get; private set; }
@@ -110,6 +110,15 @@ namespace Tatap {
             return (int) b;
         }
 
+        private int get_vposition_percent(double y) {
+            Allocation allocation;
+            get_allocation(out allocation);
+            double a = y - allocation.y;
+            double b = a / (double) allocation.height * 100.0;
+            debug("SingleImageView::y = %f, allocation.y = %f, allocation.height = %f", x, allocation.y, allocation.height);
+            return (int) b;
+        }
+
         private bool is_button_event_in_area(EventButton ev) {
             int root_x, root_y;
             get_window().get_root_coords(0, 0, out root_x, out root_y);
@@ -117,48 +126,58 @@ namespace Tatap {
             get_allocation(out alloc);
             return root_x <= ev.x_root && ev.x_root <= root_x + alloc.width && root_y <= ev.y_root && ev.y_root <= root_y + alloc.height;
         }
-        
-        public bool handle_event(Event ev) throws Error {
+
+        public override bool button_press_event(EventButton ev) {
             if (!image.has_image) {
                 return false;
             }
-            switch (ev.type) {
-              case EventType.BUTTON_PRESS:
-                if (is_button_event_in_area(ev.button)) {
-                    button_pressed = true;
-                    x = ev.motion.x_root;
-                    y = ev.motion.y_root;
-                }
-                break;
-              case EventType.@2BUTTON_PRESS:
-                if (is_button_event_in_area(ev.button)) {
+
+            if (is_button_event_in_area(ev)) {
+                if (ev.type == 2BUTTON_PRESS) {
                     main_window.fullscreen_mode = ! main_window.fullscreen_mode;
                     return true;
-                } else {
-                    return false;
                 }
-              case EventType.BUTTON_RELEASE:
-                if (is_button_event_in_area(ev.button)) {
-                    if (image.fit && x == ev.button.x_root && y == ev.button.y_root) {
-                        int hpos = get_hposition_percent(ev.button.x);
+
+                if (is_button_event_in_area(ev)) {
+                    button_pressed = true;
+                    x = ev.x_root;
+                    y = ev.y_root;
+                }
+            }
+
+            return false;
+        }
+
+        public override bool button_release_event(EventButton ev) {
+            if (!image.has_image) {
+                return false;
+            }
+
+            try {
+                if (is_button_event_in_area(ev)) {
+                    if (image.fit && x == ev.x_root && y == ev.y_root) {
+                        int hpos = get_hposition_percent(ev.x);
+                        int vpos = get_vposition_percent(ev.y);
                         debug("SingleImageView::hpos = %d", hpos);
-                        if (hpos < 25) {
-                            switch (main_window.toolbar.sort_order) {
-                              case ASC:
-                                go_backward(1);
-                                return true;
-                              case DESC:
-                                go_forward(1);
-                                return true;
-                            }
-                        } else if (hpos > 75) {
-                            switch (main_window.toolbar.sort_order) {
-                              case ASC:
-                                go_forward(1);
-                                return true;
-                              case DESC:
-                                go_backward(1);
-                                return true;
+                        if (20 < vpos < 80) {
+                            if (hpos < 25) {
+                                switch (main_window.toolbar.sort_order) {
+                                  case ASC:
+                                    go_backward(1);
+                                    return true;
+                                  case DESC:
+                                    go_forward(1);
+                                    return true;
+                                }
+                            } else if (hpos > 75) {
+                                switch (main_window.toolbar.sort_order) {
+                                  case ASC:
+                                    go_forward(1);
+                                    return true;
+                                  case DESC:
+                                    go_backward(1);
+                                    return true;
+                                }
                             }
                         }
                         image.fit_size_in_window();
@@ -166,39 +185,57 @@ namespace Tatap {
                     }
                 }
                 button_pressed = false;
-                break;
-              case EventType.MOTION_NOTIFY:
-                if (button_pressed) {
-                    double new_x = ev.motion.x_root;
-                    double new_y = ev.motion.y_root;
-                    int x_move = (int) (new_x - x);
-                    int y_move = (int) (new_y - y);
-                    scrolled.hadjustment.value -= x_move;
-                    scrolled.vadjustment.value -= y_move;
-                    x = new_x;
-                    y = new_y;
+            } catch (GLib.Error e) {
+                main_window.show_error_dialog(e.message);
+            }
+            return false;
+
+        }
+
+        public override bool motion_notify_event(EventMotion ev) {
+            if (!image.has_image) {
+                return false;
+            }
+
+            if (button_pressed) {
+                double new_x = ev.x_root;
+                double new_y = ev.y_root;
+                int x_move = (int) (new_x - x);
+                int y_move = (int) (new_y - y);
+                scrolled.hadjustment.value -= x_move;
+                scrolled.vadjustment.value -= y_move;
+                x = new_x;
+                y = new_y;
+            }
+
+            return false;
+        }
+
+        public override bool scroll_event(EventScroll ev) {
+            if (!image.has_image) {
+                return false;
+            }
+
+            if (ModifierType.CONTROL_MASK in ev.state) {
+                switch (ev.direction) {
+                  case ScrollDirection.UP:
+                    image.zoom_in(10);
+                    update_title();
+                    main_window.toolbar.zoom_fit_button.sensitive = true;
+                    return true;
+                  case ScrollDirection.DOWN:
+                    image.zoom_out(10);
+                    update_title();
+                    main_window.toolbar.zoom_fit_button.sensitive = true;
+                    return true;
+                  default:
+                    break;
                 }
-                break;
-              case EventType.SCROLL:
-                if (ModifierType.CONTROL_MASK in ev.scroll.state) {
-                    switch (ev.scroll.direction) {
-                      case ScrollDirection.UP:
-                        image.zoom_in(10);
-                        update_title();
-                        main_window.toolbar.zoom_fit_button.sensitive = true;
-                        return true;
-                      case ScrollDirection.DOWN:
-                        image.zoom_out(10);
-                        update_title();
-                        main_window.toolbar.zoom_fit_button.sensitive = true;
-                        return true;
-                      default:
-                        break;
-                    }
-                } else {
-                    if (scrolled.get_allocated_height() >= scrolled.get_vadjustment().upper
-                            && scrolled.get_allocated_width() >= scrolled.get_hadjustment().upper) {
-                        switch (ev.scroll.direction) {
+            } else {
+                if (scrolled.get_allocated_height() >= scrolled.get_vadjustment().upper
+                        && scrolled.get_allocated_width() >= scrolled.get_hadjustment().upper) {
+                    try {
+                        switch (ev.direction) {
                           case ScrollDirection.UP:
                             switch (main_window.toolbar.sort_order) {
                               case SortOrder.ASC:
@@ -222,64 +259,71 @@ namespace Tatap {
                           default:
                             break;
                         }
-                    } else {
-                        break;
+                    } catch (GLib.Error e) {
+                        main_window.show_error_dialog(e.message);
                     }
                 }
-                break;
-              case EventType.KEY_PRESS:
-                if (Gdk.ModifierType.CONTROL_MASK in ev.key.state) {
-                    switch (ev.key.keyval) {
-                      case Gdk.Key.e:
-                        if (!image.is_animation) {
-                            resize_image();
-                        }
-                        break;
-                      case Gdk.Key.plus:
-                        image.zoom_in(10);
-                        update_title();
-                        main_window.toolbar.zoom_fit_button.sensitive = true;
-                        break;
-                      case Gdk.Key.minus:
-                        image.zoom_out(10);
-                        update_title();
-                        main_window.toolbar.zoom_fit_button.sensitive = true;
-                        break;
-                      case Gdk.Key.@1:
-                        image.zoom_original();
-                        update_title();
-                        main_window.toolbar.zoom_fit_button.sensitive = true;
-                        break;
-                      case Gdk.Key.@0:
-                        image.fit_size_in_window();
-                        update_title();
-                        main_window.toolbar.zoom_fit_button.sensitive = false;
-                        break;
-                      case Gdk.Key.h:
-                        image.hflip();
-                        break;
-                      case Gdk.Key.v:
-                        image.vflip();
-                        break;
-                      case Gdk.Key.l:
-                        image.rotate_right();
-                        update_title();
-                        break;
-                      case Gdk.Key.r:
-                        image.rotate_left();
-                        update_title();
-                        break;
-                      case Gdk.Key.s:
-                        save_file_async.begin(false);
-                        break;
-                      case Gdk.Key.S:
-                        save_file_async.begin(true);
-                        break;
-                      default:
-                        return false;
+            }
+            return false;
+        }
+
+        public override bool key_press_event(EventKey ev) {
+            if (!image.has_image) {
+                return false;
+            }
+            if (Gdk.ModifierType.CONTROL_MASK in ev.state) {
+                switch (ev.keyval) {
+                  case Gdk.Key.e:
+                    if (!image.is_animation) {
+                        resize_image();
                     }
-                } else {
-                    switch (ev.key.keyval) {
+                    break;
+                  case Gdk.Key.plus:
+                    image.zoom_in(10);
+                    update_title();
+                    main_window.toolbar.zoom_fit_button.sensitive = true;
+                    break;
+                  case Gdk.Key.minus:
+                    image.zoom_out(10);
+                    update_title();
+                    main_window.toolbar.zoom_fit_button.sensitive = true;
+                    break;
+                  case Gdk.Key.@1:
+                    image.zoom_original();
+                    update_title();
+                    main_window.toolbar.zoom_fit_button.sensitive = true;
+                    break;
+                  case Gdk.Key.@0:
+                    image.fit_size_in_window();
+                    update_title();
+                    main_window.toolbar.zoom_fit_button.sensitive = false;
+                    break;
+                  case Gdk.Key.h:
+                    image.hflip();
+                    break;
+                  case Gdk.Key.v:
+                    image.vflip();
+                    break;
+                  case Gdk.Key.l:
+                    image.rotate_right();
+                    update_title();
+                    break;
+                  case Gdk.Key.r:
+                    image.rotate_left();
+                    update_title();
+                    break;
+                  case Gdk.Key.s:
+                    save_file_async.begin(false);
+                    break;
+                  case Gdk.Key.S:
+                    save_file_async.begin(true);
+                    break;
+                  default:
+                    return false;
+                }
+            } else {
+                try {
+                    switch (ev.keyval) {
                       case Gdk.Key.Left:
                         switch (main_window.toolbar.sort_order) {
                           case SortOrder.ASC:
@@ -316,12 +360,11 @@ namespace Tatap {
                       default:
                         return false;
                     }
+                } catch (GLib.Error e) {
+                    main_window.show_error_dialog(e.message);
                 }
-                return true;
-              default:
-                break;
             }
-            return false;
+            return true;
         }
 
         public File get_file() throws Error {

@@ -30,7 +30,7 @@ namespace Tatap {
         public abstract File get_file() throws Error;
         public abstract bool is_next_button_sensitive();
         public abstract bool is_prev_button_sensitive();
-        public abstract bool handle_event(Event ev) throws Error;
+//        public abstract bool handle_event(Event ev) throws Error;
         public abstract void go_forward(int offset = 1) throws Error;
         public abstract void go_backward(int offset = 1) throws Error;
         public abstract void open(File file) throws Error;
