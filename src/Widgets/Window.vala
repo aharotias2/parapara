@@ -329,7 +329,7 @@ namespace Tatap {
 
                     window_overlay.add(bottom_box);
                     window_overlay.add_overlay(revealer_box);
-                    window_overlay.set_overlay_pass_through(revealer_box, false);
+                    window_overlay.set_overlay_pass_through(revealer_box, true);
                 }
 
                 stack.add_named(welcome, "welcome");
