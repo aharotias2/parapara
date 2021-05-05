@@ -27,56 +27,56 @@ Key Combinations
 
 ### General key combinations.
 
-Ctrl + N
-:   Open new window.
-Ctrl + W
-:   Close this window.
-Ctrl + Q
-:   Close all windows and quit this application.
-Ctrl + O
-:   Choose an image on your file system and open it.
-← (left arrow key)
-:   go backward (if the sort order is ascending)
-:   go forward (if the sort order is descending)
-→ (right arrow key)
-:   go forward (if the sort order is ascending)
-:   go backward (if the sort order is descending)
++ _Ctrl + N_
+  Open new window.
++ _Ctrl + W_
+  Close this window.
++ _Ctrl + Q_
+  Close all windows and quit this application.
++ Ctrl + O
+  Choose an image on your file system and open it.
++ ← (left arrow key)
+  go backward (if the sort order is ascending)
+  go forward (if the sort order is descending)
++ → (right arrow key)
+  go forward (if the sort order is ascending)
+  go backward (if the sort order is descending)
 
 ### Shortcut key in single view mode
 
-Ctrl + S
-:   Save this picture.
-Ctrl + Shift + S
-:   Save this picture as another name.
-Ctrl + 0
-:   Show this picture as original size
-Ctrl + 1
-:   Show this picture as fitting this window.
-Ctrl + +
-:   Zoom in
-Ctrl + -
-:   Zoom out
-Ctrl + H
-:   Invert horizontally
-Ctrl + V
-:   Invert vertically
-Ctrl + R
-:   Rotate 90 degrees clockwise
-Ctrl + L
-:   Rotate 90 degrees counterclockwise
-Ctrl + E
-:   Resize this picture. You can save it later.
++ Ctrl + S
+  Save this picture.
++ Ctrl + Shift + S
+  Save this picture as another name.
++ Ctrl + 0
+  Show this picture as original size
++ Ctrl + 1
+  Show this picture as fitting this window.
++ Ctrl + +
+  Zoom in
++ Ctrl + -
+  Zoom out
++ Ctrl + H
+  Invert horizontally
++ Ctrl + V
+  Invert vertically
++ Ctrl + R
+  Rotate 90 degrees clockwise
++ Ctrl + L
+  Rotate 90 degrees counterclockwise
++ Ctrl + E
+  Resize this picture. You can save it later.
 
 ### Buttons in dual view mode
 
-<1
-:   Move one page to the left.
-2<<1
-:   Switch "from right to left" reading.
-1>>2
-:   Switch "from left to right" reading.
->1
-:   Move one page to the right
++ <1
+  Move one page to the left.
++ 2<<1
+  Switch "from right to left" reading.
++ 1>>2
+  Switch "from left to right" reading.
++ >1
+  Move one page to the right
 
 Building and Installation
 --------------------------------------------------------------------------------
