@@ -27,55 +27,55 @@ Key Combinations
 
 ### General key combinations.
 
-+ _Ctrl + N_
++ _Ctrl + N_  
   Open new window.
-+ _Ctrl + W_
++ _Ctrl + W_  
   Close this window.
-+ _Ctrl + Q_
++ _Ctrl + Q_  
   Close all windows and quit this application.
-+ Ctrl + O
++ _Ctrl + O_  
   Choose an image on your file system and open it.
-+ ← (left arrow key)
-  go backward (if the sort order is ascending)
++ _← (left arrow key)_  
+  go backward (if the sort order is ascending)  
   go forward (if the sort order is descending)
-+ → (right arrow key)
-  go forward (if the sort order is ascending)
++ _→ (right arrow key)_  
+  go forward (if the sort order is ascending)  
   go backward (if the sort order is descending)
 
 ### Shortcut key in single view mode
 
-+ Ctrl + S
++ _Ctrl + S_  
   Save this picture.
-+ Ctrl + Shift + S
++ _Ctrl + Shift + S_  
   Save this picture as another name.
-+ Ctrl + 0
++ _Ctrl + 0_  
   Show this picture as original size
-+ Ctrl + 1
++ _Ctrl + 1_  
   Show this picture as fitting this window.
-+ Ctrl + +
++ _Ctrl + +_  
   Zoom in
-+ Ctrl + -
++ _Ctrl + -_  
   Zoom out
-+ Ctrl + H
++ _Ctrl + H_  
   Invert horizontally
-+ Ctrl + V
++ _Ctrl + V_  
   Invert vertically
-+ Ctrl + R
++ _Ctrl + R_  
   Rotate 90 degrees clockwise
-+ Ctrl + L
++ _Ctrl + L_  
   Rotate 90 degrees counterclockwise
-+ Ctrl + E
++ _Ctrl + E_  
   Resize this picture. You can save it later.
 
 ### Buttons in dual view mode
 
-+ <1
++ _<1_  
   Move one page to the left.
-+ 2<<1
++ _2<<1_  
   Switch "from right to left" reading.
-+ 1>>2
++ _1>>2_  
   Switch "from left to right" reading.
-+ >1
++ _>1_  
   Move one page to the right
 
 Building and Installation
