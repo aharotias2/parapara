@@ -16,11 +16,11 @@ You can switch between right-to-left and left-to-right page turning.
 Screenshot
 --------------------------------------------------------------------------------
 
-![寄り添う3匹のうさぎのフリー素材 https://www.pakutaso.com/201701170163-16.html](tatap-screenshot-01.jpg "Screenshot")
+![Screenshot 1](tatap-screenshot-01.jpg "寄り添う3匹のうさぎのフリー素材 https://www.pakutaso.com/201701170163-16.html")
 
 (Below) Spread display is also possible.
 
-![まんまる白うさぎのフリー素材 https://www.pakutaso.com/20170138016post-9992.html, 近寄るウサギのフリー素材 https://www.pakutaso.com/20130728189post-3005.html](tatap-screenshot-02.jpg "Screenshot")
+![Screenshot 2](tatap-screenshot-02.jpg "まんまる白うさぎのフリー素材 https://www.pakutaso.com/20170138016post-9992.html, 近寄るウサギのフリー素材 https://www.pakutaso.com/20130728189post-3005.html")
 
 Key Combinations
 --------------------------------------------------------------------------------
