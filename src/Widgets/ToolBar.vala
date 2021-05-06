@@ -16,8 +16,10 @@
  *  Tanaka Takayuki <aharotias2@gmail.com>
  */
 
+using Gtk;
+
 namespace Tatap {
-    public class ToolBar : Gtk.Bin {
+    public class ToolBar : Bin {
         public Tatap.Window main_window { get; construct; }
         public SortOrder sort_order { get; protected set; }
         public bool sticked { get; protected set; }
@@ -32,20 +34,20 @@ namespace Tatap {
         public ActionButton stick_button { get; private set; }
         public ActionButton animation_forward_button { get; private set; }
         public ActionButton animation_play_pause_button { get; private set; }
-        public Gtk.ToggleButton single_view_button { get; private set; }
-        public Gtk.ToggleButton scroll_view_button { get; private set; }
-        public Gtk.ToggleButton dual_view_button { get; private set; }
-        public Gtk.Button l1button { get; private set; }
-        public Gtk.Button r1button { get; private set; }
-        public Gtk.ToggleButton sort_asc_button { get; private set; }
-        public Gtk.ToggleButton sort_desc_button { get; private set; }
-        public Gtk.ToggleButton l2rbutton { get; private set; }
-        public Gtk.ToggleButton r2lbutton { get; private set; }
-        private Gtk.Box toolbar_hbox;
-        private Gtk.Box single_view_mode_box;
-        private Gtk.Box scroll_view_mode_box;
-        private Gtk.Box dual_view_mode_box;
-        private Gtk.ButtonBox mode_switch_button_box;
+        public ToggleButton single_view_button { get; private set; }
+        public ToggleButton scroll_view_button { get; private set; }
+        public ToggleButton dual_view_button { get; private set; }
+        public Button l1button { get; private set; }
+        public Button r1button { get; private set; }
+        public ToggleButton sort_asc_button { get; private set; }
+        public ToggleButton sort_desc_button { get; private set; }
+        public ToggleButton l2rbutton { get; private set; }
+        public ToggleButton r2lbutton { get; private set; }
+        private Box toolbar_hbox;
+        private Box single_view_mode_box;
+        private Box scroll_view_mode_box;
+        private Box dual_view_mode_box;
+        private ButtonBox mode_switch_button_box;
         private ViewMode _view_mode;
 
         private SingleImageView? single_image_view {
@@ -149,9 +151,9 @@ namespace Tatap {
                 single_image_view.save_file_async.begin(true);
             });
 
-            var save_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+            var save_button_box = new ButtonBox(Orientation.HORIZONTAL) {
                 margin = 3,
-                layout_style = Gtk.ButtonBoxStyle.EXPAND
+                layout_style = ButtonBoxStyle.EXPAND
             };
             save_button_box.pack_start(save_button);
             save_button_box.pack_start(save_as_button);
@@ -221,9 +223,9 @@ namespace Tatap {
                 single_image_view.update_title();
             });
 
-            var image_actions_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+            var image_actions_button_box = new ButtonBox(Orientation.HORIZONTAL) {
                 margin = 3,
-                layout_style = Gtk.ButtonBoxStyle.EXPAND
+                layout_style = ButtonBoxStyle.EXPAND
             };
             image_actions_button_box.pack_start(resize_button);
             image_actions_button_box.pack_start(zoom_in_button);
@@ -235,9 +237,9 @@ namespace Tatap {
             image_actions_button_box.pack_start(lrotate_button);
             image_actions_button_box.pack_start(rrotate_button);
 
-            sort_asc_button = new Gtk.ToggleButton() {
+            sort_asc_button = new ToggleButton() {
                 tooltip_text = _("Sort Asc"),
-                image = new Gtk.Image.from_icon_name("view-sort-ascending-symbolic", Gtk.IconSize.SMALL_TOOLBAR),
+                image = new Gtk.Image.from_icon_name("view-sort-ascending-symbolic", IconSize.SMALL_TOOLBAR),
                 active = true,
                 sensitive = false
             };
@@ -252,9 +254,9 @@ namespace Tatap {
                 }
             });
 
-            sort_desc_button = new Gtk.ToggleButton() {
+            sort_desc_button = new ToggleButton() {
                 tooltip_text = _("Sort Desc"),
-                image = new Gtk.Image.from_icon_name("view-sort-descending-symbolic", Gtk.IconSize.SMALL_TOOLBAR),
+                image = new Gtk.Image.from_icon_name("view-sort-descending-symbolic", IconSize.SMALL_TOOLBAR),
                 active = false
             };
             sort_desc_button.get_style_context().add_class("image_overlay_button");
@@ -268,9 +270,9 @@ namespace Tatap {
                 }
             });
 
-            var sort_order_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+            var sort_order_button_box = new ButtonBox(Orientation.HORIZONTAL) {
                 margin = 3,
-                layout_style = Gtk.ButtonBoxStyle.EXPAND
+                layout_style = ButtonBoxStyle.EXPAND
             };
             sort_order_button_box.pack_start(sort_asc_button);
             sort_order_button_box.pack_start(sort_desc_button);
@@ -317,14 +319,14 @@ namespace Tatap {
                 }
             });
 
-            var animation_actions_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+            var animation_actions_button_box = new ButtonBox(Orientation.HORIZONTAL) {
                 margin = 3,
-                layout_style = Gtk.ButtonBoxStyle.EXPAND
+                layout_style = ButtonBoxStyle.EXPAND
             };
             animation_actions_button_box.pack_start(animation_play_pause_button);
             animation_actions_button_box.pack_start(animation_forward_button);
 
-            l2rbutton = new Gtk.ToggleButton() {
+            l2rbutton = new ToggleButton() {
                 tooltip_text = _("Left to Right"),
                 label = "1 >> 2",
                 active = true,
@@ -341,7 +343,7 @@ namespace Tatap {
                 }
             });
 
-            r2lbutton = new Gtk.ToggleButton() {
+            r2lbutton = new ToggleButton() {
                 tooltip_text = _("Right to Left"),
                 label = "2 << 1",
                 active = false
@@ -358,7 +360,7 @@ namespace Tatap {
                 }
             });
 
-            l1button = new Gtk.Button.with_label("<1") {
+            l1button = new Button.with_label("<1") {
                 tooltip_text =  _("Slide 1 page to Left")
             };
             l1button.clicked.connect(() => {
@@ -373,7 +375,7 @@ namespace Tatap {
                 }
             });
 
-            r1button = new Gtk.Button.with_label("1>") {
+            r1button = new Button.with_label("1>") {
                 tooltip_text = _("Slide 1 page to Right")
             };
             r1button.clicked.connect(() => {
@@ -388,9 +390,9 @@ namespace Tatap {
                 }
             });
 
-            var dual_sort_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+            var dual_sort_button_box = new ButtonBox(Orientation.HORIZONTAL) {
                 margin = 3,
-                layout_style = Gtk.ButtonBoxStyle.EXPAND
+                layout_style = ButtonBoxStyle.EXPAND
             };
 
             dual_sort_button_box.pack_start(l1button);
@@ -403,16 +405,16 @@ namespace Tatap {
                 main_window.fullscreen_mode = !main_window.fullscreen_mode;
             });
 
-            var fullscreen_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+            var fullscreen_button_box = new ButtonBox(Orientation.HORIZONTAL) {
                 margin = 3,
-                layout_style = Gtk.ButtonBoxStyle.EXPAND
+                layout_style = ButtonBoxStyle.EXPAND
             };
 
             fullscreen_button_box.pack_start(fullscreen_button);
 
-            single_view_button = new Gtk.ToggleButton() {
+            single_view_button = new ToggleButton() {
                 tooltip_text = _("Single View Mode"),
-                image = new Gtk.Image.from_icon_name("view-paged-symbolic", Gtk.IconSize.SMALL_TOOLBAR),
+                image = new Gtk.Image.from_icon_name("view-paged-symbolic", IconSize.SMALL_TOOLBAR),
                 active = true,
                 sensitive = false
             };
@@ -421,9 +423,9 @@ namespace Tatap {
                 view_mode = ViewMode.SINGLE_VIEW_MODE;
             });
 
-            scroll_view_button = new Gtk.ToggleButton() {
+            scroll_view_button = new ToggleButton() {
                 tooltip_text = _("Scroll View Mode"),
-                image = new Gtk.Image.from_icon_name("view-continuous-symbolic", Gtk.IconSize.SMALL_TOOLBAR),
+                image = new Gtk.Image.from_icon_name("view-continuous-symbolic", IconSize.SMALL_TOOLBAR),
                 active = false
             };
             scroll_view_button.get_style_context().add_class("image_overlay_button");
@@ -431,9 +433,9 @@ namespace Tatap {
                 view_mode = ViewMode.SCROLL_VIEW_MODE;
             });
 
-            dual_view_button = new Gtk.ToggleButton() {
+            dual_view_button = new ToggleButton() {
                 tooltip_text = _("Dual View Mode"),
-                image = new Gtk.Image.from_icon_name("view-dual-symbolic", Gtk.IconSize.SMALL_TOOLBAR),
+                image = new Gtk.Image.from_icon_name("view-dual-symbolic", IconSize.SMALL_TOOLBAR),
                 active = false
             };
             dual_view_button.get_style_context().add_class("image_overlay_button");
@@ -441,9 +443,9 @@ namespace Tatap {
                 view_mode = ViewMode.DUAL_VIEW_MODE;
             });
 
-            mode_switch_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+            mode_switch_button_box = new ButtonBox(Orientation.HORIZONTAL) {
                 margin = 3,
-                layout_style = Gtk.ButtonBoxStyle.EXPAND
+                layout_style = ButtonBoxStyle.EXPAND
             };
             mode_switch_button_box.pack_start(single_view_button);
 //            mode_switch_button_box.pack_start(scroll_view_button);
@@ -458,35 +460,35 @@ namespace Tatap {
                 }
             });
 
-            var stick_button_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+            var stick_button_box = new ButtonBox(Orientation.HORIZONTAL) {
                 margin = 3,
-                layout_style = Gtk.ButtonBoxStyle.EXPAND
+                layout_style = ButtonBoxStyle.EXPAND
             };
             stick_button_box.pack_start(stick_button);
 
-            single_view_mode_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0) {
+            single_view_mode_box = new Box(Orientation.HORIZONTAL, 0) {
                 vexpand = false,
-                valign = Gtk.Align.START
+                valign = Align.START
             };
             single_view_mode_box.pack_start(save_button_box, false, false);
             single_view_mode_box.pack_start(sort_order_button_box, false, false);
             single_view_mode_box.pack_start(image_actions_button_box, false, false);
             single_view_mode_box.pack_start(animation_actions_button_box, false, false);
 
-            scroll_view_mode_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0) {
+            scroll_view_mode_box = new Box(Orientation.HORIZONTAL, 0) {
                 vexpand = false,
-                valign = Gtk.Align.START
+                valign = Align.START
             };
 
-            dual_view_mode_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0) {
+            dual_view_mode_box = new Box(Orientation.HORIZONTAL, 0) {
                 vexpand = false,
-                valign = Gtk.Align.START
+                valign = Align.START
             };
             dual_view_mode_box.pack_start(dual_sort_button_box, false, false);
 
-            toolbar_hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0) {
+            toolbar_hbox = new Box(Orientation.HORIZONTAL, 0) {
                 vexpand = false,
-                valign = Gtk.Align.START
+                valign = Align.START
             };
             toolbar_hbox.pack_start(single_view_mode_box, false, false);
             toolbar_hbox.pack_end(stick_button_box, false, false);
