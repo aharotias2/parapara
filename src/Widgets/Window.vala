@@ -70,6 +70,7 @@ namespace Tatap {
         private Label message_label;
         private Stack stack;
         private Box bottom_box;
+        private Box below_box;
         private Granite.Widgets.Welcome welcome;
         private bool _fullscreen_mode = false;
         private bool reveal_progress_flag = false;
@@ -82,7 +83,7 @@ namespace Tatap {
                 /* previous, next, open, and save buttons at the left of the headerbar */
                 header_buttons = new Box(Orientation.HORIZONTAL, 12);
                 {
-                    var navigation_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+                    var navigation_box = new Gtk.ButtonBox(Orientation.HORIZONTAL) {
                             layout_style = Gtk.ButtonBoxStyle.EXPAND };
                     {
                         image_prev_button = new ActionButton("go-previous-symbolic", _("Previous"), {"Left"}) {
@@ -132,7 +133,7 @@ namespace Tatap {
                     }
 
 
-                    var file_box = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL) {
+                    var file_box = new Gtk.ButtonBox(Orientation.HORIZONTAL) {
                             layout_style = Gtk.ButtonBoxStyle.EXPAND };
                     {
                         /* file buttons */
@@ -200,48 +201,17 @@ namespace Tatap {
                 {
                     bottom_box = new Box(Orientation.VERTICAL, 0);
                     {
-                        /* contain buttons that can be opened from the menu */
-                        toolbar = new Tatap.ToolBar(this);
-                        {
-                            toolbar.sort_order_changed.connect(() => {
-                                image_next_button.sensitive = image_view.is_next_button_sensitive();
-                                image_prev_button.sensitive = image_view.is_prev_button_sensitive();
-                                try {
-                                    image_view.reopen();
-                                } catch (Error e) {
-                                    show_error_dialog(e.message);
-                                }
-                                progress_scale.inverted = toolbar.sort_order == SortOrder.DESC;
-                            });
-
-                            toolbar.stick_button_clicked.connect((sticked) => {
-                                if (sticked) {
-                                    toolbar_revealer_above.remove(toolbar);
-                                    toolbar_revealer_below.add(toolbar);
-                                    toolbar_revealer_above.reveal_child = false;
-                                    toolbar_revealer_below.reveal_child = true;
-                                    toolbar_toggle_button.sensitive = false;
-                                } else {
-                                    toolbar_revealer_below.remove(toolbar);
-                                    toolbar_revealer_above.add(toolbar);
-                                    toolbar_revealer_above.reveal_child = true;
-                                    toolbar_revealer_below.reveal_child = false;
-                                    toolbar_toggle_button.sensitive = true;
-                                }
-                            });
-
-                            toolbar.view_mode_changed.connect((view_mode) => {
-                                try {
-                                    update_image_view(view_mode);
-                                } catch (Error error) {
-                                    show_error_dialog(error.message);
-                                }
-                            });
-
-                            toolbar_revealer_below = new Revealer() {
+                        toolbar_revealer_below = new Revealer() {
                                 transition_type = RevealerTransitionType.SLIDE_DOWN,
-                                reveal_child = false
-                            };
+                                reveal_child = false };
+                        {
+                            var below_box = new Box(Orientation.VERTICAL, 0);
+                            {
+                                var dummy_button = new Button.from_icon_name("emblem-important-symbolic", SMALL_TOOLBAR);
+                                below_box.pack_start(dummy_button);
+                            }
+
+                            toolbar_revealer_below.add(below_box);
                         }
 
                         /* image area in the center of the window */
@@ -269,6 +239,41 @@ namespace Tatap {
                                 transition_type = RevealerTransitionType.SLIDE_DOWN,
                                 reveal_child = false };
                         {
+                            /* contain buttons that can be opened from the menu */
+                            toolbar = new Tatap.ToolBar(this);
+                            {
+                                toolbar.sort_order_changed.connect(() => {
+                                    image_next_button.sensitive = image_view.is_next_button_sensitive();
+                                    image_prev_button.sensitive = image_view.is_prev_button_sensitive();
+                                    try {
+                                        image_view.reopen();
+                                    } catch (Error e) {
+                                        show_error_dialog(e.message);
+                                    }
+                                    progress_scale.inverted = toolbar.sort_order == SortOrder.DESC;
+                                });
+
+                                toolbar.stick_button_clicked.connect((sticked) => {
+                                    if (sticked) {
+                                        below_box.height_request = toolbar.height_request;
+                                        toolbar_revealer_below.reveal_child = true;
+                                        toolbar_toggle_button.sensitive = false;
+                                    } else {
+                                        toolbar_revealer_above.reveal_child = true;
+                                        toolbar_revealer_below.reveal_child = false;
+                                        toolbar_toggle_button.sensitive = true;
+                                    }
+                                });
+
+                                toolbar.view_mode_changed.connect((view_mode) => {
+                                    try {
+                                        update_image_view(view_mode);
+                                    } catch (Error error) {
+                                        show_error_dialog(error.message);
+                                    }
+                                });
+                            }
+
                             toolbar_revealer_above.add(toolbar);
                         }
 
@@ -331,7 +336,7 @@ namespace Tatap {
 
                     window_overlay.add(bottom_box);
                     window_overlay.add_overlay(revealer_box);
-                    window_overlay.set_overlay_pass_through(revealer_box, true);
+                    window_overlay.set_overlay_pass_through(revealer_box, false);
                 }
 
                 stack.add_named(welcome, "welcome");
