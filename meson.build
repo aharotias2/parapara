@@ -57,12 +57,6 @@ executable(
     install: true
 )
 
-#install_data(
-#  'data/icons/128/icons.svg',
-#  install_dir : 'share/icons/hicolor/scalable/apps',
-#  rename : '@0@.svg'.format(meson.project_name())
-#)
-
 i18n.merge_file(
     input: join_paths('data', 'tatap.desktop.in'),
     output: meson.project_name() + '.desktop',
@@ -73,5 +67,6 @@ i18n.merge_file(
 )
 
 subdir('po')
+subdir('data')
 
 meson.add_install_script('meson/post_install.py')
