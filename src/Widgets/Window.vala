@@ -435,24 +435,6 @@ namespace Tatap {
             return false;
         }
 
-        public override bool button_press_event(EventButton ev) {
-            print("Window button_press_event\n");
-            if (stack.visible_child_name == "picture" && WidgetUtils.is_event_in_widget((Event) ev, image_view as Widget)) {
-                return image_view.button_press_event(ev);
-            } else {
-                return false;
-            }
-        }
-
-        public override bool button_release_event(EventButton ev) {
-            print("Window button_release_event\n");
-            if (stack.visible_child_name == "picture" && WidgetUtils.is_event_in_widget((Event) ev, image_view as Widget)) {
-                return image_view.button_release_event(ev);
-            } else {
-                return false;
-            }
-        }
-
         public override bool key_press_event(EventKey ev) {
             if (Gdk.ModifierType.CONTROL_MASK in ev.state) {
                 switch (ev.keyval) {
