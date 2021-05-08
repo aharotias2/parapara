@@ -171,20 +171,28 @@ namespace Tatap {
             }
         }
 
-        private int get_hposition_percent(double x) {
-            Allocation allocation;
-            get_allocation(out allocation);
-            double a = x - allocation.x;
-            double b = a / (double) allocation.width * 100.0;
-            debug("SingleImageView::x = %f, allocation.x = %f, allocation.width = %f", x, allocation.x, allocation.width);
-            return (int) b;
+        private enum ClickedArea {
+            RIGHT_AREA, LEFT_AREA, OTHER_AREA
+        }
+
+        private ClickedArea event_area(Event event) {
+            int hpos, vpos;
+            WidgetUtils.calc_event_position_percent(event, this, out hpos, out vpos);
+            if (20 < vpos < 80) {
+                if (hpos < 25) {
+                    return LEFT_AREA;
+                } else if (hpos > 75) {
+                    return RIGHT_AREA;
+                }
+            }
+            return OTHER_AREA;
         }
 
         public override bool button_press_event(EventButton ev) {
             if (!left_image.has_image && !right_image.has_image) {
                 return false;
             }
-            if (ev.type == 2BUTTON_PRESS) {
+            if (event_area((Event) ev) == OTHER_AREA && ev.type == 2BUTTON_PRESS) {
                 main_window.fullscreen_mode = ! main_window.fullscreen_mode;
             } else {
                 button_pressed = true;
@@ -202,9 +210,8 @@ namespace Tatap {
             try {
                 bool shift_masked =  ModifierType.SHIFT_MASK in ev.state;
                 if (x == ev.x_root && y == ev.y_root) {
-                    int hpos = get_hposition_percent(ev.x);
-                    debug("DualImageView::hpos = %d", hpos);
-                    if (hpos < 25) {
+                    switch (event_area((Event) ev)) {
+                    case LEFT_AREA:
                         switch (main_window.toolbar.sort_order) {
                             case ASC:
                               go_backward(shift_masked ? 1 : 2);
@@ -213,7 +220,8 @@ namespace Tatap {
                               go_forward(shift_masked ? 1 : 2);
                               return true;
                         }
-                    } else if (hpos > 75) {
+                        break;
+                    case RIGHT_AREA:
                         switch (main_window.toolbar.sort_order) {
                             case ASC:
                                 go_forward(shift_masked ? 1 : 2);
@@ -222,11 +230,34 @@ namespace Tatap {
                                 go_backward(shift_masked ? 1 : 2);
                                 return true;
                         }
+                        break;
+                    default:
+                        break;
                     }
                 }
                 button_pressed = false;
             } catch (GLib.Error e) {
                 main_window.show_error_dialog(e.message);
+            }
+
+            return false;
+        }
+
+        public override bool motion_notify_event(EventMotion ev) {
+            if (!left_image.has_image && !right_image.has_image) {
+                return false;
+            }
+
+            switch (event_area((Event) ev)) {
+                case LEFT_AREA:
+                    get_window().cursor = new Gdk.Cursor.for_display(Gdk.Screen.get_default().get_display(), SB_LEFT_ARROW);
+                    break;
+                case RIGHT_AREA:
+                    get_window().cursor = new Gdk.Cursor.for_display(Gdk.Screen.get_default().get_display(), SB_RIGHT_ARROW);
+                    break;
+                default:
+                    get_window().cursor = new Gdk.Cursor.for_display(Gdk.Screen.get_default().get_display(), LEFT_PTR);
+                    break;
             }
 
             return false;

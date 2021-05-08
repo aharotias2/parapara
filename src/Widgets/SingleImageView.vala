@@ -102,31 +102,13 @@ namespace Tatap {
             add(scrolled);
         }
 
-        private int get_hposition_percent(double x) {
-            Allocation allocation;
-            get_allocation(out allocation);
-            double a = x - allocation.x;
-            double b = a / (double) allocation.width * 100.0;
-            debug("SingleImageView::x = %f, allocation.x = %f, allocation.width = %f", x, allocation.x, allocation.width);
-            return (int) b;
-        }
-
-        private int get_vposition_percent(double y) {
-            Allocation allocation;
-            get_allocation(out allocation);
-            double a = y - allocation.y;
-            double b = a / (double) allocation.height * 100.0;
-            debug("SingleImageView::y = %f, allocation.y = %f, allocation.height = %f", x, allocation.y, allocation.height);
-            return (int) b;
-        }
-
         private enum ClickedArea {
             RIGHT_AREA, LEFT_AREA, OTHER_AREA
         }
 
-        private ClickedArea event_area(double x, double y) {
-            int hpos = get_hposition_percent(x);
-            int vpos = get_vposition_percent(y);
+        private ClickedArea event_area(Event event) {
+            int hpos, vpos;
+            WidgetUtils.calc_event_position_percent(event, this, out hpos, out vpos);
             if (20 < vpos < 80) {
                 if (hpos < 25) {
                     return LEFT_AREA;
@@ -142,7 +124,7 @@ namespace Tatap {
                 return false;
             }
 
-            if (event_area(ev.x, ev.y) == OTHER_AREA && ev.type == 2BUTTON_PRESS) {
+            if (event_area((Event) ev) == OTHER_AREA && ev.type == 2BUTTON_PRESS) {
                 main_window.fullscreen_mode = ! main_window.fullscreen_mode;
                 is_double_clicked = true;
                 return true;
@@ -166,7 +148,7 @@ namespace Tatap {
 
             try {
                 if (x == ev.x_root && y == ev.y_root) {
-                    switch (event_area(ev.x, ev.y)) {
+                    switch (event_area((Event) ev)) {
                         case LEFT_AREA:
                             switch (main_window.toolbar.sort_order) {
                                 case ASC:
@@ -217,7 +199,7 @@ namespace Tatap {
                 x = new_x;
                 y = new_y;
             } else {
-                switch (event_area(ev.x, ev.y)) {
+                switch (event_area((Event) ev)) {
                     case LEFT_AREA:
                         get_window().cursor = new Gdk.Cursor.for_display(Gdk.Screen.get_default().get_display(), SB_LEFT_ARROW);
                         break;
