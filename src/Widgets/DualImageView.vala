@@ -19,7 +19,7 @@
 using Gdk, Gtk;
 
 namespace Tatap {
-    public class DualImageView : ImageView, Bin {
+    public class DualImageView : ImageView, EventBox {
         public ViewMode view_mode { get; construct; }
         public Tatap.Window main_window { get; construct; }
 
@@ -180,23 +180,29 @@ namespace Tatap {
             return (int) b;
         }
 
-        public bool handle_event(Event ev) throws Error {
+        public override bool button_press_event(EventButton ev) {
             if (!left_image.has_image && !right_image.has_image) {
                 return false;
             }
-            bool shift_masked = false;
-            switch (ev.type) {
-              case EventType.BUTTON_PRESS:
-                button_pressed = true;
-                x = ev.motion.x_root;
-                y = ev.motion.y_root;
-                break;
-              case EventType.@2BUTTON_PRESS:
+            if (ev.type == 2BUTTON_PRESS) {
                 main_window.fullscreen_mode = ! main_window.fullscreen_mode;
-                return true;
-              case EventType.BUTTON_RELEASE:
-                if (x == ev.button.x_root && y == ev.button.y_root) {
-                    int hpos = get_hposition_percent(ev.button.x);
+            } else {
+                button_pressed = true;
+                x = ev.x_root;
+                y = ev.y_root;
+            }
+            return false;
+        }
+
+        public override bool button_release_event(EventButton ev) {
+            if (!left_image.has_image && !right_image.has_image) {
+                return false;
+            }
+
+            try {
+                bool shift_masked =  ModifierType.SHIFT_MASK in ev.state;
+                if (x == ev.x_root && y == ev.y_root) {
+                    int hpos = get_hposition_percent(ev.x);
                     debug("DualImageView::hpos = %d", hpos);
                     if (hpos < 25) {
                         switch (main_window.toolbar.sort_order) {
@@ -219,10 +225,22 @@ namespace Tatap {
                     }
                 }
                 button_pressed = false;
-                break;
-              case EventType.SCROLL:
-                shift_masked = ModifierType.SHIFT_MASK in ev.scroll.state;
-                switch (ev.scroll.direction) {
+            } catch (GLib.Error e) {
+                main_window.show_error_dialog(e.message);
+            }
+
+            return false;
+        }
+
+        public override bool scroll_event(EventScroll ev) {
+            if (!left_image.has_image && !right_image.has_image) {
+                return false;
+            }
+
+            bool shift_masked =  ModifierType.SHIFT_MASK in ev.scroll.state;
+
+            try {
+                switch (ev.direction) {
                   case ScrollDirection.UP:
                     if (!accessor.is_first()) {
                         go_backward(shift_masked ? 1 : 2);
@@ -235,9 +253,19 @@ namespace Tatap {
                     break;
                   default: break;
                 }
-                break;
-              case EventType.KEY_PRESS:
-                shift_masked = ModifierType.SHIFT_MASK in ev.key.state;
+            } catch (GLib.Error e) {
+                main_window.show_error_dialog(e.message);
+            }
+
+            return false;
+        }
+
+        public override bool key_press_event(EventKey ev) {
+            if (!left_image.has_image && !right_image.has_image) {
+                return false;
+            }
+            bool shift_masked =  ModifierType.SHIFT_MASK in ev.key.state;
+            try {
                 switch (ev.key.keyval) {
                   case Gdk.Key.Left:
                     switch (main_window.toolbar.sort_order) {
@@ -269,8 +297,8 @@ namespace Tatap {
                     break;
                   default: break;
                 }
-                break;
-              default: break;
+            } catch (GLib.Error e) {
+                main_window.show_error_dialog(e.message);
             }
             return false;
         }
