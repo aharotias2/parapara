@@ -206,21 +206,21 @@ namespace Tatap {
                     debug("DualImageView::hpos = %d", hpos);
                     if (hpos < 25) {
                         switch (main_window.toolbar.sort_order) {
-                          case ASC:
-                            go_backward(shift_masked ? 1 : 2);
-                            return true;
-                          case DESC:
-                            go_forward(shift_masked ? 1 : 2);
-                            return true;
+                            case ASC:
+                              go_backward(shift_masked ? 1 : 2);
+                              return true;
+                            case DESC:
+                              go_forward(shift_masked ? 1 : 2);
+                              return true;
                         }
                     } else if (hpos > 75) {
                         switch (main_window.toolbar.sort_order) {
-                          case ASC:
-                            go_forward(shift_masked ? 1 : 2);
-                            return true;
-                          case DESC:
-                            go_backward(shift_masked ? 1 : 2);
-                            return true;
+                            case ASC:
+                                go_forward(shift_masked ? 1 : 2);
+                                return true;
+                            case DESC:
+                                go_backward(shift_masked ? 1 : 2);
+                                return true;
                         }
                     }
                 }
@@ -241,17 +241,17 @@ namespace Tatap {
 
             try {
                 switch (ev.direction) {
-                  case ScrollDirection.UP:
-                    if (!accessor.is_first()) {
-                        go_backward(shift_masked ? 1 : 2);
-                    }
-                    break;
-                  case ScrollDirection.DOWN:
-                    if (!accessor.is_last()) {
-                        go_forward(shift_masked ? 1 : 2);
-                    }
-                    break;
-                  default: break;
+                    case ScrollDirection.UP:
+                        if (!accessor.is_first()) {
+                            go_backward(shift_masked ? 1 : 2);
+                        }
+                        break;
+                    case ScrollDirection.DOWN:
+                        if (!accessor.is_last()) {
+                            go_forward(shift_masked ? 1 : 2);
+                        }
+                        break;
+                    default: break;
                 }
             } catch (GLib.Error e) {
                 main_window.show_error_dialog(e.message);
@@ -267,35 +267,35 @@ namespace Tatap {
             bool shift_masked =  ModifierType.SHIFT_MASK in ev.key.state;
             try {
                 switch (ev.key.keyval) {
-                  case Gdk.Key.Left:
-                    switch (main_window.toolbar.sort_order) {
-                      case SortOrder.ASC:
-                        if (!accessor.is_first()) {
-                            go_backward(shift_masked ? 1 : 2);
+                    case Gdk.Key.Left:
+                        switch (main_window.toolbar.sort_order) {
+                            case SortOrder.ASC:
+                                if (!accessor.is_first()) {
+                                    go_backward(shift_masked ? 1 : 2);
+                                }
+                                break;
+                            case SortOrder.DESC:
+                                if (!accessor.is_last()) {
+                                    go_forward(shift_masked ? 1 : 2);
+                                }
+                                break;
                         }
                         break;
-                      case SortOrder.DESC:
-                        if (!accessor.is_last()) {
-                            go_forward(shift_masked ? 1 : 2);
+                    case Gdk.Key.Right:
+                        switch (main_window.toolbar.sort_order) {
+                            case SortOrder.ASC:
+                                if (!accessor.is_last()) {
+                                    go_forward(shift_masked ? 1 : 2);
+                                }
+                                break;
+                            case SortOrder.DESC:
+                                if (!accessor.is_first()) {
+                                    go_backward(shift_masked ? 1 : 2);
+                                }
+                                break;
                         }
                         break;
-                    }
-                    break;
-                  case Gdk.Key.Right:
-                    switch (main_window.toolbar.sort_order) {
-                      case SortOrder.ASC:
-                        if (!accessor.is_last()) {
-                            go_forward(shift_masked ? 1 : 2);
-                        }
-                        break;
-                      case SortOrder.DESC:
-                        if (!accessor.is_first()) {
-                            go_backward(shift_masked ? 1 : 2);
-                        }
-                        break;
-                    }
-                    break;
-                  default: break;
+                    default: break;
                 }
             } catch (GLib.Error e) {
                 main_window.show_error_dialog(e.message);
@@ -344,46 +344,46 @@ namespace Tatap {
                 int index1 = accessor.get_index1();
                 int index2 = accessor.get_index2();
                 switch (main_window.toolbar.sort_order) {
-                  case SortOrder.ASC:
-                    if (index1 >= 0) {
-                        left_visible = true;
-                        left_file_path = accessor.get_file1().get_path();
-                    }
-                    if (index2 >= 0) {
-                        right_visible = true;
-                        right_file_path = accessor.get_file2().get_path();
-                    }
-                    if (index1 < 0) {
-                        main_window.toolbar.l1button.sensitive = false;
-                    } else {
-                        main_window.toolbar.l1button.sensitive = true;
-                    }
-                    if (index1 >= _file_list.size - 1) {
-                        main_window.toolbar.r1button.sensitive = false;
-                    } else {
-                        main_window.toolbar.r1button.sensitive = true;
-                    }
-                    break;
-                  case SortOrder.DESC:
-                    if (index1 >= 0) {
-                        right_visible = true;
-                        right_file_path = accessor.get_file1().get_path();
-                    }
-                    if (index2 >= 0) {
-                        left_visible = true;
-                        left_file_path = accessor.get_file2().get_path();
-                    }
-                    if (index1 < 0) {
-                        main_window.toolbar.r1button.sensitive = false;
-                    } else {
-                        main_window.toolbar.r1button.sensitive = true;
-                    }
-                    if (index1 >= _file_list.size - 1) {
-                        main_window.toolbar.l1button.sensitive = false;
-                    } else {
-                        main_window.toolbar.l1button.sensitive = true;
-                    }
-                    break;
+                    case SortOrder.ASC:
+                        if (index1 >= 0) {
+                            left_visible = true;
+                            left_file_path = accessor.get_file1().get_path();
+                        }
+                        if (index2 >= 0) {
+                            right_visible = true;
+                            right_file_path = accessor.get_file2().get_path();
+                        }
+                        if (index1 < 0) {
+                            main_window.toolbar.l1button.sensitive = false;
+                        } else {
+                            main_window.toolbar.l1button.sensitive = true;
+                        }
+                        if (index1 >= _file_list.size - 1) {
+                            main_window.toolbar.r1button.sensitive = false;
+                        } else {
+                            main_window.toolbar.r1button.sensitive = true;
+                        }
+                        break;
+                    case SortOrder.DESC:
+                        if (index1 >= 0) {
+                            right_visible = true;
+                            right_file_path = accessor.get_file1().get_path();
+                        }
+                        if (index2 >= 0) {
+                            left_visible = true;
+                            left_file_path = accessor.get_file2().get_path();
+                        }
+                        if (index1 < 0) {
+                            main_window.toolbar.r1button.sensitive = false;
+                        } else {
+                            main_window.toolbar.r1button.sensitive = true;
+                        }
+                        if (index1 >= _file_list.size - 1) {
+                            main_window.toolbar.l1button.sensitive = false;
+                        } else {
+                            main_window.toolbar.l1button.sensitive = true;
+                        }
+                        break;
                 }
                 main_window.image_next_button.sensitive = is_next_button_sensitive();
                 main_window.image_prev_button.sensitive = is_prev_button_sensitive();

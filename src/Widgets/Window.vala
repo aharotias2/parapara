@@ -67,10 +67,12 @@ namespace Tatap {
         private Box header_buttons;
         private HeaderBar headerbar;
         private Revealer message_revealer;
+        private Overlay window_overlay;
         private Label message_label;
         private Stack stack;
         private Box bottom_box;
         private Box below_box;
+        private Box revealer_box;
         private Granite.Widgets.Welcome welcome;
         private bool _fullscreen_mode = false;
         private bool reveal_progress_flag = false;
@@ -197,7 +199,7 @@ namespace Tatap {
                 }
 
                 /* Add images and revealer into overlay */
-                var window_overlay = new Overlay();
+                window_overlay = new Overlay();
                 {
                     bottom_box = new Box(Orientation.VERTICAL, 0);
                     {
@@ -233,7 +235,7 @@ namespace Tatap {
                         bottom_box.pack_start(image_view as EventBox, true, true);
                     }
 
-                    var revealer_box = new Box(Orientation.VERTICAL, 0);
+                    revealer_box = new Box(Orientation.VERTICAL, 0);
                     {
                         toolbar_revealer_above = new Revealer() {
                                 transition_type = RevealerTransitionType.SLIDE_DOWN,
@@ -336,7 +338,7 @@ namespace Tatap {
 
                     window_overlay.add(bottom_box);
                     window_overlay.add_overlay(revealer_box);
-                    window_overlay.set_overlay_pass_through(revealer_box, false);
+                    window_overlay.set_overlay_pass_through(revealer_box, true);
                 }
 
                 stack.add_named(welcome, "welcome");
@@ -382,6 +384,7 @@ namespace Tatap {
                         Timeout.add(300, () => {
                             if (reveal_progress_flag) {
                                 progress_revealer.reveal_child = true;
+                                window_overlay.set_overlay_pass_through(revealer_box, false);
                                 reveal_progress_flag = false;
                             }
                             return false;
@@ -392,6 +395,7 @@ namespace Tatap {
                     if (progress_revealer.child_revealed) {
                         Timeout.add(300, () => {
                             progress_revealer.reveal_child = false;
+                            window_overlay.set_overlay_pass_through(revealer_box, true);
                             return false;
                         });
                     }
@@ -424,10 +428,29 @@ namespace Tatap {
             if (progress_revealer.child_revealed) {
                 Timeout.add(300, () => {
                     progress_revealer.reveal_child = false;
+                    window_overlay.set_overlay_pass_through(revealer_box, true);
                     return false;
                 });
             }
             return false;
+        }
+
+        public override bool button_press_event(EventButton ev) {
+            print("Window button_press_event\n");
+            if (stack.visible_child_name == "picture" && WidgetUtils.is_event_in_widget((Event) ev, image_view as Widget)) {
+                return image_view.button_press_event(ev);
+            } else {
+                return false;
+            }
+        }
+
+        public override bool button_release_event(EventButton ev) {
+            print("Window button_release_event\n");
+            if (stack.visible_child_name == "picture" && WidgetUtils.is_event_in_widget((Event) ev, image_view as Widget)) {
+                return image_view.button_release_event(ev);
+            } else {
+                return false;
+            }
         }
 
         public override bool key_press_event(EventKey ev) {
@@ -468,11 +491,19 @@ namespace Tatap {
                   default: break;
                 }
             }
-            return image_view.key_press_event(ev);
+            if (stack.visible_child_name == "picture") {
+                return image_view.key_press_event(ev);
+            } else {
+                return false;
+            }
         }
 
         public override bool scroll_event(EventScroll ev) {
-            return image_view.scroll_event(ev);
+            if (stack.visible_child_name == "picture" && WidgetUtils.is_event_in_widget((Event) ev, image_view as Widget)) {
+                return image_view.scroll_event(ev);
+            } else {
+                return false;
+            }
         }
 
         private void setup_css() {
@@ -582,15 +613,15 @@ namespace Tatap {
                 File file = image_view.get_file();
                 bottom_box.remove(image_view);
                 switch (view_mode) {
-                case SINGLE_VIEW_MODE:
-                    image_view = new SingleImageView.with_file_list(this, file_list);
-                    break;
-                case DUAL_VIEW_MODE:
-                    image_view = new DualImageView.with_file_list(this, file_list);
-                    break;
-                case SCROLL_VIEW_MODE:
-                    // TODO: Implement later.
-                    return;
+                    case SINGLE_VIEW_MODE:
+                        image_view = new SingleImageView.with_file_list(this, file_list);
+                        break;
+                    case DUAL_VIEW_MODE:
+                        image_view = new DualImageView.with_file_list(this, file_list);
+                        break;
+                    case SCROLL_VIEW_MODE:
+                        // TODO: Implement later.
+                        return;
                 }
                 bottom_box.pack_start(image_view as EventBox, true, true);
                 image_view.title_changed.connect((title) => {
