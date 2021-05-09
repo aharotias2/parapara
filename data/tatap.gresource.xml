@@ -2,9 +2,5 @@
 <gresources>
   <gresource prefix="/com/github/aharotias2/tatap">
     <file alias="Application.css">Application.css</file>
-    <file alias="read-left-to-right-symbolic">icons/symbolic/read-left-to-right-symbolic.svg</file>
-    <file alias="read-right-to-left-symbolic">icons/symbolic/read-right-to-left-symbolic.svg</file>
-    <file alias="move-one-page-right-symbolic">icons/symbolic/move-one-page-right-symbolic.svg</file>
-    <file alias="move-one-page-left-symbolic">icons/symbolic/move-one-page-left-symbolic.svg</file>
   </gresource>
 </gresources>

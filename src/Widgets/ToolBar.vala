@@ -328,9 +328,7 @@ namespace Tatap {
 
             l2rbutton = new ToggleButton() {
                 tooltip_text = _("Left to Right"),
-                image = new Gtk.Image.from_resource("/com/github/aharotias2/tatap/read-left-to-right-symbolic") {
-                    icon_size = IconSize.SMALL_TOOLBAR
-                },
+                image = new Gtk.Image.from_icon_name("read-left-to-right-symbolic", SMALL_TOOLBAR),
                 active = true,
                 sensitive = false
             };
@@ -347,9 +345,7 @@ namespace Tatap {
 
             r2lbutton = new ToggleButton() {
                 tooltip_text = _("Right to Left"),
-                image = new Gtk.Image.from_resource("/com/github/aharotias2/tatap/read-right-to-left-symbolic") {
-                    icon_size = IconSize.SMALL_TOOLBAR
-                },
+                image = new Gtk.Image.from_icon_name("read-right-to-left-symbolic", SMALL_TOOLBAR),
                 active = false
             };
             r2lbutton.get_style_context().add_class("image_overlay_button");
@@ -364,7 +360,7 @@ namespace Tatap {
                 }
             });
 
-            l1button = new ActionButton.from_resource("/com/github/aharotias2/tatap/move-one-page-left-symbolic", _("Slide 1 page to Left"), null);
+            l1button = new ActionButton("move-one-page-left-symbolic", _("Slide 1 page to Left"), null);
             l1button.clicked.connect(() => {
                 try {
                     if (sort_order == SortOrder.ASC) {
@@ -377,7 +373,7 @@ namespace Tatap {
                 }
             });
 
-            r1button = new ActionButton.from_resource("/com/github/aharotias2/tatap/move-one-page-right-symbolic", _("Slide 1 page to Right"), null);
+            r1button = new ActionButton("move-one-page-right-symbolic", _("Slide 1 page to Right"), null);
             r1button.clicked.connect(() => {
                 try {
                     if (sort_order == SortOrder.ASC) {

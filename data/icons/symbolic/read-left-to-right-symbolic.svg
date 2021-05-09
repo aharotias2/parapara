@@ -8,14 +8,25 @@
     xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
     xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
     height="16" width="16">
-  <rect x="0" y="2" width="16" height="12"
-	style="fill:black;stroke:black;stroke-width:1;fill-opacity:0.0;stroke-opacity:1.0;"/>
-  <rect x="1" y="3" width="7" height="10"
-	style="fill:black;stroke:black;stroke-width:1;fill-opacity:0.5;stroke-opacity:1.0;"/>
-  <rect x="8" y="3" width="7" height="10"
-	style="fill:black;stroke:black;stroke-width:1;fill-opacity:0.0;stroke-opacity:1.0;"/>
-  <line x1="4" y1="8" x2="12" y2="8"
-	style="stroke:black;stroke-width:2;"/>
+
+  <rect x="2" y="2" width="6" height="10"
+	style="fill:#bebebe;fill-opacity:0.5;stroke-width:0"/>
+
+  <rect x="0" y="2" width="16" height="2"
+	style="fill:#bebebe;stroke-width:0"/>
+  <rect x="0" y="2" width="2" height="12"
+	style="fill:#bebebe;stroke-width:0"/>
+  <rect x="0" y="12" width="16" height="2"
+	style="fill:#bebebe;stroke-width:0"/>
+  <rect x="14" y="2" width="2" height="12"
+	style="fill:#bebebe;stroke-width:0"/>
+
+  <rect x="7" y="4" width="1" height="10"
+	style="fill:#bebebe;stroke-width:0"/>
+
+  <rect x="4" y="7" width="8" height="2"
+	style="fill:#bebebe;stroke-width:0"/>
+
   <polygon points="13,8,10,5,10,11"
-	   style="fill:black;stroke:black;stroke-width:0;"/>
+	   style="fill:#bebebe;stroke-width:0"/>
 </svg>
