@@ -12,6 +12,6 @@ tool_icons = [ 'read-left-to-right', 'read-right-to-left', 'move-one-page-left',
 foreach i : tool_icons
   install_data(
     join_paths('icons', 'symbolic', i + '-symbolic.svg'),
-    install_dir: join_paths(get_option('datadir'), 'pixmaps', meson.project_name())
+    install_dir: join_paths(get_option('datadir'), 'pixmaps')
   )
 endforeach
