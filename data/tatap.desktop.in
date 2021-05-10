@@ -8,5 +8,4 @@ Icon=com.github.aharotias2.tatap
 Type=Application
 Terminal=false
 Categories=Graphics
-StartupWMClass=Tatap
 Keywords=Picture;Image;Viewer;
