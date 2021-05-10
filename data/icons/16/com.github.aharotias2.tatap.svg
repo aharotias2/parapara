@@ -46,7 +46,7 @@
          id="stop1418" />
       <stop
          style="stop-color:#ffffff;stop-opacity:0.2"
-         offset="0.71811223"
+         offset="0.84274375"
          id="stop1416" />
       <stop
          style="stop-color:#fefefe;stop-opacity:1"
@@ -612,7 +612,7 @@
          id="stop1430" />
       <stop
          style="stop-color:#d4d4d4;stop-opacity:0.2"
-         offset="0.18155678"
+         offset="0.16704221"
          id="stop1432" />
       <stop
          style="stop-color:#7e8087;stop-opacity:0.2"
@@ -627,8 +627,8 @@
        inkscape:collect="always"
        xlink:href="#linearGradient1438"
        id="linearGradient1048"
-       x1="4.2333336"
-       y1="289.85623"
+       x1="4.2278218"
+       y1="289.6413"
        x2="4.2333341"
        y2="294.39828"
        gradientUnits="userSpaceOnUse"
@@ -641,16 +641,18 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="22.4"
-     inkscape:cx="-3.6286524"
-     inkscape:cy="4.2767726"
+     inkscape:zoom="32"
+     inkscape:cx="4.1487689"
+     inkscape:cy="9.0868588"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
      showgrid="true"
      units="px"
      showguides="true"
-     inkscape:guide-bbox="true">
+     inkscape:guide-bbox="true"
+     inkscape:snap-to-guides="false"
+     inkscape:snap-grids="false">
     <inkscape:grid
        type="xygrid"
        id="grid1517" />
@@ -684,7 +686,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>

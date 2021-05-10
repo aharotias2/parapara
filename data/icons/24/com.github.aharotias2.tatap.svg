@@ -26,7 +26,7 @@
          id="stop1085" />
       <stop
          style="stop-color:#ffffff;stop-opacity:0.2"
-         offset="0.24390134"
+         offset="0.09755965"
          id="stop1087" />
       <stop
          style="stop-color:#d2d3d5;stop-opacity:0.2"
@@ -66,7 +66,7 @@
          id="stop1418" />
       <stop
          style="stop-color:#d4d4d4;stop-opacity:0.2"
-         offset="0.7692281"
+         offset="0.84615064"
          id="stop1416" />
       <stop
          style="stop-color:#d4d4d4;stop-opacity:1"
@@ -639,9 +639,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="22.627417"
-     inkscape:cx="0.18775955"
-     inkscape:cy="12.71915"
+     inkscape:zoom="32"
+     inkscape:cx="9.5856305"
+     inkscape:cy="7.4117703"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -682,7 +682,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>

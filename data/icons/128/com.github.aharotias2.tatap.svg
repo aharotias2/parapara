@@ -19,6 +19,26 @@
      id="defs930">
     <linearGradient
        inkscape:collect="always"
+       id="linearGradient1038">
+      <stop
+         style="stop-color:#d4d4d4;stop-opacity:1"
+         offset="0"
+         id="stop1030" />
+      <stop
+         style="stop-color:#d4d4d4;stop-opacity:0.2"
+         offset="0.02500084"
+         id="stop1032" />
+      <stop
+         style="stop-color:#7e8087;stop-opacity:0.2"
+         offset="0.71811223"
+         id="stop1034" />
+      <stop
+         style="stop-color:#7e8087;stop-opacity:1"
+         offset="1"
+         id="stop1036" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
        id="linearGradient1456">
       <stop
          style="stop-color:#abacae;stop-opacity:1"
@@ -66,7 +86,7 @@
          id="stop1418" />
       <stop
          style="stop-color:#ffffff;stop-opacity:0.2"
-         offset="0.71811223"
+         offset="0.95491159"
          id="stop1416" />
       <stop
          style="stop-color:#fefefe;stop-opacity:1"
@@ -623,6 +643,16 @@
        y2="294.35416"
        gradientUnits="userSpaceOnUse"
        gradientTransform="translate(0,-1.141116e-5)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1038"
+       id="linearGradient1028"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(0,-1.141116e-5)"
+       x1="16.668751"
+       y1="266.57291"
+       x2="16.668751"
+       y2="287.73959" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -632,8 +662,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="5.6"
-     inkscape:cx="20.622545"
-     inkscape:cy="88.376352"
+     inkscape:cx="67.917928"
+     inkscape:cy="76.476504"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -1214,7 +1244,7 @@
        height="29.897917"
        width="25.26771" />
     <rect
-       style="opacity:0.4;fill:none;stroke:url(#linearGradient1428);stroke-width:0.264583;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stop-color:#000000"
+       style="opacity:0.4;fill:none;stroke:url(#linearGradient1028);stroke-width:0.264583;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stop-color:#000000"
        id="rect1044"
        width="20.902084"
        height="20.902084"
