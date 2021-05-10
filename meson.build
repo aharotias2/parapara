@@ -34,6 +34,7 @@ executable(
     'src/Utils/FileUtils.vala',
     'src/Utils/FileType.vala',
     'src/Utils/StringUtils.vala',
+    'src/Utils/WidgetUtils.vala',
     'src/Model/SortOrder.vala',
     'src/Model/ViewMode.vala',
     'src/Model/Error.vala',
