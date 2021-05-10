@@ -35,5 +35,14 @@ namespace Tatap {
                 tooltip_markup: accels != null ? Granite.markup_accel_tooltip(accels, tooltip_text) : tooltip_text
             );
         }
+
+        public ActionButton.from_resource(string resource_name, string tooltip_text, string[]? accels = null) {
+            Object (
+                image: new Gtk.Image.from_resource(resource_name) {
+                    icon_size = Gtk.IconSize.SMALL_TOOLBAR
+                },
+                tooltip_markup: accels != null ? Granite.markup_accel_tooltip(accels, tooltip_text) : tooltip_text
+            );
+        }
     }
 }
