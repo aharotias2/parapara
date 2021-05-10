@@ -211,28 +211,40 @@ namespace Tatap {
                 bool shift_masked =  ModifierType.SHIFT_MASK in ev.state;
                 if (x == ev.x_root && y == ev.y_root) {
                     switch (event_area((Event) ev)) {
-                    case LEFT_AREA:
-                        switch (main_window.toolbar.sort_order) {
-                            case ASC:
-                              go_backward(shift_masked ? 1 : 2);
-                              return true;
-                            case DESC:
-                              go_forward(shift_masked ? 1 : 2);
-                              return true;
-                        }
-                        break;
-                    case RIGHT_AREA:
-                        switch (main_window.toolbar.sort_order) {
-                            case ASC:
-                                go_forward(shift_masked ? 1 : 2);
-                                return true;
-                            case DESC:
-                                go_backward(shift_masked ? 1 : 2);
-                                return true;
-                        }
-                        break;
-                    default:
-                        break;
+                        case LEFT_AREA:
+                            switch (main_window.toolbar.sort_order) {
+                                case ASC:
+                                  if (!accessor.is_first()) {
+                                      go_backward(shift_masked ? 1 : 2);
+                                      return true;
+                                  }
+                                  break;
+                                case DESC:
+                                  if (!accessor.is_last()) {
+                                      go_forward(shift_masked ? 1 : 2);
+                                      return true;
+                                  }
+                                  break;
+                            }
+                            break;
+                        case RIGHT_AREA:
+                            switch (main_window.toolbar.sort_order) {
+                                case ASC:
+                                  if (!accessor.is_last()) {
+                                      go_forward(shift_masked ? 1 : 2);
+                                      return true;
+                                  }
+                                  break;
+                                case DESC:
+                                  if (!accessor.is_first()) {
+                                      go_backward(shift_masked ? 1 : 2);
+                                      return true;
+                                  }
+                                  break;
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 }
                 button_pressed = false;
