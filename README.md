@@ -69,14 +69,18 @@ Key Combinations
 
 ### Buttons in dual view mode
 
++ ![2<](data/icons/symbolic/move-two-page-left-symbolic.svg)  
+  Move two page to the left.
 + ![1<](data/icons/symbolic/move-one-page-left-symbolic.svg)  
   Move one page to the left.
++ ![>1](data/icons/symbolic/move-one-page-right-symbolic.svg)  
+  Move one page to the right
++ ![>2](data/icons/symbolic/move-two-page-right-symbolic.svg)  
+  Move two page to the right
 + ![2<<1](data/icons/symbolic/read-right-to-left-symbolic.svg)  
   Switch "from right to left" reading.
 + ![1>>2](data/icons/symbolic/read-left-to-right-symbolic.svg)  
   Switch "from left to right" reading.
-+ ![>1](data/icons/symbolic/move-one-page-right-symbolic.svg)  
-  Move one page to the right
 
 Building and Installation
 --------------------------------------------------------------------------------
