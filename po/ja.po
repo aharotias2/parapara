@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.tatap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-17 23:31+0900\n"
+"POT-Creation-Date: 2021-05-16 07:05+0900\n"
 "PO-Revision-Date: 2021-01-14 11:54+0900\n"
 "Last-Translator: Takayuki Tanaka <aharotias2@gmail.com>\n"
 "Language-Team: none\n"
@@ -18,48 +18,48 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/Widgets/ToolBar.vala:190
+#: src/Widgets/ToolBar.vala:194
 msgid "100%"
 msgstr "100%"
 
-#: src/Widgets/Window.vala:486 src/Widgets/ResizeDialog.vala:119
-#: src/Widgets/SingleImageView.vala:376
+#: src/Widgets/Window.vala:503 src/Widgets/ResizeDialog.vala:119
+#: src/Widgets/SingleImageView.vala:533
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: src/Widgets/Window.vala:485
+#: src/Widgets/Window.vala:502
 msgid "Choose file to open"
 msgstr "開くファイルを選択"
 
-#: src/Widgets/Window.vala:187
+#: src/Widgets/Window.vala:191
 msgid "Click 'Open Image' to get started."
 msgstr "「画像を開く」をクリックして開始しましょう。"
 
-#: src/Widgets/SingleImageView.vala:407
+#: src/Widgets/SingleImageView.vala:564
 msgid "Do you really overwrite this file?"
 msgstr "本当にこのファイルを上書きしますか？"
 
-#: src/Widgets/ToolBar.vala:435
+#: src/Widgets/ToolBar.vala:469
 msgid "Dual View Mode"
 msgstr "デュアル ビュー モード"
 
-#: src/Widgets/SingleImageView.vala:396
+#: src/Widgets/SingleImageView.vala:553
 msgid "File already exists. Do you want to overwrite it?"
 msgstr "ファイルはすでに存在します。上書きしてもよろしいですか？"
 
-#: src/Widgets/ToolBar.vala:182
+#: src/Widgets/ToolBar.vala:186
 msgid "Fit to the page"
 msgstr "ページに合わせる"
 
-#: src/Widgets/ToolBar.vala:198
+#: src/Widgets/ToolBar.vala:202
 msgid "Flip horizontally"
 msgstr "上下反転"
 
-#: src/Widgets/ToolBar.vala:204
+#: src/Widgets/ToolBar.vala:208
 msgid "Flip vertically"
 msgstr "左右反転"
 
-#: src/Widgets/ToolBar.vala:401
+#: src/Widgets/ToolBar.vala:435
 msgid "Fullscreen"
 msgstr "フルスクリーン"
 
@@ -67,29 +67,29 @@ msgstr "フルスクリーン"
 msgid "Height:"
 msgstr "高さ:"
 
-#: src/Widgets/ToolBar.vala:328
+#: src/Widgets/ToolBar.vala:332
 msgid "Left to Right"
 msgstr "左から右へ"
 
-#: src/Widgets/Window.vala:254 src/Widgets/Window.vala:522
-#: src/Widgets/Window.vala:600
+#: src/Widgets/Window.vala:227 src/Widgets/Window.vala:539
+#: src/Widgets/Window.vala:623
 #, c-format
 msgid "Location: %d / %d (%d%%)"
 msgstr "ロケーション: %d / %d (%d%%)"
 
-#: src/Widgets/Window.vala:165
+#: src/Widgets/Window.vala:169
 msgid "Menu"
 msgstr "メニュー"
 
-#: src/Widgets/Window.vala:145
+#: src/Widgets/Window.vala:149
 msgid "New"
 msgstr "新規"
 
-#: src/Widgets/Window.vala:108
+#: src/Widgets/Window.vala:112
 msgid "Next"
 msgstr "次の画像"
 
-#: src/Widgets/Window.vala:187
+#: src/Widgets/Window.vala:191
 msgid "No Images Open"
 msgstr "画像が開いていません"
 
@@ -97,51 +97,51 @@ msgstr "画像が開いていません"
 msgid "OK"
 msgstr "OK"
 
-#: src/Widgets/Window.vala:138 src/Widgets/Window.vala:486
+#: src/Widgets/Window.vala:142 src/Widgets/Window.vala:503
 msgid "Open"
 msgstr "開く"
 
-#: src/Widgets/Window.vala:189
+#: src/Widgets/Window.vala:193
 msgid "Open Image"
 msgstr "画像を開く"
 
-#: src/Widgets/ToolBar.vala:287
+#: src/Widgets/ToolBar.vala:291
 msgid "Play/Pause animation"
 msgstr "アニメーションを再生/一時停止"
 
-#: src/Widgets/Window.vala:87
+#: src/Widgets/Window.vala:91
 msgid "Previous"
 msgstr "前の画像"
 
-#: src/Widgets/ToolBar.vala:160
+#: src/Widgets/ToolBar.vala:164
 msgid "Resize"
 msgstr "リサイズ"
 
-#: src/Widgets/SingleImageView.vala:360
+#: src/Widgets/SingleImageView.vala:517
 msgid "Resizing of the image was canceled."
 msgstr "リサイズはキャンセルされました。"
 
-#: src/Widgets/ToolBar.vala:345
+#: src/Widgets/ToolBar.vala:349
 msgid "Right to Left"
 msgstr "右から左へ"
 
-#: src/Widgets/ToolBar.vala:210
+#: src/Widgets/ToolBar.vala:214
 msgid "Rotate to the left"
 msgstr "右回転"
 
-#: src/Widgets/ToolBar.vala:217
+#: src/Widgets/ToolBar.vala:221
 msgid "Rotate to the right"
 msgstr "左回転"
 
-#: src/Widgets/ToolBar.vala:138 src/Widgets/SingleImageView.vala:376
+#: src/Widgets/ToolBar.vala:142 src/Widgets/SingleImageView.vala:533
 msgid "Save"
 msgstr "保存"
 
-#: src/Widgets/ToolBar.vala:146 src/Widgets/SingleImageView.vala:375
+#: src/Widgets/ToolBar.vala:150 src/Widgets/SingleImageView.vala:532
 msgid "Save as…"
 msgstr "名前を付けて保存…"
 
-#: src/Widgets/ToolBar.vala:425
+#: src/Widgets/ToolBar.vala:459
 msgid "Scroll View Mode"
 msgstr "スクロール ビュー モード"
 
@@ -149,52 +149,62 @@ msgstr "スクロール ビュー モード"
 msgid "Set the width and the height"
 msgstr "幅と高さを指定してください"
 
-#: src/Widgets/Window.vala:189
+#: src/Widgets/Window.vala:193
 msgid "Show and edit your image."
 msgstr "画像を閲覧/編集できます"
 
-#: src/Widgets/ToolBar.vala:414
+#: src/Widgets/ToolBar.vala:448
 msgid "Single View Mode"
 msgstr "シングル ビュー モード"
 
-#: src/Widgets/ToolBar.vala:278
+#: src/Widgets/ToolBar.vala:282
 msgid "Skip forward"
 msgstr "進む"
 
-#: src/Widgets/ToolBar.vala:362
+#: src/Widgets/ToolBar.vala:378
 msgid "Slide 1 page to Left"
 msgstr "1ページ左へ"
 
-#: src/Widgets/ToolBar.vala:377
+#: src/Widgets/ToolBar.vala:391
 msgid "Slide 1 page to Right"
 msgstr "1ページ右へ"
 
-#: src/Widgets/SingleImageView.vala:368
+#: src/Widgets/ToolBar.vala:365
+#, fuzzy
+msgid "Slide 2 page to Left"
+msgstr "1ページ左へ"
+
+#: src/Widgets/ToolBar.vala:404
+#, fuzzy
+msgid "Slide 2 page to Right"
+msgstr "1ページ右へ"
+
+#: src/Widgets/SingleImageView.vala:525
 msgid "Sorry, saving animations is not supported yet."
 msgstr "申し訳ありませんが、アニメーションの保存には未対応です。"
 
-#: src/Widgets/ToolBar.vala:239
+#: src/Widgets/ToolBar.vala:243
 msgid "Sort Asc"
 msgstr "昇順"
 
-#: src/Widgets/ToolBar.vala:256
+#: src/Widgets/ToolBar.vala:260
 msgid "Sort Desc"
 msgstr "降順"
 
-#: src/Widgets/ToolBar.vala:452
+#: src/Widgets/ToolBar.vala:486
 msgid "Stick"
 msgstr "固定"
 
-#: src/Widgets/Window.vala:512
+#: src/Widgets/Window.vala:529
 msgid "The directory does not found. Exiting."
 msgstr "ディレクトリが存在しません。終了します。"
 
-#: src/Widgets/Window.vala:559
+#: src/Widgets/Window.vala:582
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr "ファイルを開けません (理由: %s)"
 
-#: src/Widgets/Window.vala:516
+#: src/Widgets/Window.vala:533
 msgid "The file does not found."
 msgstr "ファイルが見つかりません。"
 
@@ -206,15 +216,15 @@ msgstr "ファイルリストが初期化されていません!"
 msgid "The file path is invalid. it does not exist or is not a regular file."
 msgstr "ファイルパスが不正です。存在しないか通常のファイルではありません。"
 
-#: src/Widgets/SingleImageView.vala:420
+#: src/Widgets/SingleImageView.vala:577
 msgid "The file save was canceled."
 msgstr "ファイルの保存はキャンセルされました。"
 
-#: src/Widgets/SingleImageView.vala:425
+#: src/Widgets/SingleImageView.vala:582
 msgid "The file was saved"
 msgstr "ファイルを保存しました。"
 
-#: src/Widgets/SingleImageView.vala:358
+#: src/Widgets/SingleImageView.vala:515
 msgid "The image was resized."
 msgstr "ファイルをリサイズしました。"
 
@@ -227,11 +237,11 @@ msgstr "リストへのアクセスで範囲エラー (%d/%d)"
 msgid "Width:"
 msgstr "幅:"
 
-#: src/Widgets/ToolBar.vala:166
+#: src/Widgets/ToolBar.vala:170
 msgid "Zoom in"
 msgstr "拡大"
 
-#: src/Widgets/ToolBar.vala:174
+#: src/Widgets/ToolBar.vala:178
 msgid "Zoom out"
 msgstr "縮小"
 
