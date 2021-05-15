@@ -52,10 +52,7 @@ namespace Tatap {
 
             foreach (var file in files) {
                 Tatap.Window window = create_new_window();
-                Idle.add(() => {
-                    window.open_file(file);
-                    return false;
-                });
+                window.open_file_async.begin(file);
             }
         }
 

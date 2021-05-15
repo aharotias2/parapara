@@ -37,8 +37,10 @@ namespace Tatap {
         public ToggleButton single_view_button { get; private set; }
         public ToggleButton scroll_view_button { get; private set; }
         public ToggleButton dual_view_button { get; private set; }
+        public Button l2button { get; private set; }
         public Button l1button { get; private set; }
         public Button r1button { get; private set; }
+        public Button r2button { get; private set; }
         public ToggleButton sort_asc_button { get; private set; }
         public ToggleButton sort_desc_button { get; private set; }
         public ToggleButton l2rbutton { get; private set; }
@@ -360,6 +362,19 @@ namespace Tatap {
                 }
             });
 
+            l2button = new ActionButton("move-two-page-left-symbolic", _("Slide 2 page to Left"), null);
+            l2button.clicked.connect(() => {
+                try {
+                    if (sort_order == SortOrder.ASC) {
+                        dual_image_view.go_backward(2);
+                    } else {
+                        dual_image_view.go_forward(2);
+                    }
+                } catch (Error error) {
+                    main_window.show_error_dialog(error.message);
+                }
+            });
+
             l1button = new ActionButton("move-one-page-left-symbolic", _("Slide 1 page to Left"), null);
             l1button.clicked.connect(() => {
                 try {
@@ -386,15 +401,36 @@ namespace Tatap {
                 }
             });
 
+            r2button = new ActionButton("move-two-page-right-symbolic", _("Slide 2 page to Right"), null);
+            r2button.clicked.connect(() => {
+                try {
+                    if (sort_order == SortOrder.ASC) {
+                        dual_image_view.go_forward(2);
+                    } else {
+                        dual_image_view.go_backward(2);
+                    }
+                } catch (Error error) {
+                    main_window.show_error_dialog(error.message);
+                }
+            });
+
+            var dual_paging_button_box = new ButtonBox(Orientation.HORIZONTAL) {
+                margin = 3,
+                layout_style = ButtonBoxStyle.EXPAND
+            };
+
+            dual_paging_button_box.pack_start(l2button);
+            dual_paging_button_box.pack_start(l1button);
+            dual_paging_button_box.pack_start(r1button);
+            dual_paging_button_box.pack_start(r2button);
+
             var dual_sort_button_box = new ButtonBox(Orientation.HORIZONTAL) {
                 margin = 3,
                 layout_style = ButtonBoxStyle.EXPAND
             };
 
-            dual_sort_button_box.pack_start(l1button);
             dual_sort_button_box.pack_start(r2lbutton);
             dual_sort_button_box.pack_start(l2rbutton);
-            dual_sort_button_box.pack_start(r1button);
 
             var fullscreen_button = new ActionButton("view-fullscreen-symbolic", _("Fullscreen"), {"f11"});
             fullscreen_button.clicked.connect(() => {
@@ -480,6 +516,7 @@ namespace Tatap {
                 vexpand = false,
                 valign = Align.START
             };
+            dual_view_mode_box.pack_start(dual_paging_button_box, false, false);
             dual_view_mode_box.pack_start(dual_sort_button_box, false, false);
 
             toolbar_hbox = new Box(Orientation.HORIZONTAL, 0) {

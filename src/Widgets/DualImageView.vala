@@ -23,6 +23,7 @@ namespace Tatap {
         public ViewMode view_mode { get; construct; }
         public Tatap.Window main_window { get; construct; }
 
+        public bool controllable { get; set; default = true; }
         public FileList file_list {
             get {
                 return _file_list;
@@ -75,6 +76,7 @@ namespace Tatap {
         private bool button_pressed = false;
         private double x;
         private double y;
+        private bool in_progress = false;
 
         private const string TITLE_FORMAT = "%s (%dx%d : %.2f%%), %s (%dx%d : %.2f%%)";
 
@@ -156,7 +158,7 @@ namespace Tatap {
         }
 
         public bool is_next_button_sensitive() {
-            if (main_window.toolbar.sort_order == SortOrder.ASC) {
+            if (main_window.toolbar.sort_order == ASC) {
                 return !accessor.is_last();
             } else {
                 return !accessor.is_first();
@@ -164,7 +166,7 @@ namespace Tatap {
         }
 
         public bool is_prev_button_sensitive() {
-            if (main_window.toolbar.sort_order == SortOrder.ASC) {
+            if (main_window.toolbar.sort_order == ASC) {
                 return !accessor.is_first();
             } else {
                 return !accessor.is_last();
@@ -179,17 +181,28 @@ namespace Tatap {
             int hpos, vpos;
             WidgetUtils.calc_event_position_percent(event, this, out hpos, out vpos);
             if (20 < vpos < 80) {
+                var sort_order = main_window.toolbar.sort_order;
                 if (hpos < 25) {
-                    return LEFT_AREA;
+                    if (sort_order == ASC && !accessor.is_first()) {
+                        return LEFT_AREA;
+                    }
+                    if (sort_order == DESC && !accessor.is_last()) {
+                        return LEFT_AREA;
+                    }
                 } else if (hpos > 75) {
-                    return RIGHT_AREA;
+                    if (sort_order == ASC && !accessor.is_last()) {
+                        return RIGHT_AREA;
+                    }
+                    if (sort_order == DESC && !accessor.is_first()) {
+                        return RIGHT_AREA;
+                    }
                 }
             }
             return OTHER_AREA;
         }
 
         public override bool button_press_event(EventButton ev) {
-            if (!left_image.has_image && !right_image.has_image) {
+            if (!controllable || (!left_image.has_image && !right_image.has_image)) {
                 return false;
             }
             if (event_area((Event) ev) == OTHER_AREA && ev.type == 2BUTTON_PRESS) {
@@ -203,48 +216,53 @@ namespace Tatap {
         }
 
         public override bool button_release_event(EventButton ev) {
-            if (!left_image.has_image && !right_image.has_image) {
+            if (!controllable || (!left_image.has_image && !right_image.has_image)) {
                 return false;
             }
 
             try {
                 bool shift_masked =  ModifierType.SHIFT_MASK in ev.state;
                 if (x == ev.x_root && y == ev.y_root) {
-                    switch (event_area((Event) ev)) {
-                        case LEFT_AREA:
-                            switch (main_window.toolbar.sort_order) {
-                                case ASC:
-                                  if (!accessor.is_first()) {
-                                      go_backward(shift_masked ? 1 : 2);
-                                      return true;
-                                  }
-                                  break;
-                                case DESC:
-                                  if (!accessor.is_last()) {
-                                      go_forward(shift_masked ? 1 : 2);
-                                      return true;
-                                  }
-                                  break;
+                    var area = event_area((Event) ev);
+                    switch (area) {
+                      case LEFT_AREA:
+                        switch (main_window.toolbar.sort_order) {
+                          case ASC:
+                            if (!accessor.is_first()) {
+                                go_backward(shift_masked ? 1 : 2);
+                                adjust_cursor(area);
+                                return true;
                             }
                             break;
-                        case RIGHT_AREA:
-                            switch (main_window.toolbar.sort_order) {
-                                case ASC:
-                                  if (!accessor.is_last()) {
-                                      go_forward(shift_masked ? 1 : 2);
-                                      return true;
-                                  }
-                                  break;
-                                case DESC:
-                                  if (!accessor.is_first()) {
-                                      go_backward(shift_masked ? 1 : 2);
-                                      return true;
-                                  }
-                                  break;
+                          case DESC:
+                            if (!accessor.is_last()) {
+                                go_forward(shift_masked ? 1 : 2);
+                                adjust_cursor(area);
+                                return true;
                             }
                             break;
-                        default:
+                        }
+                        break;
+                      case RIGHT_AREA:
+                        switch (main_window.toolbar.sort_order) {
+                          case ASC:
+                            if (!accessor.is_last()) {
+                                go_forward(shift_masked ? 1 : 2);
+                                adjust_cursor(area);
+                                return true;
+                            }
                             break;
+                          case DESC:
+                            if (!accessor.is_first()) {
+                                go_backward(shift_masked ? 1 : 2);
+                                adjust_cursor(area);
+                                return true;
+                            }
+                            break;
+                        }
+                        break;
+                      default:
+                        break;
                     }
                 }
                 button_pressed = false;
@@ -255,28 +273,24 @@ namespace Tatap {
             return false;
         }
 
+        private ClickedArea prev_area = OTHER_AREA;
+
         public override bool motion_notify_event(EventMotion ev) {
-            if (!left_image.has_image && !right_image.has_image) {
+            if (!controllable || (!left_image.has_image && !right_image.has_image)) {
                 return false;
             }
 
-            switch (event_area((Event) ev)) {
-                case LEFT_AREA:
-                    get_window().cursor = new Gdk.Cursor.for_display(Gdk.Screen.get_default().get_display(), SB_LEFT_ARROW);
-                    break;
-                case RIGHT_AREA:
-                    get_window().cursor = new Gdk.Cursor.for_display(Gdk.Screen.get_default().get_display(), SB_RIGHT_ARROW);
-                    break;
-                default:
-                    get_window().cursor = new Gdk.Cursor.for_display(Gdk.Screen.get_default().get_display(), LEFT_PTR);
-                    break;
+            var area = event_area((Event) ev);
+            if (area != prev_area) {
+                adjust_cursor(area);
+                prev_area = area;
             }
 
             return false;
         }
 
         public override bool scroll_event(EventScroll ev) {
-            if (!left_image.has_image && !right_image.has_image) {
+            if (!controllable || (!left_image.has_image && !right_image.has_image)) {
                 return false;
             }
 
@@ -284,17 +298,19 @@ namespace Tatap {
 
             try {
                 switch (ev.direction) {
-                    case ScrollDirection.UP:
-                        if (!accessor.is_first()) {
-                            go_backward(shift_masked ? 1 : 2);
-                        }
-                        break;
-                    case ScrollDirection.DOWN:
-                        if (!accessor.is_last()) {
-                            go_forward(shift_masked ? 1 : 2);
-                        }
-                        break;
-                    default: break;
+                  case ScrollDirection.UP:
+                    if (!accessor.is_first()) {
+                        go_backward(shift_masked ? 1 : 2);
+                        adjust_cursor(event_area(ev));
+                    }
+                    break;
+                  case ScrollDirection.DOWN:
+                    if (!accessor.is_last()) {
+                        go_forward(shift_masked ? 1 : 2);
+                        adjust_cursor(event_area(ev));
+                    }
+                    break;
+                  default: break;
                 }
             } catch (GLib.Error e) {
                 main_window.show_error_dialog(e.message);
@@ -304,41 +320,45 @@ namespace Tatap {
         }
 
         public override bool key_press_event(EventKey ev) {
-            if (!left_image.has_image && !right_image.has_image) {
+            if (!controllable || (!left_image.has_image && !right_image.has_image)) {
                 return false;
             }
             bool shift_masked =  ModifierType.SHIFT_MASK in ev.key.state;
             try {
                 switch (ev.key.keyval) {
-                    case Gdk.Key.Left:
-                        switch (main_window.toolbar.sort_order) {
-                            case SortOrder.ASC:
-                                if (!accessor.is_first()) {
-                                    go_backward(shift_masked ? 1 : 2);
-                                }
-                                break;
-                            case SortOrder.DESC:
-                                if (!accessor.is_last()) {
-                                    go_forward(shift_masked ? 1 : 2);
-                                }
-                                break;
+                  case Gdk.Key.Left:
+                    switch (main_window.toolbar.sort_order) {
+                      case ASC:
+                        if (!accessor.is_first()) {
+                            go_backward(shift_masked ? 1 : 2);
+                            adjust_cursor(event_area(ev));
                         }
                         break;
-                    case Gdk.Key.Right:
-                        switch (main_window.toolbar.sort_order) {
-                            case SortOrder.ASC:
-                                if (!accessor.is_last()) {
-                                    go_forward(shift_masked ? 1 : 2);
-                                }
-                                break;
-                            case SortOrder.DESC:
-                                if (!accessor.is_first()) {
-                                    go_backward(shift_masked ? 1 : 2);
-                                }
-                                break;
+                      case DESC:
+                        if (!accessor.is_last()) {
+                            go_forward(shift_masked ? 1 : 2);
+                            adjust_cursor(event_area(ev));
                         }
                         break;
-                    default: break;
+                    }
+                    break;
+                  case Gdk.Key.Right:
+                    switch (main_window.toolbar.sort_order) {
+                      case ASC:
+                        if (!accessor.is_last()) {
+                            go_forward(shift_masked ? 1 : 2);
+                            adjust_cursor(event_area(ev));
+                        }
+                        break;
+                      case DESC:
+                        if (!accessor.is_first()) {
+                            go_backward(shift_masked ? 1 : 2);
+                            adjust_cursor(event_area(ev));
+                        }
+                        break;
+                    }
+                    break;
+                  default: break;
                 }
             } catch (GLib.Error e) {
                 main_window.show_error_dialog(e.message);
@@ -372,12 +392,14 @@ namespace Tatap {
             }
         }
 
-        private bool in_progress = false;
-
         private async void open_by_accessor_current_index() throws Error {
             if (in_progress) {
                 return;
             }
+            var saved_cursor = get_window().cursor;
+            change_cursor(WATCH);
+            Idle.add(open_by_accessor_current_index.callback);
+            yield;
             try {
                 in_progress = true;
                 string? left_file_path = null;
@@ -387,46 +409,46 @@ namespace Tatap {
                 int index1 = accessor.get_index1();
                 int index2 = accessor.get_index2();
                 switch (main_window.toolbar.sort_order) {
-                    case SortOrder.ASC:
-                        if (index1 >= 0) {
-                            left_visible = true;
-                            left_file_path = accessor.get_file1().get_path();
-                        }
-                        if (index2 >= 0) {
-                            right_visible = true;
-                            right_file_path = accessor.get_file2().get_path();
-                        }
-                        if (index1 < 0) {
-                            main_window.toolbar.l1button.sensitive = false;
-                        } else {
-                            main_window.toolbar.l1button.sensitive = true;
-                        }
-                        if (index1 >= _file_list.size - 1) {
-                            main_window.toolbar.r1button.sensitive = false;
-                        } else {
-                            main_window.toolbar.r1button.sensitive = true;
-                        }
-                        break;
-                    case SortOrder.DESC:
-                        if (index1 >= 0) {
-                            right_visible = true;
-                            right_file_path = accessor.get_file1().get_path();
-                        }
-                        if (index2 >= 0) {
-                            left_visible = true;
-                            left_file_path = accessor.get_file2().get_path();
-                        }
-                        if (index1 < 0) {
-                            main_window.toolbar.r1button.sensitive = false;
-                        } else {
-                            main_window.toolbar.r1button.sensitive = true;
-                        }
-                        if (index1 >= _file_list.size - 1) {
-                            main_window.toolbar.l1button.sensitive = false;
-                        } else {
-                            main_window.toolbar.l1button.sensitive = true;
-                        }
-                        break;
+                  case ASC:
+                    if (index1 >= 0) {
+                        left_visible = true;
+                        left_file_path = accessor.get_file1().get_path();
+                    }
+                    if (index2 >= 0) {
+                        right_visible = true;
+                        right_file_path = accessor.get_file2().get_path();
+                    }
+                    if (index1 < 0) {
+                        main_window.toolbar.l1button.sensitive = false;
+                    } else {
+                        main_window.toolbar.l1button.sensitive = true;
+                    }
+                    if (index1 >= _file_list.size - 1) {
+                        main_window.toolbar.r1button.sensitive = false;
+                    } else {
+                        main_window.toolbar.r1button.sensitive = true;
+                    }
+                    break;
+                  case DESC:
+                    if (index1 >= 0) {
+                        right_visible = true;
+                        right_file_path = accessor.get_file1().get_path();
+                    }
+                    if (index2 >= 0) {
+                        left_visible = true;
+                        left_file_path = accessor.get_file2().get_path();
+                    }
+                    if (index1 < 0) {
+                        main_window.toolbar.r1button.sensitive = false;
+                    } else {
+                        main_window.toolbar.r1button.sensitive = true;
+                    }
+                    if (index1 >= _file_list.size - 1) {
+                        main_window.toolbar.l1button.sensitive = false;
+                    } else {
+                        main_window.toolbar.l1button.sensitive = true;
+                    }
+                    break;
                 }
                 main_window.image_next_button.sensitive = is_next_button_sensitive();
                 main_window.image_prev_button.sensitive = is_prev_button_sensitive();
@@ -458,6 +480,8 @@ namespace Tatap {
             } catch (Error e) {
                 in_progress = false;
                 throw e;
+            } finally {
+                get_window().cursor = saved_cursor;
             }
         }
 
@@ -489,6 +513,32 @@ namespace Tatap {
             });
         }
 
+        public async void open_async(File file1) throws Error {
+            accessor.set_file1(file1);
+            yield reopen_async();
+
+            if (accessor.get_index1() < 0) {
+                image_opened(accessor.get_name2(), 0);
+            } else {
+                image_opened(accessor.get_name1(), accessor.get_index1());
+            }
+        }
+
+        public async void open_at_async(int index) throws Error {
+            debug("open at: %d", index);
+            accessor.set_index1(index);
+            yield reopen_async();
+        }
+
+        public async void reopen_async() throws Error {
+            debug("open: %d, %d", accessor.get_index1(), accessor.get_index2());
+            try {
+                yield open_by_accessor_current_index();
+            } catch (Error e) {
+                main_window.show_error_dialog(e.message);
+            }
+        }
+
         public void update_title() {
             if (left_image.has_image || right_image.has_image) {
                 string title = TITLE_FORMAT.printf(
@@ -512,6 +562,24 @@ namespace Tatap {
 
         public void close() {
             return;
+        }
+
+        private void adjust_cursor(ClickedArea area) {
+            switch (area) {
+              case LEFT_AREA:
+                change_cursor(SB_LEFT_ARROW);
+                break;
+              case RIGHT_AREA:
+                change_cursor(SB_RIGHT_ARROW);
+                break;
+              default:
+                change_cursor(LEFT_PTR);
+                break;
+            }
+        }
+
+        private void change_cursor(CursorType cursor_type) {
+            get_window().cursor = new Gdk.Cursor.for_display(Gdk.Screen.get_default().get_display(), cursor_type);
         }
     }
 }

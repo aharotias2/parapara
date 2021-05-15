@@ -9,17 +9,8 @@
     xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
     height="16" width="16">
 
-  <rect x="0" y="2" width="8" height="2"
+  <rect x="11" y="4" width="2" height="8"
 	style="fill:#bebebe;stroke-width:0"/>
-  <rect x="0" y="2" width="2" height="12"
-	style="fill:#bebebe;stroke-width:0"/>
-  <rect x="0" y="12" width="8" height="2"
-	style="fill:#bebebe;stroke-width:0"/>
-  <rect x="7" y="2" width="2" height="12"
-	style="fill:#bebebe;stroke-width:0"/>
-
-  <rect x="14" y="4" width="2" height="8"
-	style="fill:#bebebe;stroke-width:0"/>
-  <polygon points="14,8,10,5,10,11"
+  <polygon points="11,8,3,4,3,12"
 	   style="fill:#bebebe;stroke-width:0"/>
 </svg>

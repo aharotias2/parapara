@@ -111,6 +111,32 @@ namespace Tatap {
             }
         }
 
+        public async void open_async(string filename) throws AppError, Error {
+            Error? error = null;
+            AppError? app_error = null;
+            var thread = new Thread<int>(filename, () => {
+                int status = 0;
+                try {
+                    open(filename);
+                } catch (AppError e) {
+                    app_error = e;
+                    status = 1;
+                } catch (Error e) {
+                    error = e;
+                    status = 2;
+                }
+                Idle.add(open_async.callback);
+                return status;
+            });
+            yield;
+            int thread_status = thread.join();
+            if (thread_status == 1 && app_error != null) {
+                throw app_error;
+            } else if (thread_status == 2 && error != null) {
+                throw error;
+            }
+        }
+
         public async void animate_async(Gdk.PixbufAnimationIter animation_iter) {
             uint count_holder = file_counter;
             Thread<int>? inner_thread = null;

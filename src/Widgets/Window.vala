@@ -228,6 +228,7 @@ namespace Tatap {
                                         index + 1, file_list.size, (int) (image_view.position * 100));
                             });
 
+                            image_view.controllable = true;
                             image_view.events = ALL_EVENTS_MASK;
                         }
 
@@ -247,11 +248,13 @@ namespace Tatap {
                                 toolbar.sort_order_changed.connect(() => {
                                     image_next_button.sensitive = image_view.is_next_button_sensitive();
                                     image_prev_button.sensitive = image_view.is_prev_button_sensitive();
-                                    try {
-                                        image_view.reopen();
-                                    } catch (Error e) {
-                                        show_error_dialog(e.message);
-                                    }
+                                    image_view.reopen_async.begin((res, obj) => {
+                                        try {
+                                            image_view.reopen_async.end(obj);
+                                        } catch (Error e) {
+                                            show_error_dialog(e.message);
+                                        }
+                                    });
                                     progress_scale.inverted = toolbar.sort_order == SortOrder.DESC;
                                 });
 
@@ -314,7 +317,7 @@ namespace Tatap {
                                             debug("change progress value: %f", progress_scale.get_value());
                                             debug("progress_adjustment %f, %f", progress_scale.adjustment.upper,
                                                     progress_scale.adjustment.lower);
-                                            image_view.open_at((int) progress_scale.get_value());
+                                            image_view.open_at_async.begin((int) progress_scale.get_value());
                                         } catch (Error e) {
                                             show_error_dialog(e.message);
                                         }
@@ -505,12 +508,12 @@ namespace Tatap {
             if (res == Gtk.ResponseType.ACCEPT) {
                 var file_path = dialog.get_filename();
                 File file = File.new_for_path(file_path);
-                open_file(file);
+                open_file_async.begin(file);
             }
             dialog.close();
         }
 
-        public void open_file(File file) {
+        public async void open_file_async(File file) {
             string? old_file_dir = null;
             if (file_list != null) {
                 old_file_dir = file_list.dir_path;
@@ -543,12 +546,16 @@ namespace Tatap {
                     });
                     file_list.make_list_async.begin(repeat_updating_file_list, (obj, res) => {
                         if (image_view.view_mode != ViewMode.SINGLE_VIEW_MODE) {
-                            try {
-                                image_view.open(file);
-                                image_view.update_title();
-                            } catch (Error e) {
-                                show_error_dialog(e.message);
-                            }
+                            disable_controls();
+                            image_view.open_async.begin(file, (res, obj) => {
+                                try {
+                                    image_view.open_async.end(obj);
+                                } catch (Error e) {
+                                    show_error_dialog(e.message);
+                                }
+                                enable_controls();
+                            });
+                            image_view.update_title();
                         }
                     });
                     image_view.file_list = file_list;
@@ -557,7 +564,9 @@ namespace Tatap {
                 }
 
                 if (image_view.view_mode == ViewMode.SINGLE_VIEW_MODE || file_list.has_list) {
-                    image_view.open(file);
+                    //disable_controls();
+                    yield image_view.open_async(file);
+                    //enable_controls();
                     image_view.update_title();
                 }
 
@@ -613,8 +622,9 @@ namespace Tatap {
                     progress_scale.set_value((double) index);
                     progress_label.label = _("Location: %d / %d (%d%%)").printf(index + 1, file_list.size, (int) (image_view.position * 100));
                 });
+                image_view.controllable = true;
                 image_view.events = ALL_EVENTS_MASK;
-                open_file(file);
+                open_file_async.begin(file);
                 bottom_box.show_all();
             }
         }
@@ -623,6 +633,18 @@ namespace Tatap {
             MessageDialog alert = new MessageDialog(this, DialogFlags.MODAL, MessageType.ERROR, ButtonsType.OK, message);
             alert.run();
             alert.close();
+        }
+
+        public void disable_controls() {
+            headerbar.sensitive = false;
+            toolbar.sensitive = false;
+            image_view.controllable = false;
+        }
+
+        public void enable_controls() {
+            headerbar.sensitive = true;
+            toolbar.sensitive = true;
+            image_view.controllable = true;
         }
     }
 }
