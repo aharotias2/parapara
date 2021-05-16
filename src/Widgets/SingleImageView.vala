@@ -165,12 +165,12 @@ namespace Tatap {
                   case LEFT_AREA:
                     switch (main_window.toolbar.sort_order) {
                       case ASC:
-                        go_backward_async.begin(1, (res, obj) => {
+                        go_backward_async.begin(1, (obj, res) => {
                             adjust_cursor(area);
                         });
                         break;
                       case DESC:
-                        go_forward_async.begin(1, (res, obj) => {
+                        go_forward_async.begin(1, (obj, res) => {
                             adjust_cursor(area);
                         });
                         break;
@@ -179,12 +179,12 @@ namespace Tatap {
                   case RIGHT_AREA:
                     switch (main_window.toolbar.sort_order) {
                       case ASC:
-                        go_forward_async.begin(1, (res, obj) => {
+                        go_forward_async.begin(1, (obj, res) => {
                             adjust_cursor(area);
                         });
                         break;
                       case DESC:
-                        go_backward_async.begin(1, (res, obj) => {
+                        go_backward_async.begin(1, (obj, res) => {
                             adjust_cursor(area);
                         });
                         break;
@@ -254,12 +254,12 @@ namespace Tatap {
                       case ScrollDirection.UP:
                         switch (main_window.toolbar.sort_order) {
                           case ASC:
-                            go_backward_async.begin(1, (res, obj) => {
+                            go_backward_async.begin(1, (obj, res) => {
                                 adjust_cursor(event_area(ev));
                             });
                             return true;
                           case DESC:
-                            go_forward_async.begin(1, (res, obj) => {
+                            go_forward_async.begin(1, (obj, res) => {
                                 adjust_cursor(event_area(ev));
                             });
                             return true;
@@ -268,12 +268,12 @@ namespace Tatap {
                       case ScrollDirection.DOWN:
                         switch (main_window.toolbar.sort_order) {
                           case ASC:
-                            go_forward_async.begin(1, (res, obj) => {
+                            go_forward_async.begin(1, (obj, res) => {
                                 adjust_cursor(event_area(ev));
                             });
                             return true;
                           case DESC:
-                            go_backward_async.begin(1, (res, obj) => {
+                            go_backward_async.begin(1, (obj, res) => {
                                 adjust_cursor(event_area(ev));
                             });
                             return true;
@@ -346,12 +346,12 @@ namespace Tatap {
                   case Gdk.Key.Left:
                     switch (main_window.toolbar.sort_order) {
                       case ASC:
-                        go_backward_async.begin(1, (res, obj) => {
+                        go_backward_async.begin(1, (obj, res) => {
                             adjust_cursor(event_area(ev));
                         });
                         break;
                       case DESC:
-                        go_forward_async.begin(1, (res, obj) => {
+                        go_forward_async.begin(1, (obj, res) => {
                             adjust_cursor(event_area(ev));
                         });
                         break;
@@ -360,12 +360,12 @@ namespace Tatap {
                   case Gdk.Key.Right:
                     switch (main_window.toolbar.sort_order) {
                       case ASC:
-                        go_forward_async.begin(1, (res, obj) => {
+                        go_forward_async.begin(1, (obj, res) => {
                             adjust_cursor(event_area(ev));
                         });
                         break;
                       case DESC:
-                        go_backward_async.begin(1, (res, obj) => {
+                        go_backward_async.begin(1, (obj, res) => {
                             adjust_cursor(event_area(ev));
                         });
                         break;

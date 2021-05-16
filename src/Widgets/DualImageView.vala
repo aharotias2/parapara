@@ -228,7 +228,7 @@ namespace Tatap {
                     switch (main_window.toolbar.sort_order) {
                       case ASC:
                         if (!accessor.is_first()) {
-                            go_backward_async.begin(shift_masked ? 1 : 2, (res, obj) => {
+                            go_backward_async.begin(shift_masked ? 1 : 2, (obj, res) => {
                                 adjust_cursor(area);
                             });
                             return true;
@@ -236,7 +236,7 @@ namespace Tatap {
                         break;
                       case DESC:
                         if (!accessor.is_last()) {
-                            go_forward_async.begin(shift_masked ? 1 : 2, (res, obj) => {
+                            go_forward_async.begin(shift_masked ? 1 : 2, (obj, res) => {
                                 adjust_cursor(area);
                             });
                             return true;
@@ -248,7 +248,7 @@ namespace Tatap {
                     switch (main_window.toolbar.sort_order) {
                       case ASC:
                         if (!accessor.is_last()) {
-                            go_forward_async.begin(shift_masked ? 1 : 2, (res, obj) => {
+                            go_forward_async.begin(shift_masked ? 1 : 2, (obj, res) => {
                                 adjust_cursor(area);
                             });
                             return true;
@@ -256,7 +256,7 @@ namespace Tatap {
                         break;
                       case DESC:
                         if (!accessor.is_first()) {
-                            go_backward_async.begin(shift_masked ? 1 : 2, (res, obj) => {
+                            go_backward_async.begin(shift_masked ? 1 : 2, (obj, res) => {
                                 adjust_cursor(area);
                             });
                             return true;
@@ -299,14 +299,14 @@ namespace Tatap {
             switch (ev.direction) {
               case ScrollDirection.UP:
                 if (!accessor.is_first()) {
-                    go_backward_async.begin(shift_masked ? 1 : 2, (res, obj) => {
+                    go_backward_async.begin(shift_masked ? 1 : 2, (obj, res) => {
                         adjust_cursor(event_area(ev));
                     });
                 }
                 break;
               case ScrollDirection.DOWN:
                 if (!accessor.is_last()) {
-                    go_forward_async.begin(shift_masked ? 1 : 2, (res, obj) => {
+                    go_forward_async.begin(shift_masked ? 1 : 2, (obj, res) => {
                         adjust_cursor(event_area(ev));
                     });
                 }
@@ -327,14 +327,14 @@ namespace Tatap {
                 switch (main_window.toolbar.sort_order) {
                   case ASC:
                     if (!accessor.is_first()) {
-                        go_backward_async.begin(shift_masked ? 1 : 2, (res, obj) => {
+                        go_backward_async.begin(shift_masked ? 1 : 2, (obj, res) => {
                             adjust_cursor(event_area(ev));
                         });
                     }
                     break;
                   case DESC:
                     if (!accessor.is_last()) {
-                        go_forward_async.begin(shift_masked ? 1 : 2, (res, obj) => {
+                        go_forward_async.begin(shift_masked ? 1 : 2, (obj, res) => {
                             adjust_cursor(event_area(ev));
                         });
                     }
@@ -345,14 +345,14 @@ namespace Tatap {
                 switch (main_window.toolbar.sort_order) {
                   case ASC:
                     if (!accessor.is_last()) {
-                        go_forward_async.begin(shift_masked ? 1 : 2, (res, obj) => {
+                        go_forward_async.begin(shift_masked ? 1 : 2, (obj, res) => {
                             adjust_cursor(event_area(ev));
                         });
                     }
                     break;
                   case DESC:
                     if (!accessor.is_first()) {
-                        go_backward_async.begin(shift_masked ? 1 : 2, (res, obj) => {
+                        go_backward_async.begin(shift_masked ? 1 : 2, (obj, res) => {
                             adjust_cursor(event_area(ev));
                         });
                     }
@@ -404,6 +404,7 @@ namespace Tatap {
             }
             var saved_cursor = get_window().cursor;
             change_cursor(WATCH);
+            main_window.disable_controls();
             Idle.add(open_by_accessor_current_index.callback);
             yield;
             try {
@@ -490,6 +491,7 @@ namespace Tatap {
                 throw e;
             } finally {
                 get_window().cursor = saved_cursor;
+                main_window.enable_controls();
             }
         }
 

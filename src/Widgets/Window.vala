@@ -49,9 +49,9 @@ namespace Tatap {
                     get_window().fullscreen();
                 } else {
                     get_window().unfullscreen();
-                    image_view.reopen_async.begin((res, obj) => {
+                    image_view.reopen_async.begin((obj, res) => {
                         try {
-                            image_view.reopen_async.end(obj);
+                            image_view.reopen_async.end(res);
                         } catch (Error e) {
                             show_error_dialog(e.message);
                         }
@@ -239,9 +239,9 @@ namespace Tatap {
                                 toolbar.sort_order_changed.connect(() => {
                                     image_next_button.sensitive = image_view.is_next_button_sensitive();
                                     image_prev_button.sensitive = image_view.is_prev_button_sensitive();
-                                    image_view.reopen_async.begin((res, obj) => {
+                                    image_view.reopen_async.begin((obj, res) => {
                                         try {
-                                            image_view.reopen_async.end(obj);
+                                            image_view.reopen_async.end(res);
                                         } catch (Error e) {
                                             show_error_dialog(e.message);
                                         }
@@ -307,9 +307,9 @@ namespace Tatap {
                                         debug("change progress value: %f", progress_scale.get_value());
                                         debug("progress_adjustment %f, %f", progress_scale.adjustment.upper, progress_scale.adjustment.lower);
 
-                                        image_view.open_at_async.begin((int) progress_scale.get_value(), (res, obj) => {
+                                        image_view.open_at_async.begin((int) progress_scale.get_value(), (obj, res) => {
                                             try {
-                                                image_view.open_at_async.end(obj);
+                                                image_view.open_at_async.end(res);
                                             } catch (Error e) {
                                                 show_error_dialog(e.message);
                                             }
@@ -540,9 +540,9 @@ namespace Tatap {
                     file_list.make_list_async.begin(repeat_updating_file_list, (obj, res) => {
                         if (image_view.view_mode != ViewMode.SINGLE_VIEW_MODE) {
                             disable_controls();
-                            image_view.open_async.begin(file, (res, obj) => {
+                            image_view.open_async.begin(file, (obj, res) => {
                                 try {
-                                    image_view.open_async.end(obj);
+                                    image_view.open_async.end(res);
                                     image_view.update_title();
                                 } catch (Error e) {
                                     show_error_dialog(e.message);
@@ -557,9 +557,9 @@ namespace Tatap {
                 }
 
                 if (image_view.view_mode == ViewMode.SINGLE_VIEW_MODE || file_list.has_list) {
-                    //disable_controls();
+                    disable_controls();
                     yield image_view.open_async(file);
-                    //enable_controls();
+                    enable_controls();
                     image_view.update_title();
                 }
 
