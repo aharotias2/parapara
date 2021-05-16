@@ -41,11 +41,8 @@ namespace Tatap {
         public abstract File get_file() throws Error;
         public abstract bool is_next_button_sensitive();
         public abstract bool is_prev_button_sensitive();
-        public abstract void go_forward(int offset = 1) throws Error;
-        public abstract void go_backward(int offset = 1) throws Error;
-        public abstract void open(File file) throws Error;
-        public abstract void reopen() throws Error;
-        public abstract void open_at(int index) throws Error;
+        public abstract async void go_forward_async(int offset = 1);
+        public abstract async void go_backward_async(int offset = 1);
         public abstract async void open_async(File file) throws Error;
         public abstract async void reopen_async() throws Error;
         public abstract async void open_at_async(int index) throws Error;

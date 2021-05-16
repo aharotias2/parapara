@@ -111,13 +111,14 @@ namespace Tatap {
             }
         }
 
-        public async void open_async(string filename) throws AppError, Error {
+        public async void open_async(string filename) throws Error {
             Error? error = null;
             AppError? app_error = null;
+            PixbufAnimation? animation_tmp = null;
             var thread = new Thread<int>(filename, () => {
                 int status = 0;
                 try {
-                    open(filename);
+                    animation_tmp = new PixbufAnimation.from_file(filename);
                 } catch (AppError e) {
                     app_error = e;
                     status = 1;
@@ -130,10 +131,35 @@ namespace Tatap {
             });
             yield;
             int thread_status = thread.join();
-            if (thread_status == 1 && app_error != null) {
-                throw app_error;
-            } else if (thread_status == 2 && error != null) {
+            if (thread_status == 1 || error != null || animation_tmp == null) {
                 throw error;
+            }
+            animation = animation_tmp;
+            fileref = File.new_for_path(filename);
+            tval = TimeVal();
+            var animation_iter = animation.get_iter(tval);
+            file_counter++;
+            original_pixbuf = animation_iter.get_pixbuf();
+            original_max_size = int.max(original_pixbuf.width, original_pixbuf.height);
+            original_rate_x = (double) original_pixbuf.width / (double) original_pixbuf.height;
+            save_width = -1;
+            save_height = -1;
+            hflipped = false;
+            vflipped = false;
+            degree = 0;
+            has_image = true;
+            if (!animation.is_static_image()) {
+                paused_value = false;
+                playing = true;
+                is_animation = true;
+            } else {
+                playing = false;
+                paused = true;
+                animation_iter = null;
+                is_animation = false;
+            }
+            if (is_animation) {
+                animate_async.begin(animation_iter);
             }
         }
 

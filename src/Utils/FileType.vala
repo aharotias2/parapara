@@ -28,41 +28,47 @@ namespace Tatap {
 
         public string? to_string() {
             switch (this) {
-                case JPEG: return "jpg";
-                case PNG: return "png";
-                case GIF: return "gif";
-                case BMP: return "bmp";
-                case ICO: return "ico";
-                default: return null;
+              case JPEG:
+                return "jpg";
+              case PNG:
+                return "png";
+              case GIF:
+                return "gif";
+              case BMP:
+                return "bmp";
+              case ICO:
+                return "ico";
+              default:
+                return null;
             }
         }
 
         public static string? to_pixbuf_type(string extension) {
             switch (extension) {
-                case "jpeg": case "jpg": case "JPG": case "JPEG":
-                default:
-                    return "jpeg";
-                case "png": case "PNG":
-                    return "png";
-                case "bmp": case "BMP":
-                    return "bmp";
-                case "gif": case "GIF":
-                    return "gif";
-                case "ico": case "ICO":
-                    return "ico";
+              case "jpeg": case "jpg": case "JPG": case "JPEG":
+              default:
+                return "jpeg";
+              case "png": case "PNG":
+                return "png";
+              case "bmp": case "BMP":
+                return "bmp";
+              case "gif": case "GIF":
+                return "gif";
+              case "ico": case "ICO":
+                return "ico";
             }
         }
 
         public static bool is_valid_extension(string extension) {
             switch (extension) {
-                case "jpeg": case "jpg": case "JPG": case "JPEG":
-                case "png": case "PNG":
-                case "bmp": case "BMP":
-                case "ico": case "ICO":
-                case "gif": case "GIF":
-                    return true;
-                default:
-                    return false;
+              case "jpeg": case "jpg": case "JPG": case "JPEG":
+              case "png": case "PNG":
+              case "bmp": case "BMP":
+              case "ico": case "ICO":
+              case "gif": case "GIF":
+                return true;
+              default:
+                return false;
             }
         }
     }

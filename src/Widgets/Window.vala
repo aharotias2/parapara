@@ -49,13 +49,12 @@ namespace Tatap {
                     get_window().fullscreen();
                 } else {
                     get_window().unfullscreen();
-                    Timeout.add(100, () => {
+                    image_view.reopen_async.begin((res, obj) => {
                         try {
-                            image_view.reopen();
+                            image_view.reopen_async.end(obj);
                         } catch (Error e) {
                             show_error_dialog(e.message);
                         }
-                        return false;
                     });
                 }
             }
@@ -97,14 +96,10 @@ namespace Tatap {
                                 if (image_view.view_mode == ViewMode.DUAL_VIEW_MODE) {
                                     offset = 2;
                                 }
-                                try {
-                                    if (toolbar.sort_order == SortOrder.ASC) {
-                                        image_view.go_backward(offset);
-                                    } else {
-                                        image_view.go_forward(offset);
-                                    }
-                                } catch (Error error) {
-                                    show_error_dialog(error.message);
+                                if (toolbar.sort_order == SortOrder.ASC) {
+                                    image_view.go_backward_async.begin(offset);
+                                } else {
+                                    image_view.go_forward_async.begin(offset);
                                 }
                             });
                         }
@@ -118,14 +113,10 @@ namespace Tatap {
                                 if (image_view.view_mode == ViewMode.DUAL_VIEW_MODE) {
                                     offset = 2;
                                 }
-                                try {
-                                    if (toolbar.sort_order == SortOrder.ASC) {
-                                        image_view.go_forward(offset);
-                                    } else {
-                                        image_view.go_backward(offset);
-                                    }
-                                } catch (Error error) {
-                                    show_error_dialog(error.message);
+                                if (toolbar.sort_order == SortOrder.ASC) {
+                                    image_view.go_forward_async.begin(offset);
+                                } else {
+                                    image_view.go_backward_async.begin(offset);
                                 }
                             });
                         }
@@ -313,14 +304,16 @@ namespace Tatap {
                                         draw_value = false, has_origin = true, margin = 5 };
                                 {
                                     progress_scale.change_value.connect(() => {
-                                        try {
-                                            debug("change progress value: %f", progress_scale.get_value());
-                                            debug("progress_adjustment %f, %f", progress_scale.adjustment.upper,
-                                                    progress_scale.adjustment.lower);
-                                            image_view.open_at_async.begin((int) progress_scale.get_value());
-                                        } catch (Error e) {
-                                            show_error_dialog(e.message);
-                                        }
+                                        debug("change progress value: %f", progress_scale.get_value());
+                                        debug("progress_adjustment %f, %f", progress_scale.adjustment.upper, progress_scale.adjustment.lower);
+
+                                        image_view.open_at_async.begin((int) progress_scale.get_value(), (res, obj) => {
+                                            try {
+                                                image_view.open_at_async.end(obj);
+                                            } catch (Error e) {
+                                                show_error_dialog(e.message);
+                                            }
+                                        });
                                     });
                                 }
 
@@ -550,12 +543,12 @@ namespace Tatap {
                             image_view.open_async.begin(file, (res, obj) => {
                                 try {
                                     image_view.open_async.end(obj);
+                                    image_view.update_title();
                                 } catch (Error e) {
                                     show_error_dialog(e.message);
                                 }
                                 enable_controls();
                             });
-                            image_view.update_title();
                         }
                     });
                     image_view.file_list = file_list;
@@ -604,15 +597,15 @@ namespace Tatap {
                 File file = image_view.get_file();
                 bottom_box.remove(image_view);
                 switch (view_mode) {
-                    case SINGLE_VIEW_MODE:
-                        image_view = new SingleImageView.with_file_list(this, file_list);
-                        break;
-                    case DUAL_VIEW_MODE:
-                        image_view = new DualImageView.with_file_list(this, file_list);
-                        break;
-                    case SCROLL_VIEW_MODE:
-                        // TODO: Implement later.
-                        return;
+                  case SINGLE_VIEW_MODE:
+                    image_view = new SingleImageView.with_file_list(this, file_list);
+                    break;
+                  case DUAL_VIEW_MODE:
+                    image_view = new DualImageView.with_file_list(this, file_list);
+                    break;
+                  case SCROLL_VIEW_MODE:
+                    // TODO: Implement later.
+                    return;
                 }
                 bottom_box.pack_start(image_view as EventBox, true, true);
                 image_view.title_changed.connect((title) => {

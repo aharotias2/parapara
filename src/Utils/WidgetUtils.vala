@@ -34,46 +34,46 @@ namespace Tatap {
         private static void get_event_position(Gdk.Event event, out double x, out double y, bool is_from_root) {
             double tmp_x, tmp_y, tmp_x_root, tmp_y_root;
             switch (event.type) {
-                case BUTTON_PRESS: case 2BUTTON_PRESS: case 3BUTTON_PRESS: case BUTTON_RELEASE:
-                    tmp_x_root = event.button.x_root;
-                    tmp_y_root = event.button.y_root;
-                    tmp_x = event.button.x;
-                    tmp_y = event.button.y;
-                    break;
-                case TOUCHPAD_PINCH:
-                    tmp_x_root = event.touchpad_pinch.x_root;
-                    tmp_y_root = event.touchpad_pinch.y_root;
-                    tmp_x = event.touchpad_pinch.x;
-                    tmp_y = event.touchpad_pinch.y;
-                    break;
-                case TOUCHPAD_SWIPE:
-                    tmp_x_root = event.touchpad_swipe.x_root;
-                    tmp_y_root = event.touchpad_swipe.y_root;
-                    tmp_x = event.touchpad_swipe.x;
-                    tmp_y = event.touchpad_swipe.y;
-                    break;
-                case SCROLL:
-                    tmp_x_root = event.scroll.x_root;
-                    tmp_y_root = event.scroll.y_root;
-                    tmp_x = event.scroll.x;
-                    tmp_y = event.scroll.y;
-                    break;
-                case MOTION_NOTIFY:
-                    tmp_x_root = event.motion.x_root;
-                    tmp_y_root = event.motion.y_root;
-                    tmp_x = event.motion.x;
-                    tmp_y = event.motion.y;
-                    break;
-                case ENTER_NOTIFY: case LEAVE_NOTIFY:
-                    tmp_x_root = event.crossing.x_root;
-                    tmp_y_root = event.crossing.y_root;
-                    tmp_x = event.crossing.x;
-                    tmp_y = event.crossing.y;
-                    break;
-                default:
-                    x = 0;
-                    y = 0;
-                    return;
+            case BUTTON_PRESS: case 2BUTTON_PRESS: case 3BUTTON_PRESS: case BUTTON_RELEASE:
+                tmp_x_root = event.button.x_root;
+                tmp_y_root = event.button.y_root;
+                tmp_x = event.button.x;
+                tmp_y = event.button.y;
+                break;
+            case TOUCHPAD_PINCH:
+                tmp_x_root = event.touchpad_pinch.x_root;
+                tmp_y_root = event.touchpad_pinch.y_root;
+                tmp_x = event.touchpad_pinch.x;
+                tmp_y = event.touchpad_pinch.y;
+                break;
+            case TOUCHPAD_SWIPE:
+                tmp_x_root = event.touchpad_swipe.x_root;
+                tmp_y_root = event.touchpad_swipe.y_root;
+                tmp_x = event.touchpad_swipe.x;
+                tmp_y = event.touchpad_swipe.y;
+                break;
+            case SCROLL:
+                tmp_x_root = event.scroll.x_root;
+                tmp_y_root = event.scroll.y_root;
+                tmp_x = event.scroll.x;
+                tmp_y = event.scroll.y;
+                break;
+            case MOTION_NOTIFY:
+                tmp_x_root = event.motion.x_root;
+                tmp_y_root = event.motion.y_root;
+                tmp_x = event.motion.x;
+                tmp_y = event.motion.y;
+                break;
+            case ENTER_NOTIFY: case LEAVE_NOTIFY:
+                tmp_x_root = event.crossing.x_root;
+                tmp_y_root = event.crossing.y_root;
+                tmp_x = event.crossing.x;
+                tmp_y = event.crossing.y;
+                break;
+            default:
+                x = 0;
+                y = 0;
+                return;
             }
             if (is_from_root) {
                 x = tmp_x_root;

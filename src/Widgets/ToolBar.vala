@@ -71,57 +71,57 @@ namespace Tatap {
             set {
                 if (_view_mode != value) {
                     switch (_view_mode) {
-                        case SINGLE_VIEW_MODE:
-                            toolbar_hbox.remove(single_view_mode_box);
-                            single_view_mode_box.hide();
-                            single_view_button.active = false;
-                            single_view_button.sensitive = true;
-                            break;
-                        case SCROLL_VIEW_MODE:
-                            toolbar_hbox.remove(scroll_view_mode_box);
-                            scroll_view_mode_box.hide();
-                            scroll_view_button.active = false;
-                            scroll_view_button.sensitive = true;
-                            break;
-                        case DUAL_VIEW_MODE:
-                            toolbar_hbox.remove(dual_view_mode_box);
-                            dual_view_mode_box.hide();
-                            dual_view_button.active = false;
-                            dual_view_button.sensitive = true;
-                            break;
+                      case SINGLE_VIEW_MODE:
+                        toolbar_hbox.remove(single_view_mode_box);
+                        single_view_mode_box.hide();
+                        single_view_button.active = false;
+                        single_view_button.sensitive = true;
+                        break;
+                      case SCROLL_VIEW_MODE:
+                        toolbar_hbox.remove(scroll_view_mode_box);
+                        scroll_view_mode_box.hide();
+                        scroll_view_button.active = false;
+                        scroll_view_button.sensitive = true;
+                        break;
+                      case DUAL_VIEW_MODE:
+                        toolbar_hbox.remove(dual_view_mode_box);
+                        dual_view_mode_box.hide();
+                        dual_view_button.active = false;
+                        dual_view_button.sensitive = true;
+                        break;
                     }
                     _view_mode = value;
                     switch (_view_mode) {
-                        case SINGLE_VIEW_MODE:
-                            toolbar_hbox.pack_start(single_view_mode_box, false, false);
-                            toolbar_hbox.reorder_child(single_view_mode_box, 0);
-                            single_view_button.active = true;
-                            single_view_button.sensitive = false;
-                            if (sort_order == SortOrder.ASC && !sort_asc_button.active) {
-                                sort_asc_button.active = true;
-                            }
-                            if (sort_order == SortOrder.DESC && !sort_desc_button.active) {
-                                sort_desc_button.active = true;
-                            }
-                            break;
-                        case SCROLL_VIEW_MODE:
-                            toolbar_hbox.pack_start(scroll_view_mode_box, false, false);
-                            toolbar_hbox.reorder_child(scroll_view_mode_box, 0);
-                            scroll_view_button.active = true;
-                            scroll_view_button.sensitive = false;
-                            break;
-                        case DUAL_VIEW_MODE:
-                            toolbar_hbox.pack_start(dual_view_mode_box, false, false);
-                            toolbar_hbox.reorder_child(dual_view_mode_box, 0);
-                            dual_view_button.active = true;
-                            dual_view_button.sensitive = false;
-                            if (sort_order == SortOrder.ASC && !l2rbutton.active) {
-                                l2rbutton.active = true;
-                            }
-                            if (sort_order == SortOrder.DESC && !r2lbutton.active) {
-                                r2lbutton.active = true;
-                            }
-                            break;
+                      case SINGLE_VIEW_MODE:
+                        toolbar_hbox.pack_start(single_view_mode_box, false, false);
+                        toolbar_hbox.reorder_child(single_view_mode_box, 0);
+                        single_view_button.active = true;
+                        single_view_button.sensitive = false;
+                        if (sort_order == SortOrder.ASC && !sort_asc_button.active) {
+                            sort_asc_button.active = true;
+                        }
+                        if (sort_order == SortOrder.DESC && !sort_desc_button.active) {
+                            sort_desc_button.active = true;
+                        }
+                        break;
+                      case SCROLL_VIEW_MODE:
+                        toolbar_hbox.pack_start(scroll_view_mode_box, false, false);
+                        toolbar_hbox.reorder_child(scroll_view_mode_box, 0);
+                        scroll_view_button.active = true;
+                        scroll_view_button.sensitive = false;
+                        break;
+                      case DUAL_VIEW_MODE:
+                        toolbar_hbox.pack_start(dual_view_mode_box, false, false);
+                        toolbar_hbox.reorder_child(dual_view_mode_box, 0);
+                        dual_view_button.active = true;
+                        dual_view_button.sensitive = false;
+                        if (sort_order == SortOrder.ASC && !l2rbutton.active) {
+                            l2rbutton.active = true;
+                        }
+                        if (sort_order == SortOrder.DESC && !r2lbutton.active) {
+                            r2lbutton.active = true;
+                        }
+                        break;
                     }
                     view_mode_changed(_view_mode);
                     toolbar_hbox.show_all();
@@ -364,53 +364,37 @@ namespace Tatap {
 
             l2button = new ActionButton("move-two-page-left-symbolic", _("Slide 2 page to Left"), null);
             l2button.clicked.connect(() => {
-                try {
-                    if (sort_order == SortOrder.ASC) {
-                        dual_image_view.go_backward(2);
-                    } else {
-                        dual_image_view.go_forward(2);
-                    }
-                } catch (Error error) {
-                    main_window.show_error_dialog(error.message);
+                if (sort_order == SortOrder.ASC) {
+                    dual_image_view.go_backward_async.begin(2);
+                } else {
+                    dual_image_view.go_forward_async.begin(2);
                 }
             });
 
             l1button = new ActionButton("move-one-page-left-symbolic", _("Slide 1 page to Left"), null);
             l1button.clicked.connect(() => {
-                try {
-                    if (sort_order == SortOrder.ASC) {
-                        dual_image_view.go_backward(1);
-                    } else {
-                        dual_image_view.go_forward(1);
-                    }
-                } catch (Error error) {
-                    main_window.show_error_dialog(error.message);
+                if (sort_order == SortOrder.ASC) {
+                    dual_image_view.go_backward_async.begin(1);
+                } else {
+                    dual_image_view.go_forward_async.begin(1);
                 }
             });
 
             r1button = new ActionButton("move-one-page-right-symbolic", _("Slide 1 page to Right"), null);
             r1button.clicked.connect(() => {
-                try {
-                    if (sort_order == SortOrder.ASC) {
-                        dual_image_view.go_forward(1);
-                    } else {
-                        dual_image_view.go_backward(1);
-                    }
-                } catch (Error error) {
-                    main_window.show_error_dialog(error.message);
+                if (sort_order == SortOrder.ASC) {
+                    dual_image_view.go_forward_async.begin(1);
+                } else {
+                    dual_image_view.go_backward_async.begin(1);
                 }
             });
 
             r2button = new ActionButton("move-two-page-right-symbolic", _("Slide 2 page to Right"), null);
             r2button.clicked.connect(() => {
-                try {
-                    if (sort_order == SortOrder.ASC) {
-                        dual_image_view.go_forward(2);
-                    } else {
-                        dual_image_view.go_backward(2);
-                    }
-                } catch (Error error) {
-                    main_window.show_error_dialog(error.message);
+                if (sort_order == SortOrder.ASC) {
+                    dual_image_view.go_forward_async.begin(2);
+                } else {
+                    dual_image_view.go_backward_async.begin(2);
                 }
             });
 

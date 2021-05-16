@@ -159,46 +159,46 @@ namespace Tatap {
                 return false;
             }
 
-            try {
-                if (x == ev.x_root && y == ev.y_root) {
-                    var area = event_area((Event) ev);
-                    switch (area) {
-                      case LEFT_AREA:
-                        switch (main_window.toolbar.sort_order) {
-                          case ASC:
-                            go_backward(1);
+            if (x == ev.x_root && y == ev.y_root) {
+                var area = event_area((Event) ev);
+                switch (area) {
+                  case LEFT_AREA:
+                    switch (main_window.toolbar.sort_order) {
+                      case ASC:
+                        go_backward_async.begin(1, (res, obj) => {
                             adjust_cursor(area);
-                            break;
-                          case DESC:
-                            go_forward(1);
-                            adjust_cursor(area);
-                            break;
-                        }
+                        });
                         break;
-                      case RIGHT_AREA:
-                        switch (main_window.toolbar.sort_order) {
-                          case ASC:
-                            go_forward(1);
+                      case DESC:
+                        go_forward_async.begin(1, (res, obj) => {
                             adjust_cursor(area);
-                            break;
-                          case DESC:
-                            go_backward(1);
-                            adjust_cursor(area);
-                            break;
-                        }
-                        break;
-                      default:
-                        if (image.fit) {
-                            image.fit_size_in_window();
-                            update_title();
-                        }
+                        });
                         break;
                     }
+                    break;
+                  case RIGHT_AREA:
+                    switch (main_window.toolbar.sort_order) {
+                      case ASC:
+                        go_forward_async.begin(1, (res, obj) => {
+                            adjust_cursor(area);
+                        });
+                        break;
+                      case DESC:
+                        go_backward_async.begin(1, (res, obj) => {
+                            adjust_cursor(area);
+                        });
+                        break;
+                    }
+                    break;
+                  default:
+                    if (image.fit) {
+                        image.fit_size_in_window();
+                        update_title();
+                    }
+                    break;
                 }
-                button_pressed = false;
-            } catch (GLib.Error e) {
-                main_window.show_error_dialog(e.message);
             }
+            button_pressed = false;
             return false;
         }
 
@@ -250,37 +250,37 @@ namespace Tatap {
             } else {
                 if (scrolled.get_allocated_height() >= scrolled.get_vadjustment().upper
                         && scrolled.get_allocated_width() >= scrolled.get_hadjustment().upper) {
-                    try {
-                        switch (ev.direction) {
-                          case ScrollDirection.UP:
-                            switch (main_window.toolbar.sort_order) {
-                              case ASC:
-                                go_backward(1);
+                    switch (ev.direction) {
+                      case ScrollDirection.UP:
+                        switch (main_window.toolbar.sort_order) {
+                          case ASC:
+                            go_backward_async.begin(1, (res, obj) => {
                                 adjust_cursor(event_area(ev));
-                                return true;
-                              case DESC:
-                                go_forward(1);
+                            });
+                            return true;
+                          case DESC:
+                            go_forward_async.begin(1, (res, obj) => {
                                 adjust_cursor(event_area(ev));
-                                return true;
-                            }
-                            break;
-                          case ScrollDirection.DOWN:
-                            switch (main_window.toolbar.sort_order) {
-                              case ASC:
-                                go_forward(1);
-                                adjust_cursor(event_area(ev));
-                                return true;
-                              case DESC:
-                                go_backward(1);
-                                adjust_cursor(event_area(ev));
-                                return true;
-                            }
-                            break;
-                          default:
-                            break;
+                            });
+                            return true;
                         }
-                    } catch (GLib.Error e) {
-                        main_window.show_error_dialog(e.message);
+                        break;
+                      case ScrollDirection.DOWN:
+                        switch (main_window.toolbar.sort_order) {
+                          case ASC:
+                            go_forward_async.begin(1, (res, obj) => {
+                                adjust_cursor(event_area(ev));
+                            });
+                            return true;
+                          case DESC:
+                            go_backward_async.begin(1, (res, obj) => {
+                                adjust_cursor(event_area(ev));
+                            });
+                            return true;
+                        }
+                        break;
+                      default:
+                        break;
                     }
                 }
             }
@@ -342,50 +342,50 @@ namespace Tatap {
                     return false;
                 }
             } else {
-                try {
-                    switch (ev.keyval) {
-                      case Gdk.Key.Left:
-                        switch (main_window.toolbar.sort_order) {
-                          case ASC:
-                            go_backward(1);
+                switch (ev.keyval) {
+                  case Gdk.Key.Left:
+                    switch (main_window.toolbar.sort_order) {
+                      case ASC:
+                        go_backward_async.begin(1, (res, obj) => {
                             adjust_cursor(event_area(ev));
-                            break;
-                          case DESC:
-                            go_forward(1);
-                            adjust_cursor(event_area(ev));
-                            break;
-                        }
+                        });
                         break;
-                      case Gdk.Key.Right:
-                        switch (main_window.toolbar.sort_order) {
-                          case ASC:
-                            go_forward(1);
+                      case DESC:
+                        go_forward_async.begin(1, (res, obj) => {
                             adjust_cursor(event_area(ev));
-                            break;
-                          case DESC:
-                            go_backward(1);
-                            adjust_cursor(event_area(ev));
-                            break;
-                        }
+                        });
                         break;
-                      case Gdk.Key.space:
-                        if (image.is_animation) {
-                            if (!image.paused) {
-                                image.pause();
-                                main_window.toolbar.animation_play_pause_button.icon_name = "media-playback-pause-symbolic";
-                                main_window.toolbar.animation_forward_button.sensitive = true;
-                            } else {
-                                image.unpause();
-                                main_window.toolbar.animation_play_pause_button.icon_name = "media-playback-start-symbolic";
-                                main_window.toolbar.animation_forward_button.sensitive = false;
-                            }
-                        }
-                        break;
-                      default:
-                        return false;
                     }
-                } catch (GLib.Error e) {
-                    main_window.show_error_dialog(e.message);
+                    break;
+                  case Gdk.Key.Right:
+                    switch (main_window.toolbar.sort_order) {
+                      case ASC:
+                        go_forward_async.begin(1, (res, obj) => {
+                            adjust_cursor(event_area(ev));
+                        });
+                        break;
+                      case DESC:
+                        go_backward_async.begin(1, (res, obj) => {
+                            adjust_cursor(event_area(ev));
+                        });
+                        break;
+                    }
+                    break;
+                  case Gdk.Key.space:
+                    if (image.is_animation) {
+                        if (!image.paused) {
+                            image.pause();
+                            main_window.toolbar.animation_play_pause_button.icon_name = "media-playback-pause-symbolic";
+                            main_window.toolbar.animation_forward_button.sensitive = true;
+                        } else {
+                            image.unpause();
+                            main_window.toolbar.animation_play_pause_button.icon_name = "media-playback-start-symbolic";
+                            main_window.toolbar.animation_forward_button.sensitive = false;
+                        }
+                    }
+                    break;
+                  default:
+                    return false;
                 }
             }
             return true;
@@ -395,32 +395,10 @@ namespace Tatap {
             return accessor.get_file();
         }
 
-        public void open(File file) throws Error {
-            image.open(file.get_path());
-            image.fit_size_in_window();
-            if (file_list.has_list) {
-                accessor.set_name(file.get_basename());
-            }
-            main_window.image_next_button.sensitive = is_next_button_sensitive();
-            main_window.image_prev_button.sensitive = is_prev_button_sensitive();
-            if (image.is_animation) {
-                main_window.toolbar.animation_play_pause_button.sensitive = true;
-                main_window.toolbar.animation_forward_button.sensitive = false;
-                main_window.toolbar.resize_button.sensitive = false;
-            } else {
-                main_window.toolbar.animation_play_pause_button.sensitive = false;
-                main_window.toolbar.animation_forward_button.sensitive = false;
-                main_window.toolbar.resize_button.sensitive = true;
-            }
-            image_opened(accessor.get_name(), accessor.get_index());
-        }
-
         public async void open_async(File file) throws Error {
             var saved_cursor = get_window().cursor;
             change_cursor(WATCH);
-            Idle.add(open_async.callback);
-            yield;
-            image.open(file.get_path());
+            yield image.open_async(file.get_path());
             image.fit_size_in_window();
             if (file_list.has_list) {
                 accessor.set_name(file.get_basename());
@@ -440,41 +418,40 @@ namespace Tatap {
             get_window().cursor = saved_cursor;
         }
 
-        public void open_at(int index) throws Error {
-            accessor.set_index(index);
-            open(accessor.get_file());
-        }
-
         public async void open_at_async(int index) throws Error {
             accessor.set_index(index);
             yield open_async(accessor.get_file());
-        }
-
-        public void reopen() throws Error {
-            open(accessor.get_file());
         }
 
         public async void reopen_async() throws Error {
             yield open_async(accessor.get_file());
         }
 
-        public void go_backward(int offset = 1) throws Error {
-            if (file_list != null) {
-                accessor.go_backward();
-                File? prev_file = accessor.get_file();
-                if (prev_file != null) {
-                    main_window.open_file_async.begin(prev_file);
+        public async void go_backward_async(int offset = 1) {
+            try {
+                if (file_list != null) {
+                    accessor.go_backward();
+                    File? prev_file = accessor.get_file();
+                    if (prev_file != null) {
+                        yield main_window.open_file_async(prev_file);
+                    }
                 }
+            } catch (Error e) {
+                main_window.show_error_dialog(e.message);
             }
         }
 
-        public void go_forward(int offset = 1) throws Error {
-            if (file_list != null) {
-                accessor.go_forward();
-                File? next_file = accessor.get_file();
-                if (next_file != null) {
-                    main_window.open_file_async.begin(next_file);
+        public async void go_forward_async(int offset = 1) {
+            try {
+                if (file_list != null) {
+                    accessor.go_forward();
+                    File? next_file = accessor.get_file();
+                    if (next_file != null) {
+                        yield main_window.open_file_async(next_file);
+                    }
                 }
+            } catch (Error e) {
+                main_window.show_error_dialog(e.message);
             }
         }
 
