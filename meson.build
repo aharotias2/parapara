@@ -39,6 +39,7 @@ executable(
     'src/Model/ViewMode.vala',
     'src/Model/Error.vala',
     'src/Model/FileList.vala',
+    'src/Model/FileListIter.vala',
     'src/Model/SingleFileAccessor.vala',
     'src/Model/DualFileAccessor.vala',
     'src/Widgets/ImageView.vala',
@@ -47,6 +48,7 @@ executable(
     'src/Widgets/ToolBar.vala',
     'src/Widgets/SingleImageView.vala',
     'src/Widgets/DualImageView.vala',
+    'src/Widgets/SlideImageView.vala',
     'src/Widgets/Image.vala',
     'src/Widgets/ActionButton.vala',
     dependencies: [

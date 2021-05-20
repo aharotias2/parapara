@@ -16,9 +16,33 @@
  *  Tanaka Takayuki <aharotias2@gmail.com>
  */
 
+/**
+ * TatapFileList is a custome Gee.LinkedList<File>.
+ */
 namespace Tatap {
-    public enum ViewMode {
-        SINGLE_VIEW_MODE, SLIDE_VIEW_MODE, DUAL_VIEW_MODE
+    public class FileListIter {
+        private FileList file_list;
+        private int index;
+
+        public FileListIter(FileList file_list) {
+            this.file_list = file_list;
+            index = 0;
+        }
+
+        public bool next() {
+            if (file_list.has_list) {
+                return index < file_list.size - 1;
+            } else {
+                return false;
+            }
+        }
+
+        public string get() {
+            try {
+                return file_list.get_filename_at(index++);
+            } catch (AppError e) {
+                return "";
+            }
+        }
     }
 }
-

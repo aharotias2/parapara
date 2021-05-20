@@ -49,7 +49,11 @@ namespace Tatap {
             }
         }
 
-        public new string get_filename_at(int index) throws AppError {
+        public FileListIter iterator() {
+            return new FileListIter(this);
+        }
+
+        public string get_filename_at(int index) throws AppError {
             if (file_list == null) {
                 throw new AppError.FILE_LIST_ERROR(_("The file list is not initialized!"));
             } else if (0 <= index < size) {

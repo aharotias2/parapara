@@ -35,7 +35,7 @@ namespace Tatap {
         public ActionButton animation_forward_button { get; private set; }
         public ActionButton animation_play_pause_button { get; private set; }
         public ToggleButton single_view_button { get; private set; }
-        public ToggleButton scroll_view_button { get; private set; }
+        public ToggleButton slide_view_button { get; private set; }
         public ToggleButton dual_view_button { get; private set; }
         public Button l2button { get; private set; }
         public Button l1button { get; private set; }
@@ -47,7 +47,7 @@ namespace Tatap {
         public ToggleButton r2lbutton { get; private set; }
         private Box toolbar_hbox;
         private Box single_view_mode_box;
-        private Box scroll_view_mode_box;
+        private Box slide_view_mode_box;
         private Box dual_view_mode_box;
         private ButtonBox mode_switch_button_box;
         private ViewMode _view_mode;
@@ -77,11 +77,11 @@ namespace Tatap {
                         single_view_button.active = false;
                         single_view_button.sensitive = true;
                         break;
-                      case SCROLL_VIEW_MODE:
-                        toolbar_hbox.remove(scroll_view_mode_box);
-                        scroll_view_mode_box.hide();
-                        scroll_view_button.active = false;
-                        scroll_view_button.sensitive = true;
+                      case SLIDE_VIEW_MODE:
+                        toolbar_hbox.remove(slide_view_mode_box);
+                        slide_view_mode_box.hide();
+                        slide_view_button.active = false;
+                        slide_view_button.sensitive = true;
                         break;
                       case DUAL_VIEW_MODE:
                         toolbar_hbox.remove(dual_view_mode_box);
@@ -104,11 +104,11 @@ namespace Tatap {
                             sort_desc_button.active = true;
                         }
                         break;
-                      case SCROLL_VIEW_MODE:
-                        toolbar_hbox.pack_start(scroll_view_mode_box, false, false);
-                        toolbar_hbox.reorder_child(scroll_view_mode_box, 0);
-                        scroll_view_button.active = true;
-                        scroll_view_button.sensitive = false;
+                      case SLIDE_VIEW_MODE:
+                        toolbar_hbox.pack_start(slide_view_mode_box, false, false);
+                        toolbar_hbox.reorder_child(slide_view_mode_box, 0);
+                        slide_view_button.active = true;
+                        slide_view_button.sensitive = false;
                         break;
                       case DUAL_VIEW_MODE:
                         toolbar_hbox.pack_start(dual_view_mode_box, false, false);
@@ -439,14 +439,14 @@ namespace Tatap {
                 view_mode = ViewMode.SINGLE_VIEW_MODE;
             });
 
-            scroll_view_button = new ToggleButton() {
+            slide_view_button = new ToggleButton() {
                 tooltip_text = _("Scroll View Mode"),
                 image = new Gtk.Image.from_icon_name("view-continuous-symbolic", IconSize.SMALL_TOOLBAR),
                 active = false
             };
-            scroll_view_button.get_style_context().add_class("image_overlay_button");
-            scroll_view_button.toggled.connect(() => {
-                view_mode = ViewMode.SCROLL_VIEW_MODE;
+            slide_view_button.get_style_context().add_class("image_overlay_button");
+            slide_view_button.toggled.connect(() => {
+                view_mode = ViewMode.SLIDE_VIEW_MODE;
             });
 
             dual_view_button = new ToggleButton() {
@@ -464,7 +464,7 @@ namespace Tatap {
                 layout_style = ButtonBoxStyle.EXPAND
             };
             mode_switch_button_box.pack_start(single_view_button);
-//            mode_switch_button_box.pack_start(scroll_view_button);
+            mode_switch_button_box.pack_start(slide_view_button);
             mode_switch_button_box.pack_start(dual_view_button);
 
             stick_button = new ActionButton("pan-down-symbolic", _("Stick"), {"<control>f"});
@@ -491,7 +491,7 @@ namespace Tatap {
             single_view_mode_box.pack_start(image_actions_button_box, false, false);
             single_view_mode_box.pack_start(animation_actions_button_box, false, false);
 
-            scroll_view_mode_box = new Box(Orientation.HORIZONTAL, 0) {
+            slide_view_mode_box = new Box(Orientation.HORIZONTAL, 0) {
                 vexpand = false,
                 valign = Align.START
             };

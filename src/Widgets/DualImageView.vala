@@ -183,17 +183,13 @@ namespace Tatap {
             if (20 < vpos < 80) {
                 var sort_order = main_window.toolbar.sort_order;
                 if (hpos < 25) {
-                    if (sort_order == ASC && !accessor.is_first()) {
-                        return LEFT_AREA;
-                    }
-                    if (sort_order == DESC && !accessor.is_last()) {
+                    if ((sort_order == ASC && !accessor.is_first())
+                            || (sort_order == DESC && !accessor.is_last())) {
                         return LEFT_AREA;
                     }
                 } else if (hpos > 75) {
-                    if (sort_order == ASC && !accessor.is_last()) {
-                        return RIGHT_AREA;
-                    }
-                    if (sort_order == DESC && !accessor.is_first()) {
+                    if ((sort_order == ASC && !accessor.is_last())
+                            || (sort_order == DESC && !accessor.is_first())) {
                         return RIGHT_AREA;
                     }
                 }

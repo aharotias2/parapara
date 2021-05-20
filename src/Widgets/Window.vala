@@ -556,14 +556,16 @@ namespace Tatap {
                     image_next_button.sensitive = false;
                 }
 
-                if (image_view.view_mode == ViewMode.SINGLE_VIEW_MODE || file_list.has_list) {
+                if (image_view.view_mode == SINGLE_VIEW_MODE || file_list.has_list) {
                     disable_controls();
                     yield image_view.open_async(file);
                     enable_controls();
                     image_view.update_title();
                 }
 
-                toolbar.animation_play_pause_button.icon_name = "media-playback-start-symbolic";
+                if (image_view.view_mode == SINGLE_VIEW_MODE) {
+                    toolbar.animation_play_pause_button.icon_name = "media-playback-start-symbolic";
+                }
                 stack.visible_child_name = "picture";
                 toolbar_toggle_button.sensitive = true;
                 toolbar.save_button.sensitive = true;
@@ -603,9 +605,9 @@ namespace Tatap {
                   case DUAL_VIEW_MODE:
                     image_view = new DualImageView.with_file_list(this, file_list);
                     break;
-                  case SCROLL_VIEW_MODE:
-                    // TODO: Implement later.
-                    return;
+                  case SLIDE_VIEW_MODE:
+                    image_view = new SlideImageView.with_file_list(this, file_list);
+                    break;
                 }
                 bottom_box.pack_start(image_view as EventBox, true, true);
                 image_view.title_changed.connect((title) => {
