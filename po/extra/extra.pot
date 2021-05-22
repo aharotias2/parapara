@@ -17,34 +17,34 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/tatap.appdata.xml.in:7 data/tatap.desktop.in:3
-msgid "Tatap"
+#: data/parapara.appdata.xml.in:7 data/parapara.desktop.in:3
+msgid "ParaPara"
 msgstr ""
 
-#: data/tatap.appdata.xml.in:8
+#: data/parapara.appdata.xml.in:8
 msgid "An image viewer without library"
 msgstr ""
 
-#: data/tatap.appdata.xml.in:10
+#: data/parapara.appdata.xml.in:10
 msgid "An image viewer that supports jpg, png, bmp, and ico files."
 msgstr ""
 
-#: data/tatap.appdata.xml.in:53
+#: data/parapara.appdata.xml.in:53
 msgid "Tanaka Takayuki"
 msgstr ""
 
-#: data/tatap.desktop.in:4
+#: data/parapara.desktop.in:4
 msgid "Image Viewer"
 msgstr ""
 
-#: data/tatap.desktop.in:5
+#: data/parapara.desktop.in:5
 msgid "View image files"
 msgstr ""
 
-#: data/tatap.desktop.in:8
+#: data/parapara.desktop.in:8
 msgid "image-viewer"
 msgstr ""
 
-#: data/tatap.desktop.in:13
+#: data/parapara.desktop.in:13
 msgid "Picture;Image;Viewer;"
 msgstr ""

@@ -17,9 +17,9 @@
  */
 
 /**
- * TatapFileList is a custome Gee.LinkedList<File>.
+ * ParaParaFileList is a custome Gee.LinkedList<File>.
  */
-namespace Tatap {
+namespace ParaPara {
     public class FileList : Object {
         public signal void updated();
         public signal void terminated();
@@ -77,11 +77,11 @@ namespace Tatap {
 
         public async void make_list_async(bool loop = true) throws AppError {
             Gee.List<string>? inner_file_list = null;
-            Tatap.FileListThreadData thread_data = new Tatap.FileListThreadData(dir_path);
+            ParaPara.FileListThreadData thread_data = new Tatap.FileListThreadData(dir_path);
             thread_data.file_found.connect((file_name) => {
                 string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, file_name);
                 try {
-                    return Tatap.FileUtils.check_file_is_image(path);
+                    return ParaPara.FileUtils.check_file_is_image(path);
                 } catch (Error e) {
                     thread_data.terminate();
                     file_not_found();

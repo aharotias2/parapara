@@ -18,14 +18,14 @@
 
 using Gdk, Gtk;
 
-namespace Tatap {
+namespace ParaPara {
     public class SlideImageView : ImageView, EventBox {
         private enum ScalingMode {
             FIT_WIDTH, FIT_PAGE, BY_PERCENTAGE
         }
 
         public ViewMode view_mode { get; construct; }
-        public Tatap.Window main_window { get; construct; }
+        public ParaPara.Window main_window { get; construct; }
         public FileList file_list {
             get {
                 return _file_list;
@@ -35,7 +35,7 @@ namespace Tatap {
                 length_list = new double[_file_list.size];
             }
         }
-        public bool controllable { get; set; }
+        public bool controllable { get; set; default = true; }
         public string dir_path {
             owned get {
                 return file_list.dir_path;
@@ -63,20 +63,21 @@ namespace Tatap {
         public int page_spacing { get; set; default = 4; }
         public int scroll_interval { get; set; default = 1; }
         public double scroll_amount { get; set; default = 10.0; }
-        public double scroll_overlapping { get; set; default = 10.0; }
-        private Gee.List<Tatap.Image> widget_list;
+        public double scroll_overlapping { get; set; default = 0.1; }
+        private Gee.List<ParaPara.Image> widget_list;
         private Box slide_box;
         private ScrolledWindow scroll;
         private FileList _file_list;
-        private uint64 size_changed_count;
+        private uint64 resizing_counter;
         private SourceFunc make_view_callback;
         private int saved_width;
         private int saved_height;
         private double[] length_list;
         private ScalingMode scaling_mode = FIT_WIDTH;
         private uint scale_percentage = 0;
+        private int prev_location = 0;
 
-        public SlideImageView(Tatap.Window window) {
+        public SlideImageView(ParaPara.Window window) {
             Object(
                 main_window: window,
                 view_mode: ViewMode.SLIDE_VIEW_MODE,
@@ -104,8 +105,9 @@ namespace Tatap {
             add(scroll);
             size_allocate.connect((allocation) => {
                 debug("slide image view size allocate to (%d, %d) current size = (%d, %d)", allocation.width, allocation.height, get_allocated_width(), get_allocated_height());
-                if (saved_width != allocation.width) {
-                    size_changed_count++;
+                if ((slide_box.orientation == VERTICAL && saved_width != allocation.width))
+                        || (slide_box.orientation == HORIZONTAL && saved_height != allocation.height)) {
+                    resizing_counter++;
                     switch (scaling_mode) {
                       case FIT_WIDTH:
                         fit_width();
@@ -114,43 +116,174 @@ namespace Tatap {
                         fit_page();
                         break;
                       case BY_PERCENTAGE:
-                        scale_by_percentage(scale_percentage);
                         break;
                     }
                 }
                 saved_width = allocation.width;
+                saved_height = allocation.height;
             });
             debug("slide view mode added scroll");
         }
 
         public void fit_width() {
             scaling_mode = FIT_WIDTH;
-            size_changed_count++;
+            resizing_counter++;
             fit_images_by_width.begin();
         }
 
         public void fit_page() {
             scaling_mode = FIT_PAGE;
-            size_changed_count++;
+            resizing_counter++;
             fit_images_by_height.begin();
         }
 
         public void scale_by_percentage(uint scale_percentage) {
             scaling_mode = BY_PERCENTAGE;
             this.scale_percentage = scale_percentage;
-            size_changed_count++;
+            resizing_counter++;
             scale_images_by_percentage.begin(scale_percentage);
+        }
+
+        public File get_file() throws Error {
+            string filename = file_list.get_filename_at(get_location());
+            string filepath = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, filename);
+            return File.new_for_path(filepath);
+        }
+
+        public bool is_next_button_sensitive() {
+            if (slide_box.orientation == VERTICAL) {
+                var vadjust = scroll.vadjustment;
+                if (vadjust.value < vadjust.upper - vadjust.page_size) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                var hadjust = scroll.hadjustment;
+                if (hadjust.value < hadjust.upper - hadjust.page_size) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        public bool is_prev_button_sensitive() {
+            if (slide_box.orientation == VERTICAL) {
+                var vadjust = scroll.vadjustment;
+                if (vadjust.value > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                var hadjust = scroll.hadjustment;
+                if (hadjust.value > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        public async void go_forward_async(int offset = 1) {
+            if (slide_box.orientation == VERTICAL) {
+                double start = scroll.vadjustment.value;
+                double page_size = scroll.vadjustment.page_size;
+                double goal = start + page_size - (page_size * scroll_overlapping);
+                if (goal > scroll.vadjustment.upper - page_size) {
+                    goal = scroll.vadjustment.upper - page_size;
+                }
+                Timeout.add(scroll_interval, () => {
+                    if (scroll.vadjustment.value < goal) {
+                        double a = scroll.vadjustment.value;
+                        double b = a + scroll_amount;
+                        debug("slide image view go forward timeout: a = %f, b = %f, goal = %f", a, b, goal);
+                        if (b >= goal) {
+                            scroll.vadjustment.value = goal;
+                            return false;
+                        } else {
+                            scroll.vadjustment.value = b;
+                            return true;
+                        }
+                    } else {
+                        return false;
+                    }
+                });
+            }
+        }
+
+        public async void go_backward_async(int offset = 1) {
+            if (slide_box.orientation == VERTICAL) {
+                double start = scroll.vadjustment.value;
+                double page_size = scroll.vadjustment.page_size;
+                double goal = start - page_size + (page_size * scroll_overlapping);
+                if (goal < 0) {
+                    goal = 0.0;
+                }
+                Timeout.add(scroll_interval, () => {
+                    if (scroll.vadjustment.value > goal) {
+                        double a = scroll.vadjustment.value;
+                        double b = a - scroll_amount;
+                        debug("slide image view go backward timeout: a = %f, b = %f, goal = %f", a, b, goal);
+                        if (b < goal) {
+                            scroll.vadjustment.value = goal;
+                            return false;
+                        } else {
+                            scroll.vadjustment.value = b;
+                            return true;
+                        }
+                    } else {
+                        return false;
+                    }
+                });
+            }
+        }
+
+        public async void open_async(File file) throws Error {
+            debug("open %s", file.get_basename());
+            yield init_async(file_list.get_index_of(file.get_basename()));
+        }
+
+        public async void reopen_async() throws Error {
+            yield init_async(get_location());
+        }
+
+        public async void open_at_async(int index) throws Error {
+            yield init_async(index);
+        }
+
+        public void update_title() {
+            try {
+                int index = get_location();
+                string filename = file_list.get_filename_at(index);
+                string title = "%s".printf(filename);
+                title_changed(title);
+            } catch (AppError e) {
+                main_window.show_error_dialog(e.message);
+            }
+        }
+
+        public void update() {
+            main_window.image_next_button.sensitive = is_next_button_sensitive();
+            main_window.image_prev_button.sensitive = is_prev_button_sensitive();
+        }
+
+        public void close() {
+            foreach (var image in widget_list) {
+                if (image.is_animation) {
+                    image.quit_animation();
+                }
+            }
         }
 
         private async void fit_images_by_width() {
             if (widget_list == null || widget_list.size == 0) {
                 return;
             }
-            uint64 tmp = size_changed_count;
-            for (int i = 0; i < widget_list.size && tmp == size_changed_count; i++) {
-                debug("size_allocated");
+            uint64 tmp = resizing_counter;
+            for (int i = 0; i < widget_list.size && tmp == resizing_counter; i++) {
                 int new_width = scroll.get_allocated_width();
-                debug("slide image view resize image %d (%lld) => %d", i, tmp, new_width);
                 widget_list[i].scale_fit_in_width(new_width);
                 length_list[i] = i > 0 ? length_list[i - 1] + (double) new_width : (double) new_width;
                 update_title();
@@ -163,11 +296,9 @@ namespace Tatap {
             if (widget_list == null || widget_list.size == 0) {
                 return;
             }
-            uint64 tmp = size_changed_count;
-            for (int i = 0; i < widget_list.size && tmp == size_changed_count; i++) {
-                debug("size_allocated");
+            uint64 tmp = resizing_counter;
+            for (int i = 0; i < widget_list.size && tmp == resizing_counter; i++) {
                 int new_height = scroll.get_allocated_height();
-                debug("slide image view resize image %d (%lld) => %d", i, tmp, new_height);
                 widget_list[i].scale_fit_in_height(new_height);
                 length_list[i] = i > 0 ? length_list[i - 1] + (double) new_height : (double) new_height;
                 update_title();
@@ -180,8 +311,8 @@ namespace Tatap {
             if (widget_list == null || widget_list.size == 0) {
                 return;
             }
-            uint64 tmp = size_changed_count;
-            for (int i = 0; i < widget_list.size && tmp == size_changed_count; i++) {
+            uint64 tmp = resizing_counter;
+            for (int i = 0; i < widget_list.size && tmp == resizing_counter; i++) {
                 widget_list[i].set_scale_percent(percentage);
                 Idle.add(scale_images_by_percentage.callback);
                 yield;
@@ -201,12 +332,12 @@ namespace Tatap {
         private bool is_make_view_continue;
 
         private async void init_async(int index = 0) {
-            size_changed_count = 0;
+            resizing_counter = 0;
             var saved_cursor = get_window().cursor;
             change_cursor(WATCH);
             Idle.add(init_async.callback);
             yield;
-            widget_list = new Gee.ArrayList<Tatap.Image>();
+            widget_list = new Gee.ArrayList<ParaPara.Image>();
             remove(scroll);
             scroll = new ScrolledWindow(null, null);
             scroll.get_style_context().add_class("image-view");
@@ -223,6 +354,11 @@ namespace Tatap {
                 scroll.vadjustment.value_changed.connect(() => {
                     main_window.image_prev_button.sensitive = is_prev_button_sensitive();
                     main_window.image_next_button.sensitive = is_next_button_sensitive();
+                    int location = get_location();
+                    if (prev_location != location) {
+                        update_title();
+                    }
+                    prev_location = location;
                     if (is_make_view_continue && get_scroll_position() > 0.98) {
                         Idle.add((owned) make_view_callback);
                     }
@@ -231,6 +367,11 @@ namespace Tatap {
                 scroll.hadjustment.value_changed.connect(() => {
                     main_window.image_prev_button.sensitive = is_prev_button_sensitive();
                     main_window.image_next_button.sensitive = is_next_button_sensitive();
+                    int location = get_location();
+                    if (prev_location != location) {
+                        update_title();
+                    }
+                    prev_location = location;
                     if (is_make_view_continue && get_scroll_position() > 0.98) {
                         Idle.add((owned) make_view_callback);
                     }
@@ -256,7 +397,7 @@ namespace Tatap {
                 try {
                     string filename = file_list.get_filename_at(i);
                     string filepath = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, filename);
-                    var image_widget = new Tatap.Image(false) {
+                    var image_widget = new ParaPara.Image(false) {
                         container = scroll,
                         halign = CENTER
                     };
@@ -279,7 +420,7 @@ namespace Tatap {
                     Idle.add(make_view_async.callback);
                     yield;
                     double h = (double) image_widget.get_allocated_height();
-                    length_list[i] = i > 0 ? length_list[i - 1] + h : h;
+                    length_list[i] = (i > 0 ? length_list[i - 1] : 0) + h + page_spacing;
                     if (i == index) {
                         scroll.vadjustment.value = length_list[i];
                         Idle.add(make_view_async.callback);
@@ -305,120 +446,6 @@ namespace Tatap {
                 debug("slide image view scroll position: %f", position);
                 return position;
             }
-        }
-
-        public File get_file() throws Error {
-            // TODO
-            string filename = file_list.get_filename_at(get_location());
-            string filepath = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, filename);
-            return File.new_for_path(filepath);
-        }
-
-        public bool is_next_button_sensitive() {
-            // TODO
-            if (slide_box.orientation == VERTICAL) {
-                var vadjust = scroll.vadjustment;
-                if (vadjust.value < vadjust.upper) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                var hadjust = scroll.hadjustment;
-                if (hadjust.value < hadjust.upper) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-
-        public bool is_prev_button_sensitive() {
-            // TODO
-            if (slide_box.orientation == VERTICAL) {
-                var vadjust = scroll.vadjustment;
-                if (vadjust.value > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                var hadjust = scroll.hadjustment;
-                if (hadjust.value > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-
-        public async void go_forward_async(int offset = 1) {
-            // TODO
-            if (slide_box.orientation == VERTICAL) {
-                double start = scroll.vadjustment.value;
-                double goal = start + scroll.vadjustment.page_size - (scroll.vadjustment.page_size / scroll_overlapping);
-                if (goal > scroll.vadjustment.upper) {
-                    goal = scroll.vadjustment.upper;
-                }
-                Timeout.add(scroll_interval, () => {
-                    if (scroll.vadjustment.value < goal) {
-                        scroll.vadjustment.value += scroll_amount;
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-            }
-        }
-
-        public async void go_backward_async(int offset = 1) {
-            // TODO
-            if (slide_box.orientation == VERTICAL) {
-                double start = scroll.vadjustment.value;
-                double goal = start - scroll.vadjustment.page_size - (scroll.vadjustment.page_size / scroll_overlapping);
-                if (goal < 0) {
-                    goal = 0.0;
-                }
-                Timeout.add(scroll_interval, () => {
-                    if (scroll.vadjustment.value > goal) {
-                        scroll.vadjustment.value -= scroll_amount;
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-            }
-        }
-
-        public async void open_async(File file) throws Error {
-            // TODO
-            debug("open %s", file.get_basename());
-            yield init_async(file_list.get_index_of(file.get_basename()));
-        }
-
-        public async void reopen_async() throws Error {
-            // TODO
-            yield init_async(get_location());
-        }
-
-        public async void open_at_async(int index) throws Error {
-            // TODO
-            yield init_async(index);
-        }
-
-        public void update_title() {
-            // TODO
-            return;
-        }
-
-        public void update() {
-            // TODO
-            return;
-        }
-
-        public void close() {
-            // TODO
-            return;
         }
 
         private int get_location() {

@@ -1,5 +1,5 @@
 project(
-    'com.github.aharotias2.tatap',
+    'com.github.aharotias2.parapara',
     'vala', 'c',
     version: '1.0.0'
 )
@@ -19,7 +19,7 @@ add_project_arguments(
 
 asresources = gnome.compile_resources(
     'as-resources',
-    join_paths('data', 'tatap.gresource.xml'),
+    join_paths('data', 'parapara.gresource.xml'),
     source_dir: 'data',
     c_name: 'as'
 )
@@ -61,7 +61,7 @@ executable(
 )
 
 i18n.merge_file(
-    input: join_paths('data', 'tatap.desktop.in'),
+    input: join_paths('data', 'parapara.desktop.in'),
     output: meson.project_name() + '.desktop',
     po_dir: join_paths(meson.source_root(), 'po', 'extra'),
     type: 'desktop',

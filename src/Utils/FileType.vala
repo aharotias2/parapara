@@ -18,7 +18,7 @@
 
 using Gtk, Gdk;
 
-namespace Tatap {
+namespace ParaPara {
     public enum FileType {
         JPEG, PNG, BMP, ICO, GIF;
 

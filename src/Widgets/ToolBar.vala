@@ -18,9 +18,9 @@
 
 using Gtk;
 
-namespace Tatap {
+namespace ParaPara {
     public class ToolBar : Bin {
-        public Tatap.Window main_window { get; construct; }
+        public ParaPara.Window main_window { get; construct; }
         public SortOrder sort_order { get; protected set; }
         public bool sticked { get; protected set; }
         public signal void sort_order_changed(SortOrder sort_order);
@@ -135,7 +135,7 @@ namespace Tatap {
             }
         }
 
-        public ToolBar (Tatap.Window main_window) {
+        public ToolBar (ParaPara.Window main_window) {
             Object (
                 main_window: main_window,
                 sort_order: SortOrder.ASC,

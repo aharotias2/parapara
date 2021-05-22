@@ -16,7 +16,7 @@
  *  Tanaka Takayuki <aharotias2@gmail.com>
  */
 
-namespace Tatap {
+namespace ParaPara {
     public class DualFileAccessor : Object {
         public unowned FileList file_list { get; construct; }
 

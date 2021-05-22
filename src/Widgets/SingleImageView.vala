@@ -18,9 +18,9 @@
 
 using Gdk, Gtk;
 
-namespace Tatap {
+namespace ParaPara {
     public class SingleImageView : ImageView, EventBox {
-        public Tatap.Window main_window { get; construct; }
+        public ParaPara.Window main_window { get; construct; }
         public Image image { get; private set; }
         public ScrolledWindow scrolled { get; private set; }
         public ViewMode view_mode { get; construct; }
@@ -555,7 +555,7 @@ namespace Tatap {
                 } else {
                     try {
                         debug("The file name for save: %s", filename);
-                        image.original_pixbuf.save(filename, Tatap.FileType.of(filename));
+                        image.original_pixbuf.save(filename, ParaPara.FileType.of(filename));
                         main_window.show_message_async.begin(_("The file was saved"));
                     } catch (Error e) {
                         stderr.printf("Error: %s\n", e.message);

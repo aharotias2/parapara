@@ -19,16 +19,16 @@
 using Gtk, Gdk;
 
 /**
- * TatapWindow is a customized gtk window class.
+ * ParaParaWindow is a customized gtk window class.
  * This is the main window of this program.
  */
-namespace Tatap {
+namespace ParaPara {
     public class Window : Gtk.Window {
         private const IconSize ICON_SIZE = IconSize.SMALL_TOOLBAR;
 
         public bool repeat_updating_file_list { get; construct set; }
-        public Tatap.FileList? file_list { get; private set; default = null; }
-        public Tatap.ToolBar toolbar { get; private set; }
+        public ParaPara.FileList? file_list { get; private set; default = null; }
+        public ParaPara.ToolBar toolbar { get; private set; }
         public ToggleButton toolbar_toggle_button { get; private set; }
         public Revealer toolbar_revealer_above { get; private set; }
         public Revealer toolbar_revealer_below { get; private set; }
@@ -234,7 +234,7 @@ namespace Tatap {
                                 reveal_child = false };
                         {
                             /* contain buttons that can be opened from the menu */
-                            toolbar = new Tatap.ToolBar(this);
+                            toolbar = new ParaPara.ToolBar(this);
                             {
                                 toolbar.sort_order_changed.connect(() => {
                                     image_next_button.sensitive = image_view.is_next_button_sensitive();
@@ -486,7 +486,7 @@ namespace Tatap {
 
         private void setup_css() {
             var css_provider = new CssProvider();
-            css_provider.load_from_resource ("/com/github/aharotias2/tatap/Application.css");
+            css_provider.load_from_resource ("/com/github/aharotias2/parapara/Application.css");
             Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (),
                     css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
         }
@@ -517,7 +517,7 @@ namespace Tatap {
                     if (file_list != null) {
                         file_list.close();
                     }
-                    file_list = new Tatap.FileList.with_dir_path(file.get_parent().get_path());
+                    file_list = new ParaPara.FileList.with_dir_path(file.get_parent().get_path());
                     file_list.directory_not_found.connect(() => {
                         show_error_dialog(_("The directory does not found. Exiting."));
                         stack.visible_child_name = "welcome";

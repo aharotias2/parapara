@@ -16,7 +16,7 @@
  *  Tanaka Takayuki <aharotias2@gmail.com>
  */
 
-namespace Tatap {
+namespace ParaPara {
     public class Application : Gtk.Application {
         public static bool config_repeat_updating_file_list = false;
         public static bool version = false;
@@ -36,7 +36,7 @@ namespace Tatap {
         */
         public Application () {
             Object (
-                application_id: "com.github.aharotias2.tatap",
+                application_id: "com.github.aharotias2.parapara",
                 flags: ApplicationFlags.HANDLES_OPEN
             );
         }
@@ -51,13 +51,13 @@ namespace Tatap {
             }
 
             foreach (var file in files) {
-                Tatap.Window window = create_new_window();
+                ParaPara.Window window = create_new_window();
                 window.open_file_async.begin(file);
             }
         }
 
-        private Tatap.Window create_new_window() {
-            var window = new Tatap.Window() {
+        private ParaPara.Window create_new_window() {
+            var window = new ParaPara.Window() {
                 repeat_updating_file_list = config_repeat_updating_file_list
             };
             window.set_application(this);
@@ -68,7 +68,7 @@ namespace Tatap {
         }
 
         public static int main(string[] args) {
-            var app = new Tatap.Application();
+            var app = new ParaPara.Application();
 
             if (args.length > 1) {
                 try {

@@ -17,9 +17,9 @@
  */
 
 /**
- * TatapFileList is a custome Gee.LinkedList<File>.
+ * ParaParaFileList is a custome Gee.LinkedList<File>.
  */
-namespace Tatap {
+namespace ParaPara {
     public class FileListIter {
         private FileList file_list;
         private int index;

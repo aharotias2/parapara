@@ -16,10 +16,10 @@
  *  Tanaka Takayuki <aharotias2@gmail.com>
  */
 
-extern int tatap_filename_compare(string str_a, string str_b);
+extern int parapara_filename_compare(string str_a, string str_b);
 
-namespace Tatap.StringUtils {
+namespace ParaPara.StringUtils {
     public int compare_filenames(string str_a, string str_b) {
-        return tatap_filename_compare(str_a, str_b);
+        return parapara_filename_compare(str_a, str_b);
     }
 }

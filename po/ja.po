@@ -1,12 +1,12 @@
-# Japanese translations for com.github.aharotias2.tatap package.
-# Copyright (C) 2020-2021 THE com.github.aharotias2.tatap'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the com.github.aharotias2.tatap package.
+# Japanese translations for com.github.aharotias2.parapara package.
+# Copyright (C) 2020-2021 THE com.github.aharotias2.parapara'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the com.github.aharotias2.parapara package.
 # Tanaka Takayuki <aharotias2@gmail.com>, 2019-2021.
 # Ryo Nakano <ryonakaknock3@gmail.com>, 2020-2021.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: com.github.aharotias2.tatap\n"
+"Project-Id-Version: com.github.aharotias2.parapara\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-21 01:00+0900\n"
 "PO-Revision-Date: 2021-01-14 11:54+0900\n"

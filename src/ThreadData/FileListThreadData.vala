@@ -16,7 +16,7 @@
  *  Tanaka Takayuki <aharotias2@gmail.com>
  */
 
-namespace Tatap {
+namespace ParaPara {
     public class FileListThreadData : Object {
         public signal bool file_found(string file_path);
         public signal bool updated(Gee.List<string>? file_list);

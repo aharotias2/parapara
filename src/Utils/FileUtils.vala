@@ -16,7 +16,7 @@
  *  Tanaka Takayuki <aharotias2@gmail.com>
  */
 
-namespace Tatap {
+namespace ParaPara {
     namespace FileUtils {
         public string? get_mime_type_from_file(File? file) throws Error {
             FileInfo info = file.query_info("standard::*", 0);

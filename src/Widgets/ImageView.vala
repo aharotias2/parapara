@@ -18,7 +18,7 @@
 
 using Gdk, Gtk;
 
-namespace Tatap {
+namespace ParaPara {
     /**
      * Common interface of SingleImageView and DualImageView
      */
@@ -27,7 +27,7 @@ namespace Tatap {
          * properties
          */
         public abstract ViewMode view_mode { get; construct; }
-        public abstract Tatap.Window main_window { get; construct; }
+        public abstract ParaPara.Window main_window { get; construct; }
         public abstract FileList file_list { get; set; }
         public abstract bool controllable { get; set; }
         public abstract string dir_path { owned get; }

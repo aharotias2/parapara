@@ -19,11 +19,11 @@
 using Gtk, Gdk;
 
 /**
- * TatapImage is a custome image widget
+ * ParaParaImage is a custome image widget
  * that has several image handling function
  * like zoom in/out, fit it to a parent widget, rotate, and flip.
  */
-namespace Tatap {
+namespace ParaPara {
     public class Image : Gtk.Image {
         public Container container { get; set; }
         public File? fileref { get; set; }

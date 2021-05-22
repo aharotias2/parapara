@@ -16,7 +16,7 @@
  *  Tanaka Takayuki <aharotias2@gmail.com>
  */
 
-namespace Tatap {
+namespace ParaPara {
     public class ResizeDialog : Gtk.Dialog {
         private const string FLOAT_FORMAT = "%0.2f";
         private const int MARGIN = 5;

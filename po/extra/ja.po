@@ -18,38 +18,38 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 2.3\n"
 
-#: data/tatap.appdata.xml.in:7 data/tatap.desktop.in:3
-msgid "Tatap"
-msgstr "Tatap"
+#: data/parapara.appdata.xml.in:7 data/parapara.desktop.in:3
+msgid "ParaPara"
+msgstr "ParaPara"
 
-#: data/tatap.appdata.xml.in:8
+#: data/parapara.appdata.xml.in:8
 msgid "An image viewer without library"
 msgstr "ライブラリー機能のない画像ビューアー"
 
-#: data/tatap.appdata.xml.in:10
+#: data/parapara.appdata.xml.in:10
 msgid "An image viewer that supports jpg, png, bmp, and ico files."
 msgstr "jpg、png、bmp、、ico ファイルに対応する画像ビューアーです。"
 
-#: data/tatap.appdata.xml.in:53
+#: data/parapara.appdata.xml.in:53
 msgid "Tanaka Takayuki"
 msgstr "Tanaka Takayuki"
 
-#: data/tatap.desktop.in:4
+#: data/parapara.desktop.in:4
 msgid "Image Viewer"
 msgstr "画像ビューアー"
 
-#: data/tatap.desktop.in:5
+#: data/parapara.desktop.in:5
 msgid "View image files"
 msgstr "画像ファイルを表示します"
 
-#: data/tatap.desktop.in:8
+#: data/parapara.desktop.in:8
 #, fuzzy
 msgid "image-viewer"
 msgstr "画像ビューアー"
 
-#: data/tatap.desktop.in:13
+#: data/parapara.desktop.in:13
 msgid "Picture;Image;Viewer;"
 msgstr "Picture;Image;Viewer;ピクチャー;画像;イメージ;ビューアー;ビューワー;"
 
-#~ msgid "com.github.aharotias2.tatap"
-#~ msgstr "com.github.aharotias2.tatap"
+#~ msgid "com.github.aharotias2.parapara"
+#~ msgstr "com.github.aharotias2.parapara"

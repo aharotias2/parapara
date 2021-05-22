@@ -19,10 +19,10 @@
 using Gdk;
 
 /**
- * PixbufUtils is used by Tatap.Image.
+ * PixbufUtils is used by ParaPara.Image.
  * This contains image scale function.
  */
-namespace Tatap {
+namespace ParaPara {
     namespace PixbufUtils {
         /**
          * Scales the image to fit in a square of the specified size.

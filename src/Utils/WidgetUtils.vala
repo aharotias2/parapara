@@ -1,5 +1,5 @@
 [Compact]
-namespace Tatap {
+namespace ParaPara {
     public class WidgetUtils {
         public static void calc_event_position_percent(Gdk.Event event, Gtk.Widget widget, out int x_percent, out int y_percent) {
             double x, y;

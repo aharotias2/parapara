@@ -15,17 +15,17 @@ struct StrPart {
     gchar *data;
 };
 
-gchar* tatap_string_get_next_part(gchar* str, struct StrPart* part);
-int tatap_string_compare_nondigit(gchar *str_a, gchar *str_b);
-int tatap_string_last_index_of_char(gchar *str, gchar needle);
+gchar* parapara_string_get_next_part(gchar* str, struct StrPart* part);
+int parapara_string_compare_nondigit(gchar *str_a, gchar *str_b);
+int parapara_string_last_index_of_char(gchar *str, gchar needle);
 
 /**
  * The string (filename) comparison function.
  * This function compares two strings so that the number part of the string is correct in the order of the numbers.
  */
-int tatap_filename_compare(gchar* str_a, gchar* str_b) {
-    int last_dot_a = tatap_string_last_index_of_char(str_a, '.');
-    int last_dot_b = tatap_string_last_index_of_char(str_b, '.');
+int parapara_filename_compare(gchar* str_a, gchar* str_b) {
+    int last_dot_a = parapara_string_last_index_of_char(str_a, '.');
+    int last_dot_b = parapara_string_last_index_of_char(str_b, '.');
     gchar *name_a = g_strndup(str_a, last_dot_a);
     gchar *name_b = g_strndup(str_b, last_dot_b);
     struct StrPart part_a = {0};
@@ -33,8 +33,8 @@ int tatap_filename_compare(gchar* str_a, gchar* str_b) {
     int result = 0;
     gchar *next_a = name_a, *next_b = name_b;
     do {
-        next_a = tatap_string_get_next_part(next_a, &part_a);
-        next_b = tatap_string_get_next_part(next_b, &part_b);
+        next_a = parapara_string_get_next_part(next_a, &part_a);
+        next_b = parapara_string_get_next_part(next_b, &part_b);
         if (part_a.type == PART_TYPE_EMPTY) {
             if (part_b.type == PART_TYPE_EMPTY) {
                 result = 0;
@@ -72,7 +72,7 @@ int tatap_filename_compare(gchar* str_a, gchar* str_b) {
     return result;
 }
 
-gchar* tatap_string_get_next_part(gchar* str, struct StrPart* part) {
+gchar* parapara_string_get_next_part(gchar* str, struct StrPart* part) {
     if (str[0] == '\0') {
         part->type = PART_TYPE_EMPTY;
         part->length = 0;
@@ -90,7 +90,7 @@ gchar* tatap_string_get_next_part(gchar* str, struct StrPart* part) {
     return str + i;
 }
 
-int tatap_string_last_index_of_char(gchar *str, gchar needle) {
+int parapara_string_last_index_of_char(gchar *str, gchar needle) {
     int len = strlen(str);
     int offset = 0;
     while (str[offset] == '.') {

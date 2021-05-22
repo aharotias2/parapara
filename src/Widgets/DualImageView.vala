@@ -18,10 +18,10 @@
 
 using Gdk, Gtk;
 
-namespace Tatap {
+namespace ParaPara {
     public class DualImageView : ImageView, EventBox {
         public ViewMode view_mode { get; construct; }
-        public Tatap.Window main_window { get; construct; }
+        public ParaPara.Window main_window { get; construct; }
 
         public bool controllable { get; set; default = true; }
         public FileList file_list {

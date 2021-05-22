@@ -1,10 +1,10 @@
-tatap
+parapara
 ================================================================================
 
 Description
 --------------------------------------------------------------------------------
 
-_Tatap_ is an image viewer created with lightweight and high-speed operation in mind.
+_ParaPara_ is an image viewer created with lightweight and high-speed operation in mind.
 
 It is supposed to be linked to the extension and opened by double-clicking from your
 favorite file manager.
@@ -16,11 +16,11 @@ You can switch between right-to-left and left-to-right page turning.
 Screenshot
 --------------------------------------------------------------------------------
 
-![Screenshot 1](tatap-screenshot-01.jpg "寄り添う3匹のうさぎのフリー素材 https://www.pakutaso.com/201701170163-16.html")
+![Screenshot 1](parapara-screenshot-01.jpg "寄り添う3匹のうさぎのフリー素材 https://www.pakutaso.com/201701170163-16.html")
 
 (Below) Spread display is also possible.
 
-![Screenshot 2](tatap-screenshot-02.jpg "まんまる白うさぎのフリー素材 https://www.pakutaso.com/20170138016post-9992.html, 近寄るウサギのフリー素材 https://www.pakutaso.com/20130728189post-3005.html")
+![Screenshot 2](parapara-screenshot-02.jpg "まんまる白うさぎのフリー素材 https://www.pakutaso.com/20170138016post-9992.html, 近寄るウサギのフリー素材 https://www.pakutaso.com/20130728189post-3005.html")
 
 Key Combinations
 --------------------------------------------------------------------------------
@@ -104,7 +104,7 @@ Change to the build directory and run `ninja` to build
     cd build
     ninja
 
-To install, use `ninja install`, then execute with `com.github.aharotias2.tatap`
+To install, use `ninja install`, then execute with `com.github.aharotias2.parapara`
 
     ninja install
-    com.github.aharotias2.tatap
+    com.github.aharotias2.parapara

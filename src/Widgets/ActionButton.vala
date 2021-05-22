@@ -16,7 +16,7 @@
  *  Tanaka Takayuki <aharotias2@gmail.com>
  */
 
-namespace Tatap {
+namespace ParaPara {
     public class ActionButton : Gtk.Button {
         private string _icon_name;
         public string icon_name {
