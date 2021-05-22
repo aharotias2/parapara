@@ -76,6 +76,10 @@ namespace ParaPara {
         private ScalingMode scaling_mode = FIT_WIDTH;
         private uint scale_percentage = 0;
         private int prev_location = 0;
+        private bool button_pressed = false;
+        private double x;
+        private double y;
+        private int up_to_index;
 
         public SlideImageView(ParaPara.Window window) {
             Object(
@@ -105,7 +109,7 @@ namespace ParaPara {
             add(scroll);
             size_allocate.connect((allocation) => {
                 debug("slide image view size allocate to (%d, %d) current size = (%d, %d)", allocation.width, allocation.height, get_allocated_width(), get_allocated_height());
-                if ((slide_box.orientation == VERTICAL && saved_width != allocation.width))
+                if ((slide_box.orientation == VERTICAL && saved_width != allocation.width)
                         || (slide_box.orientation == HORIZONTAL && saved_height != allocation.height)) {
                     resizing_counter++;
                     switch (scaling_mode) {
@@ -242,15 +246,30 @@ namespace ParaPara {
 
         public async void open_async(File file) throws Error {
             debug("open %s", file.get_basename());
-            yield init_async(file_list.get_index_of(file.get_basename()));
+            int index = file_list.get_index_of(file.get_basename());
+            yield init_async(index);
+            image_opened(file.get_basename(), index);
         }
 
         public async void reopen_async() throws Error {
-            yield init_async(get_location());
+            yield open_at_async(get_location());
         }
 
         public async void open_at_async(int index) throws Error {
-            yield init_async(index);
+            if (widget_list.size < index) {
+                up_to_index = index;
+                Idle.add((owned) make_view_callback);
+                while (widget_list.size < index) {
+                    Idle.add(open_at_async.callback);
+                    yield;
+                }
+            }
+            if (slide_box.orientation == VERTICAL) {
+                scroll.vadjustment.value = index > 0 ? length_list[index - 1] : 0;
+            } else {
+                scroll.hadjustment.value = index > 0 ? length_list[index - 1] : 0;
+            }
+            image_opened(file_list.get_filename_at(index), index);
         }
 
         public void update_title() {
@@ -275,6 +294,81 @@ namespace ParaPara {
                     image.quit_animation();
                 }
             }
+        }
+
+        public override bool button_press_event(EventButton ev) {
+            if (!controllable) {
+                return false;
+            }
+
+            if (ev.type == 2BUTTON_PRESS) {
+                main_window.fullscreen_mode = ! main_window.fullscreen_mode;
+                return true;
+            } else {
+                button_pressed = true;
+                x = ev.x_root;
+                y = ev.y_root;
+                return false;
+            }
+        }
+
+        public override bool button_release_event(EventButton ev) {
+            if (!controllable) {
+                return false;
+            }
+
+            button_pressed = false;
+            return false;
+        }
+
+        public override bool motion_notify_event(EventMotion ev) {
+            if (!controllable) {
+                return false;
+            }
+
+            if (button_pressed) {
+                double new_x = ev.x_root;
+                double new_y = ev.y_root;
+                int x_move = (int) (new_x - x);
+                int y_move = (int) (new_y - y);
+                scroll.hadjustment.value -= x_move;
+                scroll.vadjustment.value -= y_move;
+                x = new_x;
+                y = new_y;
+            }
+
+            return false;
+        }
+
+        public override bool key_press_event(EventKey ev) {
+            if (!controllable) {
+                return false;
+            }
+            switch (ev.keyval) {
+              case Gdk.Key.Page_Down:
+                go_forward_async.begin();
+                break;
+              case Gdk.Key.Page_Up:
+                go_backward_async.begin();
+                break;
+              case Gdk.Key.Down:
+                if (slide_box.orientation == VERTICAL) {
+                    scroll.vadjustment.value += scroll_amount;
+                } else {
+                    scroll.hadjustment.value += scroll_amount;
+                }
+                break;
+              case Gdk.Key.Up:
+                if (slide_box.orientation == VERTICAL) {
+                    scroll.vadjustment.value -= scroll_amount;
+                } else {
+                    scroll.hadjustment.value -= scroll_amount;
+                }
+                break;
+              default:
+                break;
+            }
+            return false;
         }
 
         private async void fit_images_by_width() {
@@ -339,10 +433,11 @@ namespace ParaPara {
             yield;
             widget_list = new Gee.ArrayList<ParaPara.Image>();
             remove(scroll);
-            scroll = new ScrolledWindow(null, null);
+            scroll = new ScrolledWindow(null, null) {
+                hscrollbar_policy = EXTERNAL,
+                vscrollbar_policy = EXTERNAL
+            };
             scroll.get_style_context().add_class("image-view");
-            scroll.vscrollbar_policy = ALWAYS;
-            scroll.hscrollbar_policy = ALWAYS;
             scroll.scroll_event.connect((event) => {
                 debug("slide image view scroll to %f", scroll.vadjustment.value);
                 if (is_make_view_continue && get_scroll_position() > 0.98) {
@@ -357,6 +452,12 @@ namespace ParaPara {
                     int location = get_location();
                     if (prev_location != location) {
                         update_title();
+                        try {
+                            string filename = file_list.get_filename_at(location);
+                            image_opened(filename, location);
+                        } catch (AppError e) {
+                            main_window.show_error_dialog(e.message);
+                        }
                     }
                     prev_location = location;
                     if (is_make_view_continue && get_scroll_position() > 0.98) {
@@ -370,6 +471,12 @@ namespace ParaPara {
                     int location = get_location();
                     if (prev_location != location) {
                         update_title();
+                        try {
+                            string filename = file_list.get_filename_at(location);
+                            image_opened(filename, location);
+                        } catch (AppError e) {
+                            main_window.show_error_dialog(e.message);
+                        }
                     }
                     prev_location = location;
                     if (is_make_view_continue && get_scroll_position() > 0.98) {
@@ -392,7 +499,10 @@ namespace ParaPara {
         }
 
         private async void make_view_async(int index = 0) {
-            is_make_view_continue = true;
+            up_to_index = index;
+            change_cursor(WATCH);
+            Idle.add(make_view_async.callback);
+            yield;
             for (int i = 0; i < file_list.size; i++) {
                 try {
                     string filename = file_list.get_filename_at(i);
@@ -421,19 +531,23 @@ namespace ParaPara {
                     yield;
                     double h = (double) image_widget.get_allocated_height();
                     length_list[i] = (i > 0 ? length_list[i - 1] : 0) + h + page_spacing;
-                    if (i == index) {
-                        scroll.vadjustment.value = length_list[i];
+                    if (i == up_to_index) {
+                        if (i > 0) {
+                            scroll.vadjustment.value = length_list[i - 1];
+                        }
+                        change_cursor(LEFT_PTR);
                         Idle.add(make_view_async.callback);
                         yield;
-                    } else if (i > index && get_scroll_position() < 0.9) {
+                    } else if (i > up_to_index && get_scroll_position() < 0.9) {
+                        is_make_view_continue = true;
                         make_view_callback = make_view_async.callback;
                         yield;
+                        is_make_view_continue = false;
                     }
                 } catch (Error e) {
                     main_window.show_error_dialog(e.message);
                 }
             }
-            is_make_view_continue = false;
         }
 
         private double get_scroll_position() {
@@ -465,7 +579,7 @@ namespace ParaPara {
         }
 
         private void change_cursor(CursorType cursor_type) {
-            get_window().cursor = new Gdk.Cursor.for_display(Gdk.Screen.get_default().get_display(), cursor_type);
+            main_window.get_window().cursor = new Gdk.Cursor.for_display(Gdk.Screen.get_default().get_display(), cursor_type);
         }
     }
 }

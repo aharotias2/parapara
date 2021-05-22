@@ -77,7 +77,7 @@ namespace ParaPara {
 
         public async void make_list_async(bool loop = true) throws AppError {
             Gee.List<string>? inner_file_list = null;
-            ParaPara.FileListThreadData thread_data = new Tatap.FileListThreadData(dir_path);
+            ParaPara.FileListThreadData thread_data = new ParaPara.FileListThreadData(dir_path);
             thread_data.file_found.connect((file_name) => {
                 string path = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, file_name);
                 try {

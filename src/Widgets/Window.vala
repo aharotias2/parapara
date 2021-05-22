@@ -214,9 +214,11 @@ namespace ParaPara {
                                 headerbar.title = title;
                             });
                             image_view.image_opened.connect((name, index) => {
-                                progress_scale.set_value((double) index);
-                                progress_label.label = _("Location: %d / %d (%d%%)").printf(
-                                        index + 1, file_list.size, (int) (image_view.position * 100));
+                                if (progress_scale.get_value() != (double) index) {
+                                    progress_scale.set_value((double) index);
+                                    progress_label.label = _("Location: %d / %d (%d%%)").printf(
+                                            index + 1, file_list.size, (int) (image_view.position * 100));
+                                }
                             });
 
                             image_view.controllable = true;
@@ -614,8 +616,10 @@ namespace ParaPara {
                     headerbar.title = title;
                 });
                 image_view.image_opened.connect((name, index) => {
-                    progress_scale.set_value((double) index);
-                    progress_label.label = _("Location: %d / %d (%d%%)").printf(index + 1, file_list.size, (int) (image_view.position * 100));
+                    if (progress_scale.get_value() != (double) index) {
+                        progress_scale.set_value((double) index);
+                        progress_label.label = _("Location: %d / %d (%d%%)").printf(index + 1, file_list.size, (int) (image_view.position * 100));
+                    }
                 });
                 image_view.controllable = true;
                 image_view.events = ALL_EVENTS_MASK;
