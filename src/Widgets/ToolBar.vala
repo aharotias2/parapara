@@ -177,7 +177,7 @@ namespace Tatap {
                                 single_image_view.save_file_async.begin(true);
                             });
                         }
-                        
+
                         save_button_box.pack_start(save_button);
                         save_button_box.pack_start(save_as_button);
                     }
@@ -303,7 +303,7 @@ namespace Tatap {
                                 }
                             });
                         }
-                        
+
                         sort_desc_button = new ToggleButton() {
                             tooltip_text = _("Sort Desc"),
                             image = new Gtk.Image.from_icon_name("view-sort-descending-symbolic", IconSize.SMALL_TOOLBAR),
@@ -321,11 +321,11 @@ namespace Tatap {
                                 }
                             });
                         }
-                        
+
                         sort_order_button_box.pack_start(sort_asc_button);
                         sort_order_button_box.pack_start(sort_desc_button);
                     }
-                    
+
                     var animation_actions_button_box = new ButtonBox(Orientation.HORIZONTAL) {
                         margin = 3,
                         layout_style = ButtonBoxStyle.EXPAND
@@ -341,7 +341,7 @@ namespace Tatap {
                                 }
                             });
                         }
-                        
+
                         animation_play_pause_button = new ActionButton("media-playback-start-symbolic", _("Play/Pause animation")) {
                             sensitive = false
                         };
@@ -381,7 +381,7 @@ namespace Tatap {
                         animation_actions_button_box.pack_start(animation_play_pause_button);
                         animation_actions_button_box.pack_start(animation_forward_button);
                     }
-                    
+
                     single_view_mode_box.pack_start(save_button_box, false, false);
                     single_view_mode_box.pack_start(sort_order_button_box, false, false);
                     single_view_mode_box.pack_start(image_actions_button_box, false, false);
@@ -419,7 +419,7 @@ namespace Tatap {
                                 }
                             });
                         }
-                            
+
                         r1button = new ActionButton("move-one-page-right-symbolic", _("Slide 1 page to Right"), null);
                         {
                             r1button.clicked.connect(() => {
@@ -430,7 +430,7 @@ namespace Tatap {
                                 }
                             });
                         }
-                        
+
                         r2button = new ActionButton("move-two-page-right-symbolic", _("Slide 2 page to Right"), null);
                         {
                             r2button.clicked.connect(() => {
@@ -441,7 +441,7 @@ namespace Tatap {
                                 }
                             });
                         }
-                        
+
                         dual_paging_button_box.pack_start(l2button);
                         dual_paging_button_box.pack_start(l1button);
                         dual_paging_button_box.pack_start(r1button);
@@ -498,11 +498,47 @@ namespace Tatap {
                     dual_view_mode_box.pack_start(dual_paging_button_box, false, false);
                     dual_view_mode_box.pack_start(dual_sort_button_box, false, false);
                 }
-                
+
                 slide_view_mode_box = new Box(Orientation.HORIZONTAL, 0) {
                     vexpand = false,
                     valign = Align.START
                 };
+                {
+                    var size_combo = new ComboBoxText() {
+                        margin = 3
+                    };
+                    {
+                        size_combo.append("fit-width", _("Fit Width"));
+                        size_combo.append("fit-page", _("Fit Page"));
+                        size_combo.append("separtator-1", "separator");
+                        size_combo.append("scale-25", _("25%"));
+                        size_combo.append("scale-50", _("50%"));
+                        size_combo.append("scale-70", _("70%"));
+                        size_combo.append("scale-80", _("80%"));
+                        size_combo.append("scale-100", _("100%"));
+                        size_combo.append("scale-200", _("200%"));
+                        size_combo.append("scale-400", _("400%"));
+                        size_combo.active_id = "fit-width";
+                        size_combo.set_row_separator_func((model, iter) => {
+                            Value id;
+                            model.get_value(iter, 0, out id);
+                            return id.get_string().has_prefix("separator");
+                        });
+                        size_combo.changed.connect(() => {
+                            string id = size_combo.active_id;
+                            if (id == "fit-width") {
+                                slide_image_view.fit_width();
+                            } else if (id == "fit-page") {
+                                slide_image_view.fit_page();
+                            } else if (id.has_prefix("scale-")) {
+                                uint scale_percentage = uint.parse(id.substring(6));
+                                slide_image_view.scale_by_percentage(scale_percentage);
+                            }
+                        });
+                    }
+
+                    slide_view_mode_box.pack_start(size_combo);
+                }
 
                 var fullscreen_button_box = new ButtonBox(Orientation.HORIZONTAL) {
                     margin = 3,
@@ -564,7 +600,7 @@ namespace Tatap {
                     mode_switch_button_box.pack_start(slide_view_button);
                     mode_switch_button_box.pack_start(dual_view_button);
                 }
-                
+
                 var stick_button_box = new ButtonBox(Orientation.HORIZONTAL) {
                     margin = 3,
                     layout_style = ButtonBoxStyle.EXPAND
