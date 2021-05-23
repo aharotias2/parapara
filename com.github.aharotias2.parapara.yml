@@ -1,0 +1,17 @@
+app-id: com.github.aharotias2.parapara
+runtime: io.elementary.Platform
+runtime-version: 'daily'
+sdk: io.elementary.Sdk
+command: com.github.aharotias2.parapara
+finish-args:
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --filesystem=home
+  # needed for perfers-color-scheme
+  - --system-talk-name=org.freedesktop.Accounts
+modules:
+  - name: parapara
+    buildsystem: meson
+    sources:
+      - type: dir
+        path: .
