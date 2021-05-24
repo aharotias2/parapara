@@ -23,6 +23,9 @@ using Gdk, Gtk;
 
 namespace ParaPara {
     public class SlideImageView : ImageView, EventBox {
+        private delegate int GetLengthFunc(Widget widget);
+        private delegate void ScrollEventFunc();
+
         private enum ScalingMode {
             FIT_WIDTH, FIT_PAGE, BY_PERCENTAGE
         }
@@ -70,17 +73,13 @@ namespace ParaPara {
             set {
                 if (slide_box.orientation != value) {
                     slide_box.orientation = value;
-                    if (slide_box.orientation == VERTICAL) {
-                        for (int i = 0; i < widget_list.size; i++) {
-                            length_list[i] = (double) (widget_list[i].get_allocated_height() + page_spacing);
-                        }
-                        primary_adjustment = scroll.vadjustment;
-                    } else {
-                        for (int i = 0; i < widget_list.size; i++) {
-                            length_list[i] = (double) (widget_list[i].get_allocated_width() + page_spacing);
-                        }
-                        primary_adjustment = scroll.hadjustment;
-                    }
+                    set_primary_functions();
+                    Allocation allocation;
+                    int baseline;
+                    scroll.get_allocated_size(out allocation, out baseline);
+                    saved_width = 0;
+                    saved_height = 0;
+                    scroll.size_allocate(allocation);
                 }
             }
         }
@@ -102,6 +101,10 @@ namespace ParaPara {
         private double y;
         private int up_to_index;
         private Adjustment primary_adjustment;
+        private GetLengthFunc get_widget_length;
+        private ScrollEventFunc on_vadjustment_value_changed;
+        private ScrollEventFunc on_hadjustment_value_changed;
+        private int64 saved_location;
 
         public SlideImageView(ParaPara.Window window) {
             Object(
@@ -155,20 +158,32 @@ namespace ParaPara {
         public void fit_width() {
             scaling_mode = FIT_WIDTH;
             resizing_counter++;
-            fit_images_by_width.begin();
+            fit_images_by_width.begin((obj, res) => {
+                if (fit_images_by_width.end(res)) {
+                    primary_adjustment.value = length_list[saved_location];
+                }
+            });
         }
 
         public void fit_page() {
             scaling_mode = FIT_PAGE;
             resizing_counter++;
-            fit_images_by_height.begin();
+            fit_images_by_height.begin((obj, res) => {
+                if (fit_images_by_height.end(res)) {
+                    primary_adjustment.value = length_list[saved_location];
+                }
+            });
         }
 
         public void scale_by_percentage(uint scale_percentage) {
             scaling_mode = BY_PERCENTAGE;
             this.scale_percentage = scale_percentage;
             resizing_counter++;
-            scale_images_by_percentage.begin(scale_percentage);
+            scale_images_by_percentage.begin(scale_percentage, (obj, res) => {
+                if (scale_images_by_percentage.end(res)) {
+                    primary_adjustment.value = length_list[saved_location];
+                }
+            });
         }
 
         public File get_file() throws Error {
@@ -359,66 +374,60 @@ namespace ParaPara {
             return false;
         }
 
-        private async void fit_images_by_width() {
+        private async bool fit_images_by_width() {
             if (widget_list == null || widget_list.size == 0) {
-                return;
+                return false;
             }
             uint64 tmp = resizing_counter;
-            for (int i = 0; i < widget_list.size && tmp == resizing_counter; i++) {
+            int i = 0;
+            for (i = 0; i < widget_list.size && tmp == resizing_counter; i++) {
                 int new_width = scroll.get_allocated_width() - page_spacing * 2;
                 widget_list[i].scale_fit_in_width(new_width);
-                if (orientation == VERTICAL) {
-                    int new_height = widget_list[i].get_allocated_height();
-                    length_list[i] = (i > 0 ? length_list[i - 1] : 0) + (double) (new_height + page_spacing);
-                } else {
-                    length_list[i] = (i > 0 ? length_list[i - 1] : 0) + (double) (new_width + page_spacing);
-                }
+                Idle.add(fit_images_by_width.callback);
+                yield;
+                length_list[i] = (i > 0 ? length_list[i - 1] : 0) + (double) (get_widget_length(widget_list[i]) + page_spacing);
                 update_title();
                 Idle.add(fit_images_by_width.callback);
                 yield;
             }
+            return i >= widget_list.size;
         }
 
-        private async void fit_images_by_height() {
+        private async bool fit_images_by_height() {
             if (widget_list == null || widget_list.size == 0) {
-                return;
+                return false;
             }
             uint64 tmp = resizing_counter;
-            for (int i = 0; i < widget_list.size && tmp == resizing_counter; i++) {
+            int i = 0;
+            for (i = 0; i < widget_list.size && tmp == resizing_counter; i++) {
                 int new_height = scroll.get_allocated_height() - page_spacing * 2;
                 widget_list[i].scale_fit_in_height(new_height);
-                if (orientation == VERTICAL) {
-                    length_list[i] = (i > 0 ? length_list[i - 1] : 0) + (double) (new_height + page_spacing);
-                } else {
-                    int new_width = widget_list[i].get_allocated_width();
-                    length_list[i] = (i > 0 ? length_list[i - 1] : 0) + (double) (new_width + page_spacing);
-                }
+                Idle.add(fit_images_by_height.callback);
+                yield;
+                length_list[i] = (i > 0 ? length_list[i - 1] : 0) + (double) (get_widget_length(widget_list[i]) + page_spacing);
                 update_title();
                 Idle.add(fit_images_by_height.callback);
                 yield;
             }
+            return i >= widget_list.size;
         }
 
-        private async void scale_images_by_percentage(uint percentage) {
+        private async bool scale_images_by_percentage(uint percentage) {
             if (widget_list == null || widget_list.size == 0) {
-                return;
+                return false;
             }
             uint64 tmp = resizing_counter;
-            for (int i = 0; i < widget_list.size && tmp == resizing_counter; i++) {
+            int i = 0;
+            for (i = 0; i < widget_list.size && tmp == resizing_counter; i++) {
                 widget_list[i].set_scale_percent(percentage);
                 Idle.add(scale_images_by_percentage.callback);
                 yield;
-                if (slide_box.orientation == VERTICAL) {
-                    double new_height = widget_list[i].get_allocated_height();
-                    length_list[i] = (i > 0 ? length_list[i - 1] : 0) + new_height + (double) page_spacing;
-                } else {
-                    double new_width = widget_list[i].get_allocated_width();
-                    length_list[i] = (i > 0 ? length_list[i - 1] : 0) + new_width + (double) page_spacing;
-                }
+                length_list[i] = (i > 0 ? length_list[i - 1] : 0) + (double) (get_widget_length(widget_list[i]) + page_spacing);
                 update_title();
                 Idle.add(scale_images_by_percentage.callback);
                 yield;
             }
+            return i >= widget_list.size;
         }
 
         private bool is_make_view_continue;
@@ -438,57 +447,20 @@ namespace ParaPara {
             scroll.get_style_context().add_class("image-view");
             scroll.scroll_event.connect((event) => {
                 debug("slide image view scroll to %f", scroll.vadjustment.value);
+                saved_location = get_location();
                 if (is_make_view_continue && get_scroll_position() > 0.98) {
                     Idle.add((owned) make_view_callback);
                 }
                 return false;
             });
             scroll.vadjustment.value_changed.connect(() => {
-                if (slide_box.orientation == VERTICAL) {
-                    main_window.image_prev_button.sensitive = is_prev_button_sensitive();
-                    main_window.image_next_button.sensitive = is_next_button_sensitive();
-                    int location = get_location();
-                    if (prev_location != location) {
-                        update_title();
-                        try {
-                            string filename = file_list.get_filename_at(location);
-                            image_opened(filename, location);
-                        } catch (AppError e) {
-                            main_window.show_error_dialog(e.message);
-                        }
-                    }
-                    prev_location = location;
-                    if (is_make_view_continue && get_scroll_position() > 0.98) {
-                        Idle.add((owned) make_view_callback);
-                    }
-                }
+                on_vadjustment_value_changed();
             });
             scroll.hadjustment.value_changed.connect(() => {
-                if (slide_box.orientation == HORIZONTAL) {
-                    main_window.image_prev_button.sensitive = is_prev_button_sensitive();
-                    main_window.image_next_button.sensitive = is_next_button_sensitive();
-                    int location = get_location();
-                    if (prev_location != location) {
-                        update_title();
-                        try {
-                            string filename = file_list.get_filename_at(location);
-                            image_opened(filename, location);
-                        } catch (AppError e) {
-                            main_window.show_error_dialog(e.message);
-                        }
-                    }
-                    prev_location = location;
-                    if (is_make_view_continue && get_scroll_position() > 0.98) {
-                        Idle.add((owned) make_view_callback);
-                    }
-                }
+                on_hadjustment_value_changed();
             });
             add(scroll);
-            if (orientation == VERTICAL) {
-                primary_adjustment = scroll.vadjustment;
-            } else {
-                primary_adjustment = scroll.hadjustment;
-            }
+            set_primary_functions();
             slide_box = new Box(slide_box.orientation, page_spacing) {
                 margin = page_spacing
             };
@@ -533,13 +505,7 @@ namespace ParaPara {
                     image_widget.show_all();
                     Idle.add(make_view_async.callback);
                     yield;
-                    if (orientation == VERTICAL) {
-                        double h = (double) image_widget.get_allocated_height();
-                        length_list[i] = (i > 0 ? length_list[i - 1] : 0) + h + page_spacing;
-                    } else {
-                        double w = (double) image_widget.get_allocated_width();
-                        length_list[i] = (i > 0 ? length_list[i - 1] : 0) + w + page_spacing;
-                    }
+                    length_list[i] = (i > 0 ? length_list[i - 1] : 0) + get_widget_length(image_widget) + page_spacing;
                     if (i == up_to_index) {
                         if (i > 0) {
                             primary_adjustment.value = length_list[i - 1];
@@ -579,6 +545,58 @@ namespace ParaPara {
 
         private void change_cursor(CursorType cursor_type) {
             main_window.get_window().cursor = new Gdk.Cursor.for_display(Gdk.Screen.get_default().get_display(), cursor_type);
+        }
+
+        private void set_primary_functions() {
+            if (orientation == VERTICAL) {
+                primary_adjustment = scroll.vadjustment;
+                get_widget_length = (widget) => {
+                    return widget.get_allocated_height();
+                };
+                on_vadjustment_value_changed = () => {
+                    main_window.image_prev_button.sensitive = is_prev_button_sensitive();
+                    main_window.image_next_button.sensitive = is_next_button_sensitive();
+                    int location = get_location();
+                    if (prev_location != location) {
+                        update_title();
+                        try {
+                            string filename = file_list.get_filename_at(location);
+                            image_opened(filename, location);
+                        } catch (AppError e) {
+                            main_window.show_error_dialog(e.message);
+                        }
+                    }
+                    prev_location = location;
+                    if (is_make_view_continue && get_scroll_position() > 0.98) {
+                        Idle.add((owned) make_view_callback);
+                    }
+                };
+                on_hadjustment_value_changed = () => {};
+            } else {
+                primary_adjustment = scroll.hadjustment;
+                get_widget_length = (widget) => {
+                    return widget.get_allocated_width();
+                };
+                on_vadjustment_value_changed = () => {};
+                on_hadjustment_value_changed = () => {
+                    main_window.image_prev_button.sensitive = is_prev_button_sensitive();
+                    main_window.image_next_button.sensitive = is_next_button_sensitive();
+                    int location = get_location();
+                    if (prev_location != location) {
+                        update_title();
+                        try {
+                            string filename = file_list.get_filename_at(location);
+                            image_opened(filename, location);
+                        } catch (AppError e) {
+                            main_window.show_error_dialog(e.message);
+                        }
+                    }
+                    prev_location = location;
+                    if (is_make_view_continue && get_scroll_position() > 0.98) {
+                        Idle.add((owned) make_view_callback);
+                    }
+                };
+            }
         }
     }
 }
