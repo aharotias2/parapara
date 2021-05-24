@@ -48,6 +48,9 @@ namespace ParaPara {
         public ToggleButton sort_desc_button { get; private set; }
         public ToggleButton l2rbutton { get; private set; }
         public ToggleButton r2lbutton { get; private set; }
+        public ToggleButton orientation_vertical_button { get; private set; }
+        public ToggleButton orientation_horizontal_button { get; private set; }
+        public ActionButton fullscreen_button { get; private set; }
         private Box toolbar_hbox;
         private Box single_view_mode_box;
         private Box slide_view_mode_box;
@@ -540,7 +543,54 @@ namespace ParaPara {
                         });
                     }
 
+                    var orientation_button_box = new ButtonBox(Orientation.HORIZONTAL) {
+                        margin = 3,
+                        layout_style = ButtonBoxStyle.EXPAND
+                    };
+                    {
+                        orientation_vertical_button = new ToggleButton() {
+                            tooltip_text = _("Vertical"),
+                            image = new Gtk.Image.from_icon_name("orientation-vertical-symbolic", SMALL_TOOLBAR),
+                            active = true,
+                            sensitive = false
+                        };
+                        {
+                            orientation_vertical_button.get_style_context().add_class("image_overlay_button");
+                            orientation_vertical_button.toggled.connect(() => {
+                                if (orientation_vertical_button.active) {
+                                    slide_image_view.orientation = VERTICAL;
+                                    orientation_vertical_button.sensitive = false;
+                                    orientation_horizontal_button.active = false;
+                                    orientation_horizontal_button.sensitive = true;
+                                }
+                            });
+                        }
+
+                        orientation_horizontal_button = new ToggleButton() {
+                            tooltip_text = _("Vertical"),
+                            image = new Gtk.Image.from_icon_name("orientation-horizontal-symbolic", SMALL_TOOLBAR),
+                            active = false,
+                            sensitive = true
+                        };
+                        {
+                            orientation_horizontal_button.get_style_context().add_class("image_overlay_button");
+                            orientation_horizontal_button.toggled.connect(() => {
+                                if (orientation_horizontal_button.active) {
+                                    slide_image_view.orientation = HORIZONTAL;
+                                    orientation_horizontal_button.sensitive = false;
+                                    orientation_vertical_button.active = false;
+                                    orientation_vertical_button.sensitive = true;
+                                }
+                            });
+                        }
+
+                        orientation_button_box.pack_start(orientation_vertical_button);
+                        orientation_button_box.pack_start(orientation_horizontal_button);
+                    }
+
                     slide_view_mode_box.pack_start(size_combo);
+                    slide_view_mode_box.pack_start(new Label(_("Orientation : ")));
+                    slide_view_mode_box.pack_start(orientation_button_box);
                 }
 
                 var fullscreen_button_box = new ButtonBox(Orientation.HORIZONTAL) {
@@ -548,7 +598,7 @@ namespace ParaPara {
                     layout_style = ButtonBoxStyle.EXPAND
                 };
                 {
-                    var fullscreen_button = new ActionButton("view-fullscreen-symbolic", _("Fullscreen"), {"f11"});
+                    fullscreen_button = new ActionButton("view-fullscreen-symbolic", _("Fullscreen"), {"f11"});
                     {
                         fullscreen_button.clicked.connect(() => {
                             main_window.fullscreen_mode = !main_window.fullscreen_mode;

@@ -50,7 +50,9 @@ namespace ParaPara {
                 _fullscreen_mode = value;
                 if (_fullscreen_mode) {
                     get_window().fullscreen();
+                    toolbar.fullscreen_button.icon_name = "view-restore-symbolic";
                 } else {
+                    toolbar.fullscreen_button.icon_name = "view-fullscreen-symbolic";
                     get_window().unfullscreen();
                     image_view.reopen_async.begin((obj, res) => {
                         try {

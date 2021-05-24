@@ -63,6 +63,28 @@ namespace ParaPara {
         public int scroll_interval { get; set; default = 1; }
         public double scroll_amount { get; set; default = 10.0; }
         public double scroll_overlapping { get; set; default = 0.1; }
+        public Orientation orientation {
+            get {
+                return slide_box.orientation;
+            }
+            set {
+                if (slide_box.orientation != value) {
+                    slide_box.orientation = value;
+                    if (slide_box.orientation == VERTICAL) {
+                        for (int i = 0; i < widget_list.size; i++) {
+                            length_list[i] = (double) (widget_list[i].get_allocated_height() + page_spacing);
+                        }
+                        primary_adjustment = scroll.vadjustment;
+                    } else {
+                        for (int i = 0; i < widget_list.size; i++) {
+                            length_list[i] = (double) (widget_list[i].get_allocated_width() + page_spacing);
+                        }
+                        primary_adjustment = scroll.hadjustment;
+                    }
+                }
+            }
+        }
+
         private Gee.List<ParaPara.Image> widget_list;
         private Box slide_box;
         private ScrolledWindow scroll;
@@ -79,6 +101,7 @@ namespace ParaPara {
         private double x;
         private double y;
         private int up_to_index;
+        private Adjustment primary_adjustment;
 
         public SlideImageView(ParaPara.Window window) {
             Object(
@@ -106,6 +129,7 @@ namespace ParaPara {
             }
 
             add(scroll);
+            primary_adjustment = scroll.vadjustment;
             size_allocate.connect((allocation) => {
                 debug("slide image view size allocate to (%d, %d) current size = (%d, %d)", allocation.width, allocation.height, get_allocated_width(), get_allocated_height());
                 if ((slide_box.orientation == VERTICAL && saved_width != allocation.width)
@@ -154,93 +178,71 @@ namespace ParaPara {
         }
 
         public bool is_next_button_sensitive() {
-            if (slide_box.orientation == VERTICAL) {
-                var vadjust = scroll.vadjustment;
-                if (vadjust.value < vadjust.upper - vadjust.page_size) {
-                    return true;
-                } else {
-                    return false;
-                }
+            var adjust = primary_adjustment;
+            if (adjust.value < adjust.upper - adjust.page_size) {
+                return true;
             } else {
-                var hadjust = scroll.hadjustment;
-                if (hadjust.value < hadjust.upper - hadjust.page_size) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return false;
             }
         }
 
         public bool is_prev_button_sensitive() {
-            if (slide_box.orientation == VERTICAL) {
-                var vadjust = scroll.vadjustment;
-                if (vadjust.value > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+            var adjust = primary_adjustment;
+            if (adjust.value > 0) {
+                return true;
             } else {
-                var hadjust = scroll.hadjustment;
-                if (hadjust.value > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return false;
             }
         }
 
         public async void go_forward_async(int offset = 1) {
-            if (slide_box.orientation == VERTICAL) {
-                double start = scroll.vadjustment.value;
-                double page_size = scroll.vadjustment.page_size;
-                double goal = start + page_size - (page_size * scroll_overlapping);
-                if (goal > scroll.vadjustment.upper - page_size) {
-                    goal = scroll.vadjustment.upper - page_size;
-                }
-                Timeout.add(scroll_interval, () => {
-                    if (scroll.vadjustment.value < goal) {
-                        double a = scroll.vadjustment.value;
-                        double b = a + scroll_amount;
-                        debug("slide image view go forward timeout: a = %f, b = %f, goal = %f", a, b, goal);
-                        if (b >= goal) {
-                            scroll.vadjustment.value = goal;
-                            return false;
-                        } else {
-                            scroll.vadjustment.value = b;
-                            return true;
-                        }
-                    } else {
-                        return false;
-                    }
-                });
+            double start = primary_adjustment.value;
+            double page_size = primary_adjustment.page_size;
+            double goal = start + page_size - (page_size * scroll_overlapping);
+            if (goal > primary_adjustment.upper - page_size) {
+                goal = primary_adjustment.upper - page_size;
             }
+            Timeout.add(scroll_interval, () => {
+                if (primary_adjustment.value < goal) {
+                    double a = primary_adjustment.value;
+                    double b = a + scroll_amount;
+                    debug("slide image view go forward timeout: a = %f, b = %f, goal = %f", a, b, goal);
+                    if (b >= goal) {
+                        primary_adjustment.value = goal;
+                        return false;
+                    } else {
+                        primary_adjustment.value = b;
+                        return true;
+                    }
+                } else {
+                    return false;
+                }
+            });
         }
 
         public async void go_backward_async(int offset = 1) {
-            if (slide_box.orientation == VERTICAL) {
-                double start = scroll.vadjustment.value;
-                double page_size = scroll.vadjustment.page_size;
-                double goal = start - page_size + (page_size * scroll_overlapping);
-                if (goal < 0) {
-                    goal = 0.0;
-                }
-                Timeout.add(scroll_interval, () => {
-                    if (scroll.vadjustment.value > goal) {
-                        double a = scroll.vadjustment.value;
-                        double b = a - scroll_amount;
-                        debug("slide image view go backward timeout: a = %f, b = %f, goal = %f", a, b, goal);
-                        if (b < goal) {
-                            scroll.vadjustment.value = goal;
-                            return false;
-                        } else {
-                            scroll.vadjustment.value = b;
-                            return true;
-                        }
-                    } else {
-                        return false;
-                    }
-                });
+            double start = primary_adjustment.value;
+            double page_size = primary_adjustment.page_size;
+            double goal = start - page_size + (page_size * scroll_overlapping);
+            if (goal < 0) {
+                goal = 0.0;
             }
+            Timeout.add(scroll_interval, () => {
+                if (primary_adjustment.value > goal) {
+                    double a = primary_adjustment.value;
+                    double b = a - scroll_amount;
+                    debug("slide image view go backward timeout: a = %f, b = %f, goal = %f", a, b, goal);
+                    if (b < goal) {
+                        primary_adjustment.value = goal;
+                        return false;
+                    } else {
+                        primary_adjustment.value = b;
+                        return true;
+                    }
+                } else {
+                    return false;
+                }
+            });
         }
 
         public async void open_async(File file) throws Error {
@@ -263,11 +265,7 @@ namespace ParaPara {
                     yield;
                 }
             }
-            if (slide_box.orientation == VERTICAL) {
-                scroll.vadjustment.value = index > 0 ? length_list[index - 1] : 0;
-            } else {
-                scroll.hadjustment.value = index > 0 ? length_list[index - 1] : 0;
-            }
+            primary_adjustment.value = index > 0 ? length_list[index - 1] : 0;
             image_opened(file_list.get_filename_at(index), index);
         }
 
@@ -275,8 +273,7 @@ namespace ParaPara {
             try {
                 int index = get_location();
                 string filename = file_list.get_filename_at(index);
-                string title = "%s".printf(filename);
-                title_changed(title);
+                title_changed(filename);
             } catch (AppError e) {
                 main_window.show_error_dialog(e.message);
             }
@@ -351,18 +348,10 @@ namespace ParaPara {
                 go_backward_async.begin();
                 break;
               case Gdk.Key.Down:
-                if (slide_box.orientation == VERTICAL) {
-                    scroll.vadjustment.value += scroll_amount;
-                } else {
-                    scroll.hadjustment.value += scroll_amount;
-                }
+                primary_adjustment.value += scroll_amount;
                 break;
               case Gdk.Key.Up:
-                if (slide_box.orientation == VERTICAL) {
-                    scroll.vadjustment.value -= scroll_amount;
-                } else {
-                    scroll.hadjustment.value -= scroll_amount;
-                }
+                primary_adjustment.value -= scroll_amount;
                 break;
               default:
                 break;
@@ -376,9 +365,14 @@ namespace ParaPara {
             }
             uint64 tmp = resizing_counter;
             for (int i = 0; i < widget_list.size && tmp == resizing_counter; i++) {
-                int new_width = scroll.get_allocated_width();
+                int new_width = scroll.get_allocated_width() - page_spacing * 2;
                 widget_list[i].scale_fit_in_width(new_width);
-                length_list[i] = i > 0 ? length_list[i - 1] + (double) new_width : (double) new_width;
+                if (orientation == VERTICAL) {
+                    int new_height = widget_list[i].get_allocated_height();
+                    length_list[i] = (i > 0 ? length_list[i - 1] : 0) + (double) (new_height + page_spacing);
+                } else {
+                    length_list[i] = (i > 0 ? length_list[i - 1] : 0) + (double) (new_width + page_spacing);
+                }
                 update_title();
                 Idle.add(fit_images_by_width.callback);
                 yield;
@@ -391,9 +385,14 @@ namespace ParaPara {
             }
             uint64 tmp = resizing_counter;
             for (int i = 0; i < widget_list.size && tmp == resizing_counter; i++) {
-                int new_height = scroll.get_allocated_height();
+                int new_height = scroll.get_allocated_height() - page_spacing * 2;
                 widget_list[i].scale_fit_in_height(new_height);
-                length_list[i] = i > 0 ? length_list[i - 1] + (double) new_height : (double) new_height;
+                if (orientation == VERTICAL) {
+                    length_list[i] = (i > 0 ? length_list[i - 1] : 0) + (double) (new_height + page_spacing);
+                } else {
+                    int new_width = widget_list[i].get_allocated_width();
+                    length_list[i] = (i > 0 ? length_list[i - 1] : 0) + (double) (new_width + page_spacing);
+                }
                 update_title();
                 Idle.add(fit_images_by_height.callback);
                 yield;
@@ -411,10 +410,10 @@ namespace ParaPara {
                 yield;
                 if (slide_box.orientation == VERTICAL) {
                     double new_height = widget_list[i].get_allocated_height();
-                    length_list[i] = i > 0 ? length_list[i - 1] + new_height : new_height;
+                    length_list[i] = (i > 0 ? length_list[i - 1] : 0) + new_height + (double) page_spacing;
                 } else {
                     double new_width = widget_list[i].get_allocated_width();
-                    length_list[i] = i > 0 ? length_list[i - 1] + new_width : new_width;
+                    length_list[i] = (i > 0 ? length_list[i - 1] : 0) + new_width + (double) page_spacing;
                 }
                 update_title();
                 Idle.add(scale_images_by_percentage.callback);
@@ -444,8 +443,8 @@ namespace ParaPara {
                 }
                 return false;
             });
-            if (slide_box.orientation == VERTICAL) {
-                scroll.vadjustment.value_changed.connect(() => {
+            scroll.vadjustment.value_changed.connect(() => {
+                if (slide_box.orientation == VERTICAL) {
                     main_window.image_prev_button.sensitive = is_prev_button_sensitive();
                     main_window.image_next_button.sensitive = is_next_button_sensitive();
                     int location = get_location();
@@ -462,9 +461,10 @@ namespace ParaPara {
                     if (is_make_view_continue && get_scroll_position() > 0.98) {
                         Idle.add((owned) make_view_callback);
                     }
-                });
-            } else {
-                scroll.hadjustment.value_changed.connect(() => {
+                }
+            });
+            scroll.hadjustment.value_changed.connect(() => {
+                if (slide_box.orientation == HORIZONTAL) {
                     main_window.image_prev_button.sensitive = is_prev_button_sensitive();
                     main_window.image_next_button.sensitive = is_next_button_sensitive();
                     int location = get_location();
@@ -481,9 +481,14 @@ namespace ParaPara {
                     if (is_make_view_continue && get_scroll_position() > 0.98) {
                         Idle.add((owned) make_view_callback);
                     }
-                });
-            }
+                }
+            });
             add(scroll);
+            if (orientation == VERTICAL) {
+                primary_adjustment = scroll.vadjustment;
+            } else {
+                primary_adjustment = scroll.hadjustment;
+            }
             slide_box = new Box(slide_box.orientation, page_spacing) {
                 margin = page_spacing
             };
@@ -516,10 +521,10 @@ namespace ParaPara {
                     yield image_widget.open_async(filepath);
                     switch (scaling_mode) {
                       case FIT_WIDTH:
-                        image_widget.scale_fit_in_width(get_allocated_width());
+                        image_widget.scale_fit_in_width(get_allocated_width() - page_spacing * 2);
                         break;
                       case FIT_PAGE:
-                        image_widget.scale_fit_in_height(get_allocated_height());
+                        image_widget.scale_fit_in_height(get_allocated_height() - page_spacing * 2);
                         break;
                       case BY_PERCENTAGE:
                         image_widget.set_scale_percent(scale_percentage);
@@ -528,11 +533,16 @@ namespace ParaPara {
                     image_widget.show_all();
                     Idle.add(make_view_async.callback);
                     yield;
-                    double h = (double) image_widget.get_allocated_height();
-                    length_list[i] = (i > 0 ? length_list[i - 1] : 0) + h + page_spacing;
+                    if (orientation == VERTICAL) {
+                        double h = (double) image_widget.get_allocated_height();
+                        length_list[i] = (i > 0 ? length_list[i - 1] : 0) + h + page_spacing;
+                    } else {
+                        double w = (double) image_widget.get_allocated_width();
+                        length_list[i] = (i > 0 ? length_list[i - 1] : 0) + w + page_spacing;
+                    }
                     if (i == up_to_index) {
                         if (i > 0) {
-                            scroll.vadjustment.value = length_list[i - 1];
+                            primary_adjustment.value = length_list[i - 1];
                         }
                         change_cursor(LEFT_PTR);
                         Idle.add(make_view_async.callback);
@@ -550,24 +560,14 @@ namespace ParaPara {
         }
 
         private double get_scroll_position() {
-            if (slide_box.orientation == VERTICAL) {
-                double position = scroll.vadjustment.value / (scroll.vadjustment.upper - scroll.vadjustment.page_size);
-                debug("slide image view scroll position: %f", position);
-                return position;
-            } else {
-                double position = scroll.hadjustment.value / (scroll.hadjustment.upper - scroll.hadjustment.page_size);
-                debug("slide image view scroll position: %f", position);
-                return position;
-            }
+            double position = primary_adjustment.value / (primary_adjustment.upper - primary_adjustment.page_size);
+            debug("slide image view scroll position: %f", position);
+            return position;
         }
 
         private int get_location() {
             double pos = 0.0;
-            if (slide_box.orientation == VERTICAL) {
-                pos = scroll.vadjustment.value;
-            } else {
-                pos = scroll.hadjustment.value;
-            }
+            pos = primary_adjustment.value;
             for (int i = 0; i < length_list.length; i++) {
                 debug("slide image view get location (pos: %f, index = %d, value = %f)", pos, i, length_list[i]);
                 if (pos <= length_list[i]) {
