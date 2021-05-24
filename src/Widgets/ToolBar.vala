@@ -589,7 +589,7 @@ namespace ParaPara {
                     }
 
                     slide_view_mode_box.pack_start(size_combo);
-                    slide_view_mode_box.pack_start(new Label(_("Orientation : ")));
+                    slide_view_mode_box.pack_start(new Label(_("Orientation : ")) { margin = 3 });
                     slide_view_mode_box.pack_start(orientation_button_box);
                 }
 
