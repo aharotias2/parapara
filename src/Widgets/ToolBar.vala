@@ -50,6 +50,8 @@ namespace ParaPara {
         public ToggleButton r2lbutton { get; private set; }
         public ToggleButton orientation_vertical_button { get; private set; }
         public ToggleButton orientation_horizontal_button { get; private set; }
+        public ToggleButton slide_sort_asc_button { get; private set; }
+        public ToggleButton slide_sort_desc_button { get; private set; }
         public ActionButton fullscreen_button { get; private set; }
         private Box toolbar_hbox;
         private Box single_view_mode_box;
@@ -588,9 +590,56 @@ namespace ParaPara {
                         orientation_button_box.pack_start(orientation_horizontal_button);
                     }
 
+                    var slide_sort_order_button_box = new ButtonBox(Orientation.HORIZONTAL) {
+                        margin = 3,
+                        layout_style = ButtonBoxStyle.EXPAND
+                    };
+                    {
+                        slide_sort_asc_button = new ToggleButton() {
+                            tooltip_text = _("Sort Asc"),
+                            image = new Gtk.Image.from_icon_name("view-sort-ascending-symbolic", IconSize.SMALL_TOOLBAR),
+                            active = true,
+                            sensitive = false
+                        };
+                        {
+                            slide_sort_asc_button.get_style_context().add_class("image_overlay_button");
+                            slide_sort_asc_button.toggled.connect(() => {
+                                if (slide_sort_asc_button.active) {
+                                    slide_sort_asc_button.sensitive = false;
+                                    slide_sort_desc_button.active = false;
+                                    slide_sort_desc_button.sensitive = true;
+                                    sort_order = SortOrder.ASC;
+                                    sort_order_changed(sort_order);
+                                }
+                            });
+                        }
+
+                        slide_sort_desc_button = new ToggleButton() {
+                            tooltip_text = _("Sort Desc"),
+                            image = new Gtk.Image.from_icon_name("view-sort-descending-symbolic", IconSize.SMALL_TOOLBAR),
+                            active = false
+                        };
+                        {
+                            slide_sort_desc_button.get_style_context().add_class("image_overlay_button");
+                            slide_sort_desc_button.toggled.connect(() => {
+                                if (slide_sort_desc_button.active) {
+                                    slide_sort_desc_button.sensitive = false;
+                                    slide_sort_asc_button.active = false;
+                                    slide_sort_asc_button.sensitive = true;
+                                    sort_order = SortOrder.DESC;
+                                    sort_order_changed(sort_order);
+                                }
+                            });
+                        }
+
+                        slide_sort_order_button_box.pack_start(slide_sort_asc_button);
+                        slide_sort_order_button_box.pack_start(slide_sort_desc_button);
+                    }
+
                     slide_view_mode_box.pack_start(size_combo);
                     slide_view_mode_box.pack_start(new Label(_("Orientation : ")) { margin = 3 });
                     slide_view_mode_box.pack_start(orientation_button_box);
+                    slide_view_mode_box.pack_start(slide_sort_order_button_box);
                 }
 
                 var fullscreen_button_box = new ButtonBox(Orientation.HORIZONTAL) {

@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-21 01:00+0900\n"
+"POT-Creation-Date: 2021-06-05 10:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,232 +16,272 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Widgets/ToolBar.vala:194
+#: src/Widgets/ToolBar.vala:236 src/Widgets/ToolBar.vala:526
 msgid "100%"
 msgstr ""
 
-#: src/Widgets/Window.vala:496 src/Widgets/ResizeDialog.vala:119
-#: src/Widgets/SingleImageView.vala:510
+#: src/Widgets/ToolBar.vala:527
+msgid "200%"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:522
+msgid "25%"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:528
+msgid "400%"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:523
+msgid "50%"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:524
+msgid "70%"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:525
+msgid "80%"
+msgstr ""
+
+#: src/Widgets/Window.vala:503 src/Widgets/ResizeDialog.vala:122
+#: src/Widgets/SingleImageView.vala:513
 msgid "Cancel"
 msgstr ""
 
-#: src/Widgets/Window.vala:495
+#: src/Widgets/Window.vala:502
 msgid "Choose file to open"
 msgstr ""
 
-#: src/Widgets/Window.vala:182
+#: src/Widgets/Window.vala:187
 msgid "Click 'Open Image' to get started."
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:541
+#: src/Widgets/SingleImageView.vala:544
 msgid "Do you really overwrite this file?"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:453
+#: src/Widgets/ToolBar.vala:690
 msgid "Dual View Mode"
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:530
+#: src/Widgets/SingleImageView.vala:533
 msgid "File already exists. Do you want to overwrite it?"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:186
+#: src/Widgets/ToolBar.vala:520
+msgid "Fit Page"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:519
+msgid "Fit Width"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:226
 msgid "Fit to the page"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:202
+#: src/Widgets/ToolBar.vala:246
 msgid "Flip horizontally"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:208
+#: src/Widgets/ToolBar.vala:254
 msgid "Flip vertically"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:419
+#: src/Widgets/ToolBar.vala:650
 msgid "Fullscreen"
 msgstr ""
 
-#: src/Widgets/ResizeDialog.vala:81
+#: src/Widgets/ResizeDialog.vala:84
 msgid "Height:"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:332
+#: src/Widgets/ToolBar.vala:465
 msgid "Left to Right"
 msgstr ""
 
-#: src/Widgets/Window.vala:218 src/Widgets/Window.vala:532
-#: src/Widgets/Window.vala:618
+#: src/Widgets/Window.vala:224 src/Widgets/Window.vala:539
+#: src/Widgets/Window.vala:626
 #, c-format
 msgid "Location: %d / %d (%d%%)"
 msgstr ""
 
-#: src/Widgets/Window.vala:160
+#: src/Widgets/Window.vala:165
 msgid "Menu"
 msgstr ""
 
-#: src/Widgets/Window.vala:140
+#: src/Widgets/Window.vala:145
 msgid "New"
 msgstr ""
 
-#: src/Widgets/Window.vala:107
+#: src/Widgets/Window.vala:112
 msgid "Next"
 msgstr ""
 
-#: src/Widgets/Window.vala:182
+#: src/Widgets/Window.vala:187
 msgid "No Images Open"
 msgstr ""
 
-#: src/Widgets/ResizeDialog.vala:118
+#: src/Widgets/ResizeDialog.vala:121
 msgid "OK"
 msgstr ""
 
-#: src/Widgets/Window.vala:133 src/Widgets/Window.vala:496
+#: src/Widgets/Window.vala:138 src/Widgets/Window.vala:503
 msgid "Open"
 msgstr ""
 
-#: src/Widgets/Window.vala:184
+#: src/Widgets/Window.vala:189
 msgid "Open Image"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:291
+#: src/Widgets/ToolBar.vala:640
+msgid "Orientation : "
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:353
 msgid "Play/Pause animation"
 msgstr ""
 
-#: src/Widgets/Window.vala:90
+#: src/Widgets/Window.vala:95
 msgid "Previous"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:164
+#: src/Widgets/ToolBar.vala:198
 msgid "Resize"
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:494
+#: src/Widgets/SingleImageView.vala:497
 msgid "Resizing of the image was canceled."
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:349
+#: src/Widgets/ToolBar.vala:484
 msgid "Right to Left"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:214
+#: src/Widgets/ToolBar.vala:262
 msgid "Rotate to the left"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:221
+#: src/Widgets/ToolBar.vala:271
 msgid "Rotate to the right"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:142 src/Widgets/SingleImageView.vala:510
+#: src/Widgets/ToolBar.vala:171 src/Widgets/SingleImageView.vala:513
 msgid "Save"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:150 src/Widgets/SingleImageView.vala:509
+#: src/Widgets/ToolBar.vala:181 src/Widgets/SingleImageView.vala:512
 msgid "Save as…"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:443
+#: src/Widgets/ToolBar.vala:678
 msgid "Scroll View Mode"
 msgstr ""
 
-#: src/Widgets/ResizeDialog.vala:59
+#: src/Widgets/ResizeDialog.vala:62
 msgid "Set the width and the height"
 msgstr ""
 
-#: src/Widgets/Window.vala:184
+#: src/Widgets/Window.vala:189
 msgid "Show and edit your image."
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:432
+#: src/Widgets/ToolBar.vala:665
 msgid "Single View Mode"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:282
+#: src/Widgets/ToolBar.vala:342
 msgid "Skip forward"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:374
+#: src/Widgets/ToolBar.vala:420
 msgid "Slide 1 page to Left"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:383
+#: src/Widgets/ToolBar.vala:431
 msgid "Slide 1 page to Right"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:365
+#: src/Widgets/ToolBar.vala:409
 msgid "Slide 2 page to Left"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:392
+#: src/Widgets/ToolBar.vala:442
 msgid "Slide 2 page to Right"
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:502
+#: src/Widgets/SingleImageView.vala:505
 msgid "Sorry, saving animations is not supported yet."
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:243
+#: src/Widgets/ToolBar.vala:297 src/Widgets/ToolBar.vala:599
 msgid "Sort Asc"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:260
+#: src/Widgets/ToolBar.vala:316 src/Widgets/ToolBar.vala:618
 msgid "Sort Desc"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:470
+#: src/Widgets/ToolBar.vala:711
 msgid "Stick"
 msgstr ""
 
-#: src/Widgets/Window.vala:522
+#: src/Widgets/Window.vala:529
 msgid "The directory does not found. Exiting."
 msgstr ""
 
-#: src/Widgets/Window.vala:577
+#: src/Widgets/Window.vala:584
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr ""
 
-#: src/Widgets/Window.vala:526
+#: src/Widgets/Window.vala:533
 msgid "The file does not found."
 msgstr ""
 
-#: src/Model/FileList.vala:58 src/Model/FileList.vala:70
+#: src/Model/FileList.vala:61 src/Model/FileList.vala:73
 msgid "The file list is not initialized!"
 msgstr ""
 
-#: src/Utils/FileUtils.vala:48
+#: src/Utils/FileUtils.vala:51
 msgid "The file path is invalid. it does not exist or is not a regular file."
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:554
+#: src/Widgets/SingleImageView.vala:557
 msgid "The file save was canceled."
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:559
+#: src/Widgets/SingleImageView.vala:562
 msgid "The file was saved"
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:492
+#: src/Widgets/SingleImageView.vala:495
 msgid "The image was resized."
 msgstr ""
 
-#: src/Model/FileList.vala:62 src/Model/SingleFileAccessor.vala:42
+#: src/Model/FileList.vala:65 src/Model/SingleFileAccessor.vala:45
 #, c-format
 msgid "The index is out of the bounds (%d/%d)"
 msgstr ""
 
-#: src/Widgets/ResizeDialog.vala:61
+#: src/Widgets/ToolBar.vala:554 src/Widgets/ToolBar.vala:572
+msgid "Vertical"
+msgstr ""
+
+#: src/Widgets/ResizeDialog.vala:64
 msgid "Width:"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:170
+#: src/Widgets/ToolBar.vala:206
 msgid "Zoom in"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:178
+#: src/Widgets/ToolBar.vala:216
 msgid "Zoom out"
 msgstr ""
 
-#: src/Model/SingleFileAccessor.vala:55
+#: src/Model/SingleFileAccessor.vala:58
 #, c-format
 msgid "file list does not contains this name! (%s)"
 msgstr ""

@@ -42,6 +42,7 @@ executable(
     'src/Model/FileListIter.vala',
     'src/Model/SingleFileAccessor.vala',
     'src/Model/DualFileAccessor.vala',
+    'src/Model/SlideFileAccessor.vala',
     'src/Widgets/ImageView.vala',
     'src/Widgets/Window.vala',
     'src/Widgets/ResizeDialog.vala',

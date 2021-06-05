@@ -39,6 +39,7 @@ namespace ParaPara {
             set {
                 _file_list = value;
                 length_list = new double[_file_list.size];
+                accessor = new SlideFileAccessor(file_list, main_window.toolbar.sort_order);
             }
         }
         public bool controllable { get; set; default = true; }
@@ -62,6 +63,7 @@ namespace ParaPara {
                 return get_location();
             }
         }
+        public SlideFileAccessor accessor { get; private set; }
         public int page_spacing { get; set; default = 4; }
         public int scroll_interval { get; set; default = 1; }
         public double scroll_amount { get; set; default = 10.0; }
@@ -187,7 +189,7 @@ namespace ParaPara {
         }
 
         public File get_file() throws Error {
-            string filename = file_list.get_filename_at(get_location());
+            string filename = accessor.get_filename_at(get_location());
             string filepath = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, filename);
             return File.new_for_path(filepath);
         }
@@ -262,13 +264,21 @@ namespace ParaPara {
 
         public async void open_async(File file) throws Error {
             debug("open %s", file.get_basename());
-            int index = file_list.get_index_of(file.get_basename());
+            int index = accessor.get_index_of(file.get_basename());
             yield init_async(index);
             image_opened(file.get_basename(), index);
         }
 
         public async void reopen_async() throws Error {
-            yield open_at_async(get_location());
+            if (accessor.sort_order == main_window.toolbar.sort_order) {
+                yield open_at_async(get_location());
+            } else {
+                string filename = accessor.get_filename_at(get_location());
+                accessor.sort_order = main_window.toolbar.sort_order;
+                int new_index = accessor.get_index_of(filename);
+                yield init_async(new_index);
+                image_opened(filename, new_index);
+            }
         }
 
         public async void open_at_async(int index) throws Error {
@@ -281,13 +291,13 @@ namespace ParaPara {
                 }
             }
             primary_adjustment.value = index > 0 ? length_list[index - 1] : 0;
-            image_opened(file_list.get_filename_at(index), index);
+            image_opened(accessor.get_filename_at(index), index);
         }
 
         public void update_title() {
             try {
                 int index = get_location();
-                string filename = file_list.get_filename_at(index);
+                string filename = accessor.get_filename_at(index);
                 title_changed(filename);
             } catch (AppError e) {
                 main_window.show_error_dialog(e.message);
@@ -481,7 +491,7 @@ namespace ParaPara {
             yield;
             for (int i = 0; i < file_list.size; i++) {
                 try {
-                    string filename = file_list.get_filename_at(i);
+                    string filename = accessor.get_filename_at(i);
                     string filepath = Path.build_path(Path.DIR_SEPARATOR_S, dir_path, filename);
                     var image_widget = new ParaPara.Image(false) {
                         container = scroll,
@@ -560,7 +570,7 @@ namespace ParaPara {
                     if (prev_location != location) {
                         update_title();
                         try {
-                            string filename = file_list.get_filename_at(location);
+                            string filename = accessor.get_filename_at(location);
                             image_opened(filename, location);
                         } catch (AppError e) {
                             main_window.show_error_dialog(e.message);
@@ -585,7 +595,7 @@ namespace ParaPara {
                     if (prev_location != location) {
                         update_title();
                         try {
-                            string filename = file_list.get_filename_at(location);
+                            string filename = accessor.get_filename_at(location);
                             image_opened(filename, location);
                         } catch (AppError e) {
                             main_window.show_error_dialog(e.message);
