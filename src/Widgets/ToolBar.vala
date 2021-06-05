@@ -539,8 +539,8 @@ namespace ParaPara {
                             } else if (id == "fit-page") {
                                 slide_image_view.fit_page();
                             } else if (id.has_prefix("scale-")) {
-                                uint scale_percentage = uint.parse(id.substring(6));
-                                slide_image_view.scale_by_percentage(scale_percentage);
+                                int scale_percentage = int.parse(id.substring(6));
+                                slide_image_view.scale_by_percentage((uint) scale_percentage);
                             }
                         });
                     }
