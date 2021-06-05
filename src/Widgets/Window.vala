@@ -84,11 +84,22 @@ namespace ParaPara {
         construct {
             /* the headerbar itself */
             headerbar = new HeaderBar() {
-                    show_close_button = true };
+                show_close_button = true
+            };
             {
                 /* previous, next, open, and save buttons at the left of the headerbar */
-                header_buttons = new Box(Orientation.HORIZONTAL, 12);
+                header_buttons = new Box(Orientation.HORIZONTAL, 5);
                 {
+                    var app_icon = new Gtk.Button.from_icon_name("com.github.aharotias2.parapara", SMALL_TOOLBAR) {
+                        margin = 0
+                    };
+                    {
+                        app_icon.get_style_context().add_class("flat");
+                        app_icon.clicked.connect(() => {
+                            show_app_dialog(this);
+                        });
+                    }
+
                     var navigation_box = new Gtk.ButtonBox(Orientation.HORIZONTAL) {
                             layout_style = Gtk.ButtonBoxStyle.EXPAND };
                     {
@@ -153,6 +164,7 @@ namespace ParaPara {
                         file_box.pack_start(open_button);
                     }
 
+                    header_buttons.pack_start(app_icon, false, false);
                     header_buttons.pack_start(navigation_box, false, false);
                     header_buttons.pack_start(file_box, false, false);
                 }
@@ -650,6 +662,44 @@ namespace ParaPara {
             headerbar.sensitive = true;
             toolbar.sensitive = true;
             image_view.controllable = true;
+        }
+
+        public void show_app_dialog(Window parent_window) {
+            var dialog = new AboutDialog();
+            dialog.set_destroy_with_parent(true);
+            dialog.set_transient_for(parent_window);
+            dialog.set_modal(true);
+            dialog.artists = {"Nararyans R.I. @Fatih20"};
+            dialog.authors = {"Takayuki Tanaka @aharotias2", "Ryo Nakano @ryonakano"};
+            dialog.documenters = null;
+            dialog.translator_credits = null;
+            dialog.program_name = "ParaPara";
+            dialog.comments = "A lightweight image viewer with three display modes: single, spread, and continuous.";
+            dialog.copyright = "Copyright (C) 2020-2021 Takayuki Tanaka";
+            dialog.version = "3.0.0";
+            dialog.license =
+"""This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.""";
+            dialog.wrap_license = true;
+            dialog.website = "https://github.com/aharotias2/parapara";
+            dialog.website_label = "ParaPara @ Github";
+            dialog.logo_icon_name = "com.github.aharotias2.parapara";
+            dialog.response.connect((response_id) => {
+                if (response_id == ResponseType.CANCEL || response_id == ResponseType.DELETE_EVENT) {
+                    dialog.hide_on_delete();
+                }
+            });
+            dialog.present();
         }
     }
 }
