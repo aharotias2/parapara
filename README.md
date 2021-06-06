@@ -100,7 +100,7 @@ You'll need the following dependencies:
 * Python3
 * Meson build system
 * GTK+3 _(in Ubuntu, install libgtk-3-dev)_
-* Vala compiler _(0.50 or later)_
+* Vala compiler _(0.40 or later)_
 * Gee (libgee-0.8 or later) _(in Ubuntu install libgee-0.8-dev)_
 * Granite _(in Ubuntu install libgranite-dev)_
 
