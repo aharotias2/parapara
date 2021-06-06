@@ -16,11 +16,19 @@ You can switch between right-to-left and left-to-right page turning.
 Screenshot
 --------------------------------------------------------------------------------
 
-![Screenshot 1](parapara-screenshot-01.jpg "寄り添う3匹のうさぎのフリー素材 https://www.pakutaso.com/201701170163-16.html")
+![Screenshot 1](docs/images/screenshot-parapara-single-01.png "Single Image View")
 
-(Below) Spread display is also possible.
+Spread display is also possible.
 
-![Screenshot 2](parapara-screenshot-02.jpg "まんまる白うさぎのフリー素材 https://www.pakutaso.com/20170138016post-9992.html, 近寄るウサギのフリー素材 https://www.pakutaso.com/20130728189post-3005.html")
+![Screenshot 2](docs/images/screenshot-parapara-spread-01.png "Dual Image View")
+
+continuous mode (vertical).
+
+![Screenshot 3](docs/images/screenshot-parapara-continuous-01.png "Scrolling Image View (vertical)")
+
+continuous mode (horizontal).
+
+![Screenshot 4](docs/images/screenshot-parapara-continuous-02.png "Scrolling Image View (horizontal)")
 
 Key Combinations
 --------------------------------------------------------------------------------
