@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.parapara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-05 10:17+0000\n"
+"POT-Creation-Date: 2021-06-20 16:52+0000\n"
 "PO-Revision-Date: 2021-01-14 11:54+0900\n"
 "Last-Translator: Takayuki Tanaka <aharotias2@gmail.com>\n"
 "Language-Team: none\n"
@@ -46,16 +46,16 @@ msgstr ""
 msgid "80%"
 msgstr ""
 
-#: src/Widgets/Window.vala:503 src/Widgets/ResizeDialog.vala:122
-#: src/Widgets/SingleImageView.vala:513
+#: src/Widgets/SingleImageView.vala:513 src/Widgets/ResizeDialog.vala:122
+#: src/Widgets/Window.vala:515
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: src/Widgets/Window.vala:502
+#: src/Widgets/Window.vala:514
 msgid "Choose file to open"
 msgstr "開くファイルを選択"
 
-#: src/Widgets/Window.vala:187
+#: src/Widgets/Window.vala:199
 msgid "Click 'Open Image' to get started."
 msgstr "「画像を開く」をクリックして開始しましょう。"
 
@@ -63,7 +63,7 @@ msgstr "「画像を開く」をクリックして開始しましょう。"
 msgid "Do you really overwrite this file?"
 msgstr "本当にこのファイルを上書きしますか？"
 
-#: src/Widgets/ToolBar.vala:690
+#: src/Widgets/ToolBar.vala:692
 msgid "Dual View Mode"
 msgstr "デュアル ビュー モード"
 
@@ -91,7 +91,7 @@ msgstr "上下反転"
 msgid "Flip vertically"
 msgstr "左右反転"
 
-#: src/Widgets/ToolBar.vala:650
+#: src/Widgets/ToolBar.vala:652
 msgid "Fullscreen"
 msgstr "フルスクリーン"
 
@@ -103,25 +103,25 @@ msgstr "高さ:"
 msgid "Left to Right"
 msgstr "左から右へ"
 
-#: src/Widgets/Window.vala:224 src/Widgets/Window.vala:539
-#: src/Widgets/Window.vala:626
+#: src/Widgets/Window.vala:236 src/Widgets/Window.vala:551
+#: src/Widgets/Window.vala:638
 #, c-format
 msgid "Location: %d / %d (%d%%)"
 msgstr "ロケーション: %d / %d (%d%%)"
 
-#: src/Widgets/Window.vala:165
+#: src/Widgets/Window.vala:177
 msgid "Menu"
 msgstr "メニュー"
 
-#: src/Widgets/Window.vala:145
+#: src/Widgets/Window.vala:156
 msgid "New"
 msgstr "新規"
 
-#: src/Widgets/Window.vala:112
+#: src/Widgets/Window.vala:123
 msgid "Next"
 msgstr "次の画像"
 
-#: src/Widgets/Window.vala:187
+#: src/Widgets/Window.vala:199
 msgid "No Images Open"
 msgstr "画像が開いていません"
 
@@ -129,23 +129,23 @@ msgstr "画像が開いていません"
 msgid "OK"
 msgstr "OK"
 
-#: src/Widgets/Window.vala:138 src/Widgets/Window.vala:503
+#: src/Widgets/Window.vala:149 src/Widgets/Window.vala:515
 msgid "Open"
 msgstr "開く"
 
-#: src/Widgets/Window.vala:189
+#: src/Widgets/Window.vala:201
 msgid "Open Image"
 msgstr "画像を開く"
 
-#: src/Widgets/ToolBar.vala:640
-msgid "Orientation : "
-msgstr ""
+#: src/Widgets/ToolBar.vala:641
+msgid "Orientation:"
+msgstr "縦/横:"
 
 #: src/Widgets/ToolBar.vala:353
 msgid "Play/Pause animation"
 msgstr "アニメーションを再生/一時停止"
 
-#: src/Widgets/Window.vala:95
+#: src/Widgets/Window.vala:106
 msgid "Previous"
 msgstr "前の画像"
 
@@ -177,7 +177,7 @@ msgstr "保存"
 msgid "Save as…"
 msgstr "名前を付けて保存…"
 
-#: src/Widgets/ToolBar.vala:678
+#: src/Widgets/ToolBar.vala:680
 msgid "Scroll View Mode"
 msgstr "スクロール ビュー モード"
 
@@ -185,11 +185,11 @@ msgstr "スクロール ビュー モード"
 msgid "Set the width and the height"
 msgstr "幅と高さを指定してください"
 
-#: src/Widgets/Window.vala:189
+#: src/Widgets/Window.vala:201
 msgid "Show and edit your image."
 msgstr "画像を閲覧/編集できます"
 
-#: src/Widgets/ToolBar.vala:665
+#: src/Widgets/ToolBar.vala:667
 msgid "Single View Mode"
 msgstr "シングル ビュー モード"
 
@@ -225,20 +225,24 @@ msgstr "昇順"
 msgid "Sort Desc"
 msgstr "降順"
 
-#: src/Widgets/ToolBar.vala:711
+#: src/Widgets/ToolBar.vala:643
+msgid "Sort:"
+msgstr "昇順"
+
+#: src/Widgets/ToolBar.vala:713
 msgid "Stick"
 msgstr "固定"
 
-#: src/Widgets/Window.vala:529
+#: src/Widgets/Window.vala:541
 msgid "The directory does not found. Exiting."
 msgstr "ディレクトリが存在しません。終了します。"
 
-#: src/Widgets/Window.vala:584
+#: src/Widgets/Window.vala:596
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr "ファイルを開けません (理由: %s)"
 
-#: src/Widgets/Window.vala:533
+#: src/Widgets/Window.vala:545
 msgid "The file does not found."
 msgstr "ファイルが見つかりません。"
 
@@ -262,7 +266,7 @@ msgstr "ファイルを保存しました。"
 msgid "The image was resized."
 msgstr "ファイルをリサイズしました。"
 
-#: src/Model/FileList.vala:65 src/Model/SingleFileAccessor.vala:45
+#: src/Model/SingleFileAccessor.vala:45 src/Model/FileList.vala:65
 #, c-format
 msgid "The index is out of the bounds (%d/%d)"
 msgstr "リストへのアクセスで範囲エラー (%d/%d)"
@@ -282,6 +286,10 @@ msgstr "拡大"
 #: src/Widgets/ToolBar.vala:216
 msgid "Zoom out"
 msgstr "縮小"
+
+#: src/Widgets/ToolBar.vala:639
+msgid "Zoom:"
+msgstr "拡大"
 
 #: src/Model/SingleFileAccessor.vala:58
 #, c-format

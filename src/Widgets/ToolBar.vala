@@ -636,9 +636,11 @@ namespace ParaPara {
                         slide_sort_order_button_box.pack_start(slide_sort_desc_button);
                     }
 
+                    slide_view_mode_box.pack_start(new Label(_("Zoom:")) { margin = 3 });
                     slide_view_mode_box.pack_start(size_combo);
-                    slide_view_mode_box.pack_start(new Label(_("Orientation : ")) { margin = 3 });
+                    slide_view_mode_box.pack_start(new Label(_("Orientation:")) { margin = 3 });
                     slide_view_mode_box.pack_start(orientation_button_box);
+                    slide_view_mode_box.pack_start(new Label(_("Sort:")) { margin = 3 });
                     slide_view_mode_box.pack_start(slide_sort_order_button_box);
                 }
 

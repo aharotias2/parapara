@@ -3,11 +3,12 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-05 10:17+0000\n"
+"POT-Creation-Date: 2021-06-20 16:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,16 +45,16 @@ msgstr ""
 msgid "80%"
 msgstr ""
 
-#: src/Widgets/Window.vala:503 src/Widgets/ResizeDialog.vala:122
-#: src/Widgets/SingleImageView.vala:513
+#: src/Widgets/SingleImageView.vala:513 src/Widgets/ResizeDialog.vala:122
+#: src/Widgets/Window.vala:515
 msgid "Cancel"
 msgstr ""
 
-#: src/Widgets/Window.vala:502
+#: src/Widgets/Window.vala:514
 msgid "Choose file to open"
 msgstr ""
 
-#: src/Widgets/Window.vala:187
+#: src/Widgets/Window.vala:199
 msgid "Click 'Open Image' to get started."
 msgstr ""
 
@@ -61,7 +62,7 @@ msgstr ""
 msgid "Do you really overwrite this file?"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:690
+#: src/Widgets/ToolBar.vala:692
 msgid "Dual View Mode"
 msgstr ""
 
@@ -89,7 +90,7 @@ msgstr ""
 msgid "Flip vertically"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:650
+#: src/Widgets/ToolBar.vala:652
 msgid "Fullscreen"
 msgstr ""
 
@@ -101,25 +102,25 @@ msgstr ""
 msgid "Left to Right"
 msgstr ""
 
-#: src/Widgets/Window.vala:224 src/Widgets/Window.vala:539
-#: src/Widgets/Window.vala:626
+#: src/Widgets/Window.vala:236 src/Widgets/Window.vala:551
+#: src/Widgets/Window.vala:638
 #, c-format
 msgid "Location: %d / %d (%d%%)"
 msgstr ""
 
-#: src/Widgets/Window.vala:165
+#: src/Widgets/Window.vala:177
 msgid "Menu"
 msgstr ""
 
-#: src/Widgets/Window.vala:145
+#: src/Widgets/Window.vala:156
 msgid "New"
 msgstr ""
 
-#: src/Widgets/Window.vala:112
+#: src/Widgets/Window.vala:123
 msgid "Next"
 msgstr ""
 
-#: src/Widgets/Window.vala:187
+#: src/Widgets/Window.vala:199
 msgid "No Images Open"
 msgstr ""
 
@@ -127,23 +128,23 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: src/Widgets/Window.vala:138 src/Widgets/Window.vala:503
+#: src/Widgets/Window.vala:149 src/Widgets/Window.vala:515
 msgid "Open"
 msgstr ""
 
-#: src/Widgets/Window.vala:189
+#: src/Widgets/Window.vala:201
 msgid "Open Image"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:640
-msgid "Orientation : "
+#: src/Widgets/ToolBar.vala:641
+msgid "Orientation:"
 msgstr ""
 
 #: src/Widgets/ToolBar.vala:353
 msgid "Play/Pause animation"
 msgstr ""
 
-#: src/Widgets/Window.vala:95
+#: src/Widgets/Window.vala:106
 msgid "Previous"
 msgstr ""
 
@@ -175,7 +176,7 @@ msgstr ""
 msgid "Save as…"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:678
+#: src/Widgets/ToolBar.vala:680
 msgid "Scroll View Mode"
 msgstr ""
 
@@ -183,11 +184,11 @@ msgstr ""
 msgid "Set the width and the height"
 msgstr ""
 
-#: src/Widgets/Window.vala:189
+#: src/Widgets/Window.vala:201
 msgid "Show and edit your image."
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:665
+#: src/Widgets/ToolBar.vala:667
 msgid "Single View Mode"
 msgstr ""
 
@@ -223,20 +224,24 @@ msgstr ""
 msgid "Sort Desc"
 msgstr ""
 
-#: src/Widgets/ToolBar.vala:711
+#: src/Widgets/ToolBar.vala:643
+msgid "Sort:"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:713
 msgid "Stick"
 msgstr ""
 
-#: src/Widgets/Window.vala:529
+#: src/Widgets/Window.vala:541
 msgid "The directory does not found. Exiting."
 msgstr ""
 
-#: src/Widgets/Window.vala:584
+#: src/Widgets/Window.vala:596
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr ""
 
-#: src/Widgets/Window.vala:533
+#: src/Widgets/Window.vala:545
 msgid "The file does not found."
 msgstr ""
 
@@ -260,7 +265,7 @@ msgstr ""
 msgid "The image was resized."
 msgstr ""
 
-#: src/Model/FileList.vala:65 src/Model/SingleFileAccessor.vala:45
+#: src/Model/SingleFileAccessor.vala:45 src/Model/FileList.vala:65
 #, c-format
 msgid "The index is out of the bounds (%d/%d)"
 msgstr ""
@@ -279,6 +284,10 @@ msgstr ""
 
 #: src/Widgets/ToolBar.vala:216
 msgid "Zoom out"
+msgstr ""
+
+#: src/Widgets/ToolBar.vala:639
+msgid "Zoom:"
 msgstr ""
 
 #: src/Model/SingleFileAccessor.vala:58
