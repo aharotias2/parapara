@@ -49,6 +49,13 @@
   </content_rating>
 
   <releases>
+    <release version="3.0.0" date="2021-08-07" urgency="medium">
+      <description>
+        <ul>
+          <li>Initial release.</li>
+        </ul>
+      </description>
+    </release>
   </releases>
 
   <developer_name>Tanaka Takayuki</developer_name>
