@@ -2,6 +2,7 @@
 <!-- Copyright 2019-2020 Tanaka Takayuki -->
 <component type="desktop">
   <id>com.github.aharotias2.parapara</id>
+  <launchable type="desktop-id">com.github.aharotias2.parapara.desktop</launchable>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0</project_license>
   <name>ParaPara</name>
