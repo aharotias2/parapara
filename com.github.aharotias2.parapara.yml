@@ -1,6 +1,6 @@
 app-id: com.github.aharotias2.parapara
 runtime: io.elementary.Platform
-runtime-version: 'daily'
+runtime-version: '6'
 sdk: io.elementary.Sdk
 command: com.github.aharotias2.parapara
 finish-args:

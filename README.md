@@ -96,7 +96,6 @@ Building and Installation
 You'll need the following dependencies:
 
 * GCC
-* CMake
 * Python3
 * Meson build system
 * GTK+3 _(in Ubuntu, install libgtk-3-dev)_
