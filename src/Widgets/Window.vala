@@ -596,6 +596,7 @@ namespace ParaPara {
                     message = _("The file could not be opend (cause: %s)").printf(e.message);
                 }
                 show_error_dialog(message);
+                enable_controls();
                 if (!image_view.has_image) {
                     stack.visible_child_name = "welcome";
                     toolbar.save_button.sensitive = false;
