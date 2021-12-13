@@ -1,0 +1,49 @@
+# ITALIAN TRANSLATION FOR PARAPARA.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the extra package.
+# ALBANO BATTISTELLA <ALBANO_BATTISTELLA@HOTMAIL.COM>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: extra\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-03-13 02:42+0000\n"
+"PO-Revision-Date: 2021-12-09 20:54+0100\n"
+"Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
+"Language-Team: Italian <LL@li.org>\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: data/parapara.appdata.xml.in:7 data/parapara.desktop.in:3
+msgid "ParaPara"
+msgstr "ParaPara"
+
+#: data/parapara.appdata.xml.in:8
+msgid "An image viewer without library"
+msgstr "Un visualizzatore di immagini senza libreria"
+
+#: data/parapara.appdata.xml.in:10
+msgid "An image viewer that supports jpg, png, bmp, and ico files."
+msgstr "Un visualizzatore di immagini che supporta file jpg, png, bmp e ico."
+
+#: data/parapara.appdata.xml.in:53
+msgid "Tanaka Takayuki"
+msgstr "Tanaka Takayuki"
+
+#: data/parapara.desktop.in:4
+msgid "Image Viewer"
+msgstr "Visualizzatore di immagini"
+
+#: data/parapara.desktop.in:5
+msgid "View image files"
+msgstr "Visualizza file immagine"
+
+#: data/parapara.desktop.in:8
+msgid "image-viewer"
+msgstr "visualizzatore-immagini"
+
+#: data/parapara.desktop.in:13
+msgid "Picture;Image;Viewer;"
+msgstr "Foto;Immagine;Visualizzatore;"
