@@ -55,7 +55,7 @@ msgstr "Scegli un file da aprire"
 
 #: src/Widgets/Window.vala:199
 msgid "Click 'Open Image' to get started."
-msgstr "Fai clic su "Apri immagine" per iniziare."
+msgstr "Fai clic su \"Apri immagine\" per iniziare."
 
 #: src/Widgets/SingleImageView.vala:544
 msgid "Do you really overwrite this file?"
