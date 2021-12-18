@@ -467,6 +467,9 @@ namespace ParaPara {
             
             action_save = new SimpleAction("save", VariantType.BOOLEAN);
             action_save.activate.connect((param) => {
+                if (stack.visible_child_name != "picture") {
+                    return;
+                }
                 if (image_view.view_mode == SINGLE_VIEW_MODE) {
                     var single_image_view = image_view as SingleImageView;
                     bool save_mode = param.get_boolean();
@@ -479,6 +482,9 @@ namespace ParaPara {
 
             action_toggle_toolbar = new SimpleAction.stateful("toggletoolbar", VariantType.BOOLEAN, new Variant.boolean(false));
             action_toggle_toolbar.activate.connect((param) => {
+                if (stack.visible_child_name != "picture") {
+                    return;
+                }
                 bool state = action_toggle_toolbar.get_state().get_boolean();
                 state = !state;
                 action_toggle_toolbar.set_state(new Variant.boolean(state));
@@ -529,6 +535,9 @@ namespace ParaPara {
             
             action_fullscreen = new SimpleAction.stateful("fullscreen", VariantType.BOOLEAN, new Variant.boolean(false));
             action_fullscreen.activate.connect((param) => {
+                if (stack.visible_child_name != "picture") {
+                    return;
+                }
                 bool state = action_fullscreen.get_state().get_boolean();
                 state = !state;
                 fullscreen_mode = state;
