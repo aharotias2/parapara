@@ -3,7 +3,35 @@
 }
 
 .toolbar {
-    background-color: @theme_bg_color;
+    /*background-color: @theme_bg_color;*/
+    background-color: rgba(0.0, 0.0, 0.0, 0.5);
+    color: rgba(255, 255, 255, 0.5);
+    border-radius: 16px;
+    margin: 4px;
+}
+
+.toolbar button {
+    background-color: rgba(255.0, 255.0, 255.0, 0.1);
+    background-image: none;
+    color: rgba(255, 255, 255, 0.9);
+    border: 1px rgba(255, 255, 255, 0.3);
+    box-shadow: none;
+    border-radius: 12px;
+    margin: 2px;
+}
+
+.toolbar button:hover {
+    background-color: rgba(128.0, 128.0, 128.0, 0.75);
+    color: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    margin: 2px;
+}
+
+.toolbar button:disabled {
+    background-color: rgba(255.0, 255.0, 255.0, 0.2);
+    color: rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    margin: 2px;
 }
 
 .message_bar {
@@ -15,5 +43,7 @@
 }
 
 .progress_bar {
-    background-color: @theme_bg_color;
+    /*background-color: @theme_bg_color;*/
+    background-color: rgba(0.0, 0.0, 0.0, 0.5);
+    color: rgba(255, 255, 255, 0.5);
 }

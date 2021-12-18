@@ -26,7 +26,7 @@ using Gtk, Gdk;
  * This is the main window of ParaPara.
  */
 namespace ParaPara {
-    public class Window : Gtk.Window {
+    public class Window : Gtk.ApplicationWindow {
         private const IconSize ICON_SIZE = IconSize.SMALL_TOOLBAR;
 
         public bool repeat_updating_file_list { get; construct set; }
@@ -41,13 +41,14 @@ namespace ParaPara {
         public ImageView image_view { get; private set; }
         public ActionButton image_prev_button { get; private set; }
         public ActionButton image_next_button { get; private set; }
-
+        
         public bool fullscreen_mode {
             get {
                 return _fullscreen_mode;
             }
             set {
                 _fullscreen_mode = value;
+                action_fullscreen.set_state(new Variant.boolean(_fullscreen_mode));
                 if (_fullscreen_mode) {
                     get_window().fullscreen();
                     toolbar.fullscreen_button.icon_name = "view-restore-symbolic";
@@ -80,8 +81,22 @@ namespace ParaPara {
         private Granite.Widgets.Welcome welcome;
         private bool _fullscreen_mode = false;
         private bool reveal_progress_flag = false;
+        private bool menu_popped = false;
+        private SimpleAction action_fullscreen;
+        private SimpleAction action_toggle_toolbar;
+        private SimpleAction action_save;
+        private SimpleAction action_save_as;
+        private bool is_open_when_value_changed = true;
 
+        public Window(Gtk.Application app) {
+            Object(
+                application: app
+            );
+        }
+                
         construct {
+            init_action_map();
+            
             /* the headerbar itself */
             headerbar = new HeaderBar() {
                 show_close_button = true
@@ -90,16 +105,6 @@ namespace ParaPara {
                 /* previous, next, open, and save buttons at the left of the headerbar */
                 header_buttons = new Box(Orientation.HORIZONTAL, 5);
                 {
-                    var app_icon = new Gtk.Button.from_icon_name("com.github.aharotias2.parapara", SMALL_TOOLBAR) {
-                        margin = 0
-                    };
-                    {
-                        app_icon.get_style_context().add_class("flat");
-                        app_icon.clicked.connect(() => {
-                            show_app_dialog(this);
-                        });
-                    }
-
                     var navigation_box = new Gtk.ButtonBox(Orientation.HORIZONTAL) {
                             layout_style = Gtk.ButtonBoxStyle.EXPAND };
                     {
@@ -108,6 +113,7 @@ namespace ParaPara {
                         {
                             image_prev_button.get_style_context().add_class("image_button");
                             image_prev_button.clicked.connect(() => {
+                                is_open_when_value_changed = false;
                                 int offset = 1;
                                 if (image_view.view_mode == ViewMode.DUAL_VIEW_MODE) {
                                     offset = 2;
@@ -125,6 +131,7 @@ namespace ParaPara {
                         {
                             image_next_button.get_style_context().add_class("image_button");
                             image_next_button.clicked.connect(() => {
+                                is_open_when_value_changed = false;
                                 int offset = 1;
                                 if (image_view.view_mode == ViewMode.DUAL_VIEW_MODE) {
                                     offset = 2;
@@ -141,55 +148,84 @@ namespace ParaPara {
                         navigation_box.pack_start(image_next_button);
                     }
 
-
-                    var file_box = new Gtk.ButtonBox(Orientation.HORIZONTAL) {
-                            layout_style = Gtk.ButtonBoxStyle.EXPAND };
-                    {
-                        /* file buttons */
-                        var open_button = new ActionButton("document-open-symbolic", _("Open"), {"<Control>o"});
-                        {
-                            open_button.clicked.connect(() => {
-                                on_open_button_clicked();
-                            });
-                        }
-
-                        var new_button = new ActionButton("document-new-symbolic", _("New"), {"<Control>n"});
-                        {
-                            new_button.clicked.connect(() => {
-                                require_new_window();
-                            });
-                        }
-
-                        file_box.pack_start(new_button);
-                        file_box.pack_start(open_button);
-                    }
-
-                    header_buttons.pack_start(app_icon, false, false);
                     header_buttons.pack_start(navigation_box, false, false);
-                    header_buttons.pack_start(file_box, false, false);
                 }
 
-                var header_button_box_right = new ButtonBox(Orientation.HORIZONTAL) {
-                        layout_style = ButtonBoxStyle.EXPAND };
+                var menu_button = new MenuButton();
                 {
-                    /* menu button at the right of the headerbar */
-                    toolbar_toggle_button = new ToggleButton() {
-                            tooltip_markup = Granite.markup_accel_tooltip({"<control>m"}, _("Menu")),
-                            relief = Gtk.ReliefStyle.NONE,
-                            sensitive = false };
+                    var menu_popover = new Popover(menu_button);
                     {
-                        var toggle_toolbar_icon = new Gtk.Image.from_icon_name("view-more-symbolic", ICON_SIZE);
-                        toolbar_toggle_button.add(toggle_toolbar_icon);
-                        toolbar_toggle_button.toggled.connect(() => {
-                            toolbar_revealer_above.reveal_child = toolbar_toggle_button.active;
-                        });
+                        var menu = new GLib.Menu();
+                        {
+                            var new_section = new GLib.Menu();
+                            {
+                                var new_window_menuitem = new GLib.MenuItem(_("New"), "new");
+                                new_section.append_item(new_window_menuitem);
+                            }
+                            
+                            var file_section = new GLib.Menu();
+                            {
+                                var open_menuitem = new GLib.MenuItem(_("Open"), "open");
+                                var save_menuitem = new GLib.MenuItem(_("Save"), "save(false)");
+                                var save_as_menuitem = new GLib.MenuItem(_("Save as…"), "save(true)");
+                                
+                                file_section.append_item(open_menuitem);
+                                file_section.append_item(save_menuitem);
+                                file_section.append_item(save_as_menuitem);
+                            }
+
+                            var view_section = new GLib.Menu();
+                            {
+                                var view_mode_menu = new GLib.Menu();
+                                {
+                                    var single_menuitem = new GLib.MenuItem(_("Single View Mode"), "change-view-mode('single')");
+                                    single_menuitem.set_icon(new ThemedIcon("view-paged-symbolic"));
+
+                                    var slide_menuitem = new GLib.MenuItem(_("Scroll View Mode"), "change-view-mode('slide')");
+                                    slide_menuitem.set_icon(new ThemedIcon("view-continuous-symbolic"));
+
+                                    var dual_menuitem = new GLib.MenuItem(_("Dual View Mode"), "change-view-mode('dual')");
+                                    dual_menuitem.set_icon(new ThemedIcon("view-dual-symbolic"));
+
+                                    view_mode_menu.append_item(single_menuitem);
+                                    view_mode_menu.append_item(slide_menuitem);
+                                    view_mode_menu.append_item(dual_menuitem);
+                                }
+                                
+                                var toggle_toolbar_menuitem = new GLib.MenuItem(_("Show Toolbar"), "toggletoolbar(true)");
+                                var fullscreen_menuitem = new GLib.MenuItem(_("Full Screen"), "fullscreen(true)");
+                                
+                                view_section.append_submenu(_("Select View Mode"), view_mode_menu);
+                                view_section.append_item(toggle_toolbar_menuitem);
+                                view_section.append_item(fullscreen_menuitem);
+                            }
+                            
+                            var info_section = new GLib.Menu();
+                            {
+                                var show_info_menuitem = new GLib.MenuItem(_("About…"), "show_info");
+                                show_info_menuitem.set_icon(new ThemedIcon("com.github.aharotias2.parapara"));
+                                info_section.append_item(show_info_menuitem);
+                            }
+
+                            menu.append_section(null, new_section);
+                            menu.append_section(null, file_section);
+                            menu.append_section(null, view_section);                           
+                            menu.append_section(null, info_section);
+                        }
+                        
+                        menu_popover.bind_model(menu, "win");
+                        Idle.add(() => { menu_popover.sensitive = true; return false; });
                     }
-
-                    header_button_box_right.add(toolbar_toggle_button);
+                    
+                    menu_button.image = new Gtk.Image.from_icon_name("open-menu-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
+                    menu_button.clicked.connect(() => {
+                        menu_popped = !menu_popped;
+                    });
+                    menu_button.popover = menu_popover;
                 }
-
+                
                 headerbar.pack_start(header_buttons);
-                headerbar.pack_end(header_button_box_right);
+                headerbar.pack_end(menu_button);
             }
 
             /* switch welcome screen and image view */
@@ -232,6 +268,7 @@ namespace ParaPara {
                             });
                             image_view.image_opened.connect((name, index) => {
                                 if (progress_scale.get_value() != (double) index) {
+                                    is_open_when_value_changed = false;
                                     progress_scale.set_value((double) index);
                                     progress_label.label = _("Location: %d / %d (%d%%)").printf(
                                             index + 1, file_list.size, (int) ((double) index / (double) file_list.size * 100));
@@ -322,17 +359,37 @@ namespace ParaPara {
                                 progress_scale = new Scale.with_range(Orientation.HORIZONTAL, 0.0, 1.0, 0.1) {
                                         draw_value = false, has_origin = true, margin = 5 };
                                 {
-                                    progress_scale.change_value.connect(() => {
-                                        debug("change progress value: %f", progress_scale.get_value());
+                                    progress_scale.change_value.connect((scroll_type, new_value) => {
+                                        debug("progress_scale.change_value(%f)", progress_scale.get_value());
                                         debug("progress_adjustment %f, %f", progress_scale.adjustment.upper, progress_scale.adjustment.lower);
-
-                                        image_view.open_at_async.begin((int) progress_scale.get_value(), (obj, res) => {
-                                            try {
-                                                image_view.open_at_async.end(res);
-                                            } catch (Error e) {
-                                                show_error_dialog(e.message);
+                                    });
+                                    
+                                    progress_scale.value_changed.connect(() => {
+                                        debug("progress_scale.value_changed => (%f)", progress_scale.get_value());
+                                        if (is_open_when_value_changed) {
+                                            switch (image_view.view_mode) {
+                                              default:
+                                              case SINGLE_VIEW_MODE:
+                                              case DUAL_VIEW_MODE:
+                                                int index = (int) progress_scale.get_value();
+                                                image_view.open_at_async.begin(index, (obj, res) => {
+                                                    try {
+                                                        image_view.open_at_async.end(res);
+                                                        progress_label.label = _("Location: %d / %d (%d%%)").printf(
+                                                                index + 1, file_list.size, (int) ((double) index / (double) file_list.size * 100));
+                                                    } catch (Error e) {
+                                                        show_error_dialog(e.message);
+                                                    }
+                                                });
+                                                break;
+                                              case SLIDE_VIEW_MODE:
+                                                var view = image_view as SlideImageView;
+                                                view.set_location(progress_scale.get_value());
+                                                break;
                                             }
-                                        });
+                                        } else {
+                                            is_open_when_value_changed = true;
+                                        }
                                     });
                                 }
 
@@ -375,6 +432,91 @@ namespace ParaPara {
             setup_css();
         }
 
+        private void init_action_map() {
+            var action_new = new SimpleAction("new", null);
+            action_new.activate.connect(() => {
+                require_new_window();
+            });
+            add_action(action_new);
+            
+            var action_open = new SimpleAction("open", null);
+            action_open.activate.connect(() => {
+                on_open_button_clicked();
+            });
+            add_action(action_open);
+            
+            action_save = new SimpleAction("save", VariantType.BOOLEAN);
+            action_save.activate.connect((param) => {
+                if (image_view.view_mode == SINGLE_VIEW_MODE) {
+                    var single_image_view = image_view as SingleImageView;
+                    bool save_mode = param.get_boolean();
+                    single_image_view.save_file_async.begin(save_mode);
+                } else {
+                    print("Save action was activated\n");
+                }
+            });
+            add_action(action_save);
+
+            action_toggle_toolbar = new SimpleAction.stateful("toggletoolbar", VariantType.BOOLEAN, new Variant.boolean(false));
+            action_toggle_toolbar.activate.connect((param) => {
+                bool state = action_toggle_toolbar.get_state().get_boolean();
+                state = !state;
+                action_toggle_toolbar.set_state(new Variant.boolean(state));
+                toolbar_revealer_above.reveal_child = state;
+            });
+            action_toggle_toolbar.set_state(new Variant.boolean(false));
+            add_action(action_toggle_toolbar);
+            
+            var action_show_info = new SimpleAction("show_info", null);
+            action_show_info.activate.connect(() => {
+                show_app_dialog(this);
+            });
+            add_action(action_show_info);
+            
+            var action_change_view_mode = new SimpleAction.stateful("change-view-mode", VariantType.STRING, new Variant.string("single"));
+            action_change_view_mode.activate.connect((param) => {
+                if (stack.visible_child_name != "picture") {
+                    return;
+                }
+                try {
+                    action_change_view_mode.set_state(param);
+                    ViewMode view_mode = SINGLE_VIEW_MODE;
+                    switch (param.get_string()) {
+                      case "single":
+                        view_mode = SINGLE_VIEW_MODE;
+                        action_save.set_enabled(true);
+                        action_save_as.set_enabled(true);
+                        break;
+                      case "slide":
+                        view_mode = SLIDE_VIEW_MODE;
+                        action_save.set_enabled(false);
+                        action_save_as.set_enabled(false);
+                        break;
+                      case "dual":
+                        view_mode = DUAL_VIEW_MODE;
+                        action_save.set_enabled(false);
+                        action_save_as.set_enabled(false);
+                        break;
+                    }
+                    toolbar.view_mode = view_mode;
+                    update_image_view(view_mode);
+                } catch (Error error) {
+                    show_error_dialog(error.message);
+                }
+            });
+            action_change_view_mode.set_state(new Variant.string("single"));
+            add_action(action_change_view_mode);
+            
+            action_fullscreen = new SimpleAction.stateful("fullscreen", VariantType.BOOLEAN, new Variant.boolean(false));
+            action_fullscreen.activate.connect((param) => {
+                bool state = action_fullscreen.get_state().get_boolean();
+                state = !state;
+                fullscreen_mode = state;
+            });
+            action_fullscreen.set_state(new Variant.boolean(false));
+            add_action(action_fullscreen);
+        }
+
         private bool in_progress_area(double x, double y) {
             int win_x_root, win_y_root;
             get_window().get_origin(out win_x_root, out win_y_root);
@@ -415,22 +557,20 @@ namespace ParaPara {
                         });
                     }
                 }
-                if (fullscreen_mode) {
-                    if (!toolbar.sticked) {
-                        if (in_toolbar_area(ev.x_root, ev.y_root)) {
-                            if (!toolbar_revealer_above.child_revealed) {
-                                Timeout.add(300, () => {
-                                    toolbar_revealer_above.reveal_child = true;
-                                    return false;
-                                });
-                            }
-                        } else {
-                            if (toolbar_revealer_above.child_revealed) {
-                                Timeout.add(300, () => {
-                                    toolbar_revealer_above.reveal_child = false;
-                                    return false;
-                                });
-                            }
+                if (!menu_popped && !action_toggle_toolbar.get_state().get_boolean()) {
+                    if (in_toolbar_area(ev.x_root, ev.y_root)) {
+                        if (!toolbar_revealer_above.child_revealed) {
+                            Timeout.add(300, () => {
+                                toolbar_revealer_above.reveal_child = true;
+                                return false;
+                            });
+                        }
+                    } else {
+                        if (toolbar_revealer_above.child_revealed) {
+                            Timeout.add(300, () => {
+                                toolbar_revealer_above.reveal_child = false;
+                                return false;
+                            });
                         }
                     }
                 }
@@ -586,8 +726,6 @@ namespace ParaPara {
                     toolbar.animation_play_pause_button.icon_name = "media-playback-start-symbolic";
                 }
                 stack.visible_child_name = "picture";
-                toolbar_toggle_button.sensitive = true;
-                toolbar.save_button.sensitive = true;
             } catch (Error e) {
                 string message;
                 if (e is AppError) {
@@ -599,7 +737,6 @@ namespace ParaPara {
                 enable_controls();
                 if (!image_view.has_image) {
                     stack.visible_child_name = "welcome";
-                    toolbar.save_button.sensitive = false;
                 }
             }
         }
@@ -634,6 +771,7 @@ namespace ParaPara {
                     headerbar.title = title;
                 });
                 image_view.image_opened.connect((name, index) => {
+                    is_open_when_value_changed = false;
                     if (progress_scale.get_value() != (double) index) {
                         progress_scale.set_value((double) index);
                         progress_label.label = _("Location: %d / %d (%d%%)").printf(

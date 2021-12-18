@@ -553,6 +553,20 @@ namespace ParaPara {
             return length_list.length - 1;
         }
 
+        public void set_location(double location) {
+            double adj = 0.0;
+            if (orientation == VERTICAL) {
+                for (int i = 0; i < location; i++) {
+                    adj += widget_list[i].get_allocated_height();
+                }
+            } else {
+                for (int i = 0; i < location; i++) {
+                    adj += widget_list[i].get_allocated_width();
+                }
+            }
+            primary_adjustment.value = adj;
+        }
+        
         private void change_cursor(CursorType cursor_type) {
             main_window.get_window().cursor = new Gdk.Cursor.for_display(Gdk.Screen.get_default().get_display(), cursor_type);
         }

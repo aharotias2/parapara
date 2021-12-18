@@ -60,13 +60,14 @@ namespace ParaPara {
         }
 
         private ParaPara.Window create_new_window() {
-            var window = new ParaPara.Window() {
+            var window = new ParaPara.Window(this) {
                 repeat_updating_file_list = config_repeat_updating_file_list
             };
             window.set_application(this);
             window.require_new_window.connect(() => create_new_window());
             window.require_quit.connect(() => quit());
             window.show_all();
+            add_window(window);
             return window;
         }
 

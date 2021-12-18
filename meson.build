@@ -10,6 +10,7 @@ if is_debug
 endif
 
 gnome = import('gnome')
+
 i18n = import('i18n')
 
 add_project_arguments(

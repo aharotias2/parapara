@@ -23,7 +23,7 @@ using Gtk;
 
 namespace ParaPara {
     public class ToolBar : Bin {
-        public ParaPara.Window main_window { get; construct; }
+        public ParaPara.Window main_window { get; construct set; }
         public SortOrder sort_order { get; protected set; }
         public bool sticked { get; protected set; }
         public signal void sort_order_changed(SortOrder sort_order);
@@ -37,9 +37,6 @@ namespace ParaPara {
         public ActionButton stick_button { get; private set; }
         public ActionButton animation_forward_button { get; private set; }
         public ActionButton animation_play_pause_button { get; private set; }
-        public ToggleButton single_view_button { get; private set; }
-        public ToggleButton slide_view_button { get; private set; }
-        public ToggleButton dual_view_button { get; private set; }
         public Button l2button { get; private set; }
         public Button l1button { get; private set; }
         public Button r1button { get; private set; }
@@ -57,7 +54,6 @@ namespace ParaPara {
         private Box single_view_mode_box;
         private Box slide_view_mode_box;
         private Box dual_view_mode_box;
-        private ButtonBox mode_switch_button_box;
         private ViewMode _view_mode;
 
         private SingleImageView? single_image_view {
@@ -88,20 +84,14 @@ namespace ParaPara {
                       case SINGLE_VIEW_MODE:
                         toolbar_hbox.remove(single_view_mode_box);
                         single_view_mode_box.hide();
-                        single_view_button.active = false;
-                        single_view_button.sensitive = true;
                         break;
                       case SLIDE_VIEW_MODE:
                         toolbar_hbox.remove(slide_view_mode_box);
                         slide_view_mode_box.hide();
-                        slide_view_button.active = false;
-                        slide_view_button.sensitive = true;
                         break;
                       case DUAL_VIEW_MODE:
                         toolbar_hbox.remove(dual_view_mode_box);
                         dual_view_mode_box.hide();
-                        dual_view_button.active = false;
-                        dual_view_button.sensitive = true;
                         break;
                     }
                     _view_mode = value;
@@ -109,8 +99,6 @@ namespace ParaPara {
                       case SINGLE_VIEW_MODE:
                         toolbar_hbox.pack_start(single_view_mode_box, false, false);
                         toolbar_hbox.reorder_child(single_view_mode_box, 0);
-                        single_view_button.active = true;
-                        single_view_button.sensitive = false;
                         if (sort_order == SortOrder.ASC && !sort_asc_button.active) {
                             sort_asc_button.active = true;
                         }
@@ -121,14 +109,10 @@ namespace ParaPara {
                       case SLIDE_VIEW_MODE:
                         toolbar_hbox.pack_start(slide_view_mode_box, false, false);
                         toolbar_hbox.reorder_child(slide_view_mode_box, 0);
-                        slide_view_button.active = true;
-                        slide_view_button.sensitive = false;
                         break;
                       case DUAL_VIEW_MODE:
                         toolbar_hbox.pack_start(dual_view_mode_box, false, false);
                         toolbar_hbox.reorder_child(dual_view_mode_box, 0);
-                        dual_view_button.active = true;
-                        dual_view_button.sensitive = false;
                         if (sort_order == SortOrder.ASC && !l2rbutton.active) {
                             l2rbutton.active = true;
                         }
@@ -137,7 +121,6 @@ namespace ParaPara {
                         }
                         break;
                     }
-                    view_mode_changed(_view_mode);
                     toolbar_hbox.show_all();
                 }
             }
@@ -155,7 +138,8 @@ namespace ParaPara {
         construct {
             toolbar_hbox = new Box(Orientation.HORIZONTAL, 0) {
                 vexpand = false,
-                valign = Align.START
+                valign = Align.START,
+                halign = Align.CENTER
             };
             {
                 single_view_mode_box = new Box(Orientation.HORIZONTAL, 0) {
@@ -163,33 +147,6 @@ namespace ParaPara {
                     valign = Align.START
                 };
                 {
-                    var save_button_box = new ButtonBox(Orientation.HORIZONTAL) {
-                        margin = 3,
-                        layout_style = ButtonBoxStyle.EXPAND
-                    };
-                    {
-                        save_button = new ActionButton("document-save-symbolic", _("Save"), {"<Control>s"}) {
-                            sensitive = false
-                        };
-                        {
-                            save_button.get_style_context().add_class("image_overlay_button");
-                            save_button.clicked.connect(() => {
-                                single_image_view.save_file_async.begin(false);
-                            });
-                        }
-
-                        save_as_button = new ActionButton("document-save-as-symbolic", _("Save as…"), {"<Control><Shift>s"});
-                        {
-                            save_as_button.get_style_context().add_class("image_overlay_button");
-                            save_as_button.clicked.connect(() => {
-                                single_image_view.save_file_async.begin(true);
-                            });
-                        }
-
-                        save_button_box.pack_start(save_button);
-                        save_button_box.pack_start(save_as_button);
-                    }
-
                     var image_actions_button_box = new ButtonBox(Orientation.HORIZONTAL) {
                         margin = 3,
                         layout_style = ButtonBoxStyle.EXPAND
@@ -390,7 +347,6 @@ namespace ParaPara {
                         animation_actions_button_box.pack_start(animation_forward_button);
                     }
 
-                    single_view_mode_box.pack_start(save_button_box, false, false);
                     single_view_mode_box.pack_start(sort_order_button_box, false, false);
                     single_view_mode_box.pack_start(image_actions_button_box, false, false);
                     single_view_mode_box.pack_start(animation_actions_button_box, false, false);
@@ -406,7 +362,9 @@ namespace ParaPara {
                         layout_style = ButtonBoxStyle.EXPAND
                     };
                     {
-                        l2button = new ActionButton("move-two-page-left-symbolic", _("Slide 2 page to Left"), null);
+                        l2button = new ActionButton.from_resource(
+                                "/com/github/aharotias2/parapara/icons/symbolic/move-two-page-left-symbolic.svg",
+                                _("Slide 2 page to Left"), null);
                         {
                             l2button.clicked.connect(() => {
                                 if (sort_order == SortOrder.ASC) {
@@ -417,7 +375,9 @@ namespace ParaPara {
                             });
                         }
 
-                        l1button = new ActionButton("move-one-page-left-symbolic", _("Slide 1 page to Left"), null);
+                        l1button = new ActionButton.from_resource(
+                                "/com/github/aharotias2/parapara/icons/symbolic/move-one-page-left-symbolic.svg",
+                                _("Slide 1 page to Left"), null);
                         {
                             l1button.clicked.connect(() => {
                                 if (sort_order == SortOrder.ASC) {
@@ -428,7 +388,9 @@ namespace ParaPara {
                             });
                         }
 
-                        r1button = new ActionButton("move-one-page-right-symbolic", _("Slide 1 page to Right"), null);
+                        r1button = new ActionButton.from_resource(
+                                "/com/github/aharotias2/parapara/icons/symbolic/move-one-page-right-symbolic.svg",
+                                _("Slide 1 page to Right"), null);
                         {
                             r1button.clicked.connect(() => {
                                 if (sort_order == SortOrder.ASC) {
@@ -439,7 +401,9 @@ namespace ParaPara {
                             });
                         }
 
-                        r2button = new ActionButton("move-two-page-right-symbolic", _("Slide 2 page to Right"), null);
+                        r2button = new ActionButton.from_resource(
+                                "/com/github/aharotias2/parapara/icons/symbolic/move-two-page-right-symbolic.svg",
+                                _("Slide 2 page to Right"), null);
                         {
                             r2button.clicked.connect(() => {
                                 if (sort_order == SortOrder.ASC) {
@@ -463,7 +427,8 @@ namespace ParaPara {
                     {
                         l2rbutton = new ToggleButton() {
                             tooltip_text = _("Left to Right"),
-                            image = new Gtk.Image.from_icon_name("read-left-to-right-symbolic", SMALL_TOOLBAR),
+                            image = new Gtk.Image.from_resource(
+                                    "/com/github/aharotias2/parapara/icons/symbolic/read-left-to-right-symbolic.svg"),
                             active = true,
                             sensitive = false
                         };
@@ -482,7 +447,8 @@ namespace ParaPara {
 
                         r2lbutton = new ToggleButton() {
                             tooltip_text = _("Right to Left"),
-                            image = new Gtk.Image.from_icon_name("read-right-to-left-symbolic", SMALL_TOOLBAR),
+                            image = new Gtk.Image.from_resource(
+                                    "/com/github/aharotias2/parapara/icons/symbolic/read-right-to-left-symbolic.svg"),
                             active = false
                         };
                         {
@@ -552,7 +518,8 @@ namespace ParaPara {
                     {
                         orientation_vertical_button = new ToggleButton() {
                             tooltip_text = _("Vertical"),
-                            image = new Gtk.Image.from_icon_name("orientation-vertical-symbolic", SMALL_TOOLBAR),
+                            image = new Gtk.Image.from_resource(
+                                    "/com/github/aharotias2/parapara/icons/symbolic/orientation-vertical-symbolic.svg"),
                             active = true,
                             sensitive = false
                         };
@@ -570,7 +537,8 @@ namespace ParaPara {
 
                         orientation_horizontal_button = new ToggleButton() {
                             tooltip_text = _("Vertical"),
-                            image = new Gtk.Image.from_icon_name("orientation-horizontal-symbolic", SMALL_TOOLBAR),
+                            image = new Gtk.Image.from_resource(
+                                    "/com/github/aharotias2/parapara/icons/symbolic/orientation-horizontal-symbolic.svg"),
                             active = false,
                             sensitive = true
                         };
@@ -644,90 +612,7 @@ namespace ParaPara {
                     slide_view_mode_box.pack_start(slide_sort_order_button_box);
                 }
 
-                var fullscreen_button_box = new ButtonBox(Orientation.HORIZONTAL) {
-                    margin = 3,
-                    layout_style = ButtonBoxStyle.EXPAND
-                };
-                {
-                    fullscreen_button = new ActionButton("view-fullscreen-symbolic", _("Fullscreen"), {"f11"});
-                    {
-                        fullscreen_button.clicked.connect(() => {
-                            main_window.fullscreen_mode = !main_window.fullscreen_mode;
-                        });
-                    }
-                    fullscreen_button_box.pack_start(fullscreen_button);
-                }
-
-                mode_switch_button_box = new ButtonBox(Orientation.HORIZONTAL) {
-                    margin = 3,
-                    layout_style = ButtonBoxStyle.EXPAND
-                };
-                {
-                    single_view_button = new ToggleButton() {
-                        tooltip_text = _("Single View Mode"),
-                        image = new Gtk.Image.from_icon_name("view-paged-symbolic", IconSize.SMALL_TOOLBAR),
-                        active = true,
-                        sensitive = false
-                    };
-                    {
-                        single_view_button.get_style_context().add_class("image_overlay_button");
-                        single_view_button.toggled.connect(() => {
-                            view_mode = ViewMode.SINGLE_VIEW_MODE;
-                        });
-                    }
-
-                    slide_view_button = new ToggleButton() {
-                        tooltip_text = _("Scroll View Mode"),
-                        image = new Gtk.Image.from_icon_name("view-continuous-symbolic", IconSize.SMALL_TOOLBAR),
-                        active = false
-                    };
-                    {
-                        slide_view_button.get_style_context().add_class("image_overlay_button");
-                        slide_view_button.toggled.connect(() => {
-                            view_mode = ViewMode.SLIDE_VIEW_MODE;
-                        });
-                    }
-
-                    dual_view_button = new ToggleButton() {
-                        tooltip_text = _("Dual View Mode"),
-                        image = new Gtk.Image.from_icon_name("view-dual-symbolic", IconSize.SMALL_TOOLBAR),
-                        active = false
-                    };
-                    {
-                        dual_view_button.get_style_context().add_class("image_overlay_button");
-                        dual_view_button.toggled.connect(() => {
-                            view_mode = ViewMode.DUAL_VIEW_MODE;
-                        });
-                    }
-
-                    mode_switch_button_box.pack_start(single_view_button);
-                    mode_switch_button_box.pack_start(slide_view_button);
-                    mode_switch_button_box.pack_start(dual_view_button);
-                }
-
-                var stick_button_box = new ButtonBox(Orientation.HORIZONTAL) {
-                    margin = 3,
-                    layout_style = ButtonBoxStyle.EXPAND
-                };
-                {
-                    stick_button = new ActionButton("pan-down-symbolic", _("Stick"), {"<control>f"});
-                    {
-                        stick_button.clicked.connect(() => {
-                            if (sticked) {
-                                unstick_toolbar();
-                            } else {
-                                stick_toolbar();
-                            }
-                        });
-                    }
-
-                    stick_button_box.pack_start(stick_button);
-                }
-
                 toolbar_hbox.pack_start(single_view_mode_box, false, false);
-                toolbar_hbox.pack_end(stick_button_box, false, false);
-                toolbar_hbox.pack_end(mode_switch_button_box, false, false);
-                toolbar_hbox.pack_end(fullscreen_button_box, false, false);
                 toolbar_hbox.get_style_context().add_class("toolbar");
             }
             add(toolbar_hbox);
