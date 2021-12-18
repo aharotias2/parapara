@@ -105,6 +105,25 @@ namespace ParaPara {
                 /* previous, next, open, and save buttons at the left of the headerbar */
                 header_buttons = new Box(Orientation.HORIZONTAL, 5);
                 {
+                    var open_button_box = new Gtk.ButtonBox(Orientation.HORIZONTAL);
+                    {
+                        var open_button = new Button();
+                        {
+                            var open_button_inner_box = new Box(HORIZONTAL, 0);
+                            {
+                                open_button_inner_box.pack_start(new Gtk.Image.from_icon_name("document-open-symbolic", SMALL_TOOLBAR));
+                                open_button_inner_box.pack_start(new Gtk.Label(_("Open")));
+                            }
+                            
+                            open_button.add(open_button_inner_box);
+                            open_button.clicked.connect(() => {
+                                on_open_button_clicked();
+                            });
+                        }
+                        
+                        open_button_box.pack_start(open_button);
+                    }
+                    
                     var navigation_box = new Gtk.ButtonBox(Orientation.HORIZONTAL) {
                             layout_style = Gtk.ButtonBoxStyle.EXPAND };
                     {
@@ -149,6 +168,7 @@ namespace ParaPara {
                     }
 
                     header_buttons.pack_start(navigation_box, false, false);
+                    header_buttons.pack_start(open_button_box, false, false);
                 }
 
                 var menu_button = new MenuButton();
