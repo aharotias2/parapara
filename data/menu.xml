@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <menu id="app-menu">
+    <section>
+      <attribute name="display-hint">horizontal-buttons</attribute>
+      <item>
+	<attribute name="label" translatable="yes">Single View Mode</attribute>
+	<attribute name="action">win.change-view-mode</attribute>
+	<attribute name="target">single</attribute>
+	<attribute name="verb-icon">view-paged-symbolic</attribute>
+      </item>
+      <item>
+	<attribute name="label" translatable="yes">Scroll View Mode</attribute>
+	<attribute name="action">win.change-view-mode</attribute>
+	<attribute name="target">slide</attribute>
+	<attribute name="verb-icon">view-continuous-symbolic</attribute>
+      </item>
+      <item>
+	<attribute name="label" translatable="yes">Dual View Mode</attribute>
+	<attribute name="action">win.change-view-mode</attribute>
+	<attribute name="target">dual</attribute>
+	<attribute name="verb-icon">view-dual-symbolic</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+	<attribute name="label" translatable="yes">New</attribute>
+	<attribute name="action">win.new</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+	<attribute name="label" translatable="yes">Open</attribute>
+	<attribute name="action">win.open</attribute>
+      </item>
+      <item>
+	<attribute name="label" translatable="yes">Save</attribute>
+	<attribute name="action">win.save</attribute>
+	<attribute name="target" type="b">false</attribute>
+      </item>
+      <item>
+	<attribute name="label" translatable="yes">Save as…</attribute>
+	<attribute name="action">win.save</attribute>
+	<attribute name="target" type="b">true</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+	<attribute name="label" translatable="yes">Show Toolbar</attribute>
+	<attribute name="action">win.toggletoolbar</attribute>
+	<attribute name="target" type="b">true</attribute>
+      </item>
+      <item>
+	<attribute name="label" translatable="yes">Full Screen</attribute>
+	<attribute name="action">win.fullscreen</attribute>
+	<attribute name="target" type="b">true</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+	<attribute name="label" translatable="yes">About…</attribute>
+	<attribute name="action">win.show_info</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

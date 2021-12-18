@@ -173,75 +173,13 @@ namespace ParaPara {
 
                 var menu_button = new MenuButton();
                 {
-                    var menu_popover = new Popover(menu_button);
-                    {
-                        var menu = new GLib.Menu();
-                        {
-                            var new_section = new GLib.Menu();
-                            {
-                                var new_window_menuitem = new GLib.MenuItem(_("New"), "new");
-                                new_section.append_item(new_window_menuitem);
-                            }
-                            
-                            var file_section = new GLib.Menu();
-                            {
-                                var open_menuitem = new GLib.MenuItem(_("Open"), "open");
-                                var save_menuitem = new GLib.MenuItem(_("Save"), "save(false)");
-                                var save_as_menuitem = new GLib.MenuItem(_("Save as…"), "save(true)");
-                                
-                                file_section.append_item(open_menuitem);
-                                file_section.append_item(save_menuitem);
-                                file_section.append_item(save_as_menuitem);
-                            }
-
-                            var view_section = new GLib.Menu();
-                            {
-                                var view_mode_menu = new GLib.Menu();
-                                {
-                                    var single_menuitem = new GLib.MenuItem(_("Single View Mode"), "change-view-mode('single')");
-                                    single_menuitem.set_icon(new ThemedIcon("view-paged-symbolic"));
-
-                                    var slide_menuitem = new GLib.MenuItem(_("Scroll View Mode"), "change-view-mode('slide')");
-                                    slide_menuitem.set_icon(new ThemedIcon("view-continuous-symbolic"));
-
-                                    var dual_menuitem = new GLib.MenuItem(_("Dual View Mode"), "change-view-mode('dual')");
-                                    dual_menuitem.set_icon(new ThemedIcon("view-dual-symbolic"));
-
-                                    view_mode_menu.append_item(single_menuitem);
-                                    view_mode_menu.append_item(slide_menuitem);
-                                    view_mode_menu.append_item(dual_menuitem);
-                                }
-                                
-                                var toggle_toolbar_menuitem = new GLib.MenuItem(_("Show Toolbar"), "toggletoolbar(true)");
-                                var fullscreen_menuitem = new GLib.MenuItem(_("Full Screen"), "fullscreen(true)");
-                                
-                                view_section.append_submenu(_("Select View Mode"), view_mode_menu);
-                                view_section.append_item(toggle_toolbar_menuitem);
-                                view_section.append_item(fullscreen_menuitem);
-                            }
-                            
-                            var info_section = new GLib.Menu();
-                            {
-                                var show_info_menuitem = new GLib.MenuItem(_("About…"), "show_info");
-                                show_info_menuitem.set_icon(new ThemedIcon("com.github.aharotias2.parapara"));
-                                info_section.append_item(show_info_menuitem);
-                            }
-
-                            menu.append_section(null, new_section);
-                            menu.append_section(null, file_section);
-                            menu.append_section(null, view_section);                           
-                            menu.append_section(null, info_section);
-                        }
-                        
-                        menu_popover.bind_model(menu, "win");
-                        Idle.add(() => { menu_popover.sensitive = true; return false; });
-                    }
+                    var menu_builder = new Gtk.Builder.from_resource("/com/github/aharotias2/parapara/menu.xml");
+                    menu_button.set_menu_model(menu_builder.get_object("app-menu") as GLib.MenuModel);
                     
                     menu_button.image = new Gtk.Image.from_icon_name("open-menu-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
                     menu_button.clicked.connect(() => {
                         menu_popped = !menu_popped;
                     });
-                    menu_button.popover = menu_popover;
                 }
                 
                 headerbar.pack_start(header_buttons);
