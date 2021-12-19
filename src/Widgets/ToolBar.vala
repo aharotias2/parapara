@@ -30,6 +30,7 @@ namespace ParaPara {
         public signal void stick_button_clicked(bool sticked);
         public signal void view_mode_changed(ViewMode view_mode);
 
+        public ToolbarOption option { get; set; default = DEPENDS; }
         public ActionButton save_button { get; private set; }
         public ActionButton save_as_button { get; private set; }
         public ActionButton resize_button { get; private set; }

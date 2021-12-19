@@ -45,11 +45,26 @@
       </item>
     </section>
     <section>
-      <item>
-	<attribute name="label" translatable="yes">Show Toolbar</attribute>
-	<attribute name="action">win.toggletoolbar</attribute>
-	<attribute name="target" type="b">true</attribute>
-      </item>
+      <submenu>
+	<attribute name="label" translatable="yes">Toolbar Option</attribute>
+	<section>
+	  <item>
+	    <attribute name="label" translatable="yes">Keep Visible</attribute>
+	    <attribute name="action">win.toggletoolbar</attribute>
+	    <attribute name="target">always-visible</attribute>
+	  </item>
+	  <item>
+	    <attribute name="label" translatable="yes">Depends</attribute>
+	    <attribute name="action">win.toggletoolbar</attribute>
+	    <attribute name="target">depends</attribute>
+	  </item>
+	  <item>
+	    <attribute name="label" translatable="yes">Keep Hidden</attribute>
+	    <attribute name="action">win.toggletoolbar</attribute>
+	    <attribute name="target">always-hidden</attribute>
+	  </item>
+	</section>
+      </submenu>
       <item>
 	<attribute name="label" translatable="yes">Full Screen</attribute>
 	<attribute name="action">win.fullscreen</attribute>

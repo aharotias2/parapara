@@ -44,6 +44,7 @@ executable(
     'src/Model/SingleFileAccessor.vala',
     'src/Model/DualFileAccessor.vala',
     'src/Model/SlideFileAccessor.vala',
+    'src/Model/ToolbarOption.vala',
     'src/Widgets/ImageView.vala',
     'src/Widgets/Window.vala',
     'src/Widgets/ResizeDialog.vala',

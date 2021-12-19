@@ -418,17 +418,21 @@ namespace ParaPara {
             });
             add_action(action_save);
 
-            action_toggle_toolbar = new SimpleAction.stateful("toggletoolbar", VariantType.BOOLEAN, new Variant.boolean(false));
+            action_toggle_toolbar = new SimpleAction.stateful("toggletoolbar", VariantType.STRING, new Variant.string("depends"));
             action_toggle_toolbar.activate.connect((param) => {
                 if (stack.visible_child_name != "picture") {
                     return;
                 }
-                bool state = action_toggle_toolbar.get_state().get_boolean();
-                state = !state;
-                action_toggle_toolbar.set_state(new Variant.boolean(state));
-                toolbar_revealer_above.reveal_child = state;
+                string new_state = param.get_string();
+                action_toggle_toolbar.set_state(param);
+                toolbar.option = ToolbarOption.value_of(new_state);
+                if (toolbar.option == ALWAYS_VISIBLE) {
+                    toolbar_revealer_above.reveal_child = true;
+                } else if (toolbar.option == ALWAYS_HIDDEN) {
+                    toolbar_revealer_above.reveal_child = false;
+                }
             });
-            action_toggle_toolbar.set_state(new Variant.boolean(false));
+            action_toggle_toolbar.set_state(new Variant.string("depends"));
             add_action(action_toggle_toolbar);
             
             var action_show_info = new SimpleAction("show_info", null);
@@ -524,7 +528,7 @@ namespace ParaPara {
                         });
                     }
                 }
-                if (!menu_popped && !action_toggle_toolbar.get_state().get_boolean()) {
+                if (!menu_popped && toolbar.option == DEPENDS) {
                     if (in_toolbar_area(ev.x_root, ev.y_root)) {
                         if (!toolbar_revealer_above.child_revealed) {
                             Timeout.add(300, () => {
