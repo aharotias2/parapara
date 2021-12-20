@@ -2,7 +2,7 @@
 <gresources>
   <gresource prefix="/com/github/aharotias2/parapara">
     <file alias="Application.css">Application.css</file>
-    <file>menu.xml</file>
+    <file>menu.ui</file>
     <file>icons/symbolic/move-one-page-left-symbolic.svg</file>
     <file>icons/symbolic/move-one-page-right-symbolic.svg</file>
     <file>icons/symbolic/move-two-page-left-symbolic.svg</file>

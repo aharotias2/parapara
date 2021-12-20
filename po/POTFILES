@@ -5,3 +5,4 @@ src/Widgets/ResizeDialog.vala
 src/Widgets/SingleImageView.vala
 src/Widgets/ToolBar.vala
 src/Widgets/Window.vala
+data/menu.ui

@@ -173,7 +173,7 @@ namespace ParaPara {
 
                 var menu_button = new MenuButton();
                 {
-                    var menu_builder = new Gtk.Builder.from_resource("/com/github/aharotias2/parapara/menu.xml");
+                    var menu_builder = new Gtk.Builder.from_resource("/com/github/aharotias2/parapara/menu.ui");
                     menu_button.set_menu_model(menu_builder.get_object("app-menu") as GLib.MenuModel);
                     
                     menu_button.image = new Gtk.Image.from_icon_name("open-menu-symbolic", Gtk.IconSize.SMALL_TOOLBAR);

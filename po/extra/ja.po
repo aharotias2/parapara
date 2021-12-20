@@ -43,13 +43,9 @@ msgid "View image files"
 msgstr "画像ファイルを表示します"
 
 #: data/parapara.desktop.in:8
-#, fuzzy
 msgid "image-viewer"
 msgstr "画像ビューアー"
 
 #: data/parapara.desktop.in:13
 msgid "Picture;Image;Viewer;"
 msgstr "Picture;Image;Viewer;ピクチャー;画像;イメージ;ビューアー;ビューワー;"
-
-#~ msgid "com.github.aharotias2.parapara"
-#~ msgstr "com.github.aharotias2.parapara"
