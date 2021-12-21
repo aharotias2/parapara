@@ -89,12 +89,13 @@ namespace ParaPara {
         private bool is_open_when_value_changed = true;
 
         public Window(Gtk.Application app) {
-            Object(
-                application: app
-            );
-        }
-                
-        construct {
+            application = app;
+
+            if (application == null) {
+                debug("application is null");
+            } else {
+                debug("application is not null");
+            }
             init_action_map();
             
             /* the headerbar itself */
@@ -173,9 +174,7 @@ namespace ParaPara {
 
                 var menu_button = new MenuButton();
                 {
-                    var menu_builder = new Gtk.Builder.from_resource("/com/github/aharotias2/parapara/menu.ui");
-                    menu_button.set_menu_model(menu_builder.get_object("app-menu") as GLib.MenuModel);
-                    
+                    menu_button.set_menu_model(application.get_menu_by_id("hamburger-menu"));
                     menu_button.image = new Gtk.Image.from_icon_name("open-menu-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
                     menu_button.clicked.connect(() => {
                         menu_popped = !menu_popped;
@@ -317,11 +316,6 @@ namespace ParaPara {
                                 progress_scale = new Scale.with_range(Orientation.HORIZONTAL, 0.0, 1.0, 0.1) {
                                         draw_value = false, has_origin = true, margin = 5 };
                                 {
-                                    progress_scale.change_value.connect((scroll_type, new_value) => {
-                                        debug("progress_scale.change_value(%f)", progress_scale.get_value());
-                                        debug("progress_adjustment %f, %f", progress_scale.adjustment.upper, progress_scale.adjustment.lower);
-                                    });
-                                    
                                     progress_scale.value_changed.connect(() => {
                                         debug("progress_scale.value_changed => (%f)", progress_scale.get_value());
                                         if (is_open_when_value_changed) {
@@ -475,16 +469,13 @@ namespace ParaPara {
             action_change_view_mode.set_state(new Variant.string("single"));
             add_action(action_change_view_mode);
             
-            action_fullscreen = new SimpleAction.stateful("fullscreen", VariantType.BOOLEAN, new Variant.boolean(false));
-            action_fullscreen.activate.connect((param) => {
+            action_fullscreen = new SimpleAction("fullscreen", null);
+            action_fullscreen.activate.connect(() => {
                 if (stack.visible_child_name != "picture") {
                     return;
                 }
-                bool state = action_fullscreen.get_state().get_boolean();
-                state = !state;
-                fullscreen_mode = state;
+                fullscreen_mode = true;
             });
-            action_fullscreen.set_state(new Variant.boolean(false));
             add_action(action_fullscreen);
         }
 

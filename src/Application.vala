@@ -39,7 +39,7 @@ namespace ParaPara {
         */
         public Application () {
             Object (
-                application_id: "com.github.aharotias2.parapara",
+                application_id: APP_ID,
                 flags: ApplicationFlags.HANDLES_OPEN
             );
         }
@@ -72,6 +72,11 @@ namespace ParaPara {
         }
 
         public static int main(string[] args) {
+            Intl.setlocale(LocaleCategory.ALL, Environment.get_variable("LANG"));
+            Intl.bindtextdomain(APP_ID, DATADIR + "/locale");
+            Intl.bind_textdomain_codeset(APP_ID, "UTF-8");
+            Intl.textdomain(APP_ID);
+            
             var app = new ParaPara.Application();
 
             if (args.length > 1) {

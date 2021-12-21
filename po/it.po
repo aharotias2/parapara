@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-20 23:27+0900\n"
+"POT-Creation-Date: 2021-12-22 00:35+0900\n"
 "PO-Revision-Date: 2021-12-09 21:10+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -51,7 +51,7 @@ msgid "OK"
 msgstr "OK"
 
 #: src/Widgets/ResizeDialog.vala:122 src/Widgets/SingleImageView.vala:513
-#: src/Widgets/Window.vala:626
+#: src/Widgets/Window.vala:617
 msgid "Cancel"
 msgstr "Cancella"
 
@@ -67,11 +67,11 @@ msgstr "Il ridimensionamento dell'immagine è stato annullato."
 msgid "Sorry, saving animations is not supported yet."
 msgstr "Spiacenti, il salvataggio delle animazioni non è ancora supportato."
 
-#: src/Widgets/SingleImageView.vala:512 data/menu.ui:42
+#: src/Widgets/SingleImageView.vala:512 data/gtk/menus.ui:42
 msgid "Save as…"
 msgstr "Salva come…"
 
-#: src/Widgets/SingleImageView.vala:513 data/menu.ui:37
+#: src/Widgets/SingleImageView.vala:513 data/gtk/menus.ui:37
 msgid "Save"
 msgstr "Salva"
 
@@ -215,94 +215,94 @@ msgstr "Orientamento:"
 msgid "Sort:"
 msgstr "Ordina:"
 
-#: src/Widgets/Window.vala:115 src/Widgets/Window.vala:626 data/menu.ui:33
+#: src/Widgets/Window.vala:116 src/Widgets/Window.vala:617 data/gtk/menus.ui:33
 msgid "Open"
 msgstr "Apri"
 
-#: src/Widgets/Window.vala:130
+#: src/Widgets/Window.vala:131
 msgid "Previous"
 msgstr "Precedente"
 
-#: src/Widgets/Window.vala:148
+#: src/Widgets/Window.vala:149
 msgid "Next"
 msgstr "Prossimo"
 
-#: src/Widgets/Window.vala:193
+#: src/Widgets/Window.vala:192
 msgid "No Images Open"
 msgstr "Nessuna Immagine Aperta"
 
-#: src/Widgets/Window.vala:193
+#: src/Widgets/Window.vala:192
 msgid "Click 'Open Image' to get started."
 msgstr "Fai clic su \"Apri immagine\" per iniziare."
 
-#: src/Widgets/Window.vala:195
+#: src/Widgets/Window.vala:194
 msgid "Open Image"
 msgstr "Apri Immagine"
 
-#: src/Widgets/Window.vala:195
+#: src/Widgets/Window.vala:194
 msgid "Show and edit your image."
 msgstr "Mostra e modifica la tua immagine."
 
-#: src/Widgets/Window.vala:231 src/Widgets/Window.vala:336
-#: src/Widgets/Window.vala:662 src/Widgets/Window.vala:748
+#: src/Widgets/Window.vala:230 src/Widgets/Window.vala:330
+#: src/Widgets/Window.vala:653 src/Widgets/Window.vala:739
 #, c-format
 msgid "Location: %d / %d (%d%%)"
 msgstr "Posizione: %d / %d (%d%%)"
 
-#: src/Widgets/Window.vala:625
+#: src/Widgets/Window.vala:616
 msgid "Choose file to open"
 msgstr "Scegli un file da aprire"
 
-#: src/Widgets/Window.vala:652
+#: src/Widgets/Window.vala:643
 msgid "The directory does not found. Exiting."
 msgstr "La directory non è stata trovata. Uscire."
 
-#: src/Widgets/Window.vala:656
+#: src/Widgets/Window.vala:647
 msgid "The file does not found."
 msgstr "Il file non è stato trovato."
 
-#: src/Widgets/Window.vala:705
+#: src/Widgets/Window.vala:696
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr "Impossibile aprire il file (motivo: %s)"
 
-#: data/menu.ui:7
+#: data/gtk/menus.ui:7
 msgid "Single View Mode"
 msgstr "Modalità di visualizzazione singola"
 
-#: data/menu.ui:13
+#: data/gtk/menus.ui:13
 msgid "Scroll View Mode"
 msgstr "Modalità di visualizzazione a scorrimento"
 
-#: data/menu.ui:19
+#: data/gtk/menus.ui:19
 msgid "Dual View Mode"
 msgstr "Modalità doppia visualizzazione"
 
-#: data/menu.ui:27
+#: data/gtk/menus.ui:27
 msgid "New"
 msgstr "Nuovo"
 
-#: data/menu.ui:49
+#: data/gtk/menus.ui:49
 msgid "Toolbar Option"
 msgstr ""
 
-#: data/menu.ui:52
+#: data/gtk/menus.ui:52
 msgid "Keep Visible"
 msgstr ""
 
-#: data/menu.ui:57
+#: data/gtk/menus.ui:57
 msgid "Depends"
 msgstr ""
 
-#: data/menu.ui:62
+#: data/gtk/menus.ui:62
 msgid "Keep Hidden"
 msgstr ""
 
-#: data/menu.ui:69
+#: data/gtk/menus.ui:69
 #, fuzzy
 msgid "Full Screen"
 msgstr "Schermo intero"
 
-#: data/menu.ui:76
+#: data/gtk/menus.ui:75
 msgid "About…"
 msgstr ""

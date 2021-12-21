@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.parapara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-20 23:27+0900\n"
+"POT-Creation-Date: 2021-12-22 00:35+0900\n"
 "PO-Revision-Date: 2021-01-14 11:54+0900\n"
 "Last-Translator: Takayuki Tanaka <aharotias2@gmail.com>\n"
 "Language-Team: none\n"
@@ -53,7 +53,7 @@ msgid "OK"
 msgstr "OK"
 
 #: src/Widgets/ResizeDialog.vala:122 src/Widgets/SingleImageView.vala:513
-#: src/Widgets/Window.vala:626
+#: src/Widgets/Window.vala:617
 msgid "Cancel"
 msgstr "キャンセル"
 
@@ -69,11 +69,11 @@ msgstr "リサイズはキャンセルされました。"
 msgid "Sorry, saving animations is not supported yet."
 msgstr "申し訳ありませんが、アニメーションの保存には未対応です。"
 
-#: src/Widgets/SingleImageView.vala:512 data/menu.ui:42
+#: src/Widgets/SingleImageView.vala:512 data/gtk/menus.ui:42
 msgid "Save as…"
 msgstr "名前を付けて保存…"
 
-#: src/Widgets/SingleImageView.vala:513 data/menu.ui:37
+#: src/Widgets/SingleImageView.vala:513 data/gtk/menus.ui:37
 msgid "Save"
 msgstr "保存"
 
@@ -217,94 +217,93 @@ msgstr "縦/横:"
 msgid "Sort:"
 msgstr "昇順"
 
-#: src/Widgets/Window.vala:115 src/Widgets/Window.vala:626 data/menu.ui:33
+#: src/Widgets/Window.vala:116 src/Widgets/Window.vala:617 data/gtk/menus.ui:33
 msgid "Open"
 msgstr "開く"
 
-#: src/Widgets/Window.vala:130
+#: src/Widgets/Window.vala:131
 msgid "Previous"
 msgstr "前の画像"
 
-#: src/Widgets/Window.vala:148
+#: src/Widgets/Window.vala:149
 msgid "Next"
 msgstr "次の画像"
 
-#: src/Widgets/Window.vala:193
+#: src/Widgets/Window.vala:192
 msgid "No Images Open"
 msgstr "画像が開いていません"
 
-#: src/Widgets/Window.vala:193
+#: src/Widgets/Window.vala:192
 msgid "Click 'Open Image' to get started."
 msgstr "「画像を開く」をクリックして開始しましょう。"
 
-#: src/Widgets/Window.vala:195
+#: src/Widgets/Window.vala:194
 msgid "Open Image"
 msgstr "画像を開く"
 
-#: src/Widgets/Window.vala:195
+#: src/Widgets/Window.vala:194
 msgid "Show and edit your image."
 msgstr "画像を閲覧/編集できます"
 
-#: src/Widgets/Window.vala:231 src/Widgets/Window.vala:336
-#: src/Widgets/Window.vala:662 src/Widgets/Window.vala:748
+#: src/Widgets/Window.vala:230 src/Widgets/Window.vala:330
+#: src/Widgets/Window.vala:653 src/Widgets/Window.vala:739
 #, c-format
 msgid "Location: %d / %d (%d%%)"
 msgstr "ロケーション: %d / %d (%d%%)"
 
-#: src/Widgets/Window.vala:625
+#: src/Widgets/Window.vala:616
 msgid "Choose file to open"
 msgstr "開くファイルを選択"
 
-#: src/Widgets/Window.vala:652
+#: src/Widgets/Window.vala:643
 msgid "The directory does not found. Exiting."
 msgstr "ディレクトリが存在しません。終了します。"
 
-#: src/Widgets/Window.vala:656
+#: src/Widgets/Window.vala:647
 msgid "The file does not found."
 msgstr "ファイルが見つかりません。"
 
-#: src/Widgets/Window.vala:705
+#: src/Widgets/Window.vala:696
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr "ファイルを開けません (理由: %s)"
 
-#: data/menu.ui:7
+#: data/gtk/menus.ui:7
 msgid "Single View Mode"
 msgstr "シングル ビュー モード"
 
-#: data/menu.ui:13
+#: data/gtk/menus.ui:13
 msgid "Scroll View Mode"
 msgstr "スクロール ビュー モード"
 
-#: data/menu.ui:19
+#: data/gtk/menus.ui:19
 msgid "Dual View Mode"
 msgstr "デュアル ビュー モード"
 
-#: data/menu.ui:27
+#: data/gtk/menus.ui:27
 msgid "New"
 msgstr "新規"
 
-#: data/menu.ui:49
+#: data/gtk/menus.ui:49
 msgid "Toolbar Option"
 msgstr "ツールバーオプション"
 
-#: data/menu.ui:52
+#: data/gtk/menus.ui:52
 msgid "Keep Visible"
 msgstr "常に表示"
 
-#: data/menu.ui:57
+#: data/gtk/menus.ui:57
 msgid "Depends"
 msgstr "カーソルに反応"
 
-#: data/menu.ui:62
+#: data/gtk/menus.ui:62
 msgid "Keep Hidden"
 msgstr "常に隠す"
 
-#: data/menu.ui:69
+#: data/gtk/menus.ui:69
 msgid "Full Screen"
 msgstr "フルスクリーン"
 
-#: data/menu.ui:76
+#: data/gtk/menus.ui:75
 msgid "About…"
 msgstr "このアプリについて…"
-

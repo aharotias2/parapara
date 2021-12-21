@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.parapara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-20 23:27+0900\n"
+"POT-Creation-Date: 2021-12-22 00:35+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,7 +52,7 @@ msgid "OK"
 msgstr ""
 
 #: src/Widgets/ResizeDialog.vala:122 src/Widgets/SingleImageView.vala:513
-#: src/Widgets/Window.vala:626
+#: src/Widgets/Window.vala:617
 msgid "Cancel"
 msgstr ""
 
@@ -68,11 +68,11 @@ msgstr ""
 msgid "Sorry, saving animations is not supported yet."
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:512 data/menu.ui:42
+#: src/Widgets/SingleImageView.vala:512 data/gtk/menus.ui:42
 msgid "Save as…"
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:513 data/menu.ui:37
+#: src/Widgets/SingleImageView.vala:513 data/gtk/menus.ui:37
 msgid "Save"
 msgstr ""
 
@@ -216,93 +216,93 @@ msgstr ""
 msgid "Sort:"
 msgstr ""
 
-#: src/Widgets/Window.vala:115 src/Widgets/Window.vala:626 data/menu.ui:33
+#: src/Widgets/Window.vala:116 src/Widgets/Window.vala:617 data/gtk/menus.ui:33
 msgid "Open"
 msgstr ""
 
-#: src/Widgets/Window.vala:130
+#: src/Widgets/Window.vala:131
 msgid "Previous"
 msgstr ""
 
-#: src/Widgets/Window.vala:148
+#: src/Widgets/Window.vala:149
 msgid "Next"
 msgstr ""
 
-#: src/Widgets/Window.vala:193
+#: src/Widgets/Window.vala:192
 msgid "No Images Open"
 msgstr ""
 
-#: src/Widgets/Window.vala:193
+#: src/Widgets/Window.vala:192
 msgid "Click 'Open Image' to get started."
 msgstr ""
 
-#: src/Widgets/Window.vala:195
+#: src/Widgets/Window.vala:194
 msgid "Open Image"
 msgstr ""
 
-#: src/Widgets/Window.vala:195
+#: src/Widgets/Window.vala:194
 msgid "Show and edit your image."
 msgstr ""
 
-#: src/Widgets/Window.vala:231 src/Widgets/Window.vala:336
-#: src/Widgets/Window.vala:662 src/Widgets/Window.vala:748
+#: src/Widgets/Window.vala:230 src/Widgets/Window.vala:330
+#: src/Widgets/Window.vala:653 src/Widgets/Window.vala:739
 #, c-format
 msgid "Location: %d / %d (%d%%)"
 msgstr ""
 
-#: src/Widgets/Window.vala:625
+#: src/Widgets/Window.vala:616
 msgid "Choose file to open"
 msgstr ""
 
-#: src/Widgets/Window.vala:652
+#: src/Widgets/Window.vala:643
 msgid "The directory does not found. Exiting."
 msgstr ""
 
-#: src/Widgets/Window.vala:656
+#: src/Widgets/Window.vala:647
 msgid "The file does not found."
 msgstr ""
 
-#: src/Widgets/Window.vala:705
+#: src/Widgets/Window.vala:696
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr ""
 
-#: data/menu.ui:7
+#: data/gtk/menus.ui:7
 msgid "Single View Mode"
 msgstr ""
 
-#: data/menu.ui:13
+#: data/gtk/menus.ui:13
 msgid "Scroll View Mode"
 msgstr ""
 
-#: data/menu.ui:19
+#: data/gtk/menus.ui:19
 msgid "Dual View Mode"
 msgstr ""
 
-#: data/menu.ui:27
+#: data/gtk/menus.ui:27
 msgid "New"
 msgstr ""
 
-#: data/menu.ui:49
+#: data/gtk/menus.ui:49
 msgid "Toolbar Option"
 msgstr ""
 
-#: data/menu.ui:52
+#: data/gtk/menus.ui:52
 msgid "Keep Visible"
 msgstr ""
 
-#: data/menu.ui:57
+#: data/gtk/menus.ui:57
 msgid "Depends"
 msgstr ""
 
-#: data/menu.ui:62
+#: data/gtk/menus.ui:62
 msgid "Keep Hidden"
 msgstr ""
 
-#: data/menu.ui:69
+#: data/gtk/menus.ui:69
 msgid "Full Screen"
 msgstr ""
 
-#: data/menu.ui:76
+#: data/gtk/menus.ui:75
 msgid "About…"
 msgstr ""
