@@ -284,19 +284,19 @@ msgstr "Nuovo"
 
 #: data/gtk/menus.ui:49
 msgid "Toolbar Option"
-msgstr ""
+msgstr "Opzione barra degli strumenti"
 
 #: data/gtk/menus.ui:52
 msgid "Keep Visible"
-msgstr ""
+msgstr "Mantieni visibile"
 
 #: data/gtk/menus.ui:57
 msgid "Depends"
-msgstr ""
+msgstr "Dipende"
 
 #: data/gtk/menus.ui:62
 msgid "Keep Hidden"
-msgstr ""
+msgstr "Tieni nascosto"
 
 #: data/gtk/menus.ui:69
 #, fuzzy
@@ -305,4 +305,4 @@ msgstr "Schermo intero"
 
 #: data/gtk/menus.ui:75
 msgid "About…"
-msgstr ""
+msgstr "Informazioni"

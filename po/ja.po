@@ -179,27 +179,27 @@ msgstr "ページに合わせる"
 
 #: src/Widgets/ToolBar.vala:489
 msgid "25%"
-msgstr ""
+msgstr "25%"
 
 #: src/Widgets/ToolBar.vala:490
 msgid "50%"
-msgstr ""
+msgstr "50%"
 
 #: src/Widgets/ToolBar.vala:491
 msgid "70%"
-msgstr ""
+msgstr "70%"
 
 #: src/Widgets/ToolBar.vala:492
 msgid "80%"
-msgstr ""
+msgstr "80%"
 
 #: src/Widgets/ToolBar.vala:494
 msgid "200%"
-msgstr ""
+msgstr "200%"
 
 #: src/Widgets/ToolBar.vala:495
 msgid "400%"
-msgstr ""
+msgstr "400%"
 
 #: src/Widgets/ToolBar.vala:521 src/Widgets/ToolBar.vala:540
 msgid "Vertical"
