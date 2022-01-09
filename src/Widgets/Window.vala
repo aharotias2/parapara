@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2021 Tanaka Takayuki (田中喬之)
+ *  Copyright 2019-2022 Tanaka Takayuki (田中喬之)
  *
  *  This file is part of ParaPara.
  *
@@ -772,8 +772,8 @@ namespace ParaPara {
             dialog.translator_credits = null;
             dialog.program_name = "ParaPara";
             dialog.comments = "A lightweight image viewer with three display modes: single, spread, and continuous.";
-            dialog.copyright = "Copyright (C) 2020-2021 Takayuki Tanaka";
-            dialog.version = "3.0.0";
+            dialog.copyright = "Copyright (C) 2020-2022 Takayuki Tanaka";
+            dialog.version = VERSION;
             dialog.license =
 """This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

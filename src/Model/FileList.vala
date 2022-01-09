@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2021 Tanaka Takayuki (田中喬之)
+ *  Copyright 2019-2022 Tanaka Takayuki (田中喬之)
  *
  *  This file is part of ParaPara.
  *

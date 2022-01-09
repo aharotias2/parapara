@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2021 Tanaka Takayuki (田中喬之)
+ *  Copyright 2019-2022 Tanaka Takayuki (田中喬之)
  *
  *  This file is part of ParaPara.
  *
@@ -92,7 +92,7 @@ namespace ParaPara {
                 }
 
                 if (version) {
-                    print(@"$(app.application_id) 3.0\n");
+                    print(@"$(app.application_id) $(VERSION)\n");
                     return 0;
                 }
 

@@ -7,11 +7,20 @@ foreach i : icon_sizes
   )
 endforeach
 
-# tool_icons = [ 'read-left-to-right', 'read-right-to-left', 'move-one-page-left', 'move-one-page-right', 'move-two-page-left', 'move-two-page-right', 'orientation-horizontal', 'orientation-vertical' ]
+i18n.merge_file(
+    input: join_paths('parapara.desktop.in'),
+    output: meson.project_name() + '.desktop',
+    po_dir: join_paths(meson.source_root(), 'po', 'extra'),
+    type: 'desktop',
+    install: true,
+    install_dir: join_paths(get_option('datadir'), 'applications')
+)
 
-# foreach i : tool_icons
-#   install_data(
-#     join_paths('icons', 'symbolic', i + '-symbolic.svg'),
-#     install_dir: join_paths(get_option('datadir'), 'pixmaps')
-#   )
-# endforeach
+i18n.merge_file(
+    input: join_paths('parapara.appdata.xml.in'),
+    output: meson.project_name() + '.appdata.xml',
+    po_dir: join_paths(meson.source_root(), 'po', 'extra'),
+    type: 'xml',
+    install: true,
+    install_dir: join_paths(get_option('datadir'), 'metainfo')
+)

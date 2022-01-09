@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2019-2020 Tanaka Takayuki -->
+<!-- Copyright 2019-2022 Tanaka Takayuki -->
 <component type="desktop">
   <id>com.github.aharotias2.parapara</id>
   <launchable type="desktop-id">com.github.aharotias2.parapara.desktop</launchable>
@@ -65,7 +65,7 @@
   </content_rating>
 
   <releases>
-    <release version="3.2.1" date="2021-12-24" urgency="medium">
+    <release version="3.2.2" date="2022-01-09" urgency="medium">
       <description>
 	<p>Update appdata.xml</p>
       </description>

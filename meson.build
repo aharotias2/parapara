@@ -1,7 +1,7 @@
 project(
     'com.github.aharotias2.parapara',
     'vala', 'c',
-    version: '3.0.0'
+    version: '3.2.2'
 )
 
 is_debug = get_option('DEBUG')
@@ -34,7 +34,7 @@ asresources = gnome.compile_resources(
 )
 
 config_h = configuration_data()
-config_h.set_quoted('VERSION', '3.2.0')
+config_h.set_quoted('VERSION', '3.2.2')
 config_h.set_quoted('APP_ID', meson.project_name())
 config_h.set_quoted('DATADIR', get_option('prefix') / get_option('datadir'))
 
@@ -85,15 +85,6 @@ executable(
 	project_config_dep
     ],
     install: true
-)
-
-i18n.merge_file(
-    input: join_paths('data', 'parapara.desktop.in'),
-    output: meson.project_name() + '.desktop',
-    po_dir: join_paths(meson.source_root(), 'po', 'extra'),
-    type: 'desktop',
-    install: true,
-    install_dir: join_paths(get_option('datadir'), 'applications')
 )
 
 subdir('po')
