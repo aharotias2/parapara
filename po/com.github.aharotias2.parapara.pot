@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.parapara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-22 00:35+0900\n"
+"POT-Creation-Date: 2022-01-09 12:46+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,7 +52,7 @@ msgid "OK"
 msgstr ""
 
 #: src/Widgets/ResizeDialog.vala:122 src/Widgets/SingleImageView.vala:513
-#: src/Widgets/Window.vala:617
+#: src/Widgets/Window.vala:613
 msgid "Cancel"
 msgstr ""
 
@@ -216,53 +216,53 @@ msgstr ""
 msgid "Sort:"
 msgstr ""
 
-#: src/Widgets/Window.vala:116 src/Widgets/Window.vala:617 data/gtk/menus.ui:33
+#: src/Widgets/Window.vala:115 src/Widgets/Window.vala:613 data/gtk/menus.ui:33
 msgid "Open"
 msgstr ""
 
-#: src/Widgets/Window.vala:131
+#: src/Widgets/Window.vala:130
 msgid "Previous"
 msgstr ""
 
-#: src/Widgets/Window.vala:149
+#: src/Widgets/Window.vala:148
 msgid "Next"
 msgstr ""
 
-#: src/Widgets/Window.vala:192
+#: src/Widgets/Window.vala:191
 msgid "No Images Open"
 msgstr ""
 
-#: src/Widgets/Window.vala:192
+#: src/Widgets/Window.vala:191
 msgid "Click 'Open Image' to get started."
 msgstr ""
 
-#: src/Widgets/Window.vala:194
+#: src/Widgets/Window.vala:193
 msgid "Open Image"
 msgstr ""
 
-#: src/Widgets/Window.vala:194
+#: src/Widgets/Window.vala:193
 msgid "Show and edit your image."
 msgstr ""
 
-#: src/Widgets/Window.vala:230 src/Widgets/Window.vala:330
-#: src/Widgets/Window.vala:653 src/Widgets/Window.vala:739
+#: src/Widgets/Window.vala:229 src/Widgets/Window.vala:329
+#: src/Widgets/Window.vala:649 src/Widgets/Window.vala:735
 #, c-format
 msgid "Location: %d / %d (%d%%)"
 msgstr ""
 
-#: src/Widgets/Window.vala:616
+#: src/Widgets/Window.vala:612
 msgid "Choose file to open"
 msgstr ""
 
-#: src/Widgets/Window.vala:643
+#: src/Widgets/Window.vala:639
 msgid "The directory does not found. Exiting."
 msgstr ""
 
-#: src/Widgets/Window.vala:647
+#: src/Widgets/Window.vala:643
 msgid "The file does not found."
 msgstr ""
 
-#: src/Widgets/Window.vala:696
+#: src/Widgets/Window.vala:692
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr ""

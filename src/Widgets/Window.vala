@@ -85,7 +85,6 @@ namespace ParaPara {
         private SimpleAction action_fullscreen;
         private SimpleAction action_toggle_toolbar;
         private SimpleAction action_save;
-        private SimpleAction action_save_as;
         private bool is_open_when_value_changed = true;
 
         public Window(Gtk.Application app) {
@@ -447,17 +446,14 @@ namespace ParaPara {
                       case "single":
                         view_mode = SINGLE_VIEW_MODE;
                         action_save.set_enabled(true);
-                        action_save_as.set_enabled(true);
                         break;
                       case "slide":
                         view_mode = SLIDE_VIEW_MODE;
                         action_save.set_enabled(false);
-                        action_save_as.set_enabled(false);
                         break;
                       case "dual":
                         view_mode = DUAL_VIEW_MODE;
                         action_save.set_enabled(false);
-                        action_save_as.set_enabled(false);
                         break;
                     }
                     toolbar.view_mode = view_mode;

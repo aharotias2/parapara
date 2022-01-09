@@ -9,12 +9,28 @@
   <summary>An image viewer without library</summary>
   <description>
     <p>
-      An image viewer that supports jpg, png, bmp, and ico files.
+      An image viewer in which images are displayed as one of three styles:
+      single, spread (book), continuous (scrolling),
+      and that supports jpg, png, bmp, ico, gif files.
+      animated gifs are also supported.
     </p>
   </description>
   <screenshots>
     <screenshot type="default">
+      <caption>Application Screenshot (Single View Mode)</caption>
       <image>https://raw.githubusercontent.com/aharotias2/parapara/master/docs/images/screenshot-parapara-single-01.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Spread View Mode</caption>
+      <image>https://raw.githubusercontent.com/aharotias2/parapara/master/docs/images/screenshot-parapara-spread-01.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Continuous View Mode (Vertical)</caption>
+      <image>https://raw.githubusercontent.com/aharotias2/parapara/master/docs/images/screenshot-parapara-continuous-01.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Continuous View Mode (Horizontal)</caption>
+      <image>https://raw.githubusercontent.com/aharotias2/parapara/master/docs/images/screenshot-parapara-continuous-02.png</image>
     </screenshot>
   </screenshots>
 
@@ -49,6 +65,21 @@
   </content_rating>
 
   <releases>
+    <release version="3.2.1" date="2021-12-24" urgency="medium">
+      <description>
+	<p>Update appdata.xml</p>
+      </description>
+    </release>
+    <release version="3.2.0" date="2021-12-24" urgency="medium">
+      <description>
+        <p>This release further standardizes the user interface.
+	  That is, like many other GNOME applications such as Gedit,
+	  we have made it with a menu button on the top right.
+	  When you press this button, you will see a pop-up menu as most people expect.
+	  (Previously, the toolbar was displayed.)
+	  There is no change in the functionality itself.</p>
+      </description>
+    </release>
     <release version="3.0.0" date="2021-08-07" urgency="medium">
       <description>
         <ul>

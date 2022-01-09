@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-22 00:35+0900\n"
+"POT-Creation-Date: 2022-01-09 12:46+0900\n"
 "PO-Revision-Date: 2021-12-09 21:10+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -51,7 +51,7 @@ msgid "OK"
 msgstr "OK"
 
 #: src/Widgets/ResizeDialog.vala:122 src/Widgets/SingleImageView.vala:513
-#: src/Widgets/Window.vala:617
+#: src/Widgets/Window.vala:613
 msgid "Cancel"
 msgstr "Cancella"
 
@@ -215,53 +215,53 @@ msgstr "Orientamento:"
 msgid "Sort:"
 msgstr "Ordina:"
 
-#: src/Widgets/Window.vala:116 src/Widgets/Window.vala:617 data/gtk/menus.ui:33
+#: src/Widgets/Window.vala:115 src/Widgets/Window.vala:613 data/gtk/menus.ui:33
 msgid "Open"
 msgstr "Apri"
 
-#: src/Widgets/Window.vala:131
+#: src/Widgets/Window.vala:130
 msgid "Previous"
 msgstr "Precedente"
 
-#: src/Widgets/Window.vala:149
+#: src/Widgets/Window.vala:148
 msgid "Next"
 msgstr "Prossimo"
 
-#: src/Widgets/Window.vala:192
+#: src/Widgets/Window.vala:191
 msgid "No Images Open"
 msgstr "Nessuna Immagine Aperta"
 
-#: src/Widgets/Window.vala:192
+#: src/Widgets/Window.vala:191
 msgid "Click 'Open Image' to get started."
 msgstr "Fai clic su \"Apri immagine\" per iniziare."
 
-#: src/Widgets/Window.vala:194
+#: src/Widgets/Window.vala:193
 msgid "Open Image"
 msgstr "Apri Immagine"
 
-#: src/Widgets/Window.vala:194
+#: src/Widgets/Window.vala:193
 msgid "Show and edit your image."
 msgstr "Mostra e modifica la tua immagine."
 
-#: src/Widgets/Window.vala:230 src/Widgets/Window.vala:330
-#: src/Widgets/Window.vala:653 src/Widgets/Window.vala:739
+#: src/Widgets/Window.vala:229 src/Widgets/Window.vala:329
+#: src/Widgets/Window.vala:649 src/Widgets/Window.vala:735
 #, c-format
 msgid "Location: %d / %d (%d%%)"
 msgstr "Posizione: %d / %d (%d%%)"
 
-#: src/Widgets/Window.vala:616
+#: src/Widgets/Window.vala:612
 msgid "Choose file to open"
 msgstr "Scegli un file da aprire"
 
-#: src/Widgets/Window.vala:643
+#: src/Widgets/Window.vala:639
 msgid "The directory does not found. Exiting."
 msgstr "La directory non è stata trovata. Uscire."
 
-#: src/Widgets/Window.vala:647
+#: src/Widgets/Window.vala:643
 msgid "The file does not found."
 msgstr "Il file non è stato trovato."
 
-#: src/Widgets/Window.vala:696
+#: src/Widgets/Window.vala:692
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr "Impossibile aprire il file (motivo: %s)"

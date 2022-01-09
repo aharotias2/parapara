@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.parapara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-22 00:35+0900\n"
+"POT-Creation-Date: 2022-01-09 12:46+0900\n"
 "PO-Revision-Date: 2021-01-14 11:54+0900\n"
 "Last-Translator: Takayuki Tanaka <aharotias2@gmail.com>\n"
 "Language-Team: none\n"
@@ -53,7 +53,7 @@ msgid "OK"
 msgstr "OK"
 
 #: src/Widgets/ResizeDialog.vala:122 src/Widgets/SingleImageView.vala:513
-#: src/Widgets/Window.vala:617
+#: src/Widgets/Window.vala:613
 msgid "Cancel"
 msgstr "キャンセル"
 
@@ -217,53 +217,53 @@ msgstr "縦/横:"
 msgid "Sort:"
 msgstr "昇順"
 
-#: src/Widgets/Window.vala:116 src/Widgets/Window.vala:617 data/gtk/menus.ui:33
+#: src/Widgets/Window.vala:115 src/Widgets/Window.vala:613 data/gtk/menus.ui:33
 msgid "Open"
 msgstr "開く"
 
-#: src/Widgets/Window.vala:131
+#: src/Widgets/Window.vala:130
 msgid "Previous"
 msgstr "前の画像"
 
-#: src/Widgets/Window.vala:149
+#: src/Widgets/Window.vala:148
 msgid "Next"
 msgstr "次の画像"
 
-#: src/Widgets/Window.vala:192
+#: src/Widgets/Window.vala:191
 msgid "No Images Open"
 msgstr "画像が開いていません"
 
-#: src/Widgets/Window.vala:192
+#: src/Widgets/Window.vala:191
 msgid "Click 'Open Image' to get started."
 msgstr "「画像を開く」をクリックして開始しましょう。"
 
-#: src/Widgets/Window.vala:194
+#: src/Widgets/Window.vala:193
 msgid "Open Image"
 msgstr "画像を開く"
 
-#: src/Widgets/Window.vala:194
+#: src/Widgets/Window.vala:193
 msgid "Show and edit your image."
 msgstr "画像を閲覧/編集できます"
 
-#: src/Widgets/Window.vala:230 src/Widgets/Window.vala:330
-#: src/Widgets/Window.vala:653 src/Widgets/Window.vala:739
+#: src/Widgets/Window.vala:229 src/Widgets/Window.vala:329
+#: src/Widgets/Window.vala:649 src/Widgets/Window.vala:735
 #, c-format
 msgid "Location: %d / %d (%d%%)"
 msgstr "ロケーション: %d / %d (%d%%)"
 
-#: src/Widgets/Window.vala:616
+#: src/Widgets/Window.vala:612
 msgid "Choose file to open"
 msgstr "開くファイルを選択"
 
-#: src/Widgets/Window.vala:643
+#: src/Widgets/Window.vala:639
 msgid "The directory does not found. Exiting."
 msgstr "ディレクトリが存在しません。終了します。"
 
-#: src/Widgets/Window.vala:647
+#: src/Widgets/Window.vala:643
 msgid "The file does not found."
 msgstr "ファイルが見つかりません。"
 
-#: src/Widgets/Window.vala:696
+#: src/Widgets/Window.vala:692
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr "ファイルを開けません (理由: %s)"
