@@ -12,6 +12,7 @@ Build-Depends: debhelper-compat (= 12),
                gettext
 Standards-Version: 4.5.0
 Homepage: https://github.com/aharotias2/parapara
+Rules-Requires-Root: no
 
 Package: parapara
 Architecture: any
