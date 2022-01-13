@@ -1,0 +1,5 @@
+parapara (3.2.3-1) UNRELEASED; urgency=low
+
+  * Initial Debian package development.
+
+ -- SwampRabbit <swamprabbit@mxlinux.org>  Fri, 07 Jan 2022 11:25:14 -0500
