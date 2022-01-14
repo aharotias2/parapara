@@ -1,0 +1,32 @@
+Source: parapara
+Section: graphics
+Priority: optional
+Maintainer: Tanaka Takayuki <aharotias2@gmail.com>
+Build-Depends: debhelper-compat (= 12),
+               valac,
+               meson,
+               libgee-0.8-dev,
+               libgranite-dev,
+               libgtk-3-dev,
+               libgdk-pixbuf-2.0-dev,
+               gettext
+Standards-Version: 4.5.0
+Homepage: https://github.com/aharotias2/parapara
+Rules-Requires-Root: no
+
+Package: parapara
+Architecture: any
+Multi-Arch: foreign
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Recommends: webp-pixbuf-loader
+Description: lightweight and high-speed operation image viewer
+ ParaPara is an image viewer created with lightweight and high-speed operation
+  in mind.
+ .
+ It is designed to be linked to the extension and opened by double-clicking from
+  your favorite file manager.
+ .
+ Features:
+ - two page spread view
+ - right-to-left and left-to-right page turning
+ - horizontal or vertical continuous view modes
