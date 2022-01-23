@@ -72,6 +72,14 @@ namespace ParaPara {
         }
 
         private Box dual_box;
+        private Overlay left_overlay;
+        private Overlay right_overlay;
+        private Revealer left_error_label_revealer;
+        private Revealer right_error_label_revealer;
+        private File? left_file;
+        private File? right_file;
+        private Label left_error_label;
+        private Label right_error_label;
         private Image left_image;
         private Image right_image;
         private DualFileAccessor accessor;
@@ -103,22 +111,48 @@ namespace ParaPara {
             {
                 dual_box = new Box(Orientation.HORIZONTAL, 0);
                 {
-                    left_image = new Image(true);
+                    left_overlay = new Overlay();
                     {
-                        left_image.halign = Align.END;
-                        left_image.container = scroll;
-                        left_image.get_style_context().add_class("image-view");
+                        left_image = new Image(true);
+                        {
+                            left_image.halign = Align.END;
+                            left_image.container = scroll;
+                            left_image.get_style_context().add_class("image-view");
+                        }
+
+                        left_error_label_revealer = new Revealer();
+                        {
+                            left_error_label = new Label("This format is not supported");
+                            left_error_label_revealer.add(left_error_label);
+                            left_error_label_revealer.reveal_child = false;
+                        }
+
+                        left_overlay.add(left_image);
+                        left_overlay.add_overlay(left_error_label_revealer);
                     }
 
-                    right_image = new Image(true);
+                    right_overlay = new Overlay();
                     {
-                        right_image.halign = Align.START;
-                        right_image.container = scroll;
-                        right_image.get_style_context().add_class("image-view");
+                        right_image = new Image(true);
+                        {
+                            right_image.halign = Align.START;
+                            right_image.container = scroll;
+                            right_image.get_style_context().add_class("image-view");
+                        }
+
+                        right_error_label_revealer = new Revealer();
+                        {
+                            right_error_label = new Label("This format is not supported");
+                            right_error_label_revealer.add(right_error_label);
+                            right_error_label_revealer.reveal_child = false;
+                        }
+
+                        right_overlay.add(right_image);
+                        right_overlay.add_overlay(right_error_label_revealer);
                     }
 
-                    dual_box.pack_start(left_image, true, true);
-                    dual_box.pack_start(right_image, true, true);
+                    dual_box.pack_start(left_overlay, true, true);
+                    dual_box.pack_start(right_overlay, true, true);
                     dual_box.get_style_context().add_class("image-view");
                 }
 
@@ -128,15 +162,17 @@ namespace ParaPara {
                     int new_height = allocation.height;
                     debug("scroll.size_allocated");
                     Idle.add(() => {
-                        if (left_image.visible) {
+                        if (left_file != null) {
                             left_image.scale_fit_in_width_and_height(new_width, new_height);
                         } else {
-                            right_image.margin_start = new_width;
+                            right_overlay.width_request = new_width;
+                            right_error_label.width_request = new_width;
                         }
-                        if (right_image.visible) {
+                        if (right_file != null) {
                             right_image.scale_fit_in_width_and_height(new_width, new_height);
                         } else {
-                            left_image.margin_end = new_width;
+                            left_overlay.width_request = new_width;
+                            left_error_label.width_request = new_width;
                         }
                         update_title();
                         return false;
@@ -376,7 +412,7 @@ namespace ParaPara {
                     }
                 }
             } catch (Error e) {
-                main_window.show_error_dialog(e.message);
+                printerr("%s\n", e.message);
             }
         }
 
@@ -393,7 +429,7 @@ namespace ParaPara {
                     }
                 }
             } catch (Error e) {
-                main_window.show_error_dialog(e.message);
+                printerr("%s\n", e.message);
             }
         }
 
@@ -406,92 +442,112 @@ namespace ParaPara {
             main_window.disable_controls();
             Idle.add(open_by_accessor_current_index.callback);
             yield;
-            try {
-                in_progress = true;
-                string? left_file_path = null;
-                string? right_file_path = null;
-                bool left_visible = false;
-                bool right_visible = false;
-                int index1 = accessor.get_index1();
-                int index2 = accessor.get_index2();
-                switch (main_window.toolbar.sort_order) {
-                  case ASC:
-                    if (index1 >= 0) {
-                        left_visible = true;
-                        left_file_path = accessor.get_file1().get_path();
-                    }
-                    if (index2 >= 0) {
-                        right_visible = true;
-                        right_file_path = accessor.get_file2().get_path();
-                    }
-                    if (index1 < 0) {
-                        main_window.toolbar.l1button.sensitive = false;
-                    } else {
-                        main_window.toolbar.l1button.sensitive = true;
-                    }
-                    if (index1 >= _file_list.size - 1) {
-                        main_window.toolbar.r1button.sensitive = false;
-                    } else {
-                        main_window.toolbar.r1button.sensitive = true;
-                    }
-                    break;
-                  case DESC:
-                    if (index1 >= 0) {
-                        right_visible = true;
-                        right_file_path = accessor.get_file1().get_path();
-                    }
-                    if (index2 >= 0) {
-                        left_visible = true;
-                        left_file_path = accessor.get_file2().get_path();
-                    }
-                    if (index1 < 0) {
-                        main_window.toolbar.r1button.sensitive = false;
-                    } else {
-                        main_window.toolbar.r1button.sensitive = true;
-                    }
-                    if (index1 >= _file_list.size - 1) {
-                        main_window.toolbar.l1button.sensitive = false;
-                    } else {
-                        main_window.toolbar.l1button.sensitive = true;
-                    }
-                    break;
-                }
-                main_window.image_next_button.sensitive = is_next_button_sensitive();
-                main_window.image_prev_button.sensitive = is_prev_button_sensitive();
-                main_window.toolbar.l2button.sensitive = main_window.image_prev_button.sensitive;
-                main_window.toolbar.r2button.sensitive = main_window.image_next_button.sensitive;
-                Idle.add(open_by_accessor_current_index.callback);
-                yield;
-                int width = get_allocated_width() / 2;
-                int height = get_allocated_height();
-                if (left_file_path != null) {
-                    yield left_image.open_async(left_file_path);
-                    left_image.scale_fit_in_width_and_height(width, height);
-                }
-                if (right_file_path != null) {
-                    yield right_image.open_async(right_file_path);
-                    right_image.scale_fit_in_width_and_height(width, height);
-                }
-                left_image.visible = left_visible;
-                right_image.visible = right_visible;
-                if (!left_visible) {
-                    right_image.margin_start = width;
+            in_progress = true;
+            left_file = null;
+            right_file = null;
+            bool left_visible = false;
+            bool right_visible = false;
+            int index1 = accessor.get_index1();
+            int index2 = accessor.get_index2();
+            switch (main_window.toolbar.sort_order) {
+              case ASC:
+                if (index1 >= 0) {
+                    left_file = accessor.get_file1();
+                    left_visible = (left_file != null);
                 } else {
-                    right_image.margin_start = 0;
+                    left_visible = false;
                 }
-                if (!right_visible) {
-                    left_image.margin_end = width;
+                if (index2 >= 0) {
+                    right_file = accessor.get_file2();
+                    right_visible = (right_file != null);
                 } else {
-                    left_image.margin_end = 0;
+                    right_visible = false;
                 }
-                in_progress = false;
-            } catch (Error e) {
-                in_progress = false;
-                throw e;
-            } finally {
-                get_window().cursor = saved_cursor;
-                main_window.enable_controls();
+                if (index1 < 0) {
+                    main_window.toolbar.l1button.sensitive = false;
+                } else {
+                    main_window.toolbar.l1button.sensitive = true;
+                }
+                if (index1 >= _file_list.size - 1) {
+                    main_window.toolbar.r1button.sensitive = false;
+                } else {
+                    main_window.toolbar.r1button.sensitive = true;
+                }
+                break;
+              case DESC:
+                if (index1 >= 0) {
+                    right_file = accessor.get_file1();
+                    right_visible = (right_file != null);;
+                } else {
+                    right_visible = false;
+                }
+                if (index2 >= 0) {
+                    left_file = accessor.get_file2();
+                    left_visible = (left_file != null);
+                } else {
+                    left_visible = false;
+                }
+                if (index1 < 0) {
+                    main_window.toolbar.r1button.sensitive = false;
+                } else {
+                    main_window.toolbar.r1button.sensitive = true;
+                }
+                if (index1 >= _file_list.size - 1) {
+                    main_window.toolbar.l1button.sensitive = false;
+                } else {
+                    main_window.toolbar.l1button.sensitive = true;
+                }
+                break;
             }
+            main_window.image_next_button.sensitive = is_next_button_sensitive();
+            main_window.image_prev_button.sensitive = is_prev_button_sensitive();
+            main_window.toolbar.l2button.sensitive = main_window.image_prev_button.sensitive;
+            main_window.toolbar.r2button.sensitive = main_window.image_next_button.sensitive;
+            left_error_label_revealer.reveal_child = false;
+            right_error_label_revealer.reveal_child = false;
+            Idle.add(open_by_accessor_current_index.callback);
+            yield;
+            int width = get_allocated_width() / 2;
+            int height = get_allocated_height();
+            if (left_file != null) {
+                try {
+                    yield left_image.open_async(left_file.get_path());
+                    left_image.scale_fit_in_width_and_height(width, height);
+                } catch (Error e) {
+                    left_error_label.label = left_file.get_basename() + ":\n" + e.message;
+                    left_visible = false;
+                    left_error_label_revealer.reveal_child = true;
+                    Idle.add(open_by_accessor_current_index.callback);
+                    yield;
+                }
+            }
+            if (right_file != null) {
+                try {
+                    yield right_image.open_async(right_file.get_path());
+                    right_image.scale_fit_in_width_and_height(width, height);
+                } catch (Error e) {
+                    right_error_label.label = right_file.get_basename() + ":\n" + e.message;
+                    right_visible = false;
+                    right_error_label_revealer.reveal_child = true;
+                    Idle.add(open_by_accessor_current_index.callback);
+                    yield;
+                }
+            }
+            left_image.visible = left_visible;
+            right_image.visible = right_visible;
+            if (left_file == null) {
+                right_image.margin_start = width;
+            } else {
+                right_image.margin_start = 0;
+            }
+            if (right_file == null) {
+                left_image.margin_end = width;
+            } else {
+                left_image.margin_end = 0;
+            }
+            in_progress = false;
+            get_window().cursor = saved_cursor;
+            main_window.enable_controls();
         }
 
         public async void open_async(File file1) throws Error {
@@ -516,7 +572,7 @@ namespace ParaPara {
             try {
                 yield open_by_accessor_current_index();
             } catch (Error e) {
-                main_window.show_error_dialog(e.message);
+                printerr("%s\n", e.message);
             }
         }
 

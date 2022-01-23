@@ -59,7 +59,7 @@ namespace ParaPara {
                         try {
                             image_view.reopen_async.end(res);
                         } catch (Error e) {
-                            show_error_dialog(e.message);
+                            printerr("%s\n", e.message);
                         }
                     });
                 }
@@ -255,7 +255,7 @@ namespace ParaPara {
                                         try {
                                             image_view.reopen_async.end(res);
                                         } catch (Error e) {
-                                            show_error_dialog(e.message);
+                                            printerr("%s\n", e.message);
                                         }
                                     });
                                     progress_scale.inverted = toolbar.sort_order == SortOrder.DESC;
@@ -662,7 +662,7 @@ namespace ParaPara {
                                     image_view.open_async.end(res);
                                     image_view.update_title();
                                 } catch (Error e) {
-                                    show_error_dialog(e.message);
+                                    printerr("%s\n", e.message);
                                 }
                                 enable_controls();
                             });
@@ -691,7 +691,7 @@ namespace ParaPara {
                 } else {
                     message = _("The file could not be opend (cause: %s)").printf(e.message);
                 }
-                show_error_dialog(message);
+                printerr("%s\n", message);
                 enable_controls();
                 if (!image_view.has_image) {
                     stack.visible_child_name = "welcome";

@@ -86,7 +86,7 @@ namespace ParaPara {
             }
         }
 
-        private Gee.List<ParaPara.Image> widget_list;
+        private Gee.List<Gtk.Widget> widget_list;
         private Box slide_box;
         private ScrolledWindow scroll;
         private FileList _file_list;
@@ -310,8 +310,9 @@ namespace ParaPara {
         }
 
         public void close() {
-            foreach (var image in widget_list) {
-                if (image.is_animation) {
+            foreach (var widget in widget_list) {
+                var image = widget as ParaPara.Image;
+                if (image != null && image.is_animation) {
                     image.quit_animation();
                 }
             }
@@ -392,10 +393,14 @@ namespace ParaPara {
             int i = 0;
             for (i = 0; i < widget_list.size && tmp == resizing_counter; i++) {
                 int new_width = scroll.get_allocated_width() - page_spacing * 2;
-                widget_list[i].scale_fit_in_width(new_width);
+                ParaPara.Image? image = widget_list[i] as ParaPara.Image;
+                if (image == null) {
+                    continue;
+                }
+                image.scale_fit_in_width(new_width);
                 Idle.add(fit_images_by_width.callback);
                 yield;
-                length_list[i] = (i > 0 ? length_list[i - 1] : 0) + (double) (get_widget_length(widget_list[i]) + page_spacing);
+                length_list[i] = (i > 0 ? length_list[i - 1] : 0) + (double) (get_widget_length(image) + page_spacing);
                 update_title();
                 Idle.add(fit_images_by_width.callback);
                 yield;
@@ -411,10 +416,14 @@ namespace ParaPara {
             int i = 0;
             for (i = 0; i < widget_list.size && tmp == resizing_counter; i++) {
                 int new_height = scroll.get_allocated_height() - page_spacing * 2;
-                widget_list[i].scale_fit_in_height(new_height);
+                ParaPara.Image? image = widget_list[i] as ParaPara.Image;
+                if (image == null) {
+                    continue;
+                }
+                image.scale_fit_in_height(new_height);
                 Idle.add(fit_images_by_height.callback);
                 yield;
-                length_list[i] = (i > 0 ? length_list[i - 1] : 0) + (double) (get_widget_length(widget_list[i]) + page_spacing);
+                length_list[i] = (i > 0 ? length_list[i - 1] : 0) + (double) (get_widget_length(image) + page_spacing);
                 update_title();
                 Idle.add(fit_images_by_height.callback);
                 yield;
@@ -429,10 +438,14 @@ namespace ParaPara {
             uint64 tmp = resizing_counter;
             int i = 0;
             for (i = 0; i < widget_list.size && tmp == resizing_counter; i++) {
-                widget_list[i].set_scale_percent(percentage);
+                ParaPara.Image? image = widget_list[i] as ParaPara.Image;
+                if (image == null) {
+                    continue;
+                }
+                image.set_scale_percent(percentage);
                 Idle.add(scale_images_by_percentage.callback);
                 yield;
-                length_list[i] = (i > 0 ? length_list[i - 1] : 0) + (double) (get_widget_length(widget_list[i]) + page_spacing);
+                length_list[i] = (i > 0 ? length_list[i - 1] : 0) + (double) (get_widget_length(image) + page_spacing);
                 update_title();
                 Idle.add(scale_images_by_percentage.callback);
                 yield;
@@ -448,7 +461,7 @@ namespace ParaPara {
             change_cursor(WATCH);
             Idle.add(init_async.callback);
             yield;
-            widget_list = new Gee.ArrayList<ParaPara.Image>();
+            widget_list = new Gee.ArrayList<Gtk.Widget>();
             remove(scroll);
             scroll = new ScrolledWindow(null, null) {
                 hscrollbar_policy = EXTERNAL,
@@ -530,7 +543,18 @@ namespace ParaPara {
                         is_make_view_continue = false;
                     }
                 } catch (Error e) {
-                    main_window.show_error_dialog(e.message);
+                    try {
+                        string filename = accessor.get_filename_at(i);
+                        var error_label = new Gtk.Label(filename + ":\n" + e.message) {
+                            margin = 10
+                        };
+                        error_label.show_all();
+                        widget_list.add(error_label);
+                        slide_box.pack_start(error_label, false, false);
+                    } catch (AppError e) {
+                        printerr("%s\n", e.message);
+                        main_window.show_error_dialog(e.message);
+                    }
                 }
             }
         }
@@ -557,16 +581,16 @@ namespace ParaPara {
             double adj = 0.0;
             if (orientation == VERTICAL) {
                 for (int i = 0; i < location; i++) {
-                    adj += widget_list[i].get_allocated_height();
+                    adj += widget_list[i].get_allocated_height() + page_spacing;
                 }
             } else {
                 for (int i = 0; i < location; i++) {
-                    adj += widget_list[i].get_allocated_width();
+                    adj += widget_list[i].get_allocated_width() + page_spacing;
                 }
             }
             primary_adjustment.value = adj;
         }
-        
+
         private void change_cursor(CursorType cursor_type) {
             main_window.get_window().cursor = new Gdk.Cursor.for_display(Gdk.Screen.get_default().get_display(), cursor_type);
         }

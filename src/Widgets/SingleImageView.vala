@@ -24,8 +24,10 @@ using Gdk, Gtk;
 namespace ParaPara {
     public class SingleImageView : ImageView, EventBox {
         public ParaPara.Window main_window { get; construct; }
+        public Overlay overlay { get; private set; }
         public Image image { get; private set; }
         public ScrolledWindow scrolled { get; private set; }
+        public Label error_message { get; private set; }
         public ViewMode view_mode { get; construct; }
         public bool controllable { get; set; default = true; }
         public bool has_image {
@@ -86,25 +88,33 @@ namespace ParaPara {
         }
 
         construct {
-            scrolled = new ScrolledWindow(null, null);
+            overlay = new Overlay();
             {
-                image = new Image(true);
+                scrolled = new ScrolledWindow(null, null);
                 {
-                    image.container = scrolled;
-                    image.get_style_context().add_class("image-view");
+                    image = new Image(true);
+                    {
+                        image.container = scrolled;
+                        image.get_style_context().add_class("image-view");
+                    }
+
+                    scrolled.add(image);
+                    scrolled.size_allocate.connect((allocation) => {
+                        if (image.fit) {
+                            debug("size_allocated");
+                            image.fit_size_in_window();
+                            update_title();
+                        }
+                    });
                 }
 
-                scrolled.add(image);
-                scrolled.size_allocate.connect((allocation) => {
-                    if (image.fit) {
-                        debug("size_allocated");
-                        image.fit_size_in_window();
-                        update_title();
-                    }
-                });
+                error_message = new Label("");
+
+                overlay.add(scrolled);
+                overlay.add_overlay(error_message);
             }
 
-            add(scrolled);
+            add(overlay);
         }
 
         private enum ClickedArea {
@@ -401,7 +411,15 @@ namespace ParaPara {
         public async void open_async(File file) throws Error {
             var saved_cursor = get_window().cursor;
             change_cursor(WATCH);
-            yield image.open_async(file.get_path());
+            try {
+                yield image.open_async(file.get_path());
+            } catch (Error e) {
+                error_message.label = _(file.get_basename() + ":\n" + e.message);
+                image.visible = false;
+                throw e;
+            }
+            error_message.label = "";
+            image.visible = true;
             image.fit_size_in_window();
             if (file_list.has_list) {
                 accessor.set_name(file.get_basename());
