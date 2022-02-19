@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.parapara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-09 12:46+0900\n"
+"POT-Creation-Date: 2022-02-19 16:53+0900\n"
 "PO-Revision-Date: 2021-01-14 11:54+0900\n"
 "Last-Translator: Takayuki Tanaka <aharotias2@gmail.com>\n"
 "Language-Team: none\n"
@@ -52,44 +52,48 @@ msgstr "高さ:"
 msgid "OK"
 msgstr "OK"
 
-#: src/Widgets/ResizeDialog.vala:122 src/Widgets/SingleImageView.vala:513
+#: src/Widgets/ResizeDialog.vala:122 src/Widgets/SingleImageView.vala:531
 #: src/Widgets/Window.vala:613
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: src/Widgets/SingleImageView.vala:495
+#: src/Widgets/SingleImageView.vala:417
+msgid ":\n"
+msgstr ""
+
+#: src/Widgets/SingleImageView.vala:513
 msgid "The image was resized."
 msgstr "ファイルをリサイズしました。"
 
-#: src/Widgets/SingleImageView.vala:497
+#: src/Widgets/SingleImageView.vala:515
 msgid "Resizing of the image was canceled."
 msgstr "リサイズはキャンセルされました。"
 
-#: src/Widgets/SingleImageView.vala:505
+#: src/Widgets/SingleImageView.vala:523
 msgid "Sorry, saving animations is not supported yet."
 msgstr "申し訳ありませんが、アニメーションの保存には未対応です。"
 
-#: src/Widgets/SingleImageView.vala:512 data/gtk/menus.ui:42
+#: src/Widgets/SingleImageView.vala:530 data/gtk/menus.ui:42
 msgid "Save as…"
 msgstr "名前を付けて保存…"
 
-#: src/Widgets/SingleImageView.vala:513 data/gtk/menus.ui:37
+#: src/Widgets/SingleImageView.vala:531 data/gtk/menus.ui:37
 msgid "Save"
 msgstr "保存"
 
-#: src/Widgets/SingleImageView.vala:533
+#: src/Widgets/SingleImageView.vala:551
 msgid "File already exists. Do you want to overwrite it?"
 msgstr "ファイルはすでに存在します。上書きしてもよろしいですか？"
 
-#: src/Widgets/SingleImageView.vala:544
+#: src/Widgets/SingleImageView.vala:562
 msgid "Do you really overwrite this file?"
 msgstr "本当にこのファイルを上書きしますか？"
 
-#: src/Widgets/SingleImageView.vala:557
+#: src/Widgets/SingleImageView.vala:575
 msgid "The file save was canceled."
 msgstr "ファイルの保存はキャンセルされました。"
 
-#: src/Widgets/SingleImageView.vala:562
+#: src/Widgets/SingleImageView.vala:580
 msgid "The file was saved"
 msgstr "ファイルを保存しました。"
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.parapara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-09 12:46+0900\n"
+"POT-Creation-Date: 2022-02-19 16:53+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,44 +51,48 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: src/Widgets/ResizeDialog.vala:122 src/Widgets/SingleImageView.vala:513
+#: src/Widgets/ResizeDialog.vala:122 src/Widgets/SingleImageView.vala:531
 #: src/Widgets/Window.vala:613
 msgid "Cancel"
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:495
+#: src/Widgets/SingleImageView.vala:417
+msgid ":\n"
+msgstr ""
+
+#: src/Widgets/SingleImageView.vala:513
 msgid "The image was resized."
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:497
+#: src/Widgets/SingleImageView.vala:515
 msgid "Resizing of the image was canceled."
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:505
+#: src/Widgets/SingleImageView.vala:523
 msgid "Sorry, saving animations is not supported yet."
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:512 data/gtk/menus.ui:42
+#: src/Widgets/SingleImageView.vala:530 data/gtk/menus.ui:42
 msgid "Save as…"
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:513 data/gtk/menus.ui:37
+#: src/Widgets/SingleImageView.vala:531 data/gtk/menus.ui:37
 msgid "Save"
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:533
+#: src/Widgets/SingleImageView.vala:551
 msgid "File already exists. Do you want to overwrite it?"
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:544
+#: src/Widgets/SingleImageView.vala:562
 msgid "Do you really overwrite this file?"
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:557
+#: src/Widgets/SingleImageView.vala:575
 msgid "The file save was canceled."
 msgstr ""
 
-#: src/Widgets/SingleImageView.vala:562
+#: src/Widgets/SingleImageView.vala:580
 msgid "The file was saved"
 msgstr ""
 
