@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-19 16:53+0900\n"
-"PO-Revision-Date: 2022-02-10 10:10+0100\n"
+"PO-Revision-Date: 2022-02-27 14:10+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -57,7 +57,7 @@ msgstr "Cancella"
 
 #: src/Widgets/SingleImageView.vala:417
 msgid ":\n"
-msgstr ""
+msgstr ":\n"
 
 #: src/Widgets/SingleImageView.vala:513
 msgid "The image was resized."
@@ -237,7 +237,7 @@ msgstr "Nessuna Immagine Aperta"
 
 #: src/Widgets/Window.vala:191
 msgid "Click 'Open Image' to get started."
-msgstr "Fai clic su \"Apri immagine\" per iniziare."
+msgstr "Fai clic su 'Apri Immagine' per iniziare."
 
 #: src/Widgets/Window.vala:193
 msgid "Open Image"
