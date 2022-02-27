@@ -41,7 +41,7 @@ namespace ParaPara {
         public ImageView image_view { get; private set; }
         public ActionButton image_prev_button { get; private set; }
         public ActionButton image_next_button { get; private set; }
-        
+
         public bool fullscreen_mode {
             get {
                 return _fullscreen_mode;
@@ -86,7 +86,8 @@ namespace ParaPara {
         private SimpleAction action_toggle_toolbar;
         private SimpleAction action_save;
         private bool is_open_when_value_changed = true;
-
+        private bool is_set_location = true;
+        
         public Window(Gtk.Application app) {
             application = app;
 
@@ -334,8 +335,14 @@ namespace ParaPara {
                                                 });
                                                 break;
                                               case SLIDE_VIEW_MODE:
-                                                var view = image_view as SlideImageView;
-                                                view.set_location(progress_scale.get_value());
+                                                var view = (!) image_view as SlideImageView;
+                                                if (is_set_location) {
+                                                    is_set_location = false;
+                                                    view.set_location.begin(progress_scale.get_value(), (a, b) => {
+                                                        debug("progress_scale.value_changed end.");
+                                                        is_set_location = true;
+                                                    });
+                                                }
                                                 break;
                                             }
                                         } else {

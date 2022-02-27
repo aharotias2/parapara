@@ -577,17 +577,25 @@ namespace ParaPara {
             return length_list.length - 1;
         }
 
-        public void set_location(double location) {
+        public async void set_location(double location) {
             double adj = 0.0;
+            int location_int = (int) location;
+            debug("SlideImageView.set_location: location = %f, location_int = %d, widget_list.size = %d", location, location_int, widget_list.size);
+            if (widget_list.size < location_int) {
+                yield make_view_async(location_int);
+            }
+            debug("SlideImageView.set_location (after init_async): widget_list.size = %d", widget_list.size);
             if (orientation == VERTICAL) {
-                for (int i = 0; i < location; i++) {
+                for (int i = 0; i < location_int; i++) {
                     adj += widget_list[i].get_allocated_height() + page_spacing;
                 }
             } else {
-                for (int i = 0; i < location; i++) {
+                for (int i = 0; i < location_int; i++) {
                     adj += widget_list[i].get_allocated_width() + page_spacing;
                 }
             }
+            debug("SlideImageView$set_location: adj = %f, lower = %f, upper = %f",
+                    adj, primary_adjustment.lower, primary_adjustment.upper);
             primary_adjustment.value = adj;
         }
 
