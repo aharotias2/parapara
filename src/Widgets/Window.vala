@@ -776,9 +776,10 @@ namespace ParaPara {
             dialog.artists = {"Nararyans R.I. @Fatih20"};
             dialog.authors = {"Takayuki Tanaka @aharotias2", "Ryo Nakano @ryonakano"};
             dialog.documenters = null;
-            dialog.translator_credits = null;
+            //TRANSLATORS: Replace with your name and email address, don't translate literally
+            dialog.translator_credits = _("translator-credits");
             dialog.program_name = "ParaPara";
-            dialog.comments = "A lightweight image viewer with three display modes: single, spread, and continuous.";
+            dialog.comments = _("A lightweight image viewer with three display modes: single, spread, and continuous.");
             dialog.copyright = "Copyright (C) 2020-2022 Takayuki Tanaka";
             dialog.version = VERSION;
             dialog.license =
