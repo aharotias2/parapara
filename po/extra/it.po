@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-13 02:42+0000\n"
+"POT-Creation-Date: 2022-03-22 10:15+0900\n"
 "PO-Revision-Date: 2021-12-09 20:54+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -16,19 +16,59 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/parapara.appdata.xml.in:7 data/parapara.desktop.in:3
+#: data/parapara.appdata.xml.in:8 data/parapara.desktop.in:3
 msgid "ParaPara"
 msgstr "ParaPara"
 
-#: data/parapara.appdata.xml.in:8
+#: data/parapara.appdata.xml.in:9
 msgid "An image viewer without library"
 msgstr "Un visualizzatore di immagini senza libreria"
 
-#: data/parapara.appdata.xml.in:10
-msgid "An image viewer that supports jpg, png, bmp, and ico files."
-msgstr "Un visualizzatore di immagini che supporta file jpg, png, bmp e ico."
+#: data/parapara.appdata.xml.in:11
+msgid ""
+"An image viewer in which images are displayed as one of three styles: "
+"single, spread (book), continuous (scrolling), and that supports jpg, png, "
+"bmp, ico, gif files. animated gifs are also supported."
+msgstr ""
 
-#: data/parapara.appdata.xml.in:53
+#: data/parapara.appdata.xml.in:20
+msgid "Application Screenshot (Single View Mode)"
+msgstr ""
+
+#: data/parapara.appdata.xml.in:24
+msgid "Spread View Mode"
+msgstr ""
+
+#: data/parapara.appdata.xml.in:28
+msgid "Continuous View Mode (Vertical)"
+msgstr ""
+
+#: data/parapara.appdata.xml.in:32
+msgid "Continuous View Mode (Horizontal)"
+msgstr ""
+
+#: data/parapara.appdata.xml.in:70
+msgid "Update meson.build"
+msgstr ""
+
+#: data/parapara.appdata.xml.in:75
+msgid "Update appdata.xml"
+msgstr ""
+
+#: data/parapara.appdata.xml.in:80
+msgid ""
+"This release further standardizes the user interface. That is, like many "
+"other GNOME applications such as Gedit, we have made it with a menu button "
+"on the top right. When you press this button, you will see a pop-up menu as "
+"most people expect. (Previously, the toolbar was displayed.) There is no "
+"change in the functionality itself."
+msgstr ""
+
+#: data/parapara.appdata.xml.in:91
+msgid "Initial release."
+msgstr ""
+
+#: data/parapara.appdata.xml.in:97
 msgid "Tanaka Takayuki"
 msgstr "Tanaka Takayuki"
 
@@ -40,10 +80,13 @@ msgstr "Visualizzatore di immagini"
 msgid "View image files"
 msgstr "Visualizza file immagine"
 
-#: data/parapara.desktop.in:8
-msgid "image-viewer"
-msgstr "visualizzatore-immagini"
-
-#: data/parapara.desktop.in:13
+#: data/parapara.desktop.in:12
 msgid "Picture;Image;Viewer;"
 msgstr "Foto;Immagine;Visualizzatore;"
+
+#~ msgid "An image viewer that supports jpg, png, bmp, and ico files."
+#~ msgstr ""
+#~ "Un visualizzatore di immagini che supporta file jpg, png, bmp e ico."
+
+#~ msgid "image-viewer"
+#~ msgstr "visualizzatore-immagini"
