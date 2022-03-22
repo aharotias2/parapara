@@ -1,16 +1,16 @@
 # Japanese translations for com.github.aharotias2.parapara package.
-# Copyright (C) 2020-2021 THE com.github.aharotias2.parapara'S COPYRIGHT HOLDER
+# Copyright (C) 2019-2022 THE com.github.aharotias2.parapara'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.aharotias2.parapara package.
 # Tanaka Takayuki <aharotias2@gmail.com>, 2019-2021.
-# Ryo Nakano <ryonakaknock3@gmail.com>, 2020-2021.
+# Ryo Nakano <ryonakaknock3@gmail.com>, 2020-2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.parapara\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-22 10:14+0900\n"
-"PO-Revision-Date: 2021-01-14 11:54+0900\n"
-"Last-Translator: Takayuki Tanaka <aharotias2@gmail.com>\n"
+"PO-Revision-Date: 2022-03-22 10:24+0900\n"
+"Last-Translator: Ryo Nakano <ryonakaknock3@gmail.com>\n"
 "Language-Team: none\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -59,7 +59,7 @@ msgstr "キャンセル"
 
 #: src/Widgets/SingleImageView.vala:417
 msgid ":\n"
-msgstr ""
+msgstr ":\n"
 
 #: src/Widgets/SingleImageView.vala:513
 msgid "The image was resized."
@@ -95,7 +95,7 @@ msgstr "ファイルの保存はキャンセルされました。"
 
 #: src/Widgets/SingleImageView.vala:580
 msgid "The file was saved"
-msgstr "ファイルを保存しました。"
+msgstr "ファイルを保存しました"
 
 #: src/Widgets/ToolBar.vala:156
 msgid "Resize"
@@ -175,7 +175,7 @@ msgstr "右から左へ"
 
 #: src/Widgets/ToolBar.vala:486
 msgid "Fit Width"
-msgstr "幅:"
+msgstr "幅に合わせる"
 
 #: src/Widgets/ToolBar.vala:487
 msgid "Fit Page"
@@ -211,7 +211,7 @@ msgstr "左右反転"
 
 #: src/Widgets/ToolBar.vala:608
 msgid "Zoom:"
-msgstr "拡大"
+msgstr "拡大:"
 
 #: src/Widgets/ToolBar.vala:610
 msgid "Orientation:"
@@ -219,7 +219,7 @@ msgstr "縦/横:"
 
 #: src/Widgets/ToolBar.vala:612
 msgid "Sort:"
-msgstr "昇順"
+msgstr "並べ替え:"
 
 #: src/Widgets/Window.vala:116 src/Widgets/Window.vala:620 data/gtk/menus.ui:33
 msgid "Open"
@@ -247,7 +247,7 @@ msgstr "画像を開く"
 
 #: src/Widgets/Window.vala:194
 msgid "Show and edit your image."
-msgstr "画像を閲覧/編集できます"
+msgstr "画像を閲覧/編集できます。"
 
 #: src/Widgets/Window.vala:230 src/Widgets/Window.vala:330
 #: src/Widgets/Window.vala:656 src/Widgets/Window.vala:742
@@ -276,6 +276,8 @@ msgstr "ファイルを開けません (理由: %s)"
 #: src/Widgets/Window.vala:780
 msgid "translator-credits"
 msgstr ""
+"Tanaka Takayuki <aharotias2@gmail.com>\n"
+"Ryo Nakano <ryonakaknock3@gmail.com>"
 
 #: src/Widgets/Window.vala:782
 msgid ""
@@ -321,4 +323,4 @@ msgstr "フルスクリーン"
 
 #: data/gtk/menus.ui:75
 msgid "About…"
-msgstr "このアプリについて…"
+msgstr "ParaPara について…"
