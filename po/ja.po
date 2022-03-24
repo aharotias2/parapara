@@ -284,6 +284,7 @@ msgid ""
 "A lightweight image viewer with three display modes: single, spread, and "
 "continuous."
 msgstr ""
+"3つのモード (シングル、ダブル、スクロール) をもつ軽量なイメージビューワー。"
 
 #: data/gtk/menus.ui:7
 msgid "Single View Mode"
