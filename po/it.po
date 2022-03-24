@@ -273,13 +273,15 @@ msgstr "Impossibile aprire il file (motivo: %s)"
 #. TRANSLATORS: Replace with your name and email address, don't translate literally
 #: src/Widgets/Window.vala:780
 msgid "translator-credits"
-msgstr ""
+msgstr "Albano Battistella <albano_battistella@hotmail.com>"
 
 #: src/Widgets/Window.vala:782
 msgid ""
 "A lightweight image viewer with three display modes: single, spread, and "
 "continuous."
 msgstr ""
+"Un visualizzatore di immagini leggero con tre modalità di visualizzazione: singola, diffusa e "
+"continua."
 
 #: data/gtk/menus.ui:7
 msgid "Single View Mode"
