@@ -1,14 +1,14 @@
 # ITALIAN TRANSLATION FOR PARAPARA.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the extra package.
-# ALBANO BATTISTELLA <ALBANO_BATTISTELLA@HOTMAIL.COM>, 2021.
+# ALBANO BATTISTELLA <ALBANO_BATTISTELLA@HOTMAIL.COM>, 2021,2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-22 10:15+0900\n"
-"PO-Revision-Date: 2021-12-09 20:54+0100\n"
+"PO-Revision-Date: 2022-03-25 19:54+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -30,18 +30,21 @@ msgid ""
 "single, spread (book), continuous (scrolling), and that supports jpg, png, "
 "bmp, ico, gif files. animated gifs are also supported."
 msgstr ""
+"Un visualizzatore di immagini in cui le immagini vengono visualizzate come uno dei tre stili: "
+"singolo, diffuso (libro), continuo (a scorrimento) e che supporta jpg, png, "
+"file bmp, ico, gif. Sono supportate anche le gif animate."
 
 #: data/parapara.appdata.xml.in:20
 msgid "Application Screenshot (Single View Mode)"
-msgstr ""
+msgstr "Screenshot dell'applicazione (modalità di visualizzazione singola)"
 
 #: data/parapara.appdata.xml.in:24
 msgid "Spread View Mode"
-msgstr ""
+msgstr "Modalità di Visualizzazione Diffusa"
 
 #: data/parapara.appdata.xml.in:28
 msgid "Continuous View Mode (Vertical)"
-msgstr ""
+msgstr "Modalità di visualizzazione continua (verticale)"
 
 #: data/parapara.appdata.xml.in:32
 msgid "Continuous View Mode (Horizontal)"
@@ -49,11 +52,11 @@ msgstr ""
 
 #: data/parapara.appdata.xml.in:70
 msgid "Update meson.build"
-msgstr ""
+msgstr "Aggiornato meson.build"
 
 #: data/parapara.appdata.xml.in:75
 msgid "Update appdata.xml"
-msgstr ""
+msgstr "Aggiornato appdata.xml"
 
 #: data/parapara.appdata.xml.in:80
 msgid ""
@@ -63,10 +66,15 @@ msgid ""
 "most people expect. (Previously, the toolbar was displayed.) There is no "
 "change in the functionality itself."
 msgstr ""
+"Questa versione standardizza ulteriormente l'interfaccia utente. Cioè, come molte "
+"altre applicazioni GNOME come Gedit, l'abbiamo realizzata con un pulsante menu"
+"in alto a destra. Quando premi questo pulsante, vedrai un menu a comparsa come "
+"la maggior parte delle persone si aspetta. (In precedenza, la barra degli strumenti era visualizzata.) Non c'è "
+"modifica della funzionalità stessa".
 
 #: data/parapara.appdata.xml.in:91
 msgid "Initial release."
-msgstr ""
+msgstr "Versione iniziale"
 
 #: data/parapara.appdata.xml.in:97
 msgid "Tanaka Takayuki"
