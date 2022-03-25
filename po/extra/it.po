@@ -48,7 +48,7 @@ msgstr "Modalità di visualizzazione continua (verticale)"
 
 #: data/parapara.appdata.xml.in:32
 msgid "Continuous View Mode (Horizontal)"
-msgstr ""
+msgstr "Modalità di visualizzazione continua (orizzontale)"
 
 #: data/parapara.appdata.xml.in:70
 msgid "Update meson.build"
@@ -70,7 +70,7 @@ msgstr ""
 "altre applicazioni GNOME come Gedit, l'abbiamo realizzata con un pulsante menu"
 "in alto a destra. Quando premi questo pulsante, vedrai un menu a comparsa come "
 "la maggior parte delle persone si aspetta. (In precedenza, la barra degli strumenti era visualizzata.) Non c'è "
-"modifica della funzionalità stessa".
+"modifica della funzionalità stessa."
 
 #: data/parapara.appdata.xml.in:91
 msgid "Initial release."
