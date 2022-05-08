@@ -76,7 +76,6 @@ namespace ParaPara {
 
         public Image(bool fit) {
             this.fit = fit;
-            this.double_buffered = true;
             has_image = false;
             paused_value = true;
             playing = false;
