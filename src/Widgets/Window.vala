@@ -87,7 +87,7 @@ namespace ParaPara {
         private SimpleAction action_save;
         private bool is_open_when_value_changed = true;
         private bool is_set_location = true;
-        
+
         public Window(Gtk.Application app) {
             application = app;
 
@@ -97,7 +97,7 @@ namespace ParaPara {
                 debug("application is not null");
             }
             init_action_map();
-            
+
             /* the headerbar itself */
             headerbar = new HeaderBar() {
                 show_close_button = true
@@ -115,16 +115,16 @@ namespace ParaPara {
                                 open_button_inner_box.pack_start(new Gtk.Image.from_icon_name("document-open-symbolic", SMALL_TOOLBAR));
                                 open_button_inner_box.pack_start(new Gtk.Label(_("Open")));
                             }
-                            
+
                             open_button.add(open_button_inner_box);
                             open_button.clicked.connect(() => {
                                 on_open_button_clicked();
                             });
                         }
-                        
+
                         open_button_box.pack_start(open_button);
                     }
-                    
+
                     var navigation_box = new Gtk.ButtonBox(Orientation.HORIZONTAL) {
                             layout_style = Gtk.ButtonBoxStyle.EXPAND };
                     {
@@ -180,7 +180,7 @@ namespace ParaPara {
                         menu_popped = !menu_popped;
                     });
                 }
-                
+
                 headerbar.pack_start(header_buttons);
                 headerbar.pack_end(menu_button);
             }
@@ -280,6 +280,10 @@ namespace ParaPara {
                                     } catch (Error error) {
                                         show_error_dialog(error.message);
                                     }
+                                });
+
+                                toolbar.delete_button_clicked.connect(() => {
+                                    activate_action("delete-file", null);
                                 });
                             }
 
@@ -396,13 +400,13 @@ namespace ParaPara {
                 require_new_window();
             });
             add_action(action_new);
-            
+
             var action_open = new SimpleAction("open", null);
             action_open.activate.connect(() => {
                 on_open_button_clicked();
             });
             add_action(action_open);
-            
+
             action_save = new SimpleAction("save", VariantType.BOOLEAN);
             action_save.activate.connect((param) => {
                 if (stack.visible_child_name != "picture") {
@@ -417,6 +421,48 @@ namespace ParaPara {
                 }
             });
             add_action(action_save);
+
+            var action_delete = new SimpleAction("delete-file", null);
+            action_delete.activate.connect(() => {
+                if (image_view.view_mode == SINGLE_VIEW_MODE) {
+                    string dirpath = image_view.file_list.dir_path;
+                    string filename = image_view.file_list.get_filename_at(image_view.index);
+                    string filepath = Path.build_path(Path.DIR_SEPARATOR_S, dirpath, filename);
+                    File file_for_delete = File.new_for_path(filepath);
+                    if (!file_for_delete.query_exists()) {
+                        return;
+                    }
+
+                    DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
+                    MessageDialog alert = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL,
+                            _("Are you sure you want to move this file to the Trash?"));
+                    int res = alert.run();
+                    alert.close();
+                    if (res == ResponseType.OK) {
+                        try {
+                            file_for_delete.trash();
+                            show_message_async(_("Moved the file to the Trash."));
+                        } catch (Error e1) {
+                            try {
+                                MessageDialog alert2 = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL,
+                                        _("This file cannot be moved to the Trash because it is not supported in the desktop environment. Are you sure you want to delete it completely?")
+                                        );
+                                file_for_delete.delete();
+                                show_message_async(_("Completely deleted the file."));
+                            } catch (Error e2) {
+                                debug("fail to delete a file");
+                            }
+                        }
+                        image_view.reopen_async.begin();
+                        debug("action_delete is activated. filepath => %s", filepath);
+                    } else {
+                        debug("action_delete is activated. but it was canceled.");
+                    }
+                } else {
+                    debug("action_delete is activated. but does nothing.");
+                }
+            });
+            add_action(action_delete);
 
             action_toggle_toolbar = new SimpleAction.stateful("toggletoolbar", VariantType.STRING, new Variant.string("depends"));
             action_toggle_toolbar.activate.connect((param) => {
@@ -434,13 +480,13 @@ namespace ParaPara {
             });
             action_toggle_toolbar.set_state(new Variant.string("depends"));
             add_action(action_toggle_toolbar);
-            
+
             var action_show_info = new SimpleAction("show_info", null);
             action_show_info.activate.connect(() => {
                 show_app_dialog(this);
             });
             add_action(action_show_info);
-            
+
             var action_change_view_mode = new SimpleAction.stateful("change-view-mode", VariantType.STRING, new Variant.string("single"));
             action_change_view_mode.activate.connect((param) => {
                 if (stack.visible_child_name != "picture") {
@@ -471,7 +517,7 @@ namespace ParaPara {
             });
             action_change_view_mode.set_state(new Variant.string("single"));
             add_action(action_change_view_mode);
-            
+
             action_fullscreen = new SimpleAction("fullscreen", null);
             action_fullscreen.activate.connect(() => {
                 if (stack.visible_child_name != "picture") {

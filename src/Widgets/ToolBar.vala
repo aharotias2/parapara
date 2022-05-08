@@ -29,6 +29,7 @@ namespace ParaPara {
         public signal void sort_order_changed(SortOrder sort_order);
         public signal void stick_button_clicked(bool sticked);
         public signal void view_mode_changed(ViewMode view_mode);
+        public signal void delete_button_clicked();
 
         public ToolbarOption option { get; set; default = DEPENDS; }
         public ActionButton save_button { get; private set; }
@@ -235,6 +236,14 @@ namespace ParaPara {
                             });
                         }
 
+                        var delete_button = new ActionButton("edit-delete-symbolic", _("Delete this file"), {"<delete>"});
+                        {
+                            delete_button.get_style_context().add_class("image_overlay_button");
+                            delete_button.clicked.connect(() => {
+                                delete_button_clicked();
+                            });
+                        }
+
                         image_actions_button_box.pack_start(resize_button);
                         image_actions_button_box.pack_start(zoom_in_button);
                         image_actions_button_box.pack_start(zoom_out_button);
@@ -244,6 +253,7 @@ namespace ParaPara {
                         image_actions_button_box.pack_start(vflip_button);
                         image_actions_button_box.pack_start(lrotate_button);
                         image_actions_button_box.pack_start(rrotate_button);
+                        image_actions_button_box.pack_start(delete_button);
                     }
 
                     var sort_order_button_box = new ButtonBox(Orientation.HORIZONTAL) {

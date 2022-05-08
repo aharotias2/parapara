@@ -54,6 +54,7 @@ namespace ParaPara {
             }
 
             foreach (var file in files) {
+                debug("open file %s", file.get_path());
                 ParaPara.Window window = create_new_window();
                 window.open_file_async.begin(file);
             }
