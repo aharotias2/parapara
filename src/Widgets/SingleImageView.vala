@@ -414,7 +414,7 @@ namespace ParaPara {
             try {
                 yield image.open_async(file.get_path());
             } catch (Error e) {
-                error_message.label = _(file.get_basename() + ":\n" + e.message);
+                error_message.label = _("%s\nThis file was deleted.").printf(file.get_basename());
                 image.visible = false;
                 throw e;
             }
@@ -449,30 +449,38 @@ namespace ParaPara {
         }
 
         public async void go_backward_async(int offset = 1) {
-            try {
-                if (file_list != null) {
+            if (file_list != null) {
+                try {
                     accessor.go_backward();
-                    File? prev_file = accessor.get_file();
-                    if (prev_file != null) {
+                } catch (Error e) {
+                    main_window.show_error_dialog(e.message);
+                }
+                File? prev_file = accessor.get_file();
+                if (prev_file != null) {
+                    try {
                         yield main_window.open_file_async(prev_file);
+                    } catch (Error e) {
+                        printerr("%s\n", e.message);
                     }
                 }
-            } catch (Error e) {
-                main_window.show_error_dialog(e.message);
             }
         }
 
         public async void go_forward_async(int offset = 1) {
-            try {
-                if (file_list != null) {
+            if (file_list != null) {
+                try {
                     accessor.go_forward();
-                    File? next_file = accessor.get_file();
-                    if (next_file != null) {
+                } catch (Error e) {
+                    main_window.show_error_dialog(e.message);
+                }
+                File? next_file = accessor.get_file();
+                if (next_file != null) {
+                    try {
                         yield main_window.open_file_async(next_file);
+                    } catch (Error e) {
+                        printerr("%s\n", e.message);
                     }
                 }
-            } catch (Error e) {
-                main_window.show_error_dialog(e.message);
             }
         }
 

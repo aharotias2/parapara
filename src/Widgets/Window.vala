@@ -424,51 +424,7 @@ namespace ParaPara {
 
             var action_delete = new SimpleAction("delete-file", null);
             action_delete.activate.connect(() => {
-                if (image_view.view_mode == SINGLE_VIEW_MODE) {
-                    try {
-                        string dirpath = image_view.file_list.dir_path;
-                        string filename = image_view.file_list.get_filename_at(image_view.index);
-                        string filepath = Path.build_path(Path.DIR_SEPARATOR_S, dirpath, filename);
-                        File file_for_delete = File.new_for_path(filepath);
-                        if (!file_for_delete.query_exists()) {
-                            return;
-                        }
-
-                        DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
-                        MessageDialog alert = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL,
-                                _("Are you sure you want to move this file to the Trash?"));
-                        int res = alert.run();
-                        alert.close();
-                        if (res == ResponseType.OK) {
-                            try {
-                                file_for_delete.trash();
-                                show_message_async.begin(_("Moved the file to the Trash."));
-                            } catch (Error e1) {
-                                try {
-                                    MessageDialog alert2 = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL,
-                                            _("This file cannot be moved to the Trash because it is not supported in the desktop environment. Are you sure you want to delete it completely?")
-                                            );
-                                    int res2 = alert2.run();
-                                    alert2.close();
-                                    if (res2 == ResponseType.OK) {
-                                        file_for_delete.delete();
-                                        show_message_async.begin(_("Completely deleted the file."));
-                                    }
-                                } catch (Error e2) {
-                                    debug("fail to delete a file");
-                                }
-                            }
-                            image_view.reopen_async.begin();
-                            debug("action_delete is activated. filepath => %s", filepath);
-                        } else {
-                            debug("action_delete is activated. but it was canceled.");
-                        }
-                    } catch (AppError e) {
-                        debug("action_delete: the file at index does not exists.");
-                    }
-                } else {
-                    debug("action_delete is activated. but does nothing.");
-                }
+                delete_file_async.begin();
             });
             add_action(action_delete);
 
@@ -679,12 +635,18 @@ namespace ParaPara {
             if (res == Gtk.ResponseType.ACCEPT) {
                 var file_path = dialog.get_filename();
                 File file = File.new_for_path(file_path);
-                open_file_async.begin(file);
+                open_file_async.begin(file, (obj, res) => {
+                    try {
+                        open_file_async.end(res);
+                    } catch (Error e) {
+                        //show_error_dialog(e.message);
+                    }
+                });
             }
             dialog.close();
         }
 
-        public async void open_file_async(File file) {
+        public async void open_file_async(File file) throws Error {
             string? old_file_dir = null;
             if (file_list != null) {
                 old_file_dir = file_list.dir_path;
@@ -757,9 +719,63 @@ namespace ParaPara {
                 if (!image_view.has_image) {
                     stack.visible_child_name = "welcome";
                 }
+                throw e;
             }
         }
 
+        public async void delete_file_async() {
+            if (image_view.view_mode == SINGLE_VIEW_MODE) {
+                try {
+                    string dirpath = image_view.file_list.dir_path;
+                    string filename = image_view.file_list.get_filename_at(image_view.index);
+                    string filepath = Path.build_path(Path.DIR_SEPARATOR_S, dirpath, filename);
+                    File file_for_delete = File.new_for_path(filepath);
+                    if (!file_for_delete.query_exists()) {
+                        return;
+                    }
+
+                    DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
+                    MessageDialog alert = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL,
+                            _("Are you sure you want to move this file to the Trash?"));
+                    int res = alert.run();
+                    alert.close();
+                    Idle.add(delete_file_async.callback);
+                    yield;
+                    if (res == ResponseType.OK) {
+                        try {
+                            file_for_delete.trash();
+                            yield image_view.reopen_async();
+                            yield show_message_async(_("Moved the file to the Trash."));
+                        } catch (Error e1) {
+                            try {
+                                MessageDialog alert2 = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL,
+                                        _("This file cannot be moved to the Trash because it is not supported in the desktop environment. Are you sure you want to delete it completely?")
+                                        );
+                                int res2 = alert2.run();
+                                alert2.close();
+                                Idle.add(delete_file_async.callback);
+                                yield;
+                                if (res2 == ResponseType.OK) {
+                                    yield file_for_delete.delete_async();
+                                    yield image_view.reopen_async();
+                                    yield show_message_async(_("Completely deleted the file."));
+                                }
+                            } catch (Error e2) {
+                                debug("fail to delete a file");
+                            }
+                        }
+                        debug("action_delete is activated. filepath => %s", filepath);
+                    } else {
+                        debug("action_delete is activated. but it was canceled.");
+                    }
+                } catch (AppError e) {
+                    debug("action_delete: the file at index does not exists.");
+                }
+            } else {
+                debug("action_delete is activated. but does nothing.");
+            }
+        }
+        
         public async void show_message_async(string message) {
             Idle.add(show_message_async.callback);
             yield;
