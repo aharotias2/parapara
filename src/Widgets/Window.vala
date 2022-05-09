@@ -749,7 +749,7 @@ namespace ParaPara {
                         } catch (Error e1) {
                             try {
                                 MessageDialog alert2 = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL,
-                                        _("This file cannot be moved to the Trash because it is not supported in the desktop environment. Are you sure you want to delete it completely?")
+                                        _("Your desktop environment doesn't seem to support Recycle Bin. Do you want to permanently delete this file? Once deleted, it cannot be undone.")
                                         );
                                 int res2 = alert2.run();
                                 alert2.close();
