@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.parapara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-09 23:42+0900\n"
+"POT-Creation-Date: 2022-05-10 22:10+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,7 +52,7 @@ msgid "OK"
 msgstr ""
 
 #: src/Widgets/ResizeDialog.vala:122 src/Widgets/SingleImageView.vala:539
-#: src/Widgets/Window.vala:630
+#: src/Widgets/Window.vala:636
 msgid "Cancel"
 msgstr ""
 
@@ -227,7 +227,7 @@ msgstr ""
 msgid "Sort:"
 msgstr ""
 
-#: src/Widgets/Window.vala:116 src/Widgets/Window.vala:630 data/gtk/menus.ui:33
+#: src/Widgets/Window.vala:116 src/Widgets/Window.vala:636 data/gtk/menus.ui:33
 msgid "Open"
 msgstr ""
 
@@ -256,52 +256,60 @@ msgid "Show and edit your image."
 msgstr ""
 
 #: src/Widgets/Window.vala:230 src/Widgets/Window.vala:334
-#: src/Widgets/Window.vala:672 src/Widgets/Window.vala:812
+#: src/Widgets/Window.vala:678 src/Widgets/Window.vala:826
 #, c-format
 msgid "Location: %d / %d (%d%%)"
 msgstr ""
 
-#: src/Widgets/Window.vala:629
+#: src/Widgets/Window.vala:635
 msgid "Choose file to open"
 msgstr ""
 
-#: src/Widgets/Window.vala:662
+#: src/Widgets/Window.vala:668
 msgid "The directory does not found. Exiting."
 msgstr ""
 
-#: src/Widgets/Window.vala:666
+#: src/Widgets/Window.vala:672
 msgid "The file does not found."
 msgstr ""
 
-#: src/Widgets/Window.vala:715
+#: src/Widgets/Window.vala:721
 #, c-format
 msgid "The file could not be opend (cause: %s)"
 msgstr ""
 
-#: src/Widgets/Window.vala:739
+#: src/Widgets/Window.vala:751
 msgid "Are you sure you want to move this file to the Trash?"
 msgstr ""
 
-#: src/Widgets/Window.vala:748
+#: src/Widgets/Window.vala:757 src/Widgets/Window.vala:773
+msgid "Delete was canceled"
+msgstr ""
+
+#: src/Widgets/Window.vala:764
 msgid "Moved the file to the Trash."
 msgstr ""
 
-#: src/Widgets/Window.vala:752
+#: src/Widgets/Window.vala:767
 msgid ""
 "Your desktop environment doesn't seem to support Recycle Bin. Do you want to "
 "permanently delete this file? Once deleted, it cannot be undone."
 msgstr ""
 
-#: src/Widgets/Window.vala:761
+#: src/Widgets/Window.vala:778
 msgid "Completely deleted the file."
 msgstr ""
 
+#: src/Widgets/Window.vala:780
+msgid "fail to delete a file"
+msgstr ""
+
 #. TRANSLATORS: Replace with your name and email address, don't translate literally
-#: src/Widgets/Window.vala:850
+#: src/Widgets/Window.vala:864
 msgid "translator-credits"
 msgstr ""
 
-#: src/Widgets/Window.vala:852
+#: src/Widgets/Window.vala:866
 msgid ""
 "A lightweight image viewer with three display modes: single, spread, and "
 "continuous."

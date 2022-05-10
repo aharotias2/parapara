@@ -597,6 +597,12 @@ namespace ParaPara {
                 }
             } else {
                 switch (ev.keyval) {
+                  case Gdk.Key.Delete:
+                    if (image_view.view_mode == SINGLE_VIEW_MODE) {
+                        print("delete action is activated.");
+                        activate_action("delete-file", null);
+                    }
+                    break;
                   case Gdk.Key.F11:
                     fullscreen_mode = !fullscreen_mode;
                     break;
@@ -724,56 +730,64 @@ namespace ParaPara {
         }
 
         public async void delete_file_async() {
-            if (image_view.view_mode == SINGLE_VIEW_MODE) {
-                try {
-                    string dirpath = image_view.file_list.dir_path;
-                    string filename = image_view.file_list.get_filename_at(image_view.index);
-                    string filepath = Path.build_path(Path.DIR_SEPARATOR_S, dirpath, filename);
-                    File file_for_delete = File.new_for_path(filepath);
-                    if (!file_for_delete.query_exists()) {
-                        return;
-                    }
-
-                    DialogFlags flags = DialogFlags.DESTROY_WITH_PARENT;
-                    MessageDialog alert = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL,
-                            _("Are you sure you want to move this file to the Trash?"));
-                    int res = alert.run();
-                    alert.close();
-                    Idle.add(delete_file_async.callback);
-                    yield;
-                    if (res == ResponseType.OK) {
-                        try {
-                            file_for_delete.trash();
-                            yield image_view.reopen_async();
-                            yield show_message_async(_("Moved the file to the Trash."));
-                        } catch (Error e1) {
-                            try {
-                                MessageDialog alert2 = new MessageDialog(this, flags, MessageType.INFO, ButtonsType.OK_CANCEL,
-                                        _("Your desktop environment doesn't seem to support Recycle Bin. Do you want to permanently delete this file? Once deleted, it cannot be undone.")
-                                        );
-                                int res2 = alert2.run();
-                                alert2.close();
-                                Idle.add(delete_file_async.callback);
-                                yield;
-                                if (res2 == ResponseType.OK) {
-                                    yield file_for_delete.delete_async();
-                                    yield image_view.reopen_async();
-                                    yield show_message_async(_("Completely deleted the file."));
-                                }
-                            } catch (Error e2) {
-                                debug("fail to delete a file");
-                            }
-                        }
-                        debug("action_delete is activated. filepath => %s", filepath);
-                    } else {
-                        debug("action_delete is activated. but it was canceled.");
-                    }
-                } catch (AppError e) {
-                    debug("action_delete: the file at index does not exists.");
-                }
-            } else {
-                debug("action_delete is activated. but does nothing.");
+            debug("delete_file_async start");
+            if (image_view.view_mode != SINGLE_VIEW_MODE) {
+                return;
             }
+            string dirpath = image_view.file_list.dir_path;
+            string filename;
+            try {
+                filename = image_view.file_list.get_filename_at(image_view.index);
+            } catch (AppError e) {
+                printerr("action_delete: index is out of the file list.");
+                return;
+            }
+            string filepath = Path.build_path(Path.DIR_SEPARATOR_S, dirpath, filename);
+            File file_for_delete = File.new_for_path(filepath);
+            if (!file_for_delete.query_exists()) {
+                return;
+            }
+            MessageDialog alert = new MessageDialog(this, DESTROY_WITH_PARENT, MessageType.INFO, ButtonsType.OK_CANCEL,
+                    _("Are you sure you want to move this file to the Trash?"));
+            int res = alert.run();
+            alert.close();
+            Idle.add(delete_file_async.callback);
+            yield;
+            if (res != ResponseType.OK) {
+                yield show_message_async(_("Delete was canceled"));
+                return;
+            }
+            debug("action_delete is activated. filepath => %s", filepath);
+            string? result_message = null;
+            try {
+                yield file_for_delete.trash_async();
+                result_message = _("Moved the file to the Trash.");
+            } catch (Error e1) {
+                MessageDialog alert2 = new MessageDialog(this, DESTROY_WITH_PARENT, MessageType.INFO, ButtonsType.OK_CANCEL,
+                        _("Your desktop environment doesn't seem to support Recycle Bin. Do you want to permanently delete this file? Once deleted, it cannot be undone."));
+                int res2 = alert2.run();
+                alert2.close();
+                Idle.add(delete_file_async.callback);
+                yield;
+                if (res2 != ResponseType.OK) {
+                    yield show_message_async(_("Delete was canceled"));
+                    return;
+                }
+                try {
+                    yield file_for_delete.delete_async();
+                    result_message = _("Completely deleted the file.");
+                } catch (Error e2) {
+                    show_error_dialog(_("fail to delete a file"));
+                    return;
+                }
+            }
+            try {
+                yield image_view.reopen_async();
+            } catch (Error e) {
+                // expected.
+                print("This file was deleted");
+            }
+            yield show_message_async(result_message);
         }
         
         public async void show_message_async(string message) {

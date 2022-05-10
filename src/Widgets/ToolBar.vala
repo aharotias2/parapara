@@ -236,7 +236,7 @@ namespace ParaPara {
                             });
                         }
 
-                        var delete_button = new ActionButton("edit-delete-symbolic", _("Delete this file"), {"<delete>"});
+                        var delete_button = new ActionButton("edit-delete-symbolic", _("Delete this file"), {"Delete"});
                         {
                             delete_button.get_style_context().add_class("image_overlay_button");
                             delete_button.clicked.connect(() => {
