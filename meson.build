@@ -1,7 +1,7 @@
 project(
     'com.github.aharotias2.parapara',
     'vala', 'c',
-    version: '3.2.9'
+    version: '3.2.10'
 )
 
 is_debug = get_option('DEBUG')
@@ -82,7 +82,7 @@ executable(
         dependency('granite'),
         dependency('gtk+-3.0'),
         dependency('gdk-3.0'),
-	project_config_dep
+        project_config_dep
     ],
     install: true
 )
