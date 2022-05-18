@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-10 22:10+0900\n"
-"PO-Revision-Date: 2022-02-27 14:10+0100\n"
+"PO-Revision-Date: 2022-05-18 19:10+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -56,11 +56,12 @@ msgid "Cancel"
 msgstr "Cancella"
 
 #: src/Widgets/SingleImageView.vala:417
-#, fuzzy, c-format
 msgid ""
 "%s\n"
 "This file was deleted."
-msgstr "Il salvataggio del file è stato annullato."
+msgstr ""
+"%s\n"
+"Questo file è stato eliminato."
 
 #: src/Widgets/SingleImageView.vala:521
 msgid "The image was resized."
@@ -135,9 +136,8 @@ msgid "Rotate to the right"
 msgstr "Ruota a destra"
 
 #: src/Widgets/ToolBar.vala:239
-#, fuzzy
 msgid "Delete this file"
-msgstr "Vuoi sovrascrivere davvero questo file?"
+msgstr "Elimina questo file"
 
 #: src/Widgets/ToolBar.vala:265 src/Widgets/ToolBar.vala:578
 msgid "Sort Asc"
@@ -280,30 +280,31 @@ msgstr "Impossibile aprire il file (motivo: %s)"
 
 #: src/Widgets/Window.vala:751
 msgid "Are you sure you want to move this file to the Trash?"
-msgstr ""
+msgstr "Sei sicuro di voler spostare questo file nel Cestino?"
 
 #: src/Widgets/Window.vala:757 src/Widgets/Window.vala:773
-#, fuzzy
 msgid "Delete was canceled"
-msgstr "Il salvataggio del file è stato annullato."
+msgstr "Cancellazione annullata"
 
 #: src/Widgets/Window.vala:764
 msgid "Moved the file to the Trash."
-msgstr ""
+msgstr "Spostato il file nel Cestino."
 
 #: src/Widgets/Window.vala:767
 msgid ""
 "Your desktop environment doesn't seem to support Recycle Bin. Do you want to "
 "permanently delete this file? Once deleted, it cannot be undone."
 msgstr ""
+"Il tuo ambiente desktop non sembra supportare il Cestino. Vuoi "
+"eliminare definitivamente questo file? Una volta eliminato, non può essere annullato."
 
 #: src/Widgets/Window.vala:778
 msgid "Completely deleted the file."
-msgstr ""
+msgstr "Il file è stato completamente cancellato."
 
 #: src/Widgets/Window.vala:780
 msgid "fail to delete a file"
-msgstr ""
+msgstr "non è possibile eliminare un file"
 
 #. TRANSLATORS: Replace with your name and email address, don't translate literally
 #: src/Widgets/Window.vala:864
