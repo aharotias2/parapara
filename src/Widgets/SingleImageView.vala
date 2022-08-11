@@ -23,38 +23,64 @@ using Gdk, Gtk;
 
 namespace ParaPara {
     public class SingleImageView : ImageView, EventBox {
-        public ParaPara.Window main_window { get; construct; }
-        public Overlay overlay { get; private set; }
-        public Image image { get; private set; }
-        public ScrolledWindow scrolled { get; private set; }
-        public Label error_message { get; private set; }
-        public ViewMode view_mode { get; construct; }
-        public bool controllable { get; set; default = true; }
+        public ParaPara.Window main_window {
+            get;
+            construct;
+        }
+        
+        public Overlay overlay {
+            get;
+            private set;
+        }
+        
+        public Image image {
+            get;
+            private set;
+        }
+        
+        public ScrolledWindow scrolled {
+            get;
+            private set;
+        }
+        
+        public Label error_message {
+            get;
+            private set;
+        }
+        
+        public ViewMode view_mode {
+            get;
+            construct;
+        }
+        
+        public bool controllable {
+            get;
+            set;
+            default = true;
+        }
+        
         public bool has_image {
             get {
                 return image.has_image;
             }
         }
+        
         public int index {
             get {
                 return accessor.get_index();
             }
         }
+        
         public double position {
             get {
                 return (double) accessor.get_index() / (double) _file_list.size;
             }
         }
 
-        private unowned FileList? _file_list = null;
-        public SingleFileAccessor accessor { get; private set; }
-        private bool button_pressed = false;
-        private double x;
-        private double y;
-        private bool is_double_clicked = false;
-        private ClickedArea prev_area = OTHER_AREA;
-
-        private const string TITLE_FORMAT = "%s (%dx%d : %.2f%%)";
+        public SingleFileAccessor accessor {
+            get;
+            private set;
+        }
 
         public FileList file_list {
             get {
@@ -71,6 +97,14 @@ namespace ParaPara {
                 return image.fileref.get_parent().get_path();
             }
         }
+
+        private unowned FileList? _file_list = null;
+        private bool button_pressed = false;
+        private double x;
+        private double y;
+        private bool is_double_clicked = false;
+        private ClickedArea prev_area = OTHER_AREA;
+        private const string TITLE_FORMAT = "%s (%dx%d : %.2f%%)";
 
         public SingleImageView(Window window) {
             Object(

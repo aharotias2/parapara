@@ -21,7 +21,10 @@
 
 namespace ParaPara {
     public class DualFileAccessor : Object {
-        public unowned FileList file_list { get; construct; }
+        public unowned FileList file_list {
+            get;
+            construct;
+        }
 
         private int index1 = 0;
         private int index2 = 1;

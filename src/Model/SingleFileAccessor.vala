@@ -22,7 +22,10 @@
 namespace ParaPara {
     public class SingleFileAccessor : Object {
 
-        public unowned FileList file_list { get; construct; }
+        public unowned FileList file_list {
+            get;
+            construct;
+        }
 
         private int current_index = 0;
         private string? current_name = null;

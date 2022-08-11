@@ -21,9 +21,15 @@
 
 namespace ParaPara {
     public class SlideFileAccessor : Object {
-        public unowned FileList file_list { get; construct; }
-        public SortOrder sort_order { get; set; }
-
+        public unowned FileList file_list {
+            get;
+            construct;
+        }
+        
+        public SortOrder sort_order {
+            get;
+            set;
+        }
 
         public SlideFileAccessor(FileList file_list, SortOrder sort_order) {
             Object(

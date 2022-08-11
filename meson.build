@@ -1,7 +1,7 @@
 project(
     'com.github.aharotias2.parapara',
     'vala', 'c',
-    version: '3.2.10'
+    version: '3.2.11'
 )
 
 is_debug = get_option('DEBUG')

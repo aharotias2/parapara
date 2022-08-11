@@ -23,10 +23,22 @@ using Gdk, Gtk;
 
 namespace ParaPara {
     public class DualImageView : ImageView, EventBox {
-        public ViewMode view_mode { get; construct; }
-        public ParaPara.Window main_window { get; construct; }
+        public ViewMode view_mode {
+            get;
+            construct;
+        }
+        
+        public ParaPara.Window main_window {
+            get;
+            construct;
+        }
 
-        public bool controllable { get; set; default = true; }
+        public bool controllable {
+            get;
+            set;
+            default = true;
+        }
+        
         public FileList file_list {
             get {
                 return _file_list;

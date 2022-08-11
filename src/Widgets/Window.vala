@@ -29,18 +29,66 @@ namespace ParaPara {
     public class Window : Gtk.ApplicationWindow {
         private const IconSize ICON_SIZE = IconSize.SMALL_TOOLBAR;
 
-        public bool repeat_updating_file_list { get; construct set; }
-        public ParaPara.FileList? file_list { get; private set; default = null; }
-        public ParaPara.ToolBar toolbar { get; private set; }
-        public ToggleButton toolbar_toggle_button { get; private set; }
-        public Revealer toolbar_revealer_above { get; private set; }
-        public Revealer toolbar_revealer_below { get; private set; }
-        public Revealer progress_revealer { get; private set; }
-        public Scale progress_scale { get; private set; }
-        public Label progress_label { get; private set; }
-        public ImageView image_view { get; private set; }
-        public ActionButton image_prev_button { get; private set; }
-        public ActionButton image_next_button { get; private set; }
+        public bool repeat_updating_file_list {
+            get;
+            construct set;
+        }
+        
+        public ParaPara.FileList? file_list {
+            get;
+            private set;
+            default = null;
+        }
+        
+        public ParaPara.ToolBar toolbar {
+            get;
+            private set;
+        }
+        
+        public ToggleButton toolbar_toggle_button {
+            get;
+            private set;
+        }
+        
+        public Revealer toolbar_revealer_above {
+            get;
+            private set;
+        }
+        
+        public Revealer toolbar_revealer_below {
+            get;
+            private set;
+        }
+        
+        public Revealer progress_revealer {
+            get;
+            private set;
+        }
+        
+        public Scale progress_scale {
+            get;
+            private set;
+        }
+        
+        public Label progress_label {
+            get;
+            private set;
+        }
+        
+        public ImageView image_view {
+            get;
+            private set;
+        }
+        
+        public ActionButton image_prev_button {
+            get;
+            private set;
+        }
+        
+        public ActionButton image_next_button {
+            get;
+            private set;
+        }
 
         public bool fullscreen_mode {
             get {

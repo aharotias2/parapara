@@ -29,14 +29,41 @@ namespace ParaPara {
         /*
          * properties
          */
-        public abstract ViewMode view_mode { get; construct; }
-        public abstract ParaPara.Window main_window { get; construct; }
-        public abstract FileList file_list { get; set; }
-        public abstract bool controllable { get; set; }
-        public abstract string dir_path { owned get; }
-        public abstract bool has_image { get; }
-        public abstract double position { get; }
-        public abstract int index { get; }
+        public abstract ViewMode view_mode {
+            get;
+            construct;
+        }
+        
+        public abstract ParaPara.Window main_window {
+            get;
+            construct;
+        }
+        
+        public abstract FileList file_list {
+            get;
+            set;
+        }
+        
+        public abstract bool controllable {
+            get;
+            set;
+        }
+        
+        public abstract string dir_path {
+            owned get;
+        }
+        
+        public abstract bool has_image {
+            get;
+        }
+        
+        public abstract double position {
+            get;
+        }
+        
+        public abstract int index {
+            get;
+        }
 
         /*
          * methods

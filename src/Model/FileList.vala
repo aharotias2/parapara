@@ -29,8 +29,16 @@ namespace ParaPara {
         public signal void directory_not_found();
         public signal void file_not_found();
 
-        public string dir_path { get; construct set; }
-        public bool closed { get; private set; default = false; }
+        public string dir_path {
+            get;
+            construct set;
+        }
+        
+        public bool closed {
+            get;
+            private set;
+            default = false;
+        }
 
         private Gee.List<string>? file_list = null;
 

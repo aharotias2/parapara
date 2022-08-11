@@ -27,8 +27,16 @@ namespace ParaPara {
         private Gtk.Entry height_entry;
         private Gtk.ComboBoxText width_unit_box;
         private Gtk.ComboBoxText height_unit_box;
-        public int original_width { construct set; get; }
-        public int original_height { construct set; get; }
+
+        public int original_width {
+            construct set;
+            get;
+        }
+        
+        public int original_height {
+            construct set;
+            get;
+        }
 
         public int width_value {
             get {

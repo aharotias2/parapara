@@ -28,10 +28,26 @@ using Gtk, Gdk;
  */
 namespace ParaPara {
     public class Image : Gtk.Image {
-        public Container container { get; set; }
-        public File? fileref { get; set; }
-        public bool fit { get; set; }
-        public bool is_animation { get; private set; }
+        public Container container {
+            get;
+            set;
+        }
+        
+        public File? fileref {
+            get;
+            set;
+        }
+        
+        public bool fit {
+            get;
+            set;
+        }
+        
+        public bool is_animation {
+            get;
+            private set;
+        }
+        
         public bool paused {
             get {
                 return paused_value;
@@ -44,6 +60,7 @@ namespace ParaPara {
         }
 
         private ViewMode _view_mode;
+        
         public ViewMode view_mode {
             get {
                 return _view_mode;
@@ -53,11 +70,33 @@ namespace ParaPara {
             }
         }
 
-        public double size_percent { get { return zoom_percent / 10.0; } }
-        public int original_height { get { return original_pixbuf.height; } }
-        public int original_width { get { return original_pixbuf.width; } }
-        public bool has_image { get; set; }
-        public Pixbuf? original_pixbuf { get; private set; }
+        public double size_percent {
+            get {
+                return zoom_percent / 10.0;
+            }
+        }
+        
+        public int original_height {
+            get {
+                return original_pixbuf.height;
+            }
+        }
+        
+        public int original_width {
+            get {
+                return original_pixbuf.width;
+            }
+        }
+        
+        public bool has_image {
+            get;
+            set;
+        }
+        
+        public Pixbuf? original_pixbuf {
+            get;
+            private set;
+        }
 
         private PixbufAnimation? animation;
         private uint zoom_percent = 1000;

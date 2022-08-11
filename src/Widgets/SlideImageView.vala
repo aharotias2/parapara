@@ -30,8 +30,16 @@ namespace ParaPara {
             FIT_WIDTH, FIT_PAGE, BY_PERCENTAGE
         }
 
-        public ViewMode view_mode { get; construct; }
-        public ParaPara.Window main_window { get; construct; }
+        public ViewMode view_mode {
+            get;
+            construct;
+        }
+        
+        public ParaPara.Window main_window {
+            get;
+            construct;
+        }
+        
         public FileList file_list {
             get {
                 return _file_list;
@@ -42,32 +50,66 @@ namespace ParaPara {
                 accessor = new SlideFileAccessor(file_list, main_window.toolbar.sort_order);
             }
         }
-        public bool controllable { get; set; default = true; }
+        
+        public bool controllable {
+            get;
+            set;
+            default = true;
+        }
+        
         public string dir_path {
             owned get {
                 return file_list.dir_path;
             }
         }
+        
         public bool has_image {
             get {
                 return widget_list.size > 0;
             }
         }
+        
         public double position {
             get {
                 return (double) get_location() / (double) file_list.size;
             }
         }
+        
         public int index {
             get {
                 return get_location();
             }
         }
-        public SlideFileAccessor accessor { get; private set; }
-        public int page_spacing { get; set; default = 4; }
-        public int scroll_interval { get; set; default = 1; }
-        public double scroll_amount { get; set; default = 10.0; }
-        public double scroll_overlapping { get; set; default = 0.1; }
+        
+        public SlideFileAccessor accessor {
+            get;
+            private set;
+        }
+        
+        public int page_spacing {
+            get;
+            set;
+            default = 4;
+        }
+        
+        public int scroll_interval {
+            get;
+            set;
+            default = 1;
+        }
+        
+        public double scroll_amount {
+            get;
+            set;
+            default = 10.0;
+        }
+        
+        public double scroll_overlapping {
+            get;
+            set;
+            default = 0.1;
+        }
+        
         public Orientation orientation {
             get {
                 return slide_box.orientation;
