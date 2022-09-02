@@ -127,6 +127,10 @@ namespace ParaPara {
             content_area.pack_start(form_grid, false, false);
 
             add_button(_("OK"), Gtk.ResponseType.OK);
+            {
+                Gtk.Widget ok_button = get_widget_for_response(Gtk.ResponseType.OK);
+                ok_button.get_style_context().add_class("destructive-action");
+            }
             add_button(_("Cancel"), Gtk.ResponseType.CANCEL);
 
             show_all();
