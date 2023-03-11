@@ -13,6 +13,18 @@ By displaying the two images on the left and right,
 you can also see manga in a two-page spread.
 You can switch between right-to-left and left-to-right page turning.
 
+Flatpak builds
+--------------
+
+You can install stable builds of _ParaPara_ from [Flathub](https://flathub.org)
+by using this command:
+
+    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    flatpak install flathub com.github.aharotias2.parapara
+
+<a href="https://flathub.org/apps/details/com.github.aharotias2.parapara"><img src="https://flathub.org/assets/badges/flathub-badge-en.png" width="200"/></a>
+
+
 Screenshot
 --------------------------------------------------------------------------------
 
