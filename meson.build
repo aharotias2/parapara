@@ -12,7 +12,9 @@ endif
 add_project_arguments(
   [
     '--vapidir', join_paths(meson.current_source_dir(), 'vapi'),
-    '--pkg', 'config'
+    '--pkg', 'config',
+    '--pkg', 'posix',
+    '--pkg', 'linux'
   ],
   language: 'vala'
 )
@@ -59,11 +61,13 @@ executable(
     'src/Utils/FileType.vala',
     'src/Utils/StringUtils.vala',
     'src/Utils/WidgetUtils.vala',
+    'src/Utils/inotify-utils.c',
     'src/Model/SortOrder.vala',
     'src/Model/ViewMode.vala',
     'src/Model/Error.vala',
     'src/Model/FileList.vala',
     'src/Model/FileListIter.vala',
+    'src/Model/FileSystemNotifier.vala',
     'src/Model/SingleFileAccessor.vala',
     'src/Model/DualFileAccessor.vala',
     'src/Model/SlideFileAccessor.vala',

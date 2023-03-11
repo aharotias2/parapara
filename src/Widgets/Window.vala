@@ -745,6 +745,7 @@ namespace ParaPara {
                             });
                         }
                     });
+                    file_list.start_watch();
                     image_view.file_list = file_list;
                     image_prev_button.sensitive = false;
                     image_next_button.sensitive = false;

@@ -28,6 +28,11 @@ namespace ParaPara {
         public signal void terminated();
         public signal void directory_not_found();
         public signal void file_not_found();
+        
+        public FileSystemNotifier notifier {
+            get;
+            private set;
+        }
 
         public string dir_path {
             get;
@@ -76,14 +81,38 @@ namespace ParaPara {
 
         public int get_index_of(string filename) throws AppError {
             if (file_list != null) {
-                return file_list.index_of(filename);
+                int index = file_list.index_of(filename);
+                if (index < 0) {
+                    return file_list.size - 1;
+                } else {
+                    return index;
+                }
             } else {
                 throw new AppError.FILE_LIST_ERROR(_("The file list is not initialized!"));
             }
         }
 
+        /**
+         * Starts watching the directory and handle events what occures in it
+         * and notify for callers or owners by sending signals.
+         */
+        public void start_watch() {
+            notifier = new FileSystemNotifier(dir_path);
+            notifier.children_updated.connect(() => {
+                make_list_async.begin(false, (obj, res) => {
+                    updated();
+                });
+            });
+            notifier.directory_deleted.connect(() => {
+                directory_not_found();
+            });
+            notifier.watch.begin();
+            debug("file list watching has been started!");
+        }
+        
         public void close() {
             closed = true;
+            notifier.quit();
         }
 
         public async void make_list_async(bool loop = true) throws AppError {
