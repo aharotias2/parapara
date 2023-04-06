@@ -46,7 +46,7 @@ namespace ParaPara {
          */
         public Pixbuf scale_fit_in_width(Pixbuf src_pixbuf, int max_width) {
             int height = (int) (src_pixbuf.height * ((double) max_width / (double) src_pixbuf.width));
-            debug("PixbufUtils.scale_by_max_width (max_width = %d, height = %d)", max_width, height);
+            //debug("PixbufUtils.scale_by_max_width (max_width = %d, height = %d)", max_width, height);
             return src_pixbuf.scale_simple(max_width, height, InterpType.BILINEAR);
         }
 
@@ -55,7 +55,7 @@ namespace ParaPara {
          */
         public Pixbuf scale_fit_in_height(Pixbuf src_pixbuf, int max_height) {
             int width = (int) (src_pixbuf.width * ((double) max_height / (double) src_pixbuf.height));
-            debug("PixbufUtils.scale_by_max_height (max_height = %d, width = %d)", max_height, width);
+            //debug("PixbufUtils.scale_by_max_height (max_height = %d, width = %d)", max_height, width);
             return src_pixbuf.scale_simple(width, max_height, InterpType.BILINEAR);
         }
 

@@ -135,6 +135,7 @@ namespace ParaPara {
         private SimpleAction action_save;
         private bool is_open_when_value_changed = true;
         private bool is_set_location = true;
+        private bool is_update_blocked = false;
 
         public Window(Gtk.Application app) {
             application = app;
@@ -166,7 +167,7 @@ namespace ParaPara {
 
                             open_button.add(open_button_inner_box);
                             open_button.clicked.connect(() => {
-                                on_open_button_clicked();
+                                on_open_button_clicked.begin();
                             });
                         }
 
@@ -242,7 +243,7 @@ namespace ParaPara {
                     welcome.append("document-open", _("Open Image"), _("Show and edit your image."));
                     welcome.activated.connect((i) => {
                         if (i == 0) {
-                            on_open_button_clicked();
+                            on_open_button_clicked.begin();
                         }
                     });
                 }
@@ -451,7 +452,7 @@ namespace ParaPara {
 
             var action_open = new SimpleAction("open", null);
             action_open.activate.connect(() => {
-                on_open_button_clicked();
+                on_open_button_clicked.begin();
             });
             add_action(action_open);
 
@@ -634,7 +635,7 @@ namespace ParaPara {
                     require_new_window();
                     break;
                   case Gdk.Key.o:
-                    on_open_button_clicked();
+                    on_open_button_clicked.begin();
                     break;
                   case Gdk.Key.w:
                     close();
@@ -679,7 +680,7 @@ namespace ParaPara {
                     css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
         }
 
-        public void on_open_button_clicked() {
+        public async void on_open_button_clicked() {
             var dialog = new Gtk.FileChooserDialog(_("Choose file to open"), this, Gtk.FileChooserAction.OPEN,
                     _("Cancel"), Gtk.ResponseType.CANCEL, _("Open"), Gtk.ResponseType.ACCEPT);
             if (file_list != null) {
@@ -689,13 +690,11 @@ namespace ParaPara {
             if (res == Gtk.ResponseType.ACCEPT) {
                 var file_path = dialog.get_filename();
                 File file = File.new_for_path(file_path);
-                open_file_async.begin(file, (obj, res) => {
-                    try {
-                        open_file_async.end(res);
-                    } catch (Error e) {
-                        //show_error_dialog(e.message);
-                    }
-                });
+                try {
+                    yield open_file_async(file);
+                } catch (Error e) {
+                    //show_error_dialog(e.message);
+                }
             }
             dialog.close();
         }
@@ -720,10 +719,12 @@ namespace ParaPara {
                         show_error_dialog(_("The file does not found."));
                     });
                     file_list.updated.connect(() => {
-                        image_view.update();
-                        progress_scale.set_range(0.0, (double) (file_list.size - 1));
-                        progress_scale.set_value(image_view.index);
-                        progress_label.label = _("Location: %d / %d (%d%%)").printf(image_view.index + 1, file_list.size, (int) (image_view.position * 100));
+                        if (!is_update_blocked) {
+                            image_view.update();
+                            progress_scale.set_range(0.0, (double) (file_list.size - 1));
+                            progress_scale.set_value(image_view.index);
+                            progress_label.label = _("Location: %d / %d (%d%%)").printf(image_view.index + 1, file_list.size, (int) (image_view.position * 100));
+                        }
                     });
                     file_list.terminated.connect(() => {
                         if (repeat_updating_file_list) {
@@ -732,6 +733,7 @@ namespace ParaPara {
                         }
                     });
                     file_list.make_list_async.begin(repeat_updating_file_list, (obj, res) => {
+                        debug("file list was updated");
                         if (image_view.view_mode != ViewMode.SINGLE_VIEW_MODE) {
                             disable_controls();
                             image_view.open_async.begin(file, (obj, res) => {
@@ -753,7 +755,9 @@ namespace ParaPara {
 
                 if (image_view.view_mode == SINGLE_VIEW_MODE || file_list.has_list) {
                     disable_controls();
+                    is_update_blocked = true;
                     yield image_view.open_async(file);
+                    is_update_blocked = false;
                     enable_controls();
                     image_view.update_title();
                 }
@@ -850,6 +854,7 @@ namespace ParaPara {
         }
 
         public void update_image_view(ViewMode view_mode) throws Error {
+            debug("Window.update_image_view");
             if (image_view.view_mode != view_mode) {
                 File file = image_view.get_file();
                 bottom_box.remove(image_view);

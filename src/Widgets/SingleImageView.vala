@@ -135,7 +135,7 @@ namespace ParaPara {
                     scrolled.add(image);
                     scrolled.size_allocate.connect((allocation) => {
                         if (image.fit) {
-                            debug("size_allocated");
+                            //debug("size_allocated");
                             image.fit_size_in_window();
                             update_title();
                         }
@@ -443,6 +443,7 @@ namespace ParaPara {
         }
 
         public async void open_async(File file) throws Error {
+            debug("SingleImageView.open_async " + file.get_path());
             var saved_cursor = get_window().cursor;
             change_cursor(WATCH);
             try {
