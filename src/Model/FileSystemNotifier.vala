@@ -27,7 +27,7 @@ public class FileSystemNotifier : Object {
     public string directory_path { get; private set; }
     private bool loop_quit_flag;
     private int inotify_fd;
-    
+
     public FileSystemNotifier(string directory_path) {
         this.directory_path = directory_path;
         // inotify初期化
@@ -37,7 +37,7 @@ public class FileSystemNotifier : Object {
             return;
         }
     }
-    
+
     public async void watch() {
         // IOChannelの作成
         IOChannel inotify_channel = new IOChannel.unix_new(inotify_fd);
@@ -61,7 +61,7 @@ public class FileSystemNotifier : Object {
         });
 
         loop_quit_flag = false;
-        
+
         // inotifyイベントループを開始
         while (!loop_quit_flag) {
             // inotifyのウォッチ開始
@@ -77,11 +77,11 @@ public class FileSystemNotifier : Object {
         // inotifyのファイル記述子を閉じる。
         Posix.close(inotify_fd);
     }
-    
+
     public void quit() {
         loop_quit_flag = true;
     }
-    
+
     private void handle_event() {
         if (!FileUtils.test(directory_path, FileTest.EXISTS)) {
             debug("directory has been deleted!");

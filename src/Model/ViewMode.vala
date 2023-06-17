@@ -24,4 +24,3 @@ namespace ParaPara {
         SINGLE_VIEW_MODE, SLIDE_VIEW_MODE, DUAL_VIEW_MODE
     }
 }
-

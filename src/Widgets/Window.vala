@@ -33,58 +33,58 @@ namespace ParaPara {
             get;
             construct set;
         }
-        
+
         public ParaPara.FileList? file_list {
             get;
             private set;
             default = null;
         }
-        
+
         public ParaPara.ToolBar toolbar {
             get;
             private set;
         }
-        
+
         public ToggleButton toolbar_toggle_button {
             get;
             private set;
         }
-        
+
         public Revealer toolbar_revealer_above {
             get;
             private set;
         }
-        
+
         public Revealer toolbar_revealer_below {
             get;
             private set;
         }
-        
+
         public Revealer progress_revealer {
             get;
             private set;
         }
-        
+
         public Scale progress_scale {
             get;
             private set;
         }
-        
+
         public Label progress_label {
             get;
             private set;
         }
-        
+
         public ImageView image_view {
             get;
             private set;
         }
-        
+
         public ActionButton image_prev_button {
             get;
             private set;
         }
-        
+
         public ActionButton image_next_button {
             get;
             private set;
@@ -273,11 +273,12 @@ namespace ParaPara {
                                 headerbar.title = title;
                             });
                             image_view.image_opened.connect((name, index) => {
-                                if (progress_scale.get_value() != (double) index) {
+                                double new_value = (double) index / (double) file_list.size;
+                                if (progress_scale.get_value() != new_value) {
                                     is_open_when_value_changed = false;
-                                    progress_scale.set_value((double) index);
+                                    progress_scale.set_value(new_value);
                                     progress_label.label = _("Location: %d / %d (%d%%)").printf(
-                                            index + 1, file_list.size, (int) ((double) index / (double) file_list.size * 100));
+                                            index + 1, file_list.size, (int) (new_value * 100));
                                 }
                             });
 
@@ -376,12 +377,12 @@ namespace ParaPara {
                                               default:
                                               case SINGLE_VIEW_MODE:
                                               case DUAL_VIEW_MODE:
-                                                int index = (int) progress_scale.get_value();
+                                                int index = (int) (file_list.size * progress_scale.get_value());
                                                 image_view.open_at_async.begin(index, (obj, res) => {
                                                     try {
                                                         image_view.open_at_async.end(res);
                                                         progress_label.label = _("Location: %d / %d (%d%%)").printf(
-                                                                index + 1, file_list.size, (int) ((double) index / (double) file_list.size * 100));
+                                                                index + 1, file_list.size, (int) (progress_scale.get_value() * 100));
                                                     } catch (Error e) {
                                                         show_error_dialog(e.message);
                                                     }
@@ -842,7 +843,7 @@ namespace ParaPara {
             }
             yield show_message_async(result_message);
         }
-        
+
         public async void show_message_async(string message) {
             Idle.add(show_message_async.callback);
             yield;

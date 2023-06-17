@@ -27,50 +27,50 @@ namespace ParaPara {
             get;
             construct;
         }
-        
+
         public Overlay overlay {
             get;
             private set;
         }
-        
+
         public Image image {
             get;
             private set;
         }
-        
+
         public ScrolledWindow scrolled {
             get;
             private set;
         }
-        
+
         public Label error_message {
             get;
             private set;
         }
-        
+
         public ViewMode view_mode {
             get;
             construct;
         }
-        
+
         public bool controllable {
             get;
             set;
             default = true;
         }
-        
+
         public bool has_image {
             get {
                 return image.has_image;
             }
         }
-        
+
         public int index {
             get {
                 return accessor.get_index();
             }
         }
-        
+
         public double position {
             get {
                 return (double) accessor.get_index() / (double) _file_list.size;

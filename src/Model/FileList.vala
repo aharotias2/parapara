@@ -28,7 +28,7 @@ namespace ParaPara {
         public signal void terminated();
         public signal void directory_not_found();
         public signal void file_not_found();
-        
+
         public FileSystemNotifier notifier {
             get;
             private set;
@@ -38,7 +38,7 @@ namespace ParaPara {
             get;
             construct set;
         }
-        
+
         public bool closed {
             get;
             private set;
@@ -109,7 +109,7 @@ namespace ParaPara {
             notifier.watch.begin();
             debug("file list watching has been started!");
         }
-        
+
         public void close() {
             closed = true;
             notifier.quit();

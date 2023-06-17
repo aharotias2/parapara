@@ -27,17 +27,17 @@ namespace ParaPara {
             get;
             construct set;
         }
-        
+
         public SortOrder sort_order {
             get;
             protected set;
         }
-        
+
         public bool sticked {
             get;
             protected set;
         }
-        
+
         public signal void sort_order_changed(SortOrder sort_order);
         public signal void stick_button_clicked(bool sticked);
         public signal void view_mode_changed(ViewMode view_mode);
@@ -48,102 +48,102 @@ namespace ParaPara {
             set;
             default = DEPENDS;
         }
-        
+
         public ActionButton save_button {
             get;
             private set;
         }
-        
+
         public ActionButton save_as_button {
             get;
             private set;
         }
-        
+
         public ActionButton resize_button {
             get;
             private set;
         }
-        
+
         public ActionButton zoom_fit_button {
             get;
             private set;
         }
-        
+
         public ActionButton stick_button {
             get;
             private set;
         }
-        
+
         public ActionButton animation_forward_button {
             get;
             private set;
         }
-        
+
         public ActionButton animation_play_pause_button {
             get;
             private set;
         }
-        
+
         public Button l2button {
             get;
             private set;
         }
-        
+
         public Button l1button {
             get;
             private set;
         }
-        
+
         public Button r1button {
             get;
             private set;
         }
-        
+
         public Button r2button {
             get;
             private set;
         }
-        
+
         public ToggleButton sort_asc_button {
             get;
             private set;
         }
-        
+
         public ToggleButton sort_desc_button {
             get;
             private set;
         }
-        
+
         public ToggleButton l2rbutton {
             get;
             private set;
         }
-        
+
         public ToggleButton r2lbutton {
             get;
             private set;
         }
-        
+
         public ToggleButton orientation_vertical_button {
             get;
             private set;
         }
-        
+
         public ToggleButton orientation_horizontal_button {
             get;
             private set;
         }
-        
+
         public ToggleButton slide_sort_asc_button {
             get;
             private set;
         }
-        
+
         public ToggleButton slide_sort_desc_button {
             get;
             private set;
         }
-        
+
         public ActionButton fullscreen_button {
             get;
             private set;
@@ -218,7 +218,7 @@ namespace ParaPara {
                 }
             }
         }
-        
+
         private Box toolbar_hbox;
         private Box single_view_mode_box;
         private Box slide_view_mode_box;

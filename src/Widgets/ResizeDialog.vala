@@ -32,7 +32,7 @@ namespace ParaPara {
             construct set;
             get;
         }
-        
+
         public int original_height {
             construct set;
             get;

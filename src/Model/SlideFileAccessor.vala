@@ -25,7 +25,7 @@ namespace ParaPara {
             get;
             construct;
         }
-        
+
         public SortOrder sort_order {
             get;
             set;
@@ -63,4 +63,3 @@ namespace ParaPara {
         }
     }
 }
-
