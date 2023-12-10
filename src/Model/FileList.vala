@@ -81,11 +81,15 @@ namespace ParaPara {
 
         public int get_index_of(string filename) throws AppError {
             if (file_list != null) {
-                int index = file_list.index_of(filename);
-                if (index < 0) {
-                    return file_list.size - 1;
-                } else {
-                    return index;
+                try {
+                    int index = file_list.index_of(filename);
+                    if (index < 0) {
+                        return file_list.size - 1;
+                    } else {
+                        return index;
+                    }
+                } catch (Error e) {
+                    return -1;
                 }
             } else {
                 throw new AppError.FILE_LIST_ERROR(_("The file list is not initialized!"));
