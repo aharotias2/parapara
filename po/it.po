@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-10 22:10+0900\n"
+"POT-Creation-Date: 2024-01-05 23:43+0300\n"
 "PO-Revision-Date: 2022-05-18 19:10+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -16,308 +16,55 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Model/FileList.vala:61 src/Model/FileList.vala:73
-msgid "The file list is not initialized!"
-msgstr "L'elenco dei file non è inizializzato!"
+#: data/parapara.appdata.xml.in:9 data/parapara.desktop.in:3
+msgid "ParaPara"
+msgstr "ParaPara"
 
-#: src/Model/FileList.vala:65 src/Model/SingleFileAccessor.vala:45
-#, c-format
-msgid "The index is out of the bounds (%d/%d)"
-msgstr "L'indice è fuori dai limiti (%d/%d)"
+#: data/parapara.appdata.xml.in:10
+msgid "An image viewer without library"
+msgstr "Un visualizzatore di immagini senza libreria"
 
-#: src/Model/SingleFileAccessor.vala:58
-#, c-format
-msgid "file list does not contains this name! (%s)"
-msgstr "l'elenco dei file non contiene questo nome! (%S)"
-
-#: src/Utils/FileUtils.vala:51
-msgid "The file path is invalid. it does not exist or is not a regular file."
-msgstr "Il percorso del file non è valido. non esiste o non è un file normale."
-
-#: src/Widgets/ResizeDialog.vala:62
-msgid "Set the width and the height"
-msgstr "Imposta la larghezza e l'altezza"
-
-#: src/Widgets/ResizeDialog.vala:64
-msgid "Width:"
-msgstr "Larghezza:"
-
-#: src/Widgets/ResizeDialog.vala:84
-msgid "Height:"
-msgstr "Altezza:"
-
-#: src/Widgets/ResizeDialog.vala:121
-msgid "OK"
-msgstr "OK"
-
-#: src/Widgets/ResizeDialog.vala:122 src/Widgets/SingleImageView.vala:539
-#: src/Widgets/Window.vala:636
-msgid "Cancel"
-msgstr "Cancella"
-
-#: src/Widgets/SingleImageView.vala:417
+#: data/parapara.appdata.xml.in:12
 msgid ""
-"%s\n"
-"This file was deleted."
+"An image viewer in which images are displayed as one of three styles: "
+"single, spread (book), continuous (scrolling), and that supports jpg, png, "
+"bmp, ico, gif files. animated gifs are also supported."
 msgstr ""
-"%s\n"
-"Questo file è stato eliminato."
+"Un visualizzatore di immagini in cui le immagini vengono visualizzate come "
+"uno dei tre stili: singolo, diffuso (libro), continuo (a scorrimento) e che "
+"supporta jpg, png, file bmp, ico, gif. Sono supportate anche le gif animate."
 
-#: src/Widgets/SingleImageView.vala:521
-msgid "The image was resized."
-msgstr "L'immagine è stata ridimensionata."
+#: data/parapara.appdata.xml.in:21
+msgid "Application Screenshot (Single View Mode)"
+msgstr "Screenshot dell'applicazione (modalità di visualizzazione singola)"
 
-#: src/Widgets/SingleImageView.vala:523
-msgid "Resizing of the image was canceled."
-msgstr "Il ridimensionamento dell'immagine è stato annullato."
+#: data/parapara.appdata.xml.in:25
+msgid "Spread View Mode"
+msgstr "Modalità di Visualizzazione Diffusa"
 
-#: src/Widgets/SingleImageView.vala:531
-msgid "Sorry, saving animations is not supported yet."
-msgstr "Spiacenti, il salvataggio delle animazioni non è ancora supportato."
+#: data/parapara.appdata.xml.in:29
+msgid "Continuous View Mode (Vertical)"
+msgstr "Modalità di visualizzazione continua (verticale)"
 
-#: src/Widgets/SingleImageView.vala:538 data/gtk/menus.ui:42
-msgid "Save as…"
-msgstr "Salva come…"
+#: data/parapara.appdata.xml.in:33
+msgid "Continuous View Mode (Horizontal)"
+msgstr "Modalità di visualizzazione continua (orizzontale)"
 
-#: src/Widgets/SingleImageView.vala:539 data/gtk/menus.ui:37
-msgid "Save"
-msgstr "Salva"
+#: data/parapara.appdata.xml.in:80
+msgid "Tanaka Takayuki"
+msgstr "Tanaka Takayuki"
 
-#: src/Widgets/SingleImageView.vala:559
-msgid "File already exists. Do you want to overwrite it?"
-msgstr "Il file esiste già. Vuoi sovrascriverlo?"
+#: data/parapara.desktop.in:4
+msgid "Image Viewer"
+msgstr "Visualizzatore di immagini"
 
-#: src/Widgets/SingleImageView.vala:570
-msgid "Do you really overwrite this file?"
-msgstr "Vuoi sovrascrivere davvero questo file?"
+#: data/parapara.desktop.in:5
+msgid "View image files"
+msgstr "Visualizza file immagine"
 
-#: src/Widgets/SingleImageView.vala:583
-msgid "The file save was canceled."
-msgstr "Il salvataggio del file è stato annullato."
-
-#: src/Widgets/SingleImageView.vala:588
-msgid "The file was saved"
-msgstr "Il file è stato salvato"
-
-#: src/Widgets/ToolBar.vala:157
-msgid "Resize"
-msgstr "Ridimensiona"
-
-#: src/Widgets/ToolBar.vala:165
-msgid "Zoom in"
-msgstr "Ingrandire"
-
-#: src/Widgets/ToolBar.vala:175
-msgid "Zoom out"
-msgstr "Rimpicciolire"
-
-#: src/Widgets/ToolBar.vala:185
-msgid "Fit to the page"
-msgstr "Adatta alla pagina"
-
-#: src/Widgets/ToolBar.vala:195 src/Widgets/ToolBar.vala:503
-msgid "100%"
-msgstr "100%"
-
-#: src/Widgets/ToolBar.vala:205
-msgid "Flip horizontally"
-msgstr "Capovolgi orizzontalmente"
-
-#: src/Widgets/ToolBar.vala:213
-msgid "Flip vertically"
-msgstr "Capovolgi verticalmente"
-
-#: src/Widgets/ToolBar.vala:221
-msgid "Rotate to the left"
-msgstr "Ruota a sinistra"
-
-#: src/Widgets/ToolBar.vala:230
-msgid "Rotate to the right"
-msgstr "Ruota a destra"
-
-#: src/Widgets/ToolBar.vala:239
-msgid "Delete this file"
-msgstr "Elimina questo file"
-
-#: src/Widgets/ToolBar.vala:265 src/Widgets/ToolBar.vala:578
-msgid "Sort Asc"
-msgstr "Ordina in modalità Ascendente"
-
-#: src/Widgets/ToolBar.vala:284 src/Widgets/ToolBar.vala:597
-msgid "Sort Desc"
-msgstr "Ordina in modalità Discendente"
-
-#: src/Widgets/ToolBar.vala:310
-msgid "Skip forward"
-msgstr "Salta in avanti"
-
-#: src/Widgets/ToolBar.vala:321
-msgid "Play/Pause animation"
-msgstr "Riproduci/Metti in pausa l'animazione"
-
-#: src/Widgets/ToolBar.vala:378
-msgid "Slide 2 page to Left"
-msgstr "Fai scorrere la pagina 2 verso sinistra"
-
-#: src/Widgets/ToolBar.vala:391
-msgid "Slide 1 page to Left"
-msgstr "Fai scorrere 1 pagina verso sinistra"
-
-#: src/Widgets/ToolBar.vala:404
-msgid "Slide 1 page to Right"
-msgstr "Fai scorrere 1 pagina verso destra"
-
-#: src/Widgets/ToolBar.vala:417
-msgid "Slide 2 page to Right"
-msgstr "Fai scorrere la pagina 2 verso destra"
-
-#: src/Widgets/ToolBar.vala:440
-msgid "Left to Right"
-msgstr "Da sinistra a destra"
-
-#: src/Widgets/ToolBar.vala:460
-msgid "Right to Left"
-msgstr "Da destra a sinistra"
-
-#: src/Widgets/ToolBar.vala:496
-msgid "Fit Width"
-msgstr "Adatta alla larghezza"
-
-#: src/Widgets/ToolBar.vala:497
-msgid "Fit Page"
-msgstr "Adatta pagina"
-
-#: src/Widgets/ToolBar.vala:499
-msgid "25%"
-msgstr "25%"
-
-#: src/Widgets/ToolBar.vala:500
-msgid "50%"
-msgstr "50%"
-
-#: src/Widgets/ToolBar.vala:501
-msgid "70%"
-msgstr "70%"
-
-#: src/Widgets/ToolBar.vala:502
-msgid "80%"
-msgstr "80%"
-
-#: src/Widgets/ToolBar.vala:504
-msgid "200%"
-msgstr "200%"
-
-#: src/Widgets/ToolBar.vala:505
-msgid "400%"
-msgstr "400%"
-
-#: src/Widgets/ToolBar.vala:531 src/Widgets/ToolBar.vala:550
-msgid "Vertical"
-msgstr "Verticale"
-
-#: src/Widgets/ToolBar.vala:618
-msgid "Zoom:"
-msgstr "Zoom:"
-
-#: src/Widgets/ToolBar.vala:620
-msgid "Orientation:"
-msgstr "Orientamento:"
-
-#: src/Widgets/ToolBar.vala:622
-msgid "Sort:"
-msgstr "Ordina:"
-
-#: src/Widgets/Window.vala:116 src/Widgets/Window.vala:636 data/gtk/menus.ui:33
-msgid "Open"
-msgstr "Apri"
-
-#: src/Widgets/Window.vala:131
-msgid "Previous"
-msgstr "Precedente"
-
-#: src/Widgets/Window.vala:149
-msgid "Next"
-msgstr "Prossimo"
-
-#: src/Widgets/Window.vala:192
-msgid "No Images Open"
-msgstr "Nessuna Immagine Aperta"
-
-#: src/Widgets/Window.vala:192
-msgid "Click 'Open Image' to get started."
-msgstr "Fai clic su 'Apri Immagine' per iniziare."
-
-#: src/Widgets/Window.vala:194
-msgid "Open Image"
-msgstr "Apri Immagine"
-
-#: src/Widgets/Window.vala:194
-msgid "Show and edit your image."
-msgstr "Mostra e modifica la tua immagine."
-
-#: src/Widgets/Window.vala:230 src/Widgets/Window.vala:334
-#: src/Widgets/Window.vala:678 src/Widgets/Window.vala:826
-#, c-format
-msgid "Location: %d / %d (%d%%)"
-msgstr "Posizione: %d / %d (%d%%)"
-
-#: src/Widgets/Window.vala:635
-msgid "Choose file to open"
-msgstr "Scegli un file da aprire"
-
-#: src/Widgets/Window.vala:668
-msgid "The directory does not found. Exiting."
-msgstr "La directory non è stata trovata. Uscire."
-
-#: src/Widgets/Window.vala:672
-msgid "The file does not found."
-msgstr "Il file non è stato trovato."
-
-#: src/Widgets/Window.vala:721
-#, c-format
-msgid "The file could not be opend (cause: %s)"
-msgstr "Impossibile aprire il file (motivo: %s)"
-
-#: src/Widgets/Window.vala:751
-msgid "Are you sure you want to move this file to the Trash?"
-msgstr "Sei sicuro di voler spostare questo file nel Cestino?"
-
-#: src/Widgets/Window.vala:757 src/Widgets/Window.vala:773
-msgid "Delete was canceled"
-msgstr "Cancellazione annullata"
-
-#: src/Widgets/Window.vala:764
-msgid "Moved the file to the Trash."
-msgstr "Spostato il file nel Cestino."
-
-#: src/Widgets/Window.vala:767
-msgid ""
-"Your desktop environment doesn't seem to support Recycle Bin. Do you want to "
-"permanently delete this file? Once deleted, it cannot be undone."
-msgstr ""
-"Il tuo ambiente desktop non sembra supportare il Cestino. Vuoi "
-"eliminare definitivamente questo file? Una volta eliminato, non può essere annullato."
-
-#: src/Widgets/Window.vala:778
-msgid "Completely deleted the file."
-msgstr "Il file è stato completamente cancellato."
-
-#: src/Widgets/Window.vala:780
-msgid "fail to delete a file"
-msgstr "non è possibile eliminare un file"
-
-#. TRANSLATORS: Replace with your name and email address, don't translate literally
-#: src/Widgets/Window.vala:864
-msgid "translator-credits"
-msgstr "Albano Battistella <albano_battistella@hotmail.com>"
-
-#: src/Widgets/Window.vala:866
-msgid ""
-"A lightweight image viewer with three display modes: single, spread, and "
-"continuous."
-msgstr ""
-"Un visualizzatore di immagini leggero con tre modalità di visualizzazione: "
-"singola, diffusa e continua."
+#: data/parapara.desktop.in:12
+msgid "Picture;Image;Viewer;"
+msgstr "Foto;Immagine;Visualizzatore;"
 
 #: data/gtk/menus.ui:7
 msgid "Single View Mode"
@@ -334,6 +81,18 @@ msgstr "Modalità doppia visualizzazione"
 #: data/gtk/menus.ui:27
 msgid "New"
 msgstr "Nuovo"
+
+#: data/gtk/menus.ui:33 src/Widgets/Window.vala:165 src/Widgets/Window.vala:686
+msgid "Open"
+msgstr "Apri"
+
+#: data/gtk/menus.ui:37 src/Widgets/SingleImageView.vala:574
+msgid "Save"
+msgstr "Salva"
+
+#: data/gtk/menus.ui:42 src/Widgets/SingleImageView.vala:573
+msgid "Save as…"
+msgstr "Salva come…"
 
 #: data/gtk/menus.ui:49
 msgid "Toolbar Option"
@@ -359,5 +118,328 @@ msgstr "Schermo Intero"
 msgid "About…"
 msgstr "Informazioni…"
 
+#: src/Model/FileList.vala:74 src/Model/FileList.vala:95
+msgid "The file list is not initialized!"
+msgstr "L'elenco dei file non è inizializzato!"
+
+#: src/Model/FileList.vala:78 src/Model/SingleFileAccessor.vala:48
+#, c-format
+msgid "The index is out of the bounds (%d/%d)"
+msgstr "L'indice è fuori dai limiti (%d/%d)"
+
+#: src/Model/SingleFileAccessor.vala:61
+#, c-format
+msgid "file list does not contains this name! (%s)"
+msgstr "l'elenco dei file non contiene questo nome! (%S)"
+
+#: src/Utils/FileUtils.vala:51
+msgid "The file path is invalid. it does not exist or is not a regular file."
+msgstr "Il percorso del file non è valido. non esiste o non è un file normale."
+
+#: src/Widgets/ResizeDialog.vala:70
+msgid "Set the width and the height"
+msgstr "Imposta la larghezza e l'altezza"
+
+#: src/Widgets/ResizeDialog.vala:72
+msgid "Width:"
+msgstr "Larghezza:"
+
+#: src/Widgets/ResizeDialog.vala:92
+msgid "Height:"
+msgstr "Altezza:"
+
+#: src/Widgets/ResizeDialog.vala:129
+msgid "OK"
+msgstr "OK"
+
+#: src/Widgets/ResizeDialog.vala:134 src/Widgets/SingleImageView.vala:574
+#: src/Widgets/Window.vala:686
+msgid "Cancel"
+msgstr "Cancella"
+
+#: src/Widgets/SingleImageView.vala:452
+#, c-format
+msgid ""
+"%s\n"
+"This file was deleted."
+msgstr ""
+"%s\n"
+"Questo file è stato eliminato."
+
+#: src/Widgets/SingleImageView.vala:556
+msgid "The image was resized."
+msgstr "L'immagine è stata ridimensionata."
+
+#: src/Widgets/SingleImageView.vala:558
+msgid "Resizing of the image was canceled."
+msgstr "Il ridimensionamento dell'immagine è stato annullato."
+
+#: src/Widgets/SingleImageView.vala:566
+msgid "Sorry, saving animations is not supported yet."
+msgstr "Spiacenti, il salvataggio delle animazioni non è ancora supportato."
+
+#: src/Widgets/SingleImageView.vala:594
+msgid "File already exists. Do you want to overwrite it?"
+msgstr "Il file esiste già. Vuoi sovrascriverlo?"
+
+#: src/Widgets/SingleImageView.vala:605
+msgid "Do you really overwrite this file?"
+msgstr "Vuoi sovrascrivere davvero questo file?"
+
+#: src/Widgets/SingleImageView.vala:618
+msgid "The file save was canceled."
+msgstr "Il salvataggio del file è stato annullato."
+
+#: src/Widgets/SingleImageView.vala:623
+msgid "The file was saved"
+msgstr "Il file è stato salvato"
+
+#: src/Widgets/ToolBar.vala:254
+msgid "Resize"
+msgstr "Ridimensiona"
+
+#: src/Widgets/ToolBar.vala:262
+msgid "Zoom in"
+msgstr "Ingrandire"
+
+#: src/Widgets/ToolBar.vala:272
+msgid "Zoom out"
+msgstr "Rimpicciolire"
+
+#: src/Widgets/ToolBar.vala:282
+msgid "Fit to the page"
+msgstr "Adatta alla pagina"
+
+#: src/Widgets/ToolBar.vala:292 src/Widgets/ToolBar.vala:600
+msgid "100%"
+msgstr "100%"
+
+#: src/Widgets/ToolBar.vala:302
+msgid "Flip horizontally"
+msgstr "Capovolgi orizzontalmente"
+
+#: src/Widgets/ToolBar.vala:310
+msgid "Flip vertically"
+msgstr "Capovolgi verticalmente"
+
+#: src/Widgets/ToolBar.vala:318
+msgid "Rotate to the left"
+msgstr "Ruota a sinistra"
+
+#: src/Widgets/ToolBar.vala:327
+msgid "Rotate to the right"
+msgstr "Ruota a destra"
+
+#: src/Widgets/ToolBar.vala:336
+msgid "Delete this file"
+msgstr "Elimina questo file"
+
+#: src/Widgets/ToolBar.vala:362 src/Widgets/ToolBar.vala:675
+msgid "Sort Asc"
+msgstr "Ordina in modalità Ascendente"
+
+#: src/Widgets/ToolBar.vala:381 src/Widgets/ToolBar.vala:694
+msgid "Sort Desc"
+msgstr "Ordina in modalità Discendente"
+
+#: src/Widgets/ToolBar.vala:407
+msgid "Skip forward"
+msgstr "Salta in avanti"
+
+#: src/Widgets/ToolBar.vala:418
+msgid "Play/Pause animation"
+msgstr "Riproduci/Metti in pausa l'animazione"
+
+#: src/Widgets/ToolBar.vala:475
+msgid "Slide 2 page to Left"
+msgstr "Fai scorrere la pagina 2 verso sinistra"
+
+#: src/Widgets/ToolBar.vala:488
+msgid "Slide 1 page to Left"
+msgstr "Fai scorrere 1 pagina verso sinistra"
+
+#: src/Widgets/ToolBar.vala:501
+msgid "Slide 1 page to Right"
+msgstr "Fai scorrere 1 pagina verso destra"
+
+#: src/Widgets/ToolBar.vala:514
+msgid "Slide 2 page to Right"
+msgstr "Fai scorrere la pagina 2 verso destra"
+
+#: src/Widgets/ToolBar.vala:537
+msgid "Left to Right"
+msgstr "Da sinistra a destra"
+
+#: src/Widgets/ToolBar.vala:557
+msgid "Right to Left"
+msgstr "Da destra a sinistra"
+
+#: src/Widgets/ToolBar.vala:593
+msgid "Fit Width"
+msgstr "Adatta alla larghezza"
+
+#: src/Widgets/ToolBar.vala:594
+msgid "Fit Page"
+msgstr "Adatta pagina"
+
+#: src/Widgets/ToolBar.vala:596
+msgid "25%"
+msgstr "25%"
+
+#: src/Widgets/ToolBar.vala:597
+msgid "50%"
+msgstr "50%"
+
+#: src/Widgets/ToolBar.vala:598
+msgid "70%"
+msgstr "70%"
+
+#: src/Widgets/ToolBar.vala:599
+msgid "80%"
+msgstr "80%"
+
+#: src/Widgets/ToolBar.vala:601
+msgid "200%"
+msgstr "200%"
+
+#: src/Widgets/ToolBar.vala:602
+msgid "400%"
+msgstr "400%"
+
+#: src/Widgets/ToolBar.vala:628 src/Widgets/ToolBar.vala:647
+msgid "Vertical"
+msgstr "Verticale"
+
+#: src/Widgets/ToolBar.vala:715
+msgid "Zoom:"
+msgstr "Zoom:"
+
+#: src/Widgets/ToolBar.vala:717
+msgid "Orientation:"
+msgstr "Orientamento:"
+
+#: src/Widgets/ToolBar.vala:719
+msgid "Sort:"
+msgstr "Ordina:"
+
+#: src/Widgets/Window.vala:180
+msgid "Previous"
+msgstr "Precedente"
+
+#: src/Widgets/Window.vala:198
+msgid "Next"
+msgstr "Prossimo"
+
+#. welcome screen
+#: src/Widgets/Window.vala:241
+msgid "No Images Open"
+msgstr "Nessuna Immagine Aperta"
+
+#: src/Widgets/Window.vala:241
+msgid "Click 'Open Image' to get started."
+msgstr "Fai clic su 'Apri Immagine' per iniziare."
+
+#: src/Widgets/Window.vala:243
+msgid "Open Image"
+msgstr "Apri Immagine"
+
+#: src/Widgets/Window.vala:243
+msgid "Show and edit your image."
+msgstr "Mostra e modifica la tua immagine."
+
+#: src/Widgets/Window.vala:280 src/Widgets/Window.vala:384
+#: src/Widgets/Window.vala:727 src/Widgets/Window.vala:881
+#, c-format
+msgid "Location: %d / %d (%d%%)"
+msgstr "Posizione: %d / %d (%d%%)"
+
+#: src/Widgets/Window.vala:685
+msgid "Choose file to open"
+msgstr "Scegli un file da aprire"
+
+#: src/Widgets/Window.vala:716
+msgid "The directory does not found. Exiting."
+msgstr "La directory non è stata trovata. Uscire."
+
+#: src/Widgets/Window.vala:720
+msgid "The file does not found."
+msgstr "Il file non è stato trovato."
+
+#: src/Widgets/Window.vala:775
+#, c-format
+msgid "The file could not be opend (cause: %s)"
+msgstr "Impossibile aprire il file (motivo: %s)"
+
+#: src/Widgets/Window.vala:805
+msgid "Are you sure you want to move this file to the Trash?"
+msgstr "Sei sicuro di voler spostare questo file nel Cestino?"
+
+#: src/Widgets/Window.vala:811 src/Widgets/Window.vala:827
+msgid "Delete was canceled"
+msgstr "Cancellazione annullata"
+
+#: src/Widgets/Window.vala:818
+msgid "Moved the file to the Trash."
+msgstr "Spostato il file nel Cestino."
+
+#: src/Widgets/Window.vala:821
+msgid ""
+"Your desktop environment doesn't seem to support Recycle Bin. Do you want to "
+"permanently delete this file? Once deleted, it cannot be undone."
+msgstr ""
+"Il tuo ambiente desktop non sembra supportare il Cestino. Vuoi eliminare "
+"definitivamente questo file? Una volta eliminato, non può essere annullato."
+
+#: src/Widgets/Window.vala:832
+msgid "Completely deleted the file."
+msgstr "Il file è stato completamente cancellato."
+
+#: src/Widgets/Window.vala:834
+msgid "fail to delete a file"
+msgstr "non è possibile eliminare un file"
+
+#. TRANSLATORS: Replace with your name and email address, don't translate literally
+#: src/Widgets/Window.vala:919
+msgid "translator-credits"
+msgstr "Albano Battistella <albano_battistella@hotmail.com>"
+
+#: src/Widgets/Window.vala:921
+msgid ""
+"A lightweight image viewer with three display modes: single, spread, and "
+"continuous."
+msgstr ""
+"Un visualizzatore di immagini leggero con tre modalità di visualizzazione: "
+"singola, diffusa e continua."
+
 #~ msgid ":\n"
 #~ msgstr ":\n"
+
+#~ msgid "Update meson.build"
+#~ msgstr "Aggiornato meson.build"
+
+#~ msgid "Update appdata.xml"
+#~ msgstr "Aggiornato appdata.xml"
+
+#~ msgid ""
+#~ "This release further standardizes the user interface. That is, like many "
+#~ "other GNOME applications such as Gedit, we have made it with a menu "
+#~ "button on the top right. When you press this button, you will see a pop-"
+#~ "up menu as most people expect. (Previously, the toolbar was displayed.) "
+#~ "There is no change in the functionality itself."
+#~ msgstr ""
+#~ "Questa versione standardizza ulteriormente l'interfaccia utente. Cioè, "
+#~ "come molte altre applicazioni GNOME come Gedit, l'abbiamo realizzata con "
+#~ "un pulsante menuin alto a destra. Quando premi questo pulsante, vedrai un "
+#~ "menu a comparsa come la maggior parte delle persone si aspetta. (In "
+#~ "precedenza, la barra degli strumenti era visualizzata.) Non c'è modifica "
+#~ "della funzionalità stessa."
+
+#~ msgid "Initial release."
+#~ msgstr "Versione iniziale"
+
+#~ msgid "An image viewer that supports jpg, png, bmp, and ico files."
+#~ msgstr ""
+#~ "Un visualizzatore di immagini che supporta file jpg, png, bmp e ico."
+
+#~ msgid "image-viewer"
+#~ msgstr "visualizzatore-immagini"
