@@ -410,9 +410,3 @@ msgid ""
 "continuous."
 msgstr ""
 "3つのモード (シングル、ダブル、スクロール) をもつ軽量なイメージビューワー。"
-
-#~ msgid "An image viewer that supports jpg, png, bmp, and ico files."
-#~ msgstr "jpg、png、bmp、、ico ファイルに対応する画像ビューアーです。"
-
-#~ msgid "image-viewer"
-#~ msgstr "画像ビューアー"

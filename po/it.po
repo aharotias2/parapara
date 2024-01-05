@@ -410,36 +410,3 @@ msgid ""
 msgstr ""
 "Un visualizzatore di immagini leggero con tre modalità di visualizzazione: "
 "singola, diffusa e continua."
-
-#~ msgid ":\n"
-#~ msgstr ":\n"
-
-#~ msgid "Update meson.build"
-#~ msgstr "Aggiornato meson.build"
-
-#~ msgid "Update appdata.xml"
-#~ msgstr "Aggiornato appdata.xml"
-
-#~ msgid ""
-#~ "This release further standardizes the user interface. That is, like many "
-#~ "other GNOME applications such as Gedit, we have made it with a menu "
-#~ "button on the top right. When you press this button, you will see a pop-"
-#~ "up menu as most people expect. (Previously, the toolbar was displayed.) "
-#~ "There is no change in the functionality itself."
-#~ msgstr ""
-#~ "Questa versione standardizza ulteriormente l'interfaccia utente. Cioè, "
-#~ "come molte altre applicazioni GNOME come Gedit, l'abbiamo realizzata con "
-#~ "un pulsante menuin alto a destra. Quando premi questo pulsante, vedrai un "
-#~ "menu a comparsa come la maggior parte delle persone si aspetta. (In "
-#~ "precedenza, la barra degli strumenti era visualizzata.) Non c'è modifica "
-#~ "della funzionalità stessa."
-
-#~ msgid "Initial release."
-#~ msgstr "Versione iniziale"
-
-#~ msgid "An image viewer that supports jpg, png, bmp, and ico files."
-#~ msgstr ""
-#~ "Un visualizzatore di immagini che supporta file jpg, png, bmp e ico."
-
-#~ msgid "image-viewer"
-#~ msgstr "visualizzatore-immagini"
