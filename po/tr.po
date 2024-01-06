@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.aharotias2.parapara master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-10 22:10+0900\n"
+"POT-Creation-Date: 2024-01-05 23:43+0300\n"
 "PO-Revision-Date: 2022-08-27 21:30+0300\n"
 "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Turkish <takim@gnome.org.tr>\n"
@@ -19,310 +19,55 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.1.1\n"
 
-#: src/Model/FileList.vala:61 src/Model/FileList.vala:73
-msgid "The file list is not initialized!"
-msgstr "Dosya listesi başlatılmadı!"
+#: data/parapara.appdata.xml.in:9 data/parapara.desktop.in:3
+msgid "ParaPara"
+msgstr "ParaPara"
 
-#: src/Model/FileList.vala:65 src/Model/SingleFileAccessor.vala:45
-#, c-format
-msgid "The index is out of the bounds (%d/%d)"
-msgstr "Dizin sınırların dışında (%d/%d)"
+#: data/parapara.appdata.xml.in:10
+msgid "An image viewer without library"
+msgstr "Kütüphanesiz resim görüntüleyici"
 
-#: src/Model/SingleFileAccessor.vala:58
-#, c-format
-msgid "file list does not contains this name! (%s)"
-msgstr "dosya listesinde bu ad yok! (%s)"
-
-#: src/Utils/FileUtils.vala:51
-msgid "The file path is invalid. it does not exist or is not a regular file."
-msgstr "Dosya yolu geçersiz. Yok veya normal bir dosya değil."
-
-#: src/Widgets/ResizeDialog.vala:62
-msgid "Set the width and the height"
-msgstr "Genişlik ve yüksekliği ayarla"
-
-#: src/Widgets/ResizeDialog.vala:64
-msgid "Width:"
-msgstr "Genişlik:"
-
-#: src/Widgets/ResizeDialog.vala:84
-msgid "Height:"
-msgstr "Yükseklik:"
-
-#: src/Widgets/ResizeDialog.vala:121
-msgid "OK"
-msgstr "Tamam"
-
-#: src/Widgets/ResizeDialog.vala:122 src/Widgets/SingleImageView.vala:539
-#: src/Widgets/Window.vala:636
-msgid "Cancel"
-msgstr "İptal Et"
-
-#: src/Widgets/SingleImageView.vala:417
-#, c-format
+#: data/parapara.appdata.xml.in:12
 msgid ""
-"%s\n"
-"This file was deleted."
+"An image viewer in which images are displayed as one of three styles: "
+"single, spread (book), continuous (scrolling), and that supports jpg, png, "
+"bmp, ico, gif files. animated gifs are also supported."
 msgstr ""
-"%s\n"
-"Dosya silindi."
+"Resimlerin üç stilden biriyle görüntülendiği resim görüntüleyici: tekli, "
+"geniş (kitap), sürekli (kaydırma). Jpg, png, bmp, ico, gif dosyalarının "
+"yanında hareketli gifleri de destekler."
 
-#: src/Widgets/SingleImageView.vala:521
-msgid "The image was resized."
-msgstr "Resim yeniden boyutlandırıldı."
+#: data/parapara.appdata.xml.in:21
+msgid "Application Screenshot (Single View Mode)"
+msgstr "Uygulama Ekran Görüntüsü (Tekli Görünüm Kipi)"
 
-#: src/Widgets/SingleImageView.vala:523
-msgid "Resizing of the image was canceled."
-msgstr "Resmin yeniden boyutlandırılması iptal edildi."
+#: data/parapara.appdata.xml.in:25
+msgid "Spread View Mode"
+msgstr "Geniş Görünüm Kipi"
 
-#: src/Widgets/SingleImageView.vala:531
-msgid "Sorry, saving animations is not supported yet."
-msgstr "Üzgünüz, animasyon kaydetmek henüz desteklenmiyor."
+#: data/parapara.appdata.xml.in:29
+msgid "Continuous View Mode (Vertical)"
+msgstr "Sürekli Görünüm Kipi (Dikey)"
 
-#: src/Widgets/SingleImageView.vala:538 data/gtk/menus.ui:42
-msgid "Save as…"
-msgstr "Farklı Kaydet…"
+#: data/parapara.appdata.xml.in:33
+msgid "Continuous View Mode (Horizontal)"
+msgstr "Sürekli Görünüm Kipi (Yatay)"
 
-#: src/Widgets/SingleImageView.vala:539 data/gtk/menus.ui:37
-msgid "Save"
-msgstr "Kaydet"
+#: data/parapara.appdata.xml.in:80
+msgid "Tanaka Takayuki"
+msgstr "Tanaka Takayuki"
 
-#: src/Widgets/SingleImageView.vala:559
-msgid "File already exists. Do you want to overwrite it?"
-msgstr "Dosya zaten mevcut. Üzerine yazmak istiyor musunuz?"
+#: data/parapara.desktop.in:4
+msgid "Image Viewer"
+msgstr "Resim Görüntüleyici"
 
-#: src/Widgets/SingleImageView.vala:570
-msgid "Do you really overwrite this file?"
-msgstr "Dosyanın üstüne cidden yazmak istiyor musunuz?"
+#: data/parapara.desktop.in:5
+msgid "View image files"
+msgstr "Resim dosyalarını görüntüle"
 
-#: src/Widgets/SingleImageView.vala:583
-msgid "The file save was canceled."
-msgstr "Dosya kaydetme iptal edildi."
-
-#: src/Widgets/SingleImageView.vala:588
-msgid "The file was saved"
-msgstr "Dosya kaydedildi"
-
-#: src/Widgets/ToolBar.vala:157
-msgid "Resize"
-msgstr "Yeniden Boyutlandır"
-
-#: src/Widgets/ToolBar.vala:165
-msgid "Zoom in"
-msgstr "Yakınlaştır"
-
-#: src/Widgets/ToolBar.vala:175
-msgid "Zoom out"
-msgstr "Uzaklaştır"
-
-#: src/Widgets/ToolBar.vala:185
-msgid "Fit to the page"
-msgstr "Sayfaya sığdır"
-
-#: src/Widgets/ToolBar.vala:195 src/Widgets/ToolBar.vala:503
-msgid "100%"
-msgstr "%100"
-
-#: src/Widgets/ToolBar.vala:205
-msgid "Flip horizontally"
-msgstr "Yatay çevir"
-
-#: src/Widgets/ToolBar.vala:213
-msgid "Flip vertically"
-msgstr "Dikey çevir"
-
-#: src/Widgets/ToolBar.vala:221
-msgid "Rotate to the left"
-msgstr "Sola döndür"
-
-#: src/Widgets/ToolBar.vala:230
-msgid "Rotate to the right"
-msgstr "Sağa döndür"
-
-#: src/Widgets/ToolBar.vala:239
-msgid "Delete this file"
-msgstr "Dosyayı sil"
-
-#: src/Widgets/ToolBar.vala:265 src/Widgets/ToolBar.vala:578
-msgid "Sort Asc"
-msgstr "Artan Sırala"
-
-#: src/Widgets/ToolBar.vala:284 src/Widgets/ToolBar.vala:597
-msgid "Sort Desc"
-msgstr "Azalan Sırala"
-
-#: src/Widgets/ToolBar.vala:310
-msgid "Skip forward"
-msgstr "İleriye atla"
-
-#: src/Widgets/ToolBar.vala:321
-msgid "Play/Pause animation"
-msgstr "Animasyonu Oynat/Durdur"
-
-#: src/Widgets/ToolBar.vala:378
-msgid "Slide 2 page to Left"
-msgstr "2 sayfa Sola kaydır"
-
-#: src/Widgets/ToolBar.vala:391
-msgid "Slide 1 page to Left"
-msgstr "1 sayfa Sola kaydır"
-
-#: src/Widgets/ToolBar.vala:404
-msgid "Slide 1 page to Right"
-msgstr "1 sayfa Sağa kaydır"
-
-#: src/Widgets/ToolBar.vala:417
-msgid "Slide 2 page to Right"
-msgstr "1 sayfa Sağa kaydır"
-
-#: src/Widgets/ToolBar.vala:440
-msgid "Left to Right"
-msgstr "Soldan Sağa"
-
-#: src/Widgets/ToolBar.vala:460
-msgid "Right to Left"
-msgstr "Sağdan Sola"
-
-#: src/Widgets/ToolBar.vala:496
-msgid "Fit Width"
-msgstr "Genişliğe Sığdır"
-
-#: src/Widgets/ToolBar.vala:497
-msgid "Fit Page"
-msgstr "Sayfaya Sığdır"
-
-#: src/Widgets/ToolBar.vala:499
-msgid "25%"
-msgstr "%25"
-
-#: src/Widgets/ToolBar.vala:500
-msgid "50%"
-msgstr "%50"
-
-#: src/Widgets/ToolBar.vala:501
-msgid "70%"
-msgstr "%70"
-
-#: src/Widgets/ToolBar.vala:502
-msgid "80%"
-msgstr "%80"
-
-#: src/Widgets/ToolBar.vala:504
-msgid "200%"
-msgstr "%200"
-
-#: src/Widgets/ToolBar.vala:505
-msgid "400%"
-msgstr "%400"
-
-#: src/Widgets/ToolBar.vala:531 src/Widgets/ToolBar.vala:550
-msgid "Vertical"
-msgstr "Dikey"
-
-#: src/Widgets/ToolBar.vala:618
-msgid "Zoom:"
-msgstr "Yakınlaştırma:"
-
-#: src/Widgets/ToolBar.vala:620
-msgid "Orientation:"
-msgstr "Yönelim:"
-
-#: src/Widgets/ToolBar.vala:622
-msgid "Sort:"
-msgstr "Sırala:"
-
-#: src/Widgets/Window.vala:116 src/Widgets/Window.vala:636 data/gtk/menus.ui:33
-msgid "Open"
-msgstr "Aç"
-
-#: src/Widgets/Window.vala:131
-msgid "Previous"
-msgstr "Önceki"
-
-#: src/Widgets/Window.vala:149
-msgid "Next"
-msgstr "Sonraki"
-
-#: src/Widgets/Window.vala:192
-msgid "No Images Open"
-msgstr "Resim Bulunamadı"
-
-#: src/Widgets/Window.vala:192
-msgid "Click 'Open Image' to get started."
-msgstr "Başlamak için 'Resim Aç' düğmesine tıklayın."
-
-#: src/Widgets/Window.vala:194
-msgid "Open Image"
-msgstr "Resim Aç"
-
-#: src/Widgets/Window.vala:194
-msgid "Show and edit your image."
-msgstr "Resimlerinizi görüntüleyin ve düzenleyin."
-
-#: src/Widgets/Window.vala:230 src/Widgets/Window.vala:334
-#: src/Widgets/Window.vala:678 src/Widgets/Window.vala:826
-#, c-format
-msgid "Location: %d / %d (%d%%)"
-msgstr "Konum: %d / %d (%d%%)"
-
-#: src/Widgets/Window.vala:635
-msgid "Choose file to open"
-msgstr "Açmak için dosya seçin"
-
-#: src/Widgets/Window.vala:668
-msgid "The directory does not found. Exiting."
-msgstr "Dizin bulunamadı. Çıkılıyor."
-
-#: src/Widgets/Window.vala:672
-msgid "The file does not found."
-msgstr "Dosya bulunamadı."
-
-#: src/Widgets/Window.vala:721
-#, c-format
-msgid "The file could not be opend (cause: %s)"
-msgstr "Dosya açılamadı (sebep: %s)"
-
-#: src/Widgets/Window.vala:751
-msgid "Are you sure you want to move this file to the Trash?"
-msgstr "Dosyayı çöpe taşımak istediğinize emin misiniz?"
-
-#: src/Widgets/Window.vala:757 src/Widgets/Window.vala:773
-msgid "Delete was canceled"
-msgstr "Silme iptal edildi"
-
-#: src/Widgets/Window.vala:764
-msgid "Moved the file to the Trash."
-msgstr "Dosyayı çöpe taşı."
-
-#: src/Widgets/Window.vala:767
-msgid ""
-"Your desktop environment doesn't seem to support Recycle Bin. Do you want to "
-"permanently delete this file? Once deleted, it cannot be undone."
-msgstr ""
-"Masaüstü ortamınız Geri Dönüşüm Kutusu'nu desteklemiyor gibi görünüyor. "
-"Dosyayı kalıcı olarak silmek istiyor musunuz? Silindikten sonra geri "
-"alınamaz."
-
-#: src/Widgets/Window.vala:778
-msgid "Completely deleted the file."
-msgstr "Dosya tamamen silindi."
-
-#: src/Widgets/Window.vala:780
-msgid "fail to delete a file"
-msgstr "dosya silinemedi"
-
-#. TRANSLATORS: Replace with your name and email address, don't translate literally
-#: src/Widgets/Window.vala:864
-msgid "translator-credits"
-msgstr "Sabri Ünal <libreajans@gmail.com>"
-
-#: src/Widgets/Window.vala:866
-msgid ""
-"A lightweight image viewer with three display modes: single, spread, and "
-"continuous."
-msgstr ""
-"Üç görüntüleme kipine sahip hafif bir resim görüntüleyici: tekli, geniş ve "
-"sürekli."
+#: data/parapara.desktop.in:12
+msgid "Picture;Image;Viewer;"
+msgstr "Fotoğraf;Resim;Görüntü;Görüntüleyici;"
 
 #: data/gtk/menus.ui:7
 msgid "Single View Mode"
@@ -339,6 +84,18 @@ msgstr "İkili Görünüm Kipi"
 #: data/gtk/menus.ui:27
 msgid "New"
 msgstr "Yeni"
+
+#: data/gtk/menus.ui:33 src/Widgets/Window.vala:165 src/Widgets/Window.vala:686
+msgid "Open"
+msgstr "Aç"
+
+#: data/gtk/menus.ui:37 src/Widgets/SingleImageView.vala:574
+msgid "Save"
+msgstr "Kaydet"
+
+#: data/gtk/menus.ui:42 src/Widgets/SingleImageView.vala:573
+msgid "Save as…"
+msgstr "Farklı Kaydet…"
 
 #: data/gtk/menus.ui:49
 msgid "Toolbar Option"
@@ -363,3 +120,297 @@ msgstr "Tam Ekran"
 #: data/gtk/menus.ui:75
 msgid "About…"
 msgstr "ParaPara Hakkında"
+
+#: src/Model/FileList.vala:74 src/Model/FileList.vala:95
+msgid "The file list is not initialized!"
+msgstr "Dosya listesi başlatılmadı!"
+
+#: src/Model/FileList.vala:78 src/Model/SingleFileAccessor.vala:48
+#, c-format
+msgid "The index is out of the bounds (%d/%d)"
+msgstr "Dizin sınırların dışında (%d/%d)"
+
+#: src/Model/SingleFileAccessor.vala:61
+#, c-format
+msgid "file list does not contains this name! (%s)"
+msgstr "dosya listesinde bu ad yok! (%s)"
+
+#: src/Utils/FileUtils.vala:51
+msgid "The file path is invalid. it does not exist or is not a regular file."
+msgstr "Dosya yolu geçersiz. Yok veya normal bir dosya değil."
+
+#: src/Widgets/ResizeDialog.vala:70
+msgid "Set the width and the height"
+msgstr "Genişlik ve yüksekliği ayarla"
+
+#: src/Widgets/ResizeDialog.vala:72
+msgid "Width:"
+msgstr "Genişlik:"
+
+#: src/Widgets/ResizeDialog.vala:92
+msgid "Height:"
+msgstr "Yükseklik:"
+
+#: src/Widgets/ResizeDialog.vala:129
+msgid "OK"
+msgstr "Tamam"
+
+#: src/Widgets/ResizeDialog.vala:134 src/Widgets/SingleImageView.vala:574
+#: src/Widgets/Window.vala:686
+msgid "Cancel"
+msgstr "İptal Et"
+
+#: src/Widgets/SingleImageView.vala:452
+#, c-format
+msgid ""
+"%s\n"
+"This file was deleted."
+msgstr ""
+"%s\n"
+"Dosya silindi."
+
+#: src/Widgets/SingleImageView.vala:556
+msgid "The image was resized."
+msgstr "Resim yeniden boyutlandırıldı."
+
+#: src/Widgets/SingleImageView.vala:558
+msgid "Resizing of the image was canceled."
+msgstr "Resmin yeniden boyutlandırılması iptal edildi."
+
+#: src/Widgets/SingleImageView.vala:566
+msgid "Sorry, saving animations is not supported yet."
+msgstr "Üzgünüz, animasyon kaydetmek henüz desteklenmiyor."
+
+#: src/Widgets/SingleImageView.vala:594
+msgid "File already exists. Do you want to overwrite it?"
+msgstr "Dosya zaten mevcut. Üzerine yazmak istiyor musunuz?"
+
+#: src/Widgets/SingleImageView.vala:605
+msgid "Do you really overwrite this file?"
+msgstr "Dosyanın üstüne cidden yazmak istiyor musunuz?"
+
+#: src/Widgets/SingleImageView.vala:618
+msgid "The file save was canceled."
+msgstr "Dosya kaydetme iptal edildi."
+
+#: src/Widgets/SingleImageView.vala:623
+msgid "The file was saved"
+msgstr "Dosya kaydedildi"
+
+#: src/Widgets/ToolBar.vala:254
+msgid "Resize"
+msgstr "Yeniden Boyutlandır"
+
+#: src/Widgets/ToolBar.vala:262
+msgid "Zoom in"
+msgstr "Yakınlaştır"
+
+#: src/Widgets/ToolBar.vala:272
+msgid "Zoom out"
+msgstr "Uzaklaştır"
+
+#: src/Widgets/ToolBar.vala:282
+msgid "Fit to the page"
+msgstr "Sayfaya sığdır"
+
+#: src/Widgets/ToolBar.vala:292 src/Widgets/ToolBar.vala:600
+msgid "100%"
+msgstr "%100"
+
+#: src/Widgets/ToolBar.vala:302
+msgid "Flip horizontally"
+msgstr "Yatay çevir"
+
+#: src/Widgets/ToolBar.vala:310
+msgid "Flip vertically"
+msgstr "Dikey çevir"
+
+#: src/Widgets/ToolBar.vala:318
+msgid "Rotate to the left"
+msgstr "Sola döndür"
+
+#: src/Widgets/ToolBar.vala:327
+msgid "Rotate to the right"
+msgstr "Sağa döndür"
+
+#: src/Widgets/ToolBar.vala:336
+msgid "Delete this file"
+msgstr "Dosyayı sil"
+
+#: src/Widgets/ToolBar.vala:362 src/Widgets/ToolBar.vala:675
+msgid "Sort Asc"
+msgstr "Artan Sırala"
+
+#: src/Widgets/ToolBar.vala:381 src/Widgets/ToolBar.vala:694
+msgid "Sort Desc"
+msgstr "Azalan Sırala"
+
+#: src/Widgets/ToolBar.vala:407
+msgid "Skip forward"
+msgstr "İleriye atla"
+
+#: src/Widgets/ToolBar.vala:418
+msgid "Play/Pause animation"
+msgstr "Animasyonu Oynat/Durdur"
+
+#: src/Widgets/ToolBar.vala:475
+msgid "Slide 2 page to Left"
+msgstr "2 sayfa Sola kaydır"
+
+#: src/Widgets/ToolBar.vala:488
+msgid "Slide 1 page to Left"
+msgstr "1 sayfa Sola kaydır"
+
+#: src/Widgets/ToolBar.vala:501
+msgid "Slide 1 page to Right"
+msgstr "1 sayfa Sağa kaydır"
+
+#: src/Widgets/ToolBar.vala:514
+msgid "Slide 2 page to Right"
+msgstr "1 sayfa Sağa kaydır"
+
+#: src/Widgets/ToolBar.vala:537
+msgid "Left to Right"
+msgstr "Soldan Sağa"
+
+#: src/Widgets/ToolBar.vala:557
+msgid "Right to Left"
+msgstr "Sağdan Sola"
+
+#: src/Widgets/ToolBar.vala:593
+msgid "Fit Width"
+msgstr "Genişliğe Sığdır"
+
+#: src/Widgets/ToolBar.vala:594
+msgid "Fit Page"
+msgstr "Sayfaya Sığdır"
+
+#: src/Widgets/ToolBar.vala:596
+msgid "25%"
+msgstr "%25"
+
+#: src/Widgets/ToolBar.vala:597
+msgid "50%"
+msgstr "%50"
+
+#: src/Widgets/ToolBar.vala:598
+msgid "70%"
+msgstr "%70"
+
+#: src/Widgets/ToolBar.vala:599
+msgid "80%"
+msgstr "%80"
+
+#: src/Widgets/ToolBar.vala:601
+msgid "200%"
+msgstr "%200"
+
+#: src/Widgets/ToolBar.vala:602
+msgid "400%"
+msgstr "%400"
+
+#: src/Widgets/ToolBar.vala:628 src/Widgets/ToolBar.vala:647
+msgid "Vertical"
+msgstr "Dikey"
+
+#: src/Widgets/ToolBar.vala:715
+msgid "Zoom:"
+msgstr "Yakınlaştırma:"
+
+#: src/Widgets/ToolBar.vala:717
+msgid "Orientation:"
+msgstr "Yönelim:"
+
+#: src/Widgets/ToolBar.vala:719
+msgid "Sort:"
+msgstr "Sırala:"
+
+#: src/Widgets/Window.vala:180
+msgid "Previous"
+msgstr "Önceki"
+
+#: src/Widgets/Window.vala:198
+msgid "Next"
+msgstr "Sonraki"
+
+#. welcome screen
+#: src/Widgets/Window.vala:241
+msgid "No Images Open"
+msgstr "Resim Bulunamadı"
+
+#: src/Widgets/Window.vala:241
+msgid "Click 'Open Image' to get started."
+msgstr "Başlamak için 'Resim Aç' düğmesine tıklayın."
+
+#: src/Widgets/Window.vala:243
+msgid "Open Image"
+msgstr "Resim Aç"
+
+#: src/Widgets/Window.vala:243
+msgid "Show and edit your image."
+msgstr "Resimlerinizi görüntüleyin ve düzenleyin."
+
+#: src/Widgets/Window.vala:280 src/Widgets/Window.vala:384
+#: src/Widgets/Window.vala:727 src/Widgets/Window.vala:881
+#, c-format
+msgid "Location: %d / %d (%d%%)"
+msgstr "Konum: %d / %d (%d%%)"
+
+#: src/Widgets/Window.vala:685
+msgid "Choose file to open"
+msgstr "Açmak için dosya seçin"
+
+#: src/Widgets/Window.vala:716
+msgid "The directory does not found. Exiting."
+msgstr "Dizin bulunamadı. Çıkılıyor."
+
+#: src/Widgets/Window.vala:720
+msgid "The file does not found."
+msgstr "Dosya bulunamadı."
+
+#: src/Widgets/Window.vala:775
+#, c-format
+msgid "The file could not be opend (cause: %s)"
+msgstr "Dosya açılamadı (sebep: %s)"
+
+#: src/Widgets/Window.vala:805
+msgid "Are you sure you want to move this file to the Trash?"
+msgstr "Dosyayı çöpe taşımak istediğinize emin misiniz?"
+
+#: src/Widgets/Window.vala:811 src/Widgets/Window.vala:827
+msgid "Delete was canceled"
+msgstr "Silme iptal edildi"
+
+#: src/Widgets/Window.vala:818
+msgid "Moved the file to the Trash."
+msgstr "Dosyayı çöpe taşı."
+
+#: src/Widgets/Window.vala:821
+msgid ""
+"Your desktop environment doesn't seem to support Recycle Bin. Do you want to "
+"permanently delete this file? Once deleted, it cannot be undone."
+msgstr ""
+"Masaüstü ortamınız Geri Dönüşüm Kutusu'nu desteklemiyor gibi görünüyor. "
+"Dosyayı kalıcı olarak silmek istiyor musunuz? Silindikten sonra geri "
+"alınamaz."
+
+#: src/Widgets/Window.vala:832
+msgid "Completely deleted the file."
+msgstr "Dosya tamamen silindi."
+
+#: src/Widgets/Window.vala:834
+msgid "fail to delete a file"
+msgstr "dosya silinemedi"
+
+#. TRANSLATORS: Replace with your name and email address, don't translate literally
+#: src/Widgets/Window.vala:919
+msgid "translator-credits"
+msgstr "Sabri Ünal <libreajans@gmail.com>"
+
+#: src/Widgets/Window.vala:921
+msgid ""
+"A lightweight image viewer with three display modes: single, spread, and "
+"continuous."
+msgstr ""
+"Üç görüntüleme kipine sahip hafif bir resim görüntüleyici: tekli, geniş ve "
+"sürekli."

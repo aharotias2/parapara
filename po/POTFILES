@@ -1,3 +1,6 @@
+data/parapara.appdata.xml.in
+data/parapara.desktop.in
+data/gtk/menus.ui
 src/Model/FileList.vala
 src/Model/SingleFileAccessor.vala
 src/Utils/FileUtils.vala
@@ -5,4 +8,3 @@ src/Widgets/ResizeDialog.vala
 src/Widgets/SingleImageView.vala
 src/Widgets/ToolBar.vala
 src/Widgets/Window.vala
-data/gtk/menus.ui
