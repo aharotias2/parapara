@@ -39,27 +39,27 @@
 
   <releases>
     <release version="3.2.9" date="2022-03-26" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
 	<p>Update it.po</p>
       </description>
     </release>
     <release version="3.2.8" date="2022-03-25" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
 	<p>Update translation</p>
       </description>
     </release>
     <release version="3.2.3" date="2022-01-10" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
 	<p>Update meson.build</p>
       </description>
     </release>
     <release version="3.2.2" date="2022-01-09" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
 	<p>Update appdata.xml</p>
       </description>
     </release>
     <release version="3.2.0" date="2021-12-24" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>This release further standardizes the user interface.
 	  That is, like many other GNOME applications such as Gedit,
 	  we have made it with a menu button on the top right.
@@ -69,7 +69,7 @@
       </description>
     </release>
     <release version="3.0.0" date="2021-08-07" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <ul>
           <li>Initial release.</li>
         </ul>
