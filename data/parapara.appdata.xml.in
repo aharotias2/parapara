@@ -78,6 +78,9 @@
   </releases>
 
   <developer_name>Tanaka Takayuki</developer_name>
+  <developer id="io.github.aharotias2">
+    <name>Tanaka Takayuki</name>
+  </developer>
   <url type="homepage">https://github.com/aharotias2/parapara</url>
   <url type="bugtracker">https://github.com/aharotias2/parapara/issues</url>
   <url type="help">https://github.com/aharotias2/parapara/issues</url>
