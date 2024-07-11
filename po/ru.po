@@ -13,12 +13,15 @@
 # SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
 # SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
 # SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
+# SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
+# SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
+# SPDX-FileCopyrightText: 2024 Вячеслав <ma12@rambler.ru>
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 23:43+0300\n"
-"PO-Revision-Date: 2024-07-11 18:57+0300\n"
+"PO-Revision-Date: 2024-07-11 19:43+0300\n"
 "Last-Translator: Вячеслав <ma12@rambler.ru>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -79,19 +82,19 @@ msgstr "Просмотр файлов изображений"
 
 #: data/parapara.desktop.in:12
 msgid "Picture;Image;Viewer;"
-msgstr "Изображение;Изображение;Просмотр;"
+msgstr "Картинка;Изображение;Просмотр;"
 
 #: data/gtk/menus.ui:7
 msgid "Single View Mode"
-msgstr "Режим одного просмотра"
+msgstr "Одночный просмотр"
 
 #: data/gtk/menus.ui:13
 msgid "Scroll View Mode"
-msgstr "Режим просмотра с прокруткой"
+msgstr "Просмотр с прокруткой"
 
 #: data/gtk/menus.ui:19
 msgid "Dual View Mode"
-msgstr "Режим двойного просмотра"
+msgstr "Двойной просмотр"
 
 #: data/gtk/menus.ui:27
 msgid "New"
