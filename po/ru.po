@@ -183,11 +183,11 @@ msgid ""
 "This file was deleted."
 msgstr ""
 "%s\n"
-"Файл был удален."
+"Файл удален."
 
 #: src/Widgets/SingleImageView.vala:556
 msgid "The image was resized."
-msgstr "Размер изображения был изменен."
+msgstr "Размер изображения изменен."
 
 #: src/Widgets/SingleImageView.vala:558
 msgid "Resizing of the image was canceled."
@@ -207,7 +207,7 @@ msgstr "Перезаписать этот файл?"
 
 #: src/Widgets/SingleImageView.vala:618
 msgid "The file save was canceled."
-msgstr "Сохранение файла было отменено."
+msgstr "Сохранение файла отменено."
 
 #: src/Widgets/SingleImageView.vala:623
 msgid "The file was saved"
