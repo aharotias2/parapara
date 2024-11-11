@@ -1,0 +1,434 @@
+# SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
+# SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
+# SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
+# SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
+# SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
+# SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
+# SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
+# SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
+# SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
+# SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
+# SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
+# SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
+# SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
+# SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
+# SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
+# SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
+# SPDX-FileCopyrightText: 2024 SPDX-FileCopyrightText :
+# SPDX-FileCopyrightText: 2024 Вячеслав <ma12@rambler.ru>
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 23:43+0300\n"
+"PO-Revision-Date: 2024-07-11 19:43+0300\n"
+"Last-Translator: Вячеслав <ma12@rambler.ru>\n"
+"Language-Team: Russian <kde-russian@lists.kde.ru>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<"
+"=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"X-Generator: Lokalize 23.08.4\n"
+"X-Poedit-Basepath: .\n"
+
+#: data/parapara.appdata.xml.in:9 data/parapara.desktop.in:3
+msgid "ParaPara"
+msgstr "ParaPara"
+
+#: data/parapara.appdata.xml.in:10
+msgid "An image viewer without library"
+msgstr "Просмотрщик изображений без библиотеки"
+
+#: data/parapara.appdata.xml.in:12
+msgid ""
+"An image viewer in which images are displayed as one of three styles: "
+"single, spread (book), continuous (scrolling), and that supports jpg, png, "
+"bmp, ico, gif files. animated gifs are also supported."
+msgstr ""
+"Средство просмотра изображений, в котором изображения отображаются в одном "
+"из трех стилей: одиночный, разворот (книга), непрерывный (прокрутка) и "
+"поддерживает файлы jpg, png, bmp, ico, gif. Также поддерживаются "
+"анимированные GIF-изображения."
+
+#: data/parapara.appdata.xml.in:21
+msgid "Application Screenshot (Single View Mode)"
+msgstr "Снимок экрана приложения (режим одного просмотра)"
+
+#: data/parapara.appdata.xml.in:25
+msgid "Spread View Mode"
+msgstr "Режим расширенного просмотра"
+
+#: data/parapara.appdata.xml.in:29
+msgid "Continuous View Mode (Vertical)"
+msgstr "Режим непрерывного просмотра (по вертикали)"
+
+#: data/parapara.appdata.xml.in:33
+msgid "Continuous View Mode (Horizontal)"
+msgstr "Режим непрерывного просмотра (по горизонтали)"
+
+#: data/parapara.appdata.xml.in:80
+msgid "Tanaka Takayuki"
+msgstr "Танака Такаюки"
+
+#: data/parapara.desktop.in:4
+msgid "Image Viewer"
+msgstr "Просмотр изображений"
+
+#: data/parapara.desktop.in:5
+msgid "View image files"
+msgstr "Просмотр файлов изображений"
+
+#: data/parapara.desktop.in:12
+msgid "Picture;Image;Viewer;"
+msgstr "Картинка;Изображение;Просмотр;"
+
+#: data/gtk/menus.ui:7
+msgid "Single View Mode"
+msgstr "Одночный просмотр"
+
+#: data/gtk/menus.ui:13
+msgid "Scroll View Mode"
+msgstr "Просмотр с прокруткой"
+
+#: data/gtk/menus.ui:19
+msgid "Dual View Mode"
+msgstr "Двойной просмотр"
+
+#: data/gtk/menus.ui:27
+msgid "New"
+msgstr "Новый"
+
+#: data/gtk/menus.ui:33 src/Widgets/Window.vala:165 src/Widgets/Window.vala:686
+msgid "Open"
+msgstr "Открыть"
+
+#: data/gtk/menus.ui:37 src/Widgets/SingleImageView.vala:574
+msgid "Save"
+msgstr "Сохранить"
+
+#: data/gtk/menus.ui:42 src/Widgets/SingleImageView.vala:573
+msgid "Save as…"
+msgstr "Сохранить как..."
+
+#: data/gtk/menus.ui:49
+msgid "Toolbar Option"
+msgstr "Видимость панели инструментов"
+
+#: data/gtk/menus.ui:52
+msgid "Keep Visible"
+msgstr "Не скрывать"
+
+#: data/gtk/menus.ui:57
+msgid "Depends"
+msgstr "При наведении курсора"
+
+#: data/gtk/menus.ui:62
+msgid "Keep Hidden"
+msgstr "Скрыть"
+
+#: data/gtk/menus.ui:69
+msgid "Full Screen"
+msgstr "На весь экран"
+
+#: data/gtk/menus.ui:75
+msgid "About…"
+msgstr "О программе..."
+
+#: src/Model/FileList.vala:74 src/Model/FileList.vala:95
+msgid "The file list is not initialized!"
+msgstr "Список файлов не инициализирован!"
+
+#: src/Model/FileList.vala:78 src/Model/SingleFileAccessor.vala:48
+#, c-format
+msgid "The index is out of the bounds (%d/%d)"
+msgstr "Индекс выходит за пределы (%d/%d)"
+
+#: src/Model/SingleFileAccessor.vala:61
+#, c-format
+msgid "file list does not contains this name! (%s)"
+msgstr "список файлов не содержит этого имени! (%s)"
+
+#: src/Utils/FileUtils.vala:51
+msgid "The file path is invalid. it does not exist or is not a regular file."
+msgstr ""
+"Указан неверный путь к файлу. он не существует или не является обычным файлом."
+
+#: src/Widgets/ResizeDialog.vala:70
+msgid "Set the width and the height"
+msgstr "Установить ширину и высоту"
+
+#: src/Widgets/ResizeDialog.vala:72
+msgid "Width:"
+msgstr "Ширина:"
+
+#: src/Widgets/ResizeDialog.vala:92
+msgid "Height:"
+msgstr "Высота"
+
+#: src/Widgets/ResizeDialog.vala:129
+msgid "OK"
+msgstr "OK"
+
+#: src/Widgets/ResizeDialog.vala:134 src/Widgets/SingleImageView.vala:574
+#: src/Widgets/Window.vala:686
+msgid "Cancel"
+msgstr "Отмена"
+
+#: src/Widgets/SingleImageView.vala:452
+#, c-format
+msgid ""
+"%s\n"
+"This file was deleted."
+msgstr ""
+"%s\n"
+"Файл удален."
+
+#: src/Widgets/SingleImageView.vala:556
+msgid "The image was resized."
+msgstr "Размер изображения изменен."
+
+#: src/Widgets/SingleImageView.vala:558
+msgid "Resizing of the image was canceled."
+msgstr "Изменение размера изображения отменено."
+
+#: src/Widgets/SingleImageView.vala:566
+msgid "Sorry, saving animations is not supported yet."
+msgstr "Сохранение анимации пока не поддерживается."
+
+#: src/Widgets/SingleImageView.vala:594
+msgid "File already exists. Do you want to overwrite it?"
+msgstr "Файл уже существует. Перезаписать его?"
+
+#: src/Widgets/SingleImageView.vala:605
+msgid "Do you really overwrite this file?"
+msgstr "Перезаписать этот файл?"
+
+#: src/Widgets/SingleImageView.vala:618
+msgid "The file save was canceled."
+msgstr "Сохранение файла отменено."
+
+#: src/Widgets/SingleImageView.vala:623
+msgid "The file was saved"
+msgstr "Файл  сохранен"
+
+#: src/Widgets/ToolBar.vala:254
+msgid "Resize"
+msgstr "Изменить размер"
+
+#: src/Widgets/ToolBar.vala:262
+msgid "Zoom in"
+msgstr "Увеличить"
+
+#: src/Widgets/ToolBar.vala:272
+msgid "Zoom out"
+msgstr "Уменьшить"
+
+#: src/Widgets/ToolBar.vala:282
+msgid "Fit to the page"
+msgstr "По размеру страницы"
+
+#: src/Widgets/ToolBar.vala:292 src/Widgets/ToolBar.vala:600
+msgid "100%"
+msgstr "100%"
+
+#: src/Widgets/ToolBar.vala:302
+msgid "Flip horizontally"
+msgstr "Отразить по горизонтали"
+
+#: src/Widgets/ToolBar.vala:310
+msgid "Flip vertically"
+msgstr "Отразить по вертикали"
+
+#: src/Widgets/ToolBar.vala:318
+msgid "Rotate to the left"
+msgstr "Повернуть против часовой"
+
+#: src/Widgets/ToolBar.vala:327
+msgid "Rotate to the right"
+msgstr "Повернуть по часовой"
+
+#: src/Widgets/ToolBar.vala:336
+msgid "Delete this file"
+msgstr "Удалить файл"
+
+#: src/Widgets/ToolBar.vala:362 src/Widgets/ToolBar.vala:675
+msgid "Sort Asc"
+msgstr "Сортировать по возрастанию"
+
+#: src/Widgets/ToolBar.vala:381 src/Widgets/ToolBar.vala:694
+msgid "Sort Desc"
+msgstr "Сортировать по убыванию"
+
+#: src/Widgets/ToolBar.vala:407
+msgid "Skip forward"
+msgstr "Перейти вперед"
+
+#: src/Widgets/ToolBar.vala:418
+msgid "Play/Pause animation"
+msgstr "Воспроизведение/пауза анимации"
+
+#: src/Widgets/ToolBar.vala:475
+msgid "Slide 2 page to Left"
+msgstr "Сдвинуть 2 страницы влево"
+
+#: src/Widgets/ToolBar.vala:488
+msgid "Slide 1 page to Left"
+msgstr "Сдвинуть 1 страницу влево"
+
+#: src/Widgets/ToolBar.vala:501
+msgid "Slide 1 page to Right"
+msgstr "Сдвинуть 1 страницу вправо"
+
+#: src/Widgets/ToolBar.vala:514
+msgid "Slide 2 page to Right"
+msgstr "Сдвинуть 2 страницы вправо"
+
+#: src/Widgets/ToolBar.vala:537
+msgid "Left to Right"
+msgstr "Слева направо"
+
+#: src/Widgets/ToolBar.vala:557
+msgid "Right to Left"
+msgstr "Справа налево"
+
+#: src/Widgets/ToolBar.vala:593
+msgid "Fit Width"
+msgstr "Подходящая ширина"
+
+#: src/Widgets/ToolBar.vala:594
+msgid "Fit Page"
+msgstr "Подогнать страницу"
+
+#: src/Widgets/ToolBar.vala:596
+msgid "25%"
+msgstr "25%"
+
+#: src/Widgets/ToolBar.vala:597
+msgid "50%"
+msgstr "50%"
+
+#: src/Widgets/ToolBar.vala:598
+msgid "70%"
+msgstr "70%"
+
+#: src/Widgets/ToolBar.vala:599
+msgid "80%"
+msgstr "80%"
+
+#: src/Widgets/ToolBar.vala:601
+msgid "200%"
+msgstr "200%"
+
+#: src/Widgets/ToolBar.vala:602
+msgid "400%"
+msgstr "400%"
+
+#: src/Widgets/ToolBar.vala:628 src/Widgets/ToolBar.vala:647
+msgid "Vertical"
+msgstr "Вертикально"
+
+#: src/Widgets/ToolBar.vala:715
+msgid "Zoom:"
+msgstr "Увеличение:"
+
+#: src/Widgets/ToolBar.vala:717
+msgid "Orientation:"
+msgstr "Ориентация:"
+
+#: src/Widgets/ToolBar.vala:719
+msgid "Sort:"
+msgstr "Сортировать:"
+
+#: src/Widgets/Window.vala:180
+msgid "Previous"
+msgstr "Предыдущий"
+
+#: src/Widgets/Window.vala:198
+msgid "Next"
+msgstr "Следующий"
+
+#. welcome screen
+#: src/Widgets/Window.vala:241
+msgid "No Images Open"
+msgstr "Нет открытых изображений"
+
+#: src/Widgets/Window.vala:241
+msgid "Click 'Open Image' to get started."
+msgstr "Нажмите «Открыть изображение», чтобы начать."
+
+#: src/Widgets/Window.vala:243
+msgid "Open Image"
+msgstr "Открыть изображение"
+
+#: src/Widgets/Window.vala:243
+msgid "Show and edit your image."
+msgstr "Смотрите и редактируйте свои изображения."
+
+#: src/Widgets/Window.vala:280 src/Widgets/Window.vala:384
+#: src/Widgets/Window.vala:727 src/Widgets/Window.vala:881
+#, c-format
+msgid "Location: %d / %d (%d%%)"
+msgstr "Местоположение: %d / %d (%d%%)"
+
+#: src/Widgets/Window.vala:685
+msgid "Choose file to open"
+msgstr "Выберите файл для открытия"
+
+#: src/Widgets/Window.vala:716
+msgid "The directory does not found. Exiting."
+msgstr "Каталог не найден. Выход."
+
+#: src/Widgets/Window.vala:720
+msgid "The file does not found."
+msgstr "Файл не найден."
+
+#: src/Widgets/Window.vala:775
+#, c-format
+msgid "The file could not be opend (cause: %s)"
+msgstr "Невозможно открыть файл (причина: %s)"
+
+#: src/Widgets/Window.vala:805
+msgid "Are you sure you want to move this file to the Trash?"
+msgstr "Переместить этот файл в корзину?"
+
+#: src/Widgets/Window.vala:811 src/Widgets/Window.vala:827
+msgid "Delete was canceled"
+msgstr "Удаление отменено"
+
+#: src/Widgets/Window.vala:818
+msgid "Moved the file to the Trash."
+msgstr "Файл перемещён в корзину."
+
+#: src/Widgets/Window.vala:821
+msgid ""
+"Your desktop environment doesn't seem to support Recycle Bin. Do you want to "
+"permanently delete this file? Once deleted, it cannot be undone."
+msgstr ""
+"Похоже, ваша среда рабочего стола не поддерживает корзину. Вы хотите, чтобы "
+"навсегда удалить этот файл?"
+
+#: src/Widgets/Window.vala:832
+msgid "Completely deleted the file."
+msgstr "Файл полностью удалён."
+
+#: src/Widgets/Window.vala:834
+msgid "fail to delete a file"
+msgstr "не удалось удалить файл"
+
+#. TRANSLATORS: Replace with your name and email address, don't translate literally
+#: src/Widgets/Window.vala:919
+msgid "translator-credits"
+msgstr "переводчики"
+
+#: src/Widgets/Window.vala:921
+msgid ""
+"A lightweight image viewer with three display modes: single, spread, and "
+"continuous."
+msgstr ""
+"Легкая программа просмотра изображений с тремя режимами отображения:"
+" одиночным, расширенным и "
+"непрерывный."
+
+
